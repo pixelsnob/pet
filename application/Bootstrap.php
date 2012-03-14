@@ -13,6 +13,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         return $autoloader;
     }
 
-
+    protected function _initConfig() {
+        Zend_Registry::set('app_config', $this->getOptions());
+    }
+    
+    protected function _initLogger() {
+        $this->bootstrap('log');
+        $log = $this->getResource('log'); 
+        Zend_Registry::set('log', $log);
+    }
 }
 
