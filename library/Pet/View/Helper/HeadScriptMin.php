@@ -2,11 +2,13 @@
 /**
  * @package Pet_View_Helper_HeadScriptMin
  * 
- * Takes files added view appendFile(), converts them to a list, and calls the minify url
- * 
+ * Takes files added via appendFile(), converts them to a list, and calls the minify url
+ * Any code added via appendScript() will be ignored.
  * 
  */
-class Pet_View_Helper_HeadScriptMin extends Zend_View_Helper_HeadScript {
+require_once 'Pet/View/Helper/HeadScript.php';
+
+class Pet_View_Helper_HeadScriptMin extends Pet_View_Helper_HeadScript {
     
     /**
      * Minify url
@@ -59,18 +61,25 @@ class Pet_View_Helper_HeadScriptMin extends Zend_View_Helper_HeadScript {
             return '';
         }
         $this->getContainer()->ksort();
-        $items = array();
+        $files = array();
+        $scripts = '';
         foreach ($this as $item) {
-            // Ignore scripts. We're only interested in files.
-            if (!$this->_isValid($item) || !isset($item->attributes['src'])) {
+            if (!$this->_isValid($item)) {
                 continue;
             }
-            $items[] = $item->attributes['src'];
+            // Determine whether this is a file or a script. Store data
+            // accordingly
+            if (isset($item->attributes['src'])) {
+                $files[] = $item->attributes['src'];
+            } elseif (isset($item->source)) {
+                $scripts .= $item->source . "\n";
+            }
         }
         // Clear stack of scripts
         $this->getContainer()->exchangeArray(array());
         // Replace scripts with one call to minify
-        $this->appendFile(self::MIN_URL . 'f=' . implode(',', $items));
+        $this->appendFile(self::MIN_URL . 'f=' . implode(',', $files));
+        $this->appendScript($scripts);
         return parent::toString();
     }
 }
