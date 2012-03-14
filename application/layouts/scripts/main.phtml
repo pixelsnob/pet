@@ -148,8 +148,7 @@
         </div>
     </div>
     
-    <?php /*$this->headScriptMin()->appendFile('/js/test.js')->appendFile('/js/test2.js');*/ ?>
-    <?php echo $this->headScriptMin(); ?>
+    <?php echo $this->headScriptMin()->loadGroup('common')/*->appendFile('xxxxxxxxx.js')*/; ?>
 
     <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/login.js"></script>
     <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/jquery.megamenu.js"></script>

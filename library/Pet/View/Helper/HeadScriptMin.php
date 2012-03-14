@@ -15,6 +15,12 @@ class Pet_View_Helper_HeadScriptMin extends Zend_View_Helper_HeadScript {
     const MIN_URL = '/min/';
     
     /**
+     * File groups config
+     * 
+     */
+    const GROUPS_CFG = '/configs/js_file_groups.php';
+
+    /**
      * @return void
      * 
      */
@@ -22,6 +28,28 @@ class Pet_View_Helper_HeadScriptMin extends Zend_View_Helper_HeadScript {
         return $this;
     }
     
+    /**
+     * Loads a group of files from a config file
+     * 
+     * @param $group_name string
+     * @return Pet_View_Helper_HeadScriptMin
+     */
+    public function loadGroup($group_name) {
+        // Attempt to load config file
+        $config = new Zend_Config(require APPLICATION_PATH . self::GROUPS_CFG);
+        // Attempt to load group
+        if (!isset($config->$group_name)) {
+            $msg = "File group $group_name does not exist in " .
+                self::GROUPS_CFG;
+            throw new Exception($msg);
+        }
+        // Append files
+        foreach ($config->$group_name as $file) {
+            $this->appendFile($file);
+        }
+        return $this;
+    }
+
     /**
      * @return string
      * 
@@ -41,6 +69,7 @@ class Pet_View_Helper_HeadScriptMin extends Zend_View_Helper_HeadScript {
         }
         // Clear stack of scripts
         $this->getContainer()->exchangeArray(array());
+        // Replace scripts with one call to minify
         $this->appendFile(self::MIN_URL . 'f=' . implode(',', $items));
         return parent::toString();
     }
