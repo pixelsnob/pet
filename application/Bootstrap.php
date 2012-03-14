@@ -22,5 +22,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $log = $this->getResource('log'); 
         Zend_Registry::set('log', $log);
     }
+    
+    protected function _initRouter() {
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/routes.ini');
+        $router = Zend_Controller_Front::getInstance()->getRouter();
+        $router->addConfig($config, 'routes');
+    }
 }
 
