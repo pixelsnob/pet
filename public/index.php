@@ -1,5 +1,7 @@
 <?php
 
+ini_set('date.timezone', 'America/Los_Angeles');
+
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) .
