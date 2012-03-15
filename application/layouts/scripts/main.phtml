@@ -107,7 +107,7 @@
                     <p>New user? <a href="/subscribe-6/?utm_source=nav&amp;utm_medium=SubscribeLink&amp;utm_campaign=subscribe-6">Subscribe</a>!&nbsp;&nbsp;&middot;&nbsp;&nbsp;Already a subscriber? <a href="#"><span class="login">Log in</span></a>. </p>
                     <div id="login">
                         <div class="signup clearfix">
-                            <form action="<?php echo $this->url(array(), 'subscribe_login'); ?>" method="post">
+                            <form action="<?php $this->getHelper('ServerUrl')->setScheme('https'); echo $this->serverUrl($this->url(array(), 'login_index')); ?>" method="post">
                                 <p><label for="username">Username:</label> <input type="text" name="username" id="username" value="" class="input" /></p>
                                 <p><label for="password">Password:</label> <input type="password" name="password" id="password" value="" /></p>
                                 <input type="hidden" name="next" value="http://www.photoshopelementsuser.com/" />
