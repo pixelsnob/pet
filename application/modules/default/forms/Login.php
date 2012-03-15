@@ -6,13 +6,15 @@ class Default_Form_Login extends Pet_Form {
         $this->setMethod('post')->setName('login_form');
         $this->addElement('text', 'username', array(
             'label' => 'Username',
-            'required' => true
+            'required' => true,
+            'id' => 'login-username'
         ));
         $this->addElement('password', 'password', array(
             'label' => 'Password',
-            'required' => true
+            'required' => true,
+            'id' => 'login-password'
         ));
-        $this->addElement('submit', 'login', array(
+        $this->addElement('submit', 'login-submit', array(
             'label' => 'Login'
         ));
     }

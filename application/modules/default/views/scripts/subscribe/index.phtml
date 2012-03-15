@@ -1,1 +1,16 @@
 
+<form action="<?php echo $this->serverUrl($this->url(array(), 'login_process')); ?>" method="post" name="login">
+    <dl>
+        <dt><?php echo $this->login_form->username->getLabel(); ?></dt>
+        <dd>
+            <?php echo $this->login_form->username->renderViewHelper(); ?>
+            <?php echo $this->login_form->username->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->login_form->password->getLabel(); ?></dt>
+        <dd>
+            <?php echo $this->login_form->password->renderViewHelper(); ?>
+            <?php echo $this->login_form->password->renderErrors(); ?>
+        </dd>
+    </dl>
+    <p><input type="submit" value="Login" id="login-submit"></p>
+</form>
