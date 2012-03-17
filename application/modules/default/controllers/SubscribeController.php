@@ -12,7 +12,7 @@ class SubscribeController extends Zend_Controller_Action {
 
     public function loginAction() {
         if ($this->_user_svc->isAuthenticated()) {
-            $this->_helper->Redirector->gotoSimple('welcome');
+            $this->_helper->Redirector->gotoSimple('index');
         }
         $login_form = new Default_Form_Login;
         $this->view->login_form = $login_form;
