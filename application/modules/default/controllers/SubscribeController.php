@@ -8,9 +8,6 @@ class SubscribeController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        //echo (int) $this->_user_svc->isAuthenticated();
-        echo sha1('0f27b' . 'blast1-furnace');
-        exit;
     }
 
     public function loginAction() {
@@ -22,7 +19,7 @@ class SubscribeController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost() and $login_form->isValid($post)) {
             if ($this->_user_svc->authenticate($post)) {
-                $this->_helper->Redirector->gotoSimple('welcome');
+                $this->_helper->Redirector->gotoSimple('index');
             } else {
                 $this->view->login_failed = true;
             } 

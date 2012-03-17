@@ -24,19 +24,7 @@ class Service_User {
         $password = (isset($data['password']) ? $data['password'] : '');
         $auth_adapter = new Pet_Auth_Adapter($username, $password);
         $auth = Zend_Auth::getInstance();
-        if ($auth->authenticate($auth_adapter)->isValid()) {
-            //$ns = new Zend_Session_Namespace('Zend_Auth');
-            //$ns->setExpirationSeconds();
-            /*$storage = $auth->getStorage();
-            $storage->write($auth_adapter->getResultRowObject(array(
-                'user_id',
-                'user_role',
-            )));*/
-            print_r($auth->getIdentity());
-            exit;
-            return true;
-        }
-        return false;
+        return $auth->authenticate($auth_adapter)->isValid();
     }
     
     /**

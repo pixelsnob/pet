@@ -104,19 +104,12 @@
         <div class="container">
             <div class="col-wrap clearfix">
                 <div class="col col-1">
-                    <p>New user? <a href="/subscribe-6/?utm_source=nav&amp;utm_medium=SubscribeLink&amp;utm_campaign=subscribe-6">Subscribe</a>!&nbsp;&nbsp;&middot;&nbsp;&nbsp;Already a subscriber? <a href="#"><span class="login">Log in</span></a>. </p>
-                    <div id="login">
-                        <div class="signup clearfix">
-                            <form action="<?php $this->getHelper('ServerUrl')->setScheme('https'); echo $this->serverUrl($this->url(array(), 'login_index')); ?>" method="post">
-                                <p><label for="username">Username:</label> <input type="text" name="username" id="username" value="" class="input" /></p>
-                                <p><label for="password">Password:</label> <input type="password" name="password" id="password" value="" /></p>
-                                <input type="hidden" name="next" value="http://www.photoshopelementsuser.com/" />
-                                <p><a href="http://store.photoshopelementsuser.com/subscribe/password_reset">Forgot password?</a></p>
-                                <p><button type="submit" class="button round_button"><span>Submit</span></button></p>
-                            </form>
-                        </div>
-                        <div id="login-bottom"></div>
-                    </div>
+                    <?php $this->getHelper('serverUrl')->setScheme('https'); ?>
+                    <?php if ($user = Zend_Auth::getInstance()->getIdentity()): ?>
+                        <p>Logged in as <?php echo $this->escape($user->username); ?>. <a href="/subscribe/profile">Profile</a> &middot; <a href="/favorites/">My Favorites</a> &middot; <a href="/subscribe/logout">Log out</a> </p>
+                    <?php else: ?>
+                        <p>New user? <a href="/subscribe-6/?utm_source=nav&amp;utm_medium=SubscribeLink&amp;utm_campaign=subscribe-6">Subscribe</a>!&nbsp;&nbsp;&middot;&nbsp;&nbsp;Already a subscriber? <a href="<?php echo $this->serverUrl($this->url(array(), 'login_index')); ?>"><span class="login">Log in</span></a>. </p>                    
+                    <?php endif; ?>
                 </div>
                 <div class="col col-2">
                     <form method="get" id="search" action="/">
@@ -148,7 +141,7 @@
     
     <?php echo $this->headScriptMin()->loadGroup('common'); ?>
 
-    <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/login.js"></script>
+    <!--<script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/login.js"></script>-->
     <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/jquery.megamenu.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
