@@ -1,5 +1,5 @@
 
-<form action="<?php echo $this->serverUrl($this->url(array(), 'login_process')); ?>" method="post" name="login">
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="login">
     <dl>
         <dt><?php echo $this->login_form->username->getLabel(); ?></dt>
         <dd>
@@ -14,3 +14,4 @@
     </dl>
     <p><input type="submit" value="Login" id="login-submit"></p>
 </form>
+<?php if ($this->login_failed): ?><p class="error">Login failed</p><?php endif; ?>

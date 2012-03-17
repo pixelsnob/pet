@@ -9,7 +9,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         ));
         // Override default mappers resource, which wants to use models/mappers:
         // using models/Mapper for consistency with others like models/DbTable, etc.
-        $autoloader->addResourceType('mappers', 'models/Mapper', 'Model_Mapper');
+        $autoloader->addResourceType('mappers', 'models/Mapper', 'Model_Mapper')
+            ->addResourceType('service', 'services', 'Service');
         return $autoloader;
     }
 

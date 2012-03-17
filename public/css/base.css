@@ -10,3 +10,6 @@ ul.errors li {
     color: red;
 }
 
+#content {
+    min-height: 380px;
+}
