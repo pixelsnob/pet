@@ -8,7 +8,8 @@ class SubscribeController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        echo (int) $this->_user_svc->isAuthenticated();
+        //echo (int) $this->_user_svc->isAuthenticated();
+        echo sha1('0f27b' . 'blast1-furnace');
         exit;
     }
 
@@ -34,6 +35,9 @@ class SubscribeController extends Zend_Controller_Action {
     }
 
     public function welcomeAction() {
+        if (!$this->_user_svc->isAuthenticated()) {
+            $this->_helper->Redirector->gotoSimple('login');
+        }
         exit('hi');
     }
 

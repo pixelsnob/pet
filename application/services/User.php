@@ -8,27 +8,32 @@
 class Service_User {
     
     /**
+     * @return void
+     * 
+     */
+    public function __construct() {}
+
+    /**
      * @param $data Username and password, etc.
      * @return bool Auth status
      * 
      * 
      */
     public function authenticate($data) {
-        $auth_adapter = new Zend_Auth_Adapter_DbTable(
-            Zend_Db_Table::getDefaultAdapter());
-        $auth_adapter->setTableName('users')
-            ->setIdentityColumn('username')
-            ->setCredentialColumn('password')
-            ->setCredentialTreatment('sha1(?)')
-            ->setIdentity($data['username'])
-            ->setCredential($data['password']);
+        $username = (isset($data['username']) ? $data['username'] : '');
+        $password = (isset($data['password']) ? $data['password'] : '');
+        $auth_adapter = new Pet_Auth_Adapter($username, $password);
         $auth = Zend_Auth::getInstance();
         if ($auth->authenticate($auth_adapter)->isValid()) {
-            $storage = $auth->getStorage();
+            //$ns = new Zend_Session_Namespace('Zend_Auth');
+            //$ns->setExpirationSeconds();
+            /*$storage = $auth->getStorage();
             $storage->write($auth_adapter->getResultRowObject(array(
                 'user_id',
                 'user_role',
-            )));
+            )));*/
+            print_r($auth->getIdentity());
+            exit;
             return true;
         }
         return false;
