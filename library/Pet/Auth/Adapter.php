@@ -42,7 +42,7 @@ class Pet_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         $messages = array();
         $users = new Model_DbTable_Users;
         $user = $users->getByUsername($this->_username);
-        if ($user) {
+        if ($user && $user->is_active) {
             $pw = explode('$', $user->password);
             if (count($pw) == 3) {
                 $hash = sha1($pw[1] . $this->_password);
