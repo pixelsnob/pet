@@ -18,7 +18,8 @@ class Default_Form_Profile extends Pet_Form {
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Please enter your username'
-                ))
+                )),
+                array(new Pet_Validate_UsernameNotExists)
             )
         ))->addElement('text', 'email', array(
             'label' => 'Email',

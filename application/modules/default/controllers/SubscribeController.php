@@ -40,7 +40,6 @@ class SubscribeController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
             $this->_user_svc->updateProfile($post);
-            //exit;
         }
     }
 }

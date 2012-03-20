@@ -5,6 +5,14 @@
  */
 class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
 
+    public function getByUsername($username) {
+        $users = new Model_DbTable_Users;
+        $user = $users->getByUsername($username);
+        if ($user) {
+            return new Model_User($user->toArray());
+        }
+    }
+
     public function getById($id) {
         $users = new Model_DbTable_Users;
         $user = $users->getById($id);
