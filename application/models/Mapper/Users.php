@@ -33,7 +33,7 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     public function save($data, $id) {
         $users = new Model_DbTable_Users;
         $user = new Model_User($data);
-        $users->update($user->toArray(), $id);
+        return $users->update($user->toArray(), $id);
     }
 }
 

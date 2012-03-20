@@ -21,6 +21,8 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
 
     public function update($data, $id) {
         unset($data['id']);
-        parent::update($data, $this->getAdapter()->quoteInto('id = ?', $id));
+        unset($data['password']);
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        return parent::update($data, $where);
     }
 }

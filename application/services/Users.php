@@ -80,11 +80,7 @@ class Service_Users {
 
     public function updateProfile($data) {
         $identity = Zend_Auth::getInstance()->getIdentity();
-        $profile = $this->getProfile();
-        if (!$profile) {
-            throw new Exception('Profile by ' . $identity->id . ' not found');
-        }
-        $this->_users->save($data, $identity->id);
+        return $this->_users->save($data, $identity->id);
     }
 
     
