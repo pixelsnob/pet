@@ -4,7 +4,11 @@
  * 
  */
 class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
-
+    
+    /**
+     * 
+     * 
+     */
     public function getByUsername($username) {
         $users = new Model_DbTable_Users;
         $user = $users->getByUsername($username);
@@ -13,6 +17,10 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         }
     }
 
+    /**
+     * 
+     * 
+     */
     public function getByEmail($email) {
         $users = new Model_DbTable_Users;
         $user = $users->getByEmail($email);
@@ -21,7 +29,10 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         }
     }
 
-
+    /**
+     * 
+     * 
+     */
     public function getById($id) {
         $users = new Model_DbTable_Users;
         $user = $users->getById($id);
@@ -30,10 +41,20 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         }
     }
 
-    public function save($data, $id) {
+    /**
+     * 
+     * 
+     */
+    public function updatePersonalInfo($data, $id) {
         $users = new Model_DbTable_Users;
         $user = new Model_User($data);
-        return $users->update($user->toArray(), $id);
+        $user_array = array(
+            'first_name' => $user->first_name,
+            'last_name'  => $user->last_name,
+            'username'   => $user->username,
+            'email'      => $user->email
+        );
+        return $users->update($user_array, $id);
     }
 }
 
