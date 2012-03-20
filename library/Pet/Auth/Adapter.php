@@ -37,19 +37,16 @@ class Pet_Auth_Adapter implements Zend_Auth_Adapter_Interface {
      * @return Zend_Auth_Result
      */
     public function authenticate() {
-        // Initialize return values
         $code = Zend_Auth_Result::FAILURE;
         $identity = null;
         $messages = array();
-
         $users = new Model_DbTable_Users;
         $user = $users->getByUsername($this->_username);
         if ($user) {
-            $pw = preg_match('/^sha1\$([^\$]*)\$([^\$]*)$/',
-                trim($user->password), $m);
-            if ($pw && count($m) == 3) {
-                $hash = sha1($m[1] . $this->_password);
-                if ($hash == $m[2]) {
+            $pw = explode('$', $user->password);
+            if (count($pw) == 3) {
+                $hash = sha1($pw[1] . $this->_password);
+                if ($hash == $pw[2]) {
                     $code = Zend_Auth_Result::SUCCESS;
                     unset($user->password);
                     $identity = $user;
@@ -62,4 +59,3 @@ class Pet_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         return new Zend_Auth_Result($code, $identity, $messages);
     }
 }
-
