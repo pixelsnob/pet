@@ -28,10 +28,10 @@ class Default_Form_Profile extends Pet_Form {
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Please enter your email'
-                ))
+                )),
+                array(new Pet_Validate_EmailNotExists)
             )
-        ));
-        $this->addElement('submit', 'login-submit', array(
+        ))->addElement('submit', 'login-submit', array(
             'label' => 'Login'
         ));
     }

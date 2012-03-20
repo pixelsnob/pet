@@ -34,6 +34,7 @@ class SubscribeController extends Zend_Controller_Action {
     public function profileAction() {
         if ($profile_form = $this->_user_svc->getProfileForm()) {
             $this->view->profile_form = $profile_form;
+            $this->view->subscription = $this->_user_svc->getSubscription();
         } else {
             throw new Exception('User not found');
         }

@@ -1,9 +1,9 @@
 <?php
 /**
- * @package Pet_Validate_UsernameNotExists
+ * @package Pet_Validate_EmailNotExists
  * 
  */
-class Pet_Validate_UsernameNotExists extends Zend_Validate_Abstract {
+class Pet_Validate_EmailNotExists extends Zend_Validate_Abstract {
     
     /**
      * Message constants
@@ -16,7 +16,7 @@ class Pet_Validate_UsernameNotExists extends Zend_Validate_Abstract {
      * 
      */
     protected $_messageTemplates = array(
-        self::INVALID => 'That username is already in use'
+        self::INVALID => 'That email is already in use'
     );
     
     /**
@@ -29,7 +29,7 @@ class Pet_Validate_UsernameNotExists extends Zend_Validate_Abstract {
     public function isValid($value, $context = null) {
         $identity = Zend_Auth::getInstance()->getIdentity();
         $users = new Model_Mapper_Users;
-        $user = $users->getByUsername($value);
+        $user = $users->getByEmail($value);
         if ($user && $user->id && $user->id != $identity->id) {
             $this->_error(self::INVALID);
             return false;    

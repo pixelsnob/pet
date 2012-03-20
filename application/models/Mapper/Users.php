@@ -13,6 +13,15 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         }
     }
 
+    public function getByEmail($email) {
+        $users = new Model_DbTable_Users;
+        $user = $users->getByEmail($email);
+        if ($user) {
+            return new Model_User($user->toArray());
+        }
+    }
+
+
     public function getById($id) {
         $users = new Model_DbTable_Users;
         $user = $users->getById($id);

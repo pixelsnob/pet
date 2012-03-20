@@ -1,17 +1,22 @@
 
-<h3>Account information</h3>
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
-    <dl class="form">
-        <dt><?php echo $this->profile_form->username->getLabel(); ?></dt>
-        <dd>
-            <?php echo $this->profile_form->username->renderViewHelper(); ?>
-            <?php echo $this->profile_form->username->renderErrors(); ?>
-        </dd>
-        <dt><?php echo $this->profile_form->email->getLabel(); ?></dt>
-        <dd>
-            <?php echo $this->profile_form->email->renderViewHelper(); ?>
-            <?php echo $this->profile_form->email->renderErrors(); ?>
-        </dd>
-    </dl>
+    <fieldset>
+        <legend>Account information</legend>
+        <dl class="form">
+            <dt><?php echo $this->profile_form->username->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->username->renderViewHelper(); ?>
+                <?php echo $this->profile_form->username->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->email->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->email->renderViewHelper(); ?>
+                <?php echo $this->profile_form->email->renderErrors(); ?>
+            </dd>
+            <dt>Expiration</dt>
+            <dd><?php echo $this->escape($this->subscription->expiration); ?></dd>
+        </dl>
+    </fieldset>
     <p><input type="submit" value="Update" id="update-submit"></p>
 </form>
+

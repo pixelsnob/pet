@@ -13,6 +13,7 @@ class Service_Users {
      */
     public function __construct() {
         $this->_user_profiles = new Model_Mapper_UserProfiles;
+        $this->_user_subs = new Model_Mapper_UserSubscriptions;
         $this->_users = new Model_Mapper_Users;
     }
 
@@ -72,6 +73,11 @@ class Service_Users {
         return false;
     }
     
+    public function getSubscription() {
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        return $this->_user_subs->getByUserId($identity->id);
+    }
+
     public function updateProfile($data) {
         $identity = Zend_Auth::getInstance()->getIdentity();
         $profile = $this->getProfile();
