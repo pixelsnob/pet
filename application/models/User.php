@@ -1,10 +1,9 @@
 <?php
-
 /**
  * @package Model_User
+ * 
  */
-class Model_User extends Pet_Model_Abstract
-{
+class Model_User extends Pet_Model_Abstract {
 
     public $_data = array(
         'id' => null,
@@ -18,8 +17,7 @@ class Model_User extends Pet_Model_Abstract
         'is_superuser' => null,
         'last_login' => null,
         'date_joined' => null
-        );
-
+    );
 
 }
 

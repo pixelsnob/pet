@@ -19,6 +19,7 @@ class SubscribeController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $login_form->isValid($post)) {
             if ($this->_user_svc->authenticate($post)) {
+                $this->_user_svc->updateLastLogin();
                 $this->_helper->Redirector->gotoSimple('index');
             } else {
                 $this->view->login_failed = true;
@@ -32,6 +33,9 @@ class SubscribeController extends Zend_Controller_Action {
     }
 
     public function profileAction() {
+        if (!$this->_user_svc->isAuthenticated()) {
+            $this->_helper->Redirector->gotoSimple('login');
+        }
         if ($profile_form = $this->_user_svc->getProfileForm()) {
             $this->view->profile_form = $profile_form;
         } else {

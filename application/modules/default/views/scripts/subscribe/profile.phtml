@@ -76,15 +76,15 @@
     <fieldset>
         <legend>Shipping Information</legend>
         <dl class="form">
-            <dt><?php echo $this->profile_form->first_name->getLabel(); ?></dt>
+            <dt><?php echo $this->profile_form->shipping_first_name->getLabel(); ?></dt>
             <dd>
-                <?php echo $this->profile_form->first_name->renderViewHelper(); ?>
-                <?php echo $this->profile_form->first_name->renderErrors(); ?>
+                <?php echo $this->profile_form->shipping_first_name->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_first_name->renderErrors(); ?>
             </dd>
-            <dt><?php echo $this->profile_form->last_name->getLabel(); ?></dt>
+            <dt><?php echo $this->profile_form->shipping_last_name->getLabel(); ?></dt>
             <dd>
-                <?php echo $this->profile_form->last_name->renderViewHelper(); ?>
-                <?php echo $this->profile_form->last_name->renderErrors(); ?>
+                <?php echo $this->profile_form->shipping_last_name->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_last_name->renderErrors(); ?>
             </dd>
             <dt><?php echo $this->profile_form->shipping_address->getLabel(); ?></dt>
             <dd>
@@ -128,6 +128,6 @@
             </dd>
         </dl>
     </fieldset>
-    <p><input type="submit" value="Update" id="update-submit"></p>
+    <p class="update"><input type="submit" value="Update" id="update-submit"></p>
 </form>
 

@@ -119,6 +119,11 @@ class Service_Users {
         }
     }
 
+    public function updateLastLogin() {
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        $this->_users->updateLastLogin($identity->id); 
+    }
+
     /**
      * 
      * 

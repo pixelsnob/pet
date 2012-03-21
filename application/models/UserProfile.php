@@ -1,17 +1,16 @@
 <?php
-
 /**
  * @package Model_UserProfile
+ * 
  */
-class Model_UserProfile extends Pet_Model_Abstract
-{
+class Model_UserProfile extends Pet_Model_Abstract {
 
     public $_data = array(
         'id' => null,
         'user_id' => null,
-        'company' => null,
         'billing_address' => null,
         'billing_address_2' => null,
+        'billing_company' => null,
         'billing_city' => null,
         'billing_state' => null,
         'billing_postal_code' => null,
@@ -35,8 +34,7 @@ class Model_UserProfile extends Pet_Model_Abstract
         'comp' => null,
         'version' => null,
         'platform' => null
-        );
-
+    );
 
 }
 
