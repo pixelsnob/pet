@@ -45,7 +45,7 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
      * 
      * 
      */
-    public function updatePersonalInfo($data, $id) {
+    public function updatePersonal($data, $id) {
         $users = new Model_DbTable_Users;
         $user = new Model_User($data);
         $user_array = array(

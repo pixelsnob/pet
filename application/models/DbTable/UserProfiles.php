@@ -10,4 +10,8 @@ class Model_DbTable_UserProfiles extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
+    public function updateByUserId($data, $user_id) {
+        $where = $this->getAdapter()->quoteInto('user_id = ?', $user_id);
+        return parent::update($data, $where);
+    }
 }

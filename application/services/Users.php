@@ -80,12 +80,8 @@ class Service_Users {
         if ($user && $profile) {
             $states = new Zend_Config(require APPLICATION_PATH .
                 '/configs/states.php');
-            $states = $states->toArray();
-            $states_formatted = array('' => 'Please select...') +
-                $states['US'] +
-                array('' => '-------------') +
-                $states['CA'];
-            $profile_form->billing_state->setMultiOptions($states_formatted);
+            $profile_form->billing_state->setMultiOptions($states->toArray());
+            $profile_form->shipping_state->setMultiOptions($states->toArray());
             $form_data = array_merge($user->toArray(), $profile->toArray());
             $profile_form->populate($form_data);
             return $profile_form;
@@ -108,8 +104,19 @@ class Service_Users {
      */
     public function updateProfile($data) {
         $identity = Zend_Auth::getInstance()->getIdentity();
-        $ct = $this->_users->updatePersonalInfo($data, $identity->id) + 1;
-        return $ct;
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->beginTransaction();
+        try {
+            $this->_users->updatePersonal($data, $identity->id);
+            $this->_user_profiles->updateByUserId($data, $identity->id);
+            $auth_storage = Zend_Auth::getInstance()->getStorage();
+            $auth_storage->write($this->getUser());
+            $db->commit();
+            return true;
+        } catch (Exception $e) {
+            $db->rollBack(); 
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**

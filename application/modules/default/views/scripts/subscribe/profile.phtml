@@ -73,6 +73,61 @@
             </dd>
         </dl>
     </fieldset>
+    <fieldset>
+        <legend>Shipping Information</legend>
+        <dl class="form">
+            <dt><?php echo $this->profile_form->first_name->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->first_name->renderViewHelper(); ?>
+                <?php echo $this->profile_form->first_name->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->last_name->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->last_name->renderViewHelper(); ?>
+                <?php echo $this->profile_form->last_name->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_address->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_address->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_address->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_address_2->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_address_2->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_address_2->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_company->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_company->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_company->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_city->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_city->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_city->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_state->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_state->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_state->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_postal_code->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_postal_code->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_postal_code->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_country->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_country->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_country->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->profile_form->shipping_phone->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->profile_form->shipping_phone->renderViewHelper(); ?>
+                <?php echo $this->profile_form->shipping_phone->renderErrors(); ?>
+            </dd>
+        </dl>
+    </fieldset>
     <p><input type="submit" value="Update" id="update-submit"></p>
 </form>
 
