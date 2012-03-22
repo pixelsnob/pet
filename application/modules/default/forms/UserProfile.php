@@ -148,7 +148,7 @@ class Default_Form_UserProfile extends Pet_Form {
                     'messages' => 'Please enter your postal code'
                 )),
                 array('StringLength', true, array(
-                    'max' => 50,
+                    'max' => 30,
                     'messages' => 'Postal code must be %max% characters or less'
                 ))
             )
@@ -288,7 +288,7 @@ class Default_Form_UserProfile extends Pet_Form {
                     'messages' => 'Please enter your postal code'
                 )),
                 array('StringLength', true, array(
-                    'max' => 50,
+                    'max' => 30,
                     'messages' => 'Postal code must be %max% characters or less'
                 ))
             )
