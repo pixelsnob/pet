@@ -5,13 +5,17 @@
  */
 class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     
+    /**
+     * @return void
+     * 
+     */
     public function __construct() {
         $this->_users = new Model_DbTable_Users;
     }
     
     /**
-     * 
-     * 
+     * @param string $username
+     * @return void|Model_User
      */
     public function getByUsername($username) {
         $user = $this->_users->getByUsername($username);
@@ -21,7 +25,8 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * 
+     * @param string $email
+     * @return void|Model_User
      * 
      */
     public function getByEmail($email) {
@@ -32,7 +37,8 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * 
+     * @param int $id
+     * @return void|Model_User
      * 
      */
     public function getById($id) {
@@ -43,10 +49,11 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * 
-     * 
+     * @param array $data
+     * @param int $id User id
+     * @return int Num rows updated
      */
-    public function updatePersonal($data, $id) {
+    public function updatePersonal(array $data, $id) {
         $user = new Model_User($data);
         $user_array = array(
             'first_name' => $user->first_name,
@@ -56,7 +63,12 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         );
         return $this->_users->update($user_array, $id);
     }
-
+    
+    /**
+     * @param int $id User id
+     * @return int Num rows updated
+     * 
+     */
     public function updateLastLogin($id) {
         return $this->_users->update(array('last_login' => date('Y-m-d G:i:s', time())), $id);
     }

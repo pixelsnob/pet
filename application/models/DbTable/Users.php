@@ -3,13 +3,14 @@
 class Model_DbTable_Users extends Zend_Db_Table_Abstract {
     
     /**
-     * 
+     * @var string 
      * 
      */
     protected $_name = 'users';
     
     /**
-     * 
+     * @param int $id
+     * @return Zend_Db_Table_Row Object 
      * 
      */
     public function getById($id) {
@@ -18,7 +19,8 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
     }
     
     /**
-     * 
+     * @param string $username 
+     * @return Zend_Db_Table_Row Object 
      * 
      */
     public function getByUsername($username) {
@@ -27,7 +29,8 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
     }
 
     /**
-     * 
+     * @param string $email
+     * @return Zend_Db_Table_Row Object 
      * 
      */
     public function getByEmail($email) {
@@ -36,10 +39,12 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
     }
 
     /**
-     * 
+     * @param array $data
+     * @param int $id
+     * @return int Num rows updated
      * 
      */
-    public function update($data, $id) {
+    public function update(array $data, $id) {
         $where = $this->getAdapter()->quoteInto('id = ?', $id);
         return parent::update($data, $where);
     }

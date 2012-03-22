@@ -14,6 +14,7 @@ class Service_Users {
     public function __construct() {
         $this->_user_profiles = new Model_Mapper_UserProfiles;
         $this->_user_subs = new Model_Mapper_UserSubscriptions;
+        $this->_user_actions = new Model_Mapper_UserActions;
         $this->_users = new Model_Mapper_Users;
     }
 
@@ -48,7 +49,7 @@ class Service_Users {
     }
     
     /**
-     * 
+     * @return Model_User 
      * 
      */
     public function getUser() {
@@ -57,7 +58,7 @@ class Service_Users {
     }
 
     /**
-     * 
+     * @return Model_UserProfile 
      * 
      */
     public function getProfile() {
@@ -66,7 +67,7 @@ class Service_Users {
     }
     
     /**
-     * 
+     * @return bool|Default_Form_UserProfile
      * 
      */
     public function getProfileForm() {
@@ -90,7 +91,7 @@ class Service_Users {
     }
     
     /**
-     * 
+     * @return Model_UserSubscription 
      * 
      */
     public function getSubscription() {
@@ -99,10 +100,11 @@ class Service_Users {
     }
 
     /**
-     * 
+     * @param array $data
+     * @return bool Update status
      * 
      */
-    public function updateProfile($data) {
+    public function updateProfile(array $data) {
         $identity = Zend_Auth::getInstance()->getIdentity();
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
@@ -112,24 +114,44 @@ class Service_Users {
             $auth_storage = Zend_Auth::getInstance()->getStorage();
             $auth_storage->write($this->getUser());
             $db->commit();
+            $this->logUserAction('Profile updated');
             return true;
         } catch (Exception $e) {
-            $db->rollBack(); 
+            try {
+                $db->rollBack();
+            } catch (Exception $e2) {}
             throw new Exception($e->getMessage());
         }
     }
-
+    
+    /**
+     * @return void
+     * 
+     */
     public function updateLastLogin() {
         $identity = Zend_Auth::getInstance()->getIdentity();
         $this->_users->updateLastLogin($identity->id); 
     }
 
     /**
-     * 
+     * @return Default_Form_Login
      * 
      */ 
     public function getLoginForm() {
         $login_form = new Default_Form_Login; 
         return $login_form;
+    }
+
+    /**
+     * @param string $action
+     * 
+     */ 
+    public function logUserAction($action) {
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        $server = Zend_Controller_Front::getInstance()
+            ->getRequest()->getServer();
+        $ip = (isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '');
+        $user_actions = new Model_Mapper_UserActions;
+        $user_actions->add($action, $ip, $identity->id);
     }
 }
