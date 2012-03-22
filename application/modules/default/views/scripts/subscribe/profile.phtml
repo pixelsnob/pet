@@ -1,7 +1,7 @@
 
 <?php if ($this->profile_updated): ?><p class="flash-message">Profile updated</p><?php endif; ?>
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
-    <fieldset>
+    <fieldset class="account">
         <legend>Account Information</legend>
         <dl class="form">
             <dt><?php echo $this->profile_form->username->getLabel(); ?></dt>
@@ -17,8 +17,9 @@
             <dt>Expiration</dt>
             <dd><?php echo $this->escape($this->subscription->expiration); ?></dd>
         </dl>
+        <p><a href="#">Change password</a></p>
     </fieldset>
-    <fieldset>
+    <fieldset class="billing">
         <legend>Billing Information</legend>
         <dl class="form">
             <dt><?php echo $this->profile_form->first_name->getLabel(); ?></dt>
@@ -73,7 +74,7 @@
             </dd>
         </dl>
     </fieldset>
-    <fieldset>
+    <fieldset class="shipping">
         <legend>Shipping Information</legend>
         <dl class="form">
             <dt><?php echo $this->profile_form->shipping_first_name->getLabel(); ?></dt>
@@ -125,6 +126,34 @@
             <dd>
                 <?php echo $this->profile_form->shipping_phone->renderViewHelper(); ?>
                 <?php echo $this->profile_form->shipping_phone->renderErrors(); ?>
+            </dd>
+        </dl>
+    </fieldset>
+    <fieldset class="profile">
+        <legend>Profile Information</legend>
+        <dl class="form">
+            <dt class="version">
+                <label for="version">What version of Photoshop Elements are you using?</label>
+            </dt>
+            <dd class="version">
+                <?php echo $this->profile_form->version->renderViewHelper(); ?>
+                <?php echo $this->profile_form->version->renderErrors(); ?>
+            </dd>
+            <dt class="checkbox"></dt>
+            <dd class="checkbox">
+                <?php echo $this->profile_form->opt_in->renderViewHelper(); ?>
+                <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
+                <?php echo $this->profile_form->opt_in->renderErrors(); ?>
+            </dd>
+            <dt class="checkbox"></dt>
+            <dd class="checkbox">
+                <?php echo $this->profile_form->opt_in_partner->renderViewHelper(); ?>
+                <label for="opt-in-partner">I'd like to receive information from Photoshop Elements Techniques sponsors</label>
+                <?php echo $this->profile_form->opt_in_partner->renderErrors(); ?>
+                <p class="note">
+                    <strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
+                    companies or entities.
+                </p>
             </dd>
         </dl>
     </fieldset>

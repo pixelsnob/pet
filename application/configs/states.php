@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'United States' => array(
+    'USA' => array(
         'AL' => 'Alabama',
         'AK' => 'Alaska',
         'AZ' => 'Arizona',

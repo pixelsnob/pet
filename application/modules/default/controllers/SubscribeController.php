@@ -33,6 +33,7 @@ class SubscribeController extends Zend_Controller_Action {
     }
 
     public function profileAction() {
+        $this->view->headLink()->appendStylesheet('/css/profile.css');
         if (!$this->_user_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('login');
         }

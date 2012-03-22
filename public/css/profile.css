@@ -1,0 +1,15 @@
+
+dt.version {
+    width: auto;
+    white-space: nowrap;
+    margin-right: 7px;
+}
+
+dd.version {
+    width: auto;
+}
+
+fieldset.profile dd, fieldset.profile dt {
+    line-height: 24px;
+}
+

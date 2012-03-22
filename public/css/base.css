@@ -15,7 +15,8 @@ ul.errors li {
 }
 
 .form {
-    margin: 15px 0 20px 0;
+    margin: 15px 0;
+    overflow: hidden;
 }
 
 .form dt, .form dd {
@@ -63,9 +64,23 @@ p.update {
 
 }
 
+.form dt.checkbox {
+    width: 0;
+}
+
+.form dd.checkbox {
+    width: auto;
+}
+
+.form dd.checkbox input {
+    width: auto;
+}
+
+.form .note {
+    color: #888;
+}
+
 .flash-message {
-    position: absolute;
-    top: 175px;
     color: #348d03;
     font-weight: bold;
 }
