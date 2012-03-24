@@ -17,7 +17,7 @@
             <dt>Expiration</dt>
             <dd><?php echo $this->escape($this->subscription->expiration); ?></dd>
         </dl>
-        <p><a href="#">Change password</a></p>
+        <p><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>
     </fieldset>
     <fieldset class="billing">
         <legend>Billing Information</legend>

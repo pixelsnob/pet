@@ -356,7 +356,7 @@ class Default_Form_UserProfile extends Pet_Form {
             'required' => false
         // Submit
         ))->addElement('submit', 'login-submit', array(
-            'label' => 'Login'
+            'label' => 'Submit'
         ))->setElementFilters(array('StringTrim'));
     }
 }

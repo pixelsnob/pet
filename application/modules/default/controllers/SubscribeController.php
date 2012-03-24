@@ -54,4 +54,24 @@ class SubscribeController extends Zend_Controller_Action {
             }
         }
     }
+
+    public function changePasswordAction() {
+        if (!$this->_user_svc->isAuthenticated()) {
+            $this->_helper->Redirector->gotoSimple('login');
+        }
+        if ($pw_form = $this->_user_svc->getChangePasswordForm()) {
+            $this->view->pw_form = $pw_form;
+        } else {
+            throw new Exception('User not found');
+        }
+        if ($this->_request->isPost()) {
+            $post = $this->_request->getPost();
+            $pw_form->populate($post);
+        }
+        if ($this->_request->isPost() && $pw_form->isValid($post)) {
+            if ($this->_user_svc->updateProfile($post)) {
+                $this->view->profile_updated = true;
+            }
+        }
+    }
 }

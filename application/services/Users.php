@@ -53,8 +53,16 @@ class Service_Users {
      * 
      */
     public function getUser() {
+        return $this->_users->getById($this->getId());
+    }
+    
+    /**
+     * @return int User id
+     * 
+     */
+    public function getId() {
         $identity = Zend_Auth::getInstance()->getIdentity();
-        return $this->_users->getById($identity->id);
+        return $identity->id;
     }
 
     /**
@@ -62,8 +70,7 @@ class Service_Users {
      * 
      */
     public function getProfile() {
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        return $this->_user_profiles->getByUserId($identity->id);
+        return $this->_user_profiles->getByUserId($this->getId());
     }
     
     /**
@@ -95,8 +102,7 @@ class Service_Users {
      * 
      */
     public function getSubscription() {
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        return $this->_user_subs->getByUserId($identity->id);
+        return $this->_user_subs->getByUserId($this->getId());
     }
 
     /**
@@ -105,21 +111,19 @@ class Service_Users {
      * 
      */
     public function updateProfile(array $data) {
-        $identity = Zend_Auth::getInstance()->getIdentity();
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
         try {
-            $this->_users->updatePersonal($data, $identity->id);
-            $this->_user_profiles->updateByUserId($data, $identity->id);
+            $this->_users->updatePersonal($data, $this->getId());
+            $this->_user_profiles->updateByUserId($data, $this->getId());
+            $this->logUserAction('Profile updated');
+            $db->commit();
             $auth_storage = Zend_Auth::getInstance()->getStorage();
             $auth_storage->write($this->getUser());
-            $db->commit();
-            $this->logUserAction('Profile updated');
+            Zend_Session::regenerateId();
+            session_write_close();
             return true;
         } catch (Exception $e) {
-            try {
-                $db->rollBack();
-            } catch (Exception $e2) {}
             throw new Exception($e->getMessage());
         }
     }
@@ -129,8 +133,7 @@ class Service_Users {
      * 
      */
     public function updateLastLogin() {
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        $this->_users->updateLastLogin($identity->id); 
+        $this->_users->updateLastLogin($this->getId()); 
     }
 
     /**
@@ -147,11 +150,19 @@ class Service_Users {
      * 
      */ 
     public function logUserAction($action) {
-        $identity = Zend_Auth::getInstance()->getIdentity();
         $server = Zend_Controller_Front::getInstance()
             ->getRequest()->getServer();
         $ip = (isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '');
         $user_actions = new Model_Mapper_UserActions;
-        $user_actions->add($action, $ip, $identity->id);
+        $user_actions->add($action, $ip, $this->getId());
+    }
+
+    /**
+     * @return Default_Form_ChangePassword
+     * 
+     */ 
+    public function getChangePasswordForm() {
+        $login_form = new Default_Form_ChangePassword; 
+        return $login_form;
     }
 }

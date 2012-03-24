@@ -25,6 +25,17 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param string $username
+     * @return void|Model_User
+     */
+    public function getActiveByUsername($username) {
+        $user = $this->_users->getActiveByUsername($username);
+        if ($user) {
+            return new Model_User($user->toArray());
+        }
+    }
+
+    /**
      * @param string $email
      * @return void|Model_User
      * 
@@ -63,6 +74,16 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         );
         return $this->_users->update($user_array, $id);
     }
+
+    /**
+     * @param string $pw
+     * @param int $id User id
+     * @return int Num rows updated
+     * 
+     */
+    public function updatePassword($pw, $id) {
+        return $this->_users->update(array('password' => $pw), $id);
+    }
     
     /**
      * @param int $id User id
@@ -70,7 +91,26 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function updateLastLogin($id) {
-        return $this->_users->update(array('last_login' => date('Y-m-d G:i:s', time())), $id);
+        return $this->_users->update(array(
+            'last_login' => date('Y-m-d G:i:s', time())), $id);
+    }
+    
+    /**
+     * Passwords are stored as sha1$salt$hash
+     * 
+     * @param string $hash
+     * @param string $pw
+     * 
+     */
+    public function validatePassword($hash, $value) {
+        $pw = explode('$', $hash);
+        if (count($pw) == 3) {
+            $hash = sha1($pw[1] . $value);
+            if ($hash == $pw[2]) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
