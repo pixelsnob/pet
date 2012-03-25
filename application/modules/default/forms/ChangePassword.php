@@ -56,6 +56,10 @@ class Default_Form_ChangePassword extends Pet_Form {
                 array('StringLength', true, array(
                     'max' => 40,
                     'messages' => 'Password must be %max% characters or less'
+                )),
+                array('Identical', true, array(
+                    'token' => 'new_password',
+                    'messages' => 'Password and confirm password must be the same'
                 ))
             )
 

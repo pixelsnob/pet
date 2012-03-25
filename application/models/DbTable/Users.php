@@ -61,16 +61,4 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
         $where = $this->getAdapter()->quoteInto('id = ?', $id);
         return parent::update($data, $where);
     }
-
-    public function validatePassword($pw) {
-        $pw = explode('$', $pw);
-        if (count($pw) == 3) {
-            $hash = sha1($pw[1] . $this->_password);
-            if ($hash == $pw[2]) {
-                $code = Zend_Auth_Result::SUCCESS;
-                unset($user->password);
-                $identity = $user;
-            }
-        }
-    }
 }

@@ -94,23 +94,5 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         return $this->_users->update(array(
             'last_login' => date('Y-m-d G:i:s', time())), $id);
     }
-    
-    /**
-     * Passwords are stored as sha1$salt$hash
-     * 
-     * @param string $hash
-     * @param string $pw
-     * 
-     */
-    public function validatePassword($hash, $value) {
-        $pw = explode('$', $hash);
-        if (count($pw) == 3) {
-            $hash = sha1($pw[1] . $value);
-            if ($hash == $pw[2]) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
 

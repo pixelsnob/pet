@@ -28,8 +28,8 @@ class Pet_Validate_StoredPassword extends Zend_Validate_Abstract {
      */
     public function isValid($value, $context = null) {
         $identity = Zend_Auth::getInstance()->getIdentity();
-        $users = new Model_Mapper_Users;
-        if (!$users->validatePassword($identity->password, $value)) {
+        $users_svc = new Service_Users;
+        if (!$users_svc->validatePassword($identity->password, $value)) {
             $this->_error(self::INVALID);
             return false;    
         }

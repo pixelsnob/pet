@@ -165,4 +165,56 @@ class Service_Users {
         $login_form = new Default_Form_ChangePassword; 
         return $login_form;
     }
+    
+    /**
+     * @param array $data
+     * @return bool Update status
+     * 
+     */
+    public function updatePassword(array $data) {
+        $new_pw = (isset($data['new_password']) ? $data['new_password'] : '');
+        $enc_pw = $this->generateHash($new_pw); 
+        if ($this->_users->updatePassword($enc_pw, $this->getId())) {
+            $auth_storage = Zend_Auth::getInstance()->getStorage();
+            $auth_storage->write($this->getUser());
+            Zend_Session::regenerateId();
+            session_write_close();
+            return true;
+        } else {
+            throw new Exception('Password not updated');
+        }
+    }
+
+    /**
+     * Passwords are stored as sha1$salt$hash
+     * 
+     * @param string $hash
+     * @param string $pw
+     * 
+     */
+    public function validatePassword($hash, $value) {
+        $pw = explode('$', $hash);
+        if (count($pw) == 3) {
+            $hash = sha1($pw[1] . $value);
+            if ($hash == $pw[2]) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * @param $new_pw
+     * @return string
+     * 
+     */
+    function generateHash($new_pw) {
+        $salt = '';
+        for ($i=0; $i < 5; $i++) { 
+            $salt .= chr(rand(97,122));
+        }
+        $salt = substr(sha1($salt), 0, 5);
+        $hash = sha1($salt . $new_pw);
+        return ('sha1$' . $salt . '$' . $hash);
+    }
 }
