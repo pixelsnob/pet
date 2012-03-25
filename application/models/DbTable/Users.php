@@ -44,6 +44,18 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
      * @return Zend_Db_Table_Row Object 
      * 
      */
+    public function getActiveByEmail($email) {
+        $sel = $this->select()->where('email = ?', $email)
+            ->where('is_active = 1');
+        return $this->fetchRow($sel);
+    }
+
+
+    /**
+     * @param string $email
+     * @return Zend_Db_Table_Row Object 
+     * 
+     */
     public function getByEmail($email) {
         $sel = $this->select()->where('email = ?', $email);
         return $this->fetchRow($sel);

@@ -75,4 +75,17 @@ class SubscribeController extends Zend_Controller_Action {
             }
         }
     }
+
+    public function resetPasswordRequestAction() {
+        $pw_form = $this->_user_svc->getResetPasswordRequestForm();
+        $this->view->pw_form = $pw_form;
+        $post = $this->_request->getPost();
+        if ($this->_request->isPost() && $pw_form->isValid($post)) {
+            if ($this->_user_svc->getActiveUserByEmail($post['email'])) {
+                $this->_user_svc->processResetPasswordRequest();
+            } else {
+                $this->view->email_invalid = true;
+            }
+        }
+    }
 }

@@ -57,6 +57,14 @@ class Service_Users {
     }
     
     /**
+     * @return Model_User
+     * 
+     */
+    public function getActiveUserByEmail($email) {
+        return $this->_users->getActiveByEmail($email); 
+    }
+
+    /**
      * @return int User id
      * 
      */
@@ -173,15 +181,20 @@ class Service_Users {
      */
     public function updatePassword(array $data) {
         $new_pw = (isset($data['new_password']) ? $data['new_password'] : '');
-        $enc_pw = $this->generateHash($new_pw); 
-        if ($this->_users->updatePassword($enc_pw, $this->getId())) {
+        $enc_pw = $this->_generateHash($new_pw); 
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->beginTransaction();
+        try {
+            $this->_users->updatePassword($enc_pw, $this->getId());
+            $this->logUserAction('Password updated');
+            $db->commit();
             $auth_storage = Zend_Auth::getInstance()->getStorage();
             $auth_storage->write($this->getUser());
             Zend_Session::regenerateId();
             session_write_close();
             return true;
-        } else {
-            throw new Exception('Password not updated');
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -203,15 +216,26 @@ class Service_Users {
         return false;
     }
     
+    public function getResetPasswordRequestForm() {
+        $form = new Default_Form_ResetPasswordRequest;    
+        return $form;
+    }
+
+    public function processResetPasswordRequest() {
+        exit('process reset pw');
+    }
+
     /**
+     * Passwords are stored as sha1$salt$hash
+     * 
      * @param $new_pw
      * @return string
      * 
      */
-    function generateHash($new_pw) {
+    protected function _generateHash($new_pw) {
         $salt = '';
         for ($i=0; $i < 5; $i++) { 
-            $salt .= chr(rand(97,122));
+            $salt .= chr(rand(97, 122));
         }
         $salt = substr(sha1($salt), 0, 5);
         $hash = sha1($salt . $new_pw);

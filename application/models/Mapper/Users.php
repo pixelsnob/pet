@@ -38,6 +38,17 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     /**
      * @param string $email
      * @return void|Model_User
+     */
+    public function getActiveByEmail($email) {
+        $user = $this->_users->getActiveByEmail($email);
+        if ($user) {
+            return new Model_User($user->toArray());
+        }
+    }
+
+    /**
+     * @param string $email
+     * @return void|Model_User
      * 
      */
     public function getByEmail($email) {

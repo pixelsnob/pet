@@ -1,4 +1,9 @@
 
+.error, .errors {
+    font-weight: bold;
+    color: red;
+}
+
 ul.errors {
     margin-bottom: 0;
 }
@@ -7,7 +12,6 @@ ul.errors li {
     margin-bottom: 5px;
     background: none;
     padding-left: 0;
-    color: red;
 }
 
 #content {
