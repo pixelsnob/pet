@@ -115,25 +115,20 @@ class Service_Users {
 
     /**
      * @param array $data
-     * @return bool Update status
+     * @return void
      * 
      */
     public function updateProfile(array $data) {
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
-        try {
-            $this->_users->updatePersonal($data, $this->getId());
-            $this->_user_profiles->updateByUserId($data, $this->getId());
-            $this->logUserAction('Profile updated');
-            $db->commit();
-            $auth_storage = Zend_Auth::getInstance()->getStorage();
-            $auth_storage->write($this->getUser());
-            Zend_Session::regenerateId();
-            session_write_close();
-            return true;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $this->_users->updatePersonal($data, $this->getId());
+        $this->_user_profiles->updateByUserId($data, $this->getId());
+        $this->logUserAction('Profile updated');
+        $db->commit();
+        $auth_storage = Zend_Auth::getInstance()->getStorage();
+        $auth_storage->write($this->getUser());
+        Zend_Session::regenerateId();
+        session_write_close();
     }
     
     /**
@@ -176,7 +171,7 @@ class Service_Users {
     
     /**
      * @param array $data
-     * @return bool Update status
+     * @return void
      * 
      */
     public function updatePassword(array $data) {
@@ -184,18 +179,13 @@ class Service_Users {
         $enc_pw = $this->_generateHash($new_pw); 
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
-        try {
-            $this->_users->updatePassword($enc_pw, $this->getId());
-            $this->logUserAction('Password updated');
-            $db->commit();
-            $auth_storage = Zend_Auth::getInstance()->getStorage();
-            $auth_storage->write($this->getUser());
-            Zend_Session::regenerateId();
-            session_write_close();
-            return true;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $this->_users->updatePassword($enc_pw, $this->getId());
+        $this->logUserAction('Password updated');
+        $db->commit();
+        $auth_storage = Zend_Auth::getInstance()->getStorage();
+        $auth_storage->write($this->getUser());
+        Zend_Session::regenerateId();
+        session_write_close();
     }
 
     /**
@@ -216,13 +206,43 @@ class Service_Users {
         return false;
     }
     
+    /**
+     * 
+     * 
+     */
     public function getResetPasswordRequestForm() {
         $form = new Default_Form_ResetPasswordRequest;    
         return $form;
     }
+    
+    /**
+     * 
+     * 
+     */
+    public function processResetPasswordRequest(Model_User $user) {
+        // Build token
+        $token = '';
+        for ($i = 0; $i < 32; $i++) { 
+            $token .= chr(mt_rand(0, 255));
+        }
+        $token = base64_encode($token);
+        $pw_tokens = new Model_Mapper_UserPasswordTokens; 
 
-    public function processResetPasswordRequest() {
-        exit('process reset pw');
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->beginTransaction();
+        $pw_tokens->deleteByUserId($user->id);
+        $pw_tokens->add($user->id, $token);
+        $view = Zend_Controller_Front::getInstance()
+            ->getParam('bootstrap')->getResource('view'); 
+        /*$mail = new Zend_Mail;
+        $mail->setBodyText($message)
+            //->setBodyHtml($html_message)
+            ->addTo($email)
+            ->setSubject('Photoshop Elements User Password Reset');
+            //->addBcc($this->_config->store->order_email_bcc->toArray());
+        $mail->send();
+        $db->commit();*/
+        exit('?');
     }
 
     /**
@@ -235,7 +255,7 @@ class Service_Users {
     protected function _generateHash($new_pw) {
         $salt = '';
         for ($i=0; $i < 5; $i++) { 
-            $salt .= chr(rand(97, 122));
+            $salt .= chr(mt_rand(0, 255));
         }
         $salt = substr(sha1($salt), 0, 5);
         $hash = sha1($salt . $new_pw);

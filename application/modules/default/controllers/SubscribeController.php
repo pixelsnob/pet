@@ -49,9 +49,8 @@ class SubscribeController extends Zend_Controller_Action {
         }
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
-            if ($this->_user_svc->updateProfile($post)) {
-                $this->view->profile_updated = true;
-            }
+            $this->_user_svc->updateProfile($post);
+            $this->view->profile_updated = true;
         }
     }
 
@@ -69,10 +68,9 @@ class SubscribeController extends Zend_Controller_Action {
             $pw_form->populate($post);
         }
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
-            if ($this->_user_svc->updatePassword($post)) {
-                $this->view->password_updated = true;
-                $pw_form->reset();
-            }
+            $this->_user_svc->updatePassword($post);
+            $this->view->password_updated = true;
+            $pw_form->reset();
         }
     }
 
@@ -81,8 +79,8 @@ class SubscribeController extends Zend_Controller_Action {
         $this->view->pw_form = $pw_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
-            if ($this->_user_svc->getActiveUserByEmail($post['email'])) {
-                $this->_user_svc->processResetPasswordRequest();
+            if ($user = $this->_user_svc->getActiveUserByEmail($post['email'])) {
+                $this->_user_svc->processResetPasswordRequest($user);
             } else {
                 $this->view->email_invalid = true;
             }
