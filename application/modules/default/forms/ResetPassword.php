@@ -6,18 +6,18 @@
 class Default_Form_ResetPassword extends Pet_Form {
     
     /**
-     * @var int
+     * @var Model_User 
      * 
      */
-    protected $_user_id;
+    protected $_user;
 
     /**
-     * @param string $user_id
+     * @param string Model_User $user
      * @return void
      */
-    public function __construct($user_id) {
+    public function __construct($user) {
         parent::__construct();
-        $this->_user_id = $user_id;
+        $this->_user = $user;
     }
 
     /**
@@ -75,10 +75,7 @@ class Default_Form_ResetPassword extends Pet_Form {
      */
     public function isNewPasswordValid($value, $context) {
         $users_svc = new Service_Users;
-        $user = $users_svc->getUser($this->_user_id);
-        if (!$user) {
-            return false;
-        }
-        return $users_svc->validatePassword($user->password, trim($value)); 
+        return !$users_svc->validatePassword($this->_user->password, trim($value)); 
     }
 }
+

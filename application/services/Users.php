@@ -24,9 +24,11 @@ class Service_Users {
      * 
      * 
      */
-    public function authenticate($data) {
+    public function login($data) {
         $username = (isset($data['username']) ? $data['username'] : '');
         $password = (isset($data['password']) ? $data['password'] : '');
+        //$auth_session = new Zend_Session_Namespace('Zend_Auth');
+        //$auth_session->setExpirationSeconds(10);
         $auth_adapter = new Pet_Auth_Adapter($username, $password);
         $auth = Zend_Auth::getInstance();
         return $auth->authenticate($auth_adapter)->isValid();
@@ -37,6 +39,7 @@ class Service_Users {
      * 
      */
     public function logout() {
+        $this->logUserAction('User logged out');
         Zend_Auth::getInstance()->clearIdentity();
     }
 
@@ -61,15 +64,6 @@ class Service_Users {
     }
     
     /**
-     * @param int $user_id
-     * @return Model_User 
-     * 
-     */
-    /*public function getUserById($user_id) {
-        return $this->_users->getById($user_id);
-    }*/
-
-    /**
      * @return Model_User
      * 
      */
@@ -78,8 +72,10 @@ class Service_Users {
     }
 
     /**
-     * @return int User id
+     * Returns id of logged in user
      * 
+     * @return null|int User id
+     *  
      */
     public function getId() {
         $identity = Zend_Auth::getInstance()->getIdentity();
@@ -87,13 +83,49 @@ class Service_Users {
     }
 
     /**
+     * @param null|int $user_id
      * @return Model_UserProfile 
      * 
      */
-    public function getProfile() {
-        return $this->_user_profiles->getByUserId($this->getId());
+    public function getProfile($user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
+        return $this->_user_profiles->getByUserId($user_id);
     }
+
+    /**
+     * @param null|int $user_id
+     * @return Model_UserSubscription 
+     * 
+     */
+    public function getSubscription($user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
+        return $this->_user_subs->getByUserId($this->getId());
+    }
+
+    /**
+     * @param string $token
+     * @return void|Model_UserPasswordToken
+     * 
+     */
+    public function getValidPasswordResetToken($token) {
+        $pw_tokens = new Model_Mapper_UserPasswordTokens; 
+        return $pw_tokens->getByMaxAge($token, 1800);
+    }
+
     
+    /**
+     * @return Default_Form_Login
+     * 
+     */ 
+    public function getLoginForm() {
+        $login_form = new Default_Form_Login; 
+        return $login_form;
+    }
+
     /**
      * @return bool|Default_Form_UserProfile
      * 
@@ -119,24 +151,50 @@ class Service_Users {
     }
     
     /**
-     * @return Model_UserSubscription 
+     * @return Default_Form_ResetPasswordRequest
      * 
      */
-    public function getSubscription() {
-        return $this->_user_subs->getByUserId($this->getId());
+    public function getResetPasswordRequestForm() {
+        $form = new Default_Form_ResetPasswordRequest;    
+        return $form;
     }
+    
+    /**
+     * @param null|int $user_id
+     * @return Default_Form_ResetPassword 
+     * 
+     */
+    public function getResetPasswordForm($user_id = null) {
+        $user = $this->getUser($user_id);
+        $form = new Default_Form_ResetPassword($user);
+        return $form;
+    }
+    
+    /**
+     * @return Default_Form_ChangePassword
+     * 
+     */ 
+    public function getChangePasswordForm() {
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        $login_form = new Default_Form_ChangePassword($identity); 
+        return $login_form;
+    }    
 
     /**
      * @param array $data
+     * @param null|int $user_id
      * @return void
      * 
      */
-    public function updateProfile(array $data) {
+    public function updateProfile(array $data, $user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
-        $this->_users->updatePersonal($data, $this->getId());
-        $this->_user_profiles->updateByUserId($data, $this->getId());
-        $this->logUserAction('Profile updated');
+        $this->_users->updatePersonal($data, $user_id);
+        $this->_user_profiles->updateByUserId($data, $user_id);
+        $this->logUserAction('Profile updated', $user_id);
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
         $auth_storage->write($this->getUser());
@@ -145,25 +203,42 @@ class Service_Users {
     }
     
     /**
+     * @param null|int $user_id
      * @return void
      * 
      */
-    public function updateLastLogin() {
-        $this->_users->updateLastLogin($this->getId()); 
+    public function updateLastLogin($user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
+        $this->_users->updateLastLogin($user_id); 
     }
 
     /**
-     * @return Default_Form_Login
+     * @param string $new_pw
+     * @param null|int $user_id
+     * @return void
      * 
-     */ 
-    public function getLoginForm() {
-        $login_form = new Default_Form_Login; 
-        return $login_form;
+     */
+    public function updatePassword($new_pw, $user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
+        $enc_pw = $this->_generateHash($new_pw); 
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->beginTransaction();
+        $this->_users->updatePassword($enc_pw, $user_id);
+        $this->logUserAction('Password updated', $user_id);
+        $db->commit();
+        $auth_storage = Zend_Auth::getInstance()->getStorage();
+        $auth_storage->write($this->getUser());
+        Zend_Session::regenerateId();
+        session_write_close();
     }
 
     /**
      * @param string $action
-     * @param int $user_id 
+     * @param null|int $user_id
      * 
      */ 
     public function logUserAction($action, $user_id = null) {
@@ -177,55 +252,6 @@ class Service_Users {
         $user_actions->add($action, $ip, $user_id);
     }
 
-    /**
-     * @return Default_Form_ChangePassword
-     * 
-     */ 
-    public function getChangePasswordForm() {
-        $login_form = new Default_Form_ChangePassword; 
-        return $login_form;
-    }
-    
-    /**
-     * @param string $new_pw
-     * @return void
-     * 
-     */
-    public function updatePassword($new_pw) {
-        $enc_pw = $this->_generateHash($new_pw); 
-        $db = Zend_Db_Table::getDefaultAdapter();
-        $db->beginTransaction();
-        $this->_users->updatePassword($enc_pw, $this->getId());
-        $this->logUserAction('Password updated');
-        $db->commit();
-        $auth_storage = Zend_Auth::getInstance()->getStorage();
-        $auth_storage->write($this->getUser());
-        Zend_Session::regenerateId();
-        session_write_close();
-    }
-
-    /**
-     * @param string $new_pw
-     * @param string $token
-     * @return void
-     * 
-     */
-    public function resetPassword($new_pw, $token) {
-        $pw_tokens = new Model_Mapper_UserPasswordTokens; 
-        $enc_pw = $this->_generateHash($new_pw); 
-        $db = Zend_Db_Table::getDefaultAdapter();
-        $token = $pw_tokens->getByToken($token);
-        $db->beginTransaction();
-        $this->_users->updatePassword($enc_pw, $token->user_id);
-        $pw_tokens->deleteByUserId($token->user_id); 
-        $this->logUserAction('Password reset', $token->user_id);
-        $db->commit();
-        $auth_storage = Zend_Auth::getInstance()->getStorage();
-        $user = $this->getUser($token->user_id);
-        $auth_storage->write($user);
-        Zend_Session::regenerateId();
-        session_write_close();
-    }
 
     /**
      * Passwords are stored as sha1$salt$hash
@@ -243,15 +269,6 @@ class Service_Users {
             }
         }
         return false;
-    }
-    
-    /**
-     * @return Default_Form_ResetPasswordRequest
-     * 
-     */
-    public function getResetPasswordRequestForm() {
-        $form = new Default_Form_ResetPasswordRequest;    
-        return $form;
     }
     
     /**
@@ -284,29 +301,29 @@ class Service_Users {
             ->addTo($user->email)
             ->setSubject('Photoshop Elements User Password Reset');
         $mail->send();
+        $log_msg = "Password reset email sent to {$user->email}, token $token";
+        $this->logUserAction($log_msg, $user->id);
         $db->commit();
     }
     
     /**
+     * @param string $new_pw
      * @param string $token
-     * @return void|Model_UserPasswordToken
+     * @return void
      * 
      */
-    public function getValidPasswordResetToken($token) {
+    public function resetPasswordByToken($new_pw, $token) {
         $pw_tokens = new Model_Mapper_UserPasswordTokens; 
-        return $pw_tokens->getByMaxAge($token, 1800);
+        $enc_pw = $this->_generateHash($new_pw); 
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $token = $pw_tokens->getByToken($token);
+        $db->beginTransaction();
+        $this->_users->updatePassword($enc_pw, $token->user_id);
+        $pw_tokens->deleteByUserId($token->user_id); 
+        $this->logUserAction('Password reset', $token->user_id);
+        $db->commit();
     }
 
-    /**
-     * @param int $user_id
-     * @return Default_Form_ResetPassword 
-     * 
-     */
-    public function getResetPasswordForm($user_id) {
-        $form = new Default_Form_ResetPassword($user_id);
-        return $form;
-    }
-    
     /**
      * Passwords are stored as sha1$salt$hash
      * 

@@ -21,8 +21,9 @@ class SubscribeController extends Zend_Controller_Action {
         $this->view->login_form = $login_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $login_form->isValid($post)) {
-            if ($this->_users_svc->authenticate($post)) {
+            if ($this->_users_svc->login($post)) {
                 $this->_users_svc->updateLastLogin();
+                $this->_users_svc->logUserAction('User logged in');
                 $this->_helper->Redirector->gotoSimple('index');
             } else {
                 $this->view->login_failed = true;
@@ -133,8 +134,11 @@ class SubscribeController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
             $new_pw = $this->_request->getPost('password');
-            $this->_users_svc->resetPassword($new_pw, $token);    
-            exit('success');
+            $this->_users_svc->resetPasswordByToken($new_pw, $token);    
+            $this->_helper->Redirector->gotoSimple(
+                'reset-password-success');
         }
     }
+
+    public function resetPasswordSuccessAction() {}
 }

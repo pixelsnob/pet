@@ -6,6 +6,21 @@
 class Default_Form_ChangePassword extends Pet_Form {
     
     /**
+     * @var Model_User 
+     * 
+     */
+    protected $_user;
+
+    /**
+     * @param string Model_User $user
+     * @return void
+     */
+    public function __construct($user) {
+        parent::__construct();
+        $this->_user = $user;
+    }
+
+    /**
      * @return void
      * 
      */
@@ -41,11 +56,11 @@ class Default_Form_ChangePassword extends Pet_Form {
                 array('NotEmpty', true, array(
                     'messages' => 'Please enter your new password'
                 )),
+                array(new Pet_Validate_PasswordStrength, true),
                 array('Callback', true, array(
                     'callback' => array($this, 'isNewPasswordValid'),
                     'messages' => 'New password must be different than old password'
                 )),
-                array(new Pet_Validate_PasswordStrength, true),
                 array('StringLength', true, array(
                     'max' => 40,
                     'messages' => 'Password must be %max% characters or less'
@@ -80,9 +95,8 @@ class Default_Form_ChangePassword extends Pet_Form {
      * 
      */
     public function isExistingPasswordValid($value, $context) {
-        $identity = Zend_Auth::getInstance()->getIdentity();
         $users_svc = new Service_Users;
-        return $users_svc->validatePassword($identity->password, $value);
+        return $users_svc->validatePassword($this->_user->password, $value);
     }
 
     /**
@@ -93,6 +107,8 @@ class Default_Form_ChangePassword extends Pet_Form {
      */
     public function isNewPasswordValid($value, $context) {
         $existing_pw = (isset($context['password']) ? $context['password'] : '');
-        return !(trim($existing_pw) == trim($value));
+        //return !(trim($existing_pw) == trim($value));
+        $users_svc = new Service_Users;
+        return !$users_svc->validatePassword($this->_user->password, $value);
     }
 }
