@@ -61,9 +61,7 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
-    /**
-     * Put this in parent class?????????
-     * 
+    /** 
      * @param array $data
      * @param int $id
      * @return int Num rows updated

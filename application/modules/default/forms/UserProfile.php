@@ -25,6 +25,7 @@ class Default_Form_UserProfile extends Pet_Form {
                     'max' => 30,
                     'messages' => 'Username must be %max% characters or less'
                 )),
+
                 array(new Pet_Validate_UsernameNotExists),
                 array('Alnum', true, array(
                     'messages' => 'Only letters and numbers allowed'

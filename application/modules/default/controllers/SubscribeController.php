@@ -7,9 +7,12 @@ class SubscribeController extends Zend_Controller_Action {
         $this->_users_svc = new Service_Users;
     }
 
-    public function indexAction() {
-    }
-
+    public function indexAction() {}
+    
+    /**
+     * Shows the login form
+     * 
+     */
     public function loginAction() {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('index');
@@ -27,11 +30,19 @@ class SubscribeController extends Zend_Controller_Action {
         }
     }
     
+    /**
+     * Logs out a user
+     * 
+     */
     public function logoutAction() {
         $this->_users_svc->logout(); 
         $this->_helper->Redirector->gotoSimple('login');
     }
 
+    /**
+     * Profile form for logged-in users
+     * 
+     */
     public function profileAction() {
         $this->view->headLink()->appendStylesheet('/css/profile.css');
         if (!$this->_users_svc->isAuthenticated()) {
@@ -54,6 +65,10 @@ class SubscribeController extends Zend_Controller_Action {
         }
     }
 
+    /**
+     * Change password for logged-in user
+     * 
+     */
     public function changePasswordAction() {
         if (!$this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('login');
@@ -74,7 +89,11 @@ class SubscribeController extends Zend_Controller_Action {
             $pw_form->reset();
         }
     }
-
+    
+    /**
+     * Simple form that accepts a user's email address
+     * 
+     */
     public function resetPasswordRequestAction() {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('change-password');
@@ -93,9 +112,7 @@ class SubscribeController extends Zend_Controller_Action {
         }
     }
 
-    public function resetPasswordRequestSuccessAction() {
-        
-    }
+    public function resetPasswordRequestSuccessAction() {}
 
     /**
      * For non-logged-in users

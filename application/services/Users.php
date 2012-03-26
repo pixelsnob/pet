@@ -49,11 +49,15 @@ class Service_Users {
     }
     
     /**
+     * @param int|null $user_id
      * @return Model_User 
      * 
      */
-    public function getUser() {
-        return $this->_users->getById($this->getId());
+    public function getUser($user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
+        return $this->_users->getById($user_id);
     }
     
     /**
@@ -61,9 +65,9 @@ class Service_Users {
      * @return Model_User 
      * 
      */
-    public function getUserById($user_id) {
+    /*public function getUserById($user_id) {
         return $this->_users->getById($user_id);
-    }
+    }*/
 
     /**
      * @return Model_User
@@ -217,7 +221,7 @@ class Service_Users {
         $this->logUserAction('Password reset', $token->user_id);
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
-        $user = $this->getUserById($token->user_id);
+        $user = $this->getUser($token->user_id);
         $auth_storage->write($user);
         Zend_Session::regenerateId();
         session_write_close();
@@ -242,7 +246,7 @@ class Service_Users {
     }
     
     /**
-     * 
+     * @return Default_Form_ResetPasswordRequest
      * 
      */
     public function getResetPasswordRequestForm() {
@@ -251,7 +255,10 @@ class Service_Users {
     }
     
     /**
+     * Generates a token, and sends a link via email
      * 
+     * @param Model_User $user
+     * @return void
      * 
      */
     public function resetPasswordRequest(Model_User $user) {
@@ -276,7 +283,6 @@ class Service_Users {
         $mail->setBodyText($message)
             ->addTo($user->email)
             ->setSubject('Photoshop Elements User Password Reset');
-            //->addBcc('');
         $mail->send();
         $db->commit();
     }

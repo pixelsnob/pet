@@ -75,7 +75,7 @@ class Default_Form_ResetPassword extends Pet_Form {
      */
     public function isNewPasswordValid($value, $context) {
         $users_svc = new Service_Users;
-        $user = $users_svc->getUserById($this->_user_id);
+        $user = $users_svc->getUser($this->_user_id);
         if (!$user) {
             return false;
         }
