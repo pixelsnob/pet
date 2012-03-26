@@ -57,6 +57,15 @@ class Service_Users {
     }
     
     /**
+     * @param int $user_id
+     * @return Model_User 
+     * 
+     */
+    public function getUserById($user_id) {
+        return $this->_users->getById($user_id);
+    }
+
+    /**
      * @return Model_User
      * 
      */
@@ -150,14 +159,18 @@ class Service_Users {
 
     /**
      * @param string $action
+     * @param int $user_id 
      * 
      */ 
-    public function logUserAction($action) {
+    public function logUserAction($action, $user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
         $server = Zend_Controller_Front::getInstance()
             ->getRequest()->getServer();
         $ip = (isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '');
         $user_actions = new Model_Mapper_UserActions;
-        $user_actions->add($action, $ip, $this->getId());
+        $user_actions->add($action, $ip, $user_id);
     }
 
     /**
@@ -197,18 +210,15 @@ class Service_Users {
         $pw_tokens = new Model_Mapper_UserPasswordTokens; 
         $enc_pw = $this->_generateHash($new_pw); 
         $db = Zend_Db_Table::getDefaultAdapter();
-        
         $token = $pw_tokens->getByToken($token);
-        print_r($token);
-        exit;
-
         $db->beginTransaction();
-        $this->_users->updatePassword($enc_pw, $this->getId());
-        $pw_tokens->deleteByUserId($this->getId()); 
-        $this->logUserAction('Password reset');
+        $this->_users->updatePassword($enc_pw, $token->user_id);
+        $pw_tokens->deleteByUserId($token->user_id); 
+        $this->logUserAction('Password reset', $token->user_id);
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
-        $auth_storage->write($this->getUser());
+        $user = $this->getUserById($token->user_id);
+        $auth_storage->write($user);
         Zend_Session::regenerateId();
         session_write_close();
     }
@@ -282,11 +292,12 @@ class Service_Users {
     }
 
     /**
-     * 
+     * @param int $user_id
+     * @return Default_Form_ResetPassword 
      * 
      */
-    public function getResetPasswordForm() {
-        $form = new Default_Form_ResetPassword;
+    public function getResetPasswordForm($user_id) {
+        $form = new Default_Form_ResetPassword($user_id);
         return $form;
     }
     
