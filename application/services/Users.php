@@ -170,17 +170,42 @@ class Service_Users {
     }
     
     /**
-     * @param array $data
+     * @param string $new_pw
      * @return void
      * 
      */
-    public function updatePassword(array $data) {
-        $new_pw = (isset($data['new_password']) ? $data['new_password'] : '');
+    public function updatePassword($new_pw) {
         $enc_pw = $this->_generateHash($new_pw); 
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
         $this->_users->updatePassword($enc_pw, $this->getId());
         $this->logUserAction('Password updated');
+        $db->commit();
+        $auth_storage = Zend_Auth::getInstance()->getStorage();
+        $auth_storage->write($this->getUser());
+        Zend_Session::regenerateId();
+        session_write_close();
+    }
+
+    /**
+     * @param string $new_pw
+     * @param string $token
+     * @return void
+     * 
+     */
+    public function resetPassword($new_pw, $token) {
+        $pw_tokens = new Model_Mapper_UserPasswordTokens; 
+        $enc_pw = $this->_generateHash($new_pw); 
+        $db = Zend_Db_Table::getDefaultAdapter();
+        
+        $token = $pw_tokens->getByToken($token);
+        print_r($token);
+        exit;
+
+        $db->beginTransaction();
+        $this->_users->updatePassword($enc_pw, $this->getId());
+        $pw_tokens->deleteByUserId($this->getId()); 
+        $this->logUserAction('Password reset');
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
         $auth_storage->write($this->getUser());
@@ -235,6 +260,7 @@ class Service_Users {
         $view = Zend_Controller_Front::getInstance()
             ->getParam('bootstrap')->getResource('view'); 
         $view->token = $token;
+        $view->user = $user;
         $message = $view->render('subscribe/reset-password-email.phtml');
         $mail = new Zend_Mail;
         $mail->setBodyText($message)
@@ -243,9 +269,27 @@ class Service_Users {
             //->addBcc('');
         $mail->send();
         $db->commit();
-        exit('?');
+    }
+    
+    /**
+     * @param string $token
+     * @return void|Model_UserPasswordToken
+     * 
+     */
+    public function getValidPasswordResetToken($token) {
+        $pw_tokens = new Model_Mapper_UserPasswordTokens; 
+        return $pw_tokens->getByMaxAge($token, 1800);
     }
 
+    /**
+     * 
+     * 
+     */
+    public function getResetPasswordForm() {
+        $form = new Default_Form_ResetPassword;
+        return $form;
+    }
+    
     /**
      * Passwords are stored as sha1$salt$hash
      * 

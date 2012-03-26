@@ -13,3 +13,7 @@ fieldset.profile dd, fieldset.profile dt {
     line-height: 24px;
 }
 
+.change-password {
+    padding-bottom: 20px;
+}
+

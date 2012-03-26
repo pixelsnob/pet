@@ -19,7 +19,7 @@ ul.errors li {
 }
 
 .form {
-    margin: 15px 0;
+    margin: 15px 0 25px 0;
     overflow: hidden;
 }
 
@@ -45,9 +45,11 @@ ul.errors li {
 }
 
 legend {
-    font-weight: bold;
-    font-size: 14px;
-    padding-bottom: 15px;
+    padding-bottom: 25px;
+    color: #AD6A51;
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: normal;
 }
 
 p.update {

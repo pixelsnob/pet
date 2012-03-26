@@ -26,9 +26,6 @@ class Default_Form_ResetPasswordRequest extends Pet_Form {
                 )),
                 array(new Pet_Validate_EmailAddress)
             )
-        // Submit
-        ))->addElement('submit', 'change-pw-submit', array(
-            'label' => 'Submit'
         ))->setElementFilters(array('StringTrim'));
     }
 }

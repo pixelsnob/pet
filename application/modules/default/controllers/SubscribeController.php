@@ -68,7 +68,8 @@ class SubscribeController extends Zend_Controller_Action {
             $pw_form->populate($post);
         }
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
-            $this->_user_svc->updatePassword($post);
+            $new_pw = $this->_request->getPost('new_password');
+            $this->_user_svc->updatePassword($new_pw);
             $this->view->password_updated = true;
             $pw_form->reset();
         }
@@ -81,22 +82,31 @@ class SubscribeController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
             if ($user = $this->_user_svc->getActiveUserByEmail($post['email'])) {
                 $this->_user_svc->resetPasswordRequest($user);
+                $this->_helper->Redirector->gotoSimple(
+                    'reset-password-request-success');
             } else {
                 $this->view->email_invalid = true;
             }
         }
     }
 
+    public function resetPasswordRequestSuccessAction() {
+        
+    }
+
     public function resetPasswordAction() {
-        /*$pw_form = $this->_user_svc->getResetPasswordRequestForm();
+        $token = $this->_request->getParam('token');
+        if (!$this->_user_svc->getValidPasswordResetToken($token)) {
+            $this->view->invalid = true;
+            return;
+        }
+        $pw_form = $this->_user_svc->getResetPasswordForm();
         $this->view->pw_form = $pw_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
-            if ($user = $this->_user_svc->getActiveUserByEmail($post['email'])) {
-                $this->_user_svc->resetPasswordRequest($user);
-            } else {
-                $this->view->email_invalid = true;
-            }
-        }*/
+            $new_pw = $this->_request->getPost('password');
+            $this->_user_svc->resetPassword($new_pw, $token);    
+            exit('success');
+        }
     }
 }

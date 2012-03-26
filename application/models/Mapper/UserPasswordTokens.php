@@ -14,6 +14,28 @@ class Model_Mapper_UserPasswordTokens extends Pet_Model_Mapper_Abstract {
     }
     
     /**
+     * @param string $token
+     * @param int $max_age
+     * @return void|Model_UserPasswordToken
+     * 
+     */
+    public function getByToken($token) {
+        return $this->_pw_tokens->getByToken($token);
+    }
+
+    /**
+     * @param string $token
+     * @param int $max_age
+     * @return void|Model_UserPasswordToken
+     * 
+     */
+    public function getByMaxAge($token, $max_age) {
+        $max_age = time() - $max_age;
+        $max_age = date('Y-m-d G:i:s', $max_age);
+        return $this->_pw_tokens->getByMaxAge($token, $max_age);        
+    }
+
+    /**
      * @param string $user_id
      * @return Num rows deleted
      * 
@@ -35,5 +57,6 @@ class Model_Mapper_UserPasswordTokens extends Pet_Model_Mapper_Abstract {
             'timestamp' => date('Y-m-d G:i:s', time())
         ));
     }
+    
 }
 

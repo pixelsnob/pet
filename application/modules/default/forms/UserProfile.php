@@ -354,9 +354,6 @@ class Default_Form_UserProfile extends Pet_Form {
             'label' => 'Opt In (Sponsors)',
             'id' => 'opt-in-partner',
             'required' => false
-        // Submit
-        ))->addElement('submit', 'login-submit', array(
-            'label' => 'Submit'
         ))->setElementFilters(array('StringTrim'));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Change password form
+ * Change password form for logged in users
  * 
  */
 class Default_Form_ChangePassword extends Pet_Form {
@@ -22,7 +22,10 @@ class Default_Form_ChangePassword extends Pet_Form {
                 array('NotEmpty', true, array(
                     'messages' => 'Please enter your password'
                 )),
-                array(new Pet_Validate_StoredPassword),
+                array('Callback', true, array(
+                    'callback' => array($this, 'isExistingPasswordValid'),
+                    'messages' => 'Password is not correct'
+                )),
                 array('StringLength', true, array(
                     'max' => 40,
                     'messages' => 'Password must be %max% characters or less'
@@ -38,8 +41,11 @@ class Default_Form_ChangePassword extends Pet_Form {
                 array('NotEmpty', true, array(
                     'messages' => 'Please enter your new password'
                 )),
-                array(new Pet_Validate_NewPassword),
-                array(new Pet_Validate_PasswordStrength),
+                array('Callback', true, array(
+                    'callback' => array($this, 'isNewPasswordValid'),
+                    'messages' => 'New password must be different than old password'
+                )),
+                array(new Pet_Validate_PasswordStrength, true),
                 array('StringLength', true, array(
                     'max' => 40,
                     'messages' => 'Password must be %max% characters or less'
@@ -64,10 +70,29 @@ class Default_Form_ChangePassword extends Pet_Form {
                     'messages' => 'Password and confirm password must be the same'
                 ))
             )
-
-        // Submit
-        ))->addElement('submit', 'change-pw-submit', array(
-            'label' => 'Submit'
         ))->setElementFilters(array('StringTrim'));
+    }
+    
+    /**
+     * @param string $value
+     * @param array $context
+     * @return bool 
+     * 
+     */
+    public function isExistingPasswordValid($value, $context) {
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        $users_svc = new Service_Users;
+        return $users_svc->validatePassword($identity->password, $value);
+    }
+
+    /**
+     * @param string $value
+     * @param array $context
+     * @return bool 
+     * 
+     */
+    public function isNewPasswordValid($value, $context) {
+        $existing_pw = (isset($context['password']) ? $context['password'] : '');
+        return !(trim($existing_pw) == trim($value));
     }
 }

@@ -31,8 +31,5 @@ class Default_Form_Login extends Pet_Form {
                 ))
             )
         ));
-        $this->addElement('submit', 'login-submit', array(
-            'label' => 'Login'
-        ));
     }
 }
