@@ -86,11 +86,12 @@ class SubscribeController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
             $new_pw = $this->_request->getPost('new_password');
             $this->_users_svc->updatePassword($new_pw);
-            $this->view->password_updated = true;
-            $pw_form->reset();
+            $this->_helper->Redirector->gotoSimple('change-password-success');
         }
     }
     
+    public function changePasswordSuccessAction() {}
+
     /**
      * Simple form that accepts a user's email address
      * 
