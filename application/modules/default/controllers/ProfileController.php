@@ -1,14 +1,12 @@
 <?php
 
-class SubscribeController extends Zend_Controller_Action {
+class ProfileController extends Zend_Controller_Action {
 
     public function init() {
         $this->view->getHelper('serverUrl')->setScheme('https');
         $this->_users_svc = new Service_Users;
     }
 
-    public function indexAction() {}
-    
     /**
      * Shows the login form
      * 
@@ -44,7 +42,7 @@ class SubscribeController extends Zend_Controller_Action {
      * Profile form for logged-in users
      * 
      */
-    public function profileAction() {
+    public function indexAction() {
         $this->view->headLink()->appendStylesheet('/css/profile.css');
         if (!$this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('login');

@@ -56,7 +56,6 @@ class Default_Form_ChangePassword extends Pet_Form {
                 array('NotEmpty', true, array(
                     'messages' => 'Please enter your new password'
                 )),
-                array(new Pet_Validate_PasswordStrength, true),
                 array('Callback', true, array(
                     'callback' => array($this, 'isNewPasswordValid'),
                     'messages' => 'New password must be different than old password'
@@ -64,7 +63,8 @@ class Default_Form_ChangePassword extends Pet_Form {
                 array('StringLength', true, array(
                     'max' => 40,
                     'messages' => 'Password must be %max% characters or less'
-                ))
+                )),
+                array(new Pet_Validate_PasswordStrength, true),
             )
         // Confirm new password
         ))->addElement('password', 'confirm_new_password', array(

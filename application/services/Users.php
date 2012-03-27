@@ -299,7 +299,7 @@ class Service_Users {
             ->getParam('bootstrap')->getResource('view'); 
         $view->token = $token;
         $view->user = $user;
-        $message = $view->render('subscribe/reset-password-email.phtml');
+        $message = $view->render('profile/reset-password-email.phtml');
         $mail = new Zend_Mail;
         $mail->setBodyText($message)
             ->addTo($user->email)
