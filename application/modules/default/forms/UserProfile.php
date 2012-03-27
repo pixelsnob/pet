@@ -6,6 +6,34 @@
 class Default_Form_UserProfile extends Pet_Form {
     
     /**
+     * @var Model_User 
+     * 
+     */
+    protected $_identity;
+    
+    /**
+     * @var Pet_Model_Mapper_Abstract 
+     * 
+     */
+    protected $_mapper;
+
+    /**
+     * @param Model_User $user
+     * @return void
+     */
+    public function setIdentity(Model_User $identity) {
+        $this->_identity = $identity;
+    }
+
+    /**
+     * @param Pet_Model_Mapper_Abstract $mapper
+     * @return void
+     */
+    public function setMapper(Pet_Model_Mapper_Abstract $mapper) {
+        $this->_mapper = $mapper;
+    }
+
+    /**
      * @return void
      * 
      */
@@ -26,7 +54,8 @@ class Default_Form_UserProfile extends Pet_Form {
                     'messages' => 'Username must be %max% characters or less'
                 )),
 
-                array(new Pet_Validate_UsernameNotExists),
+                array(new Pet_Validate_UsernameNotExists(
+                    $this->_identity, $this->_mapper), true),
                 array('Alnum', true, array(
                     'messages' => 'Only letters and numbers allowed'
                 ))
@@ -44,7 +73,8 @@ class Default_Form_UserProfile extends Pet_Form {
                     'max' => 75,
                     'messages' => 'Username must be %max% characters or less'
                 )),
-                array(new Pet_Validate_EmailNotExists),
+                array(new Pet_Validate_EmailNotExists(
+                    $this->_identity, $this->_mapper), true),
                 array(new Pet_Validate_EmailAddress)
             )
         // First name

@@ -132,7 +132,6 @@ class Service_Users {
      * 
      */
     public function getProfileForm() {
-        $profile_form = new Default_Form_UserProfile;
         $identity = Zend_Auth::getInstance()->getIdentity();
         if (!$identity) {
             return false;
@@ -140,6 +139,10 @@ class Service_Users {
         $user = $this->getUser();
         $profile = $this->getProfile();
         if ($user && $profile) {
+            $profile_form = new Default_Form_UserProfile(array(
+                'identity' => $identity,
+                'mapper'   => $this->_users
+            ));
             $states = new Zend_Config(require APPLICATION_PATH .
                 '/configs/states.php');
             $profile_form->billing_state->setMultiOptions($states->toArray());

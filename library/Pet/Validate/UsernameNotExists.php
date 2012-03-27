@@ -6,6 +6,18 @@
 class Pet_Validate_UsernameNotExists extends Zend_Validate_Abstract {
     
     /**
+     * @var Model_User
+     * 
+     */
+    protected $_identity;
+    
+    /**
+     * @var Pet_Model_Mapper_Abstract
+     * 
+     */
+    protected $_mapper;
+
+    /**
      * Message constants
      * 
      */
@@ -20,6 +32,17 @@ class Pet_Validate_UsernameNotExists extends Zend_Validate_Abstract {
     );
     
     /**
+     * @param Model_User $identity
+     * @param Pet_Model_Mapper_Abstract $mapper
+     * @return void
+     * 
+     */
+    public function __construct($identity, $mapper) {
+        $this->_identity = $identity;
+        $this->_mapper = $mapper;
+    }
+
+    /**
      * isValid() implementation
      * 
      * @param mixed $value
@@ -27,10 +50,8 @@ class Pet_Validate_UsernameNotExists extends Zend_Validate_Abstract {
      * @return bool
      */
     public function isValid($value, $context = null) {
-        $identity = Zend_Auth::getInstance()->getIdentity();
-        $users = new Model_Mapper_Users;
-        $user = $users->getByUsername($value);
-        if ($user && $user->id && $user->id != $identity->id) {
+        $user = $this->_mapper->getByUsername($value);
+        if ($user && $user->id && $user->id != $this->_identity->id) {
             $this->_error(self::INVALID);
             return false;    
         }

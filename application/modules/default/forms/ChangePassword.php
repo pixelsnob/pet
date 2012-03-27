@@ -12,7 +12,7 @@ class Default_Form_ChangePassword extends Pet_Form {
     protected $_user;
 
     /**
-     * @param string Model_User $user
+     * @param Model_User $user
      * @return void
      */
     public function setUser(Model_User $user) {
