@@ -25,10 +25,11 @@ class Service_Users {
      * 
      */
     public function login($data) {
+        $config = Zend_Registry::get('app_config');
         $username = (isset($data['username']) ? $data['username'] : '');
         $password = (isset($data['password']) ? $data['password'] : '');
-        //$auth_session = new Zend_Session_Namespace('Zend_Auth');
-        //$auth_session->setExpirationSeconds(10);
+        $auth_session = new Zend_Session_Namespace('Zend_Auth');
+        $auth_session->setExpirationSeconds($config['user_session_timeout']);
         $auth_adapter = new Pet_Auth_Adapter($username, $password);
         $auth = Zend_Auth::getInstance();
         return $auth->authenticate($auth_adapter)->isValid();
@@ -155,7 +156,7 @@ class Service_Users {
      * 
      */
     public function getResetPasswordRequestForm() {
-        $form = new Default_Form_ResetPasswordRequest;    
+        return new Default_Form_ResetPasswordRequest;    
         return $form;
     }
     
@@ -166,8 +167,7 @@ class Service_Users {
      */
     public function getResetPasswordForm($user_id = null) {
         $user = $this->getUser($user_id);
-        $form = new Default_Form_ResetPassword($user);
-        return $form;
+        return new Default_Form_ResetPassword(array('user' => $user));
     }
     
     /**
@@ -176,7 +176,8 @@ class Service_Users {
      */ 
     public function getChangePasswordForm() {
         $identity = Zend_Auth::getInstance()->getIdentity();
-        $login_form = new Default_Form_ChangePassword($identity); 
+        $login_form = new Default_Form_ChangePassword(array(
+            'user' => $identity)); 
         return $login_form;
     }    
 
@@ -260,7 +261,7 @@ class Service_Users {
      * @param string $pw
      * 
      */
-    public function validatePassword($hash, $value) {
+    static public function validatePassword($hash, $value) {
         $pw = explode('$', $hash);
         if (count($pw) == 3) {
             $hash = sha1($pw[1] . $value);

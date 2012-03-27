@@ -15,8 +15,7 @@ class Default_Form_ResetPassword extends Pet_Form {
      * @param string Model_User $user
      * @return void
      */
-    public function __construct($user) {
-        parent::__construct();
+    public function setUser(Model_User $user) {
         $this->_user = $user;
     }
 

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Password strength validator
+ * 
+ */
 class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
     
     const LENGTH  = 'length';
@@ -8,6 +11,10 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
     const SPECIAL = 'special';
     const CHARS = 'chars';
  
+    /**
+     * @var array
+     * 
+     */
     protected $_messageTemplates = array(
         self::LENGTH  => 'Password must be at least 8 characters in length',
         self::LETTER  => 'Password must contain at least one letter',
@@ -15,7 +22,12 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
         self::SPECIAL => 'Password must contain a letter, a number, and at least one of ! @ $ % ^ & * ( ) + ? _ -',
         self::SPECIAL => 'Password must contain at least one of ! @ $ % ^ & * ( ) + ? _ -'
     );
- 
+    
+    /**
+     * @param string $value
+     * @return bool
+     * 
+     */
     public function isValid($value) {
         if (strlen($value) < 8) {
             $this->_error(self::LENGTH);

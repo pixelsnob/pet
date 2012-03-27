@@ -141,4 +141,6 @@ class SubscribeController extends Zend_Controller_Action {
     }
 
     public function resetPasswordSuccessAction() {}
+
+
 }
