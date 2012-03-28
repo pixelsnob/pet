@@ -1,11 +1,9 @@
-
-var AuthModel = Backbone.Model.extend({
-    is_authenticated: null,
-    url: 'profile/is-authenticated'
-});
-
-var ProfileView = Backbone.View.extend({
-
+/**
+ * Profile form view
+ * 
+ */
+Pet.ProfileFormView = Backbone.View.extend({
+    
     el: $('body'),
     
     events: {
@@ -15,11 +13,15 @@ var ProfileView = Backbone.View.extend({
     initialize: function(){
         _.bindAll(this, 'changePassword'); 
     },
-
+    
+    /**
+     * Shows the "change password" form in a lightbox
+     * 
+     */
     changePassword: function() {
-        var auth = new AuthModel;
+        var auth = new Pet.AuthModel;
         auth.fetch();
-        auth.on('change', function(model, t) {
+        auth.on('change', function(model) {
             if (model.get('is_authenticated')) {
                 $.fancybox({
                     href: 'profile/change-password/nolayout/1',
@@ -36,4 +38,4 @@ var ProfileView = Backbone.View.extend({
 
 });
 
-var profile = new ProfileView;
+var profile = new Pet.ProfileFormView;
