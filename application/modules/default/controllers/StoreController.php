@@ -1,9 +1,10 @@
 <?php
 
-class CartController extends Zend_Controller_Action {
+class StoreController extends Zend_Controller_Action {
 
     public function init() {
         $this->_cart_svc = new Service_Cart;
+        //$this->view->headLink()->appendStylesheet('/css/store.css');
     }
 
     /**
@@ -11,6 +12,7 @@ class CartController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        //$this->view->headLink()->appendStylesheet('/css/profile.css');
+        
     }
+
 }

@@ -3,7 +3,8 @@
 class ProductsController extends Zend_Controller_Action {
 
     public function init() {
-        $this->_cart_svc = new Service_Cart;
+        //$this->_cart_svc = new Service_Cart;
+        //$this->view->headLink()->appendStylesheet('/css/store.css');
     }
 
     /**
@@ -11,6 +12,26 @@ class ProductsController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        //$this->view->headLink()->appendStylesheet('/css/profile.css');
+        
+    }
+
+    /**
+     * 
+     */
+    public function magazineAction() {
+        
+    }
+
+    /**
+     * 
+     */
+    public function digitalAction() {
+        
+    }
+
+    /**
+     * 
+     */
+    public function giftAction() {
     }
 }
