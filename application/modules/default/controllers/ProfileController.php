@@ -4,6 +4,7 @@ class ProfileController extends Zend_Controller_Action {
 
     public function init() {
         $this->view->getHelper('serverUrl')->setScheme('https');
+        $this->view->inlineScriptMin()->loadGroup('profile');
         $this->_users_svc = new Service_Users;
     }
 

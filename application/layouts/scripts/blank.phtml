@@ -1,0 +1,46 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+<title>Photoshop Elements Techniques, Tutorials, Downloads, Video Tips, Newsletter and more - Photoshop Elements User</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="We offer how-to articles, tutorials and videos about Adobe Photoshop Elements. Get a free issue of Photoshop Elements magazine." />
+<meta name="copyright" content="1999-<?php echo date('Y'); ?>, Photo One Media" />
+<meta name="google-site-verification" content="yxFgFAShYWbqXMOs28hBBdBqeqiPh0LGs9e2-ocHe_E" />
+
+<link rel="stylesheet" type="text/css" href="http://www.photoshopelementsuser.com/wp-content/themes/pet/style.css" />
+<link rel="stylesheet" type="text/css" href="/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
+
+<?php echo $this->headLink(); ?>
+
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="alternate" type="application/rss+xml" href="http://feeds.feedburner.com/ElementsTechniques" />
+
+<link rel="prev" title="Blog" href="http://www.photoshopelementsuser.com/blog/" />
+<link rel="next" title="Contest" href="http://www.photoshopelementsuser.com/contest/" />
+
+<link rel="shortlink" href="http://wp.me/PSCv8-5" />
+
+</head>
+
+<body id="home">
+    
+    <div id="content">
+        <div class="container clearfix">
+            <div id="main">
+                <?php echo $this->layout()->content; ?>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->headScriptMin()->loadGroup('common'); echo $this->inlineScriptMin(); ?>
+
+    <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/cufon-yui.js"></script>
+    <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/graublau.font.js"></script>
+    <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/museo.font.js"></script>
+    <script type="text/javascript">
+        Cufon.replace('#content h2, #bottom h2, #subscribe #content h1', { fontFamily: 'Graublau Web' });
+        Cufon.replace('#top #login h3, #content h3, p', { fontFamily: 'Museo', hover: true });
+    </script>
+
+</body>
+</html>

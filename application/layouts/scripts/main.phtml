@@ -9,6 +9,7 @@
 
 <link rel="stylesheet" type="text/css" href="http://www.photoshopelementsuser.com/wp-content/themes/pet/style.css" />
 <link rel="stylesheet" type="text/css" href="/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
 
 <?php echo $this->headLink(); ?>
 
@@ -141,9 +142,8 @@
         </div>
     </div>
     
-    <?php echo $this->headScriptMin()->loadGroup('common'); ?>
+    <?php echo $this->headScriptMin()->loadGroup('common'); echo $this->inlineScriptMin(); ?>
 
-    <!--<script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/login.js"></script>-->
     <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/jquery.megamenu.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {

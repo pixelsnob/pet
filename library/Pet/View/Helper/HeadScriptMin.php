@@ -23,6 +23,12 @@ class Pet_View_Helper_HeadScriptMin extends Pet_View_Helper_HeadScript {
     const GROUPS_CFG = '/configs/js_file_groups.php';
 
     /**
+     * Registry key for placeholder
+     * @var string
+     */
+    protected $_regKey = 'Pet_View_Helper_HeadScriptMin';
+
+    /**
      * @return void
      * 
      */
