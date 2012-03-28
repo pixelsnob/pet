@@ -16,6 +16,10 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('index');
         }
+        // Don't let the user log in if "nolayout" param is present
+        if ($this->_request->getParam('nolayout')) {
+            $this->_helper->Redirector->gotoSimple('timeout');
+        }
         $login_form = $this->_users_svc->getLoginForm();
         $this->view->login_form = $login_form;
         $post = $this->_request->getPost();
@@ -87,9 +91,8 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
             $new_pw = $this->_request->getPost('new_password');
             $this->_users_svc->updatePassword($new_pw);
-            $this->_helper->Redirector->gotoSimple('change-password-success',
-                'profile', 'default', array('nolayout' =>
-                    $this->_request->getParam('nolayout')));
+            $this->_helper->Redirector->gotoSimple('change-password-success');
+
         }
     }
     
@@ -149,5 +152,9 @@ class ProfileController extends Zend_Controller_Action {
     public function isAuthenticatedAction() {
         $this->_helper->json(array('is_authenticated' =>
             $this->_users_svc->isAuthenticated()));
+    }
+
+    public function timeoutAction() {
+
     }
 }

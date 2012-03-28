@@ -1,7 +1,19 @@
 <?php
-
+/**
+ * Overrides Zend_Controller_Action_Helper_Redirector
+ * 
+ */
 class Pet_Controller_Action_Helper_Redirector extends Zend_Controller_Action_Helper_Redirector {
     
+    /**
+     * Override setGotoSimple for the purpose of propagating the "nolayout" param if present
+     *
+     * @param  string $action
+     * @param  string $controller
+     * @param  string $module
+     * @param  array  $params
+     * @return void
+     */
     public function setGotoSimple($action, $controller = null, $module = null,
                                   array $params = array()) {
         
@@ -33,7 +45,10 @@ class Pet_Controller_Action_Helper_Redirector extends Zend_Controller_Action_Hel
         $params[$request->getControllerKey()] = $controller;
         $params[$request->getActionKey()]     = $action;
         
-        //$params['nolayout'] = 1;
+        // Make sure we forward "nolayout" value in URL if it exists
+        if (strpos($request->getRequestUri(), 'nolayout') !== false) {
+            $params['nolayout'] = 1;
+        }
         
         $router = $this->getFrontController()->getRouter();
         $url    = $router->assemble($params, 'default', true);
