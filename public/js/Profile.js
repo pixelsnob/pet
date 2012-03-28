@@ -13,7 +13,7 @@ var ProfileView = Backbone.View.extend({
 
     test: function(q, p) {
         $.fancybox({
-            href: 'profile/change-password?nolayout',
+            href: 'profile/change-password/nolayout/1',
             type: 'iframe',
             scrolling: 'no'
         });

@@ -35,7 +35,9 @@ class ProfileController extends Zend_Controller_Action {
      * 
      */
     public function logoutAction() {
-        $this->_users_svc->logout(); 
+        if ($this->_users_svc->isAuthenticated()) {
+            $this->_users_svc->logout(); 
+        }
         $this->_helper->Redirector->gotoSimple('login');
     }
 
@@ -85,7 +87,9 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $pw_form->isValid($post)) {
             $new_pw = $this->_request->getPost('new_password');
             $this->_users_svc->updatePassword($new_pw);
-            $this->_helper->Redirector->gotoSimple('change-password-success');
+            $this->_helper->Redirector->gotoSimple('change-password-success',
+                'profile', 'default', array('nolayout' =>
+                    $this->_request->getParam('nolayout')));
         }
     }
     
@@ -142,4 +146,8 @@ class ProfileController extends Zend_Controller_Action {
 
     public function resetPasswordSuccessAction() {}
 
+    public function isAuthenticatedAction() {
+        $this->_helper->json(array('is_authenticated' =>
+            $this->_users_svc->isAuthenticated()));
+    }
 }

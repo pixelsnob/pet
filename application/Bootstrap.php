@@ -30,5 +30,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $router = Zend_Controller_Front::getInstance()->getRouter();
         $router->addConfig($config, 'routes');
     }
+    
+    protected function _initActionHelpers() {
+        Zend_Controller_Action_HelperBroker::addPrefix('Pet_Controller_Action_Helper');
+    }
 }
 
