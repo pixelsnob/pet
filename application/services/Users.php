@@ -29,7 +29,7 @@ class Service_Users {
         $username = (isset($data['username']) ? $data['username'] : '');
         $password = (isset($data['password']) ? $data['password'] : '');
         $auth_session = new Zend_Session_Namespace('Zend_Auth');
-        $auth_session->setExpirationSeconds($config['user_session_timeout']);
+        $auth_session->timestamp = time();
         $auth_adapter = new Pet_Auth_Adapter($username, $password);
         $auth = Zend_Auth::getInstance();
         return $auth->authenticate($auth_adapter)->isValid();
@@ -49,7 +49,19 @@ class Service_Users {
      * 
      */
     public function isAuthenticated() {
-        return Zend_Auth::getInstance()->hasIdentity();
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            $config = Zend_Registry::get('app_config');
+            $auth_session = new Zend_Session_Namespace('Zend_Auth');
+            $ts = (int) $auth_session->timestamp;
+            if ($ts && (time() - $ts > $config['user_session_timeout'])) {
+                $this->logUserAction('User timed out');
+                Zend_Auth::getInstance()->clearIdentity();
+                return false;
+            }
+            $auth_session->timestamp = time();
+            return true;
+        }
+        return false;
     }
     
     /**
