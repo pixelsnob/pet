@@ -10,7 +10,7 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     protected $_data = array(
-        'products'               => array(),
+        'products'            => null, // Model_Cart_Products
         'billing'             => null, // Model_Cart_Billing
         'shipping'            => null, // Model_Cart_Shipping
         'payment'             => null,
@@ -27,6 +27,7 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function __construct() {
+        $this->_data['products'] = new Model_Cart_Products;
         $this->_data['billing'] = new Model_Cart_Billing;
         $this->_data['shipping'] = new Model_Cart_Shipping;
         $this->_data['payment'] = new Model_Cart_Payment;
@@ -63,28 +64,6 @@ class Model_Cart extends Pet_Model_Abstract {
             return false;
         }
         return $this->_data['products'][$key];
-    }
-
-    /**
-     * @param string $key
-     * @param Model_Cart_Prod $prod
-     * @return void
-     * 
-     * 
-     */
-    public function addProduct($key, $Product) {
-        $this->_data['products'][$key] = $prod;
-    }
-    
-    /**
-     * @param string $key
-     * @return void
-     * 
-     */
-    public function removeProduct($key) {
-        if (isset($this->_data['products'][$key])) {
-            unset($this->_data['products'][$key]);
-        }
     }
 
     /**

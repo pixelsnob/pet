@@ -12,7 +12,8 @@ class CartController extends Zend_Controller_Action {
      */
     public function indexAction() {
         $session = new Zend_Session_Namespace;
-        print_r($session->cart->getProduct(3));
+        print_r($session->cart);
+        exit;
     }
 
     /**
@@ -24,9 +25,22 @@ class CartController extends Zend_Controller_Action {
         $this->_helper->Redirector->setGotoSimple('index');
     }
 
-    public function removeAction() {
-
+    public function setQtyAction() {
+        $product_id = $this->_request->getParam('product_id');
+        $qty = (int) $this->_request->getParam('qty');
+        $this->_cart_svc->setProductQty($product_id, $qty);
+        $this->_helper->Redirector->setGotoSimple('index');
     }
 
+    public function removeAction() {
+        $product_id = $this->_request->getParam('product_id');
+        $this->_cart_svc->removeProduct($product_id);
+        $this->_helper->Redirector->setGotoSimple('index');
+    }
+    
+    public function resetAction() {
+        $this->_cart_svc->reset();
+        $this->_helper->Redirector->setGotoSimple('index');
+    }
 
 }
