@@ -14,7 +14,7 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_checkTimestamp();
     }
     
-    public function addProduct(Model_Product $product) {
+    public function addProduct($product) {
         $product = new Model_Cart_Product($product->toArray());
         $this->_cart->products->add($product); 
     }

@@ -12,7 +12,6 @@ class Service_Cart {
      * 
      */
     public function __construct() {
-        //$this->_users = new Model_Mapper_Users;
         $this->_cart = new Model_Mapper_Cart;
         $this->_products = new Model_Mapper_Products;
     }
