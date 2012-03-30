@@ -62,9 +62,9 @@ class Model_Cart extends Pet_Model_Abstract {
     
     /**
      * @param Model_Cart_Product $product
-     * @return void
+     * @return bool
      */
-    public function validateProduct(Model_Cart_Product $product) {
+    public function isProductValid(Model_Cart_Product $product) {
         $ptid = $product->product_type_id;
         switch ($ptid) {
             case Model_ProductType::DOWNLOAD:
@@ -77,11 +77,12 @@ class Model_Cart extends Pet_Model_Abstract {
                 
                 break;
             case Model_ProductType::SUBSCRIPTION:
-                if ($this->getQtyByProductTypeId($ptid)) {
-                    //throw new Exception('Multiple subscriptions not allowed'); 
+                if ($this->hasSubscription()) {
+                    throw new Exception('Multiple subscriptions not allowed'); 
                 }
                 break;
         }
+        return true;
     }
 
     /**
@@ -158,21 +159,37 @@ class Model_Cart extends Pet_Model_Abstract {
         return $this->_data['products'][$key];
     }
     
+    /**
+     * @return bool
+     * 
+     */
     public function hasDownload() {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::SUBSCRIPTION);
     }
     
+    /**
+     * @return bool
+     * 
+     */
     public function hasPhysical() {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::PHYSICAL);
     }
 
+    /**
+     * @return bool
+     * 
+     */
     public function hasCourse() {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::COURSE);
     }
     
+    /**
+     * @return bool
+     * 
+     */
     public function hasSubscription() {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::SUBSCRIPTION);
@@ -205,20 +222,4 @@ class Model_Cart extends Pet_Model_Abstract {
         return $data;
     }
     
-    /**
-     * Clone properties that are objects
-     * 
-     * @return void
-     */
-    /*public function __clone() {
-        $this->_data['billing'] = clone $this->_data['billing'];
-        $this->_data['shipping'] = clone $this->_data['shipping'];
-        $this->_data['totals'] = clone $this->_data['totals'];
-        $this->_data['payment'] = clone $this->_data['payment'];
-        $products = array();
-        foreach ($this->_data['products'] as $k => $prod) {
-            $products[$k] = clone $prod;
-        }
-        $this->_data['products'] = $products;
-    }*/
 }

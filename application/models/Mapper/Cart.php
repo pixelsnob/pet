@@ -31,6 +31,12 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_cart->addProduct($product); 
     }
 
+    public function isProductValid($product) {
+        $product = new Model_Cart_Product(array('product' => $product));
+        return $this->_cart->isProductValid($product); 
+    }
+
+
     public function removeProduct($product_id) {
         $this->_cart->removeProduct($product_id); 
     }

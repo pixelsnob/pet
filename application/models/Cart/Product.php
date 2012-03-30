@@ -40,7 +40,7 @@ class Model_Cart_Product extends Pet_Model_Abstract {
     );
 
     /**
-     * Enable direct access to product properties: eliminates need to type
+     * Enable direct access to product properties:
      * $product->name instead of $product->product->name 
      * 
      * @param string $field Name of field to get
