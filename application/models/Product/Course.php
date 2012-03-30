@@ -3,7 +3,7 @@
  * @package Model_Product
  * 
  */
-class Model_Product_Subscription extends Pet_Model_Abstract {
+class Model_Product_Course extends Pet_Model_Abstract {
     
     public $_data = array(
         'product_id' => null,
@@ -12,11 +12,11 @@ class Model_Product_Subscription extends Pet_Model_Abstract {
         'cost' => null,
         'image' => null,
         'active' => null,
-        'zone_id' => null,
         'name' => null,
         'description' => null,
-        'term' => null,
-        'is_renewal' => null
+        'slug' => null,
+        'active' => null,
+        'free' => null
     );
     
 }

@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Model_Product
+ * @package Model_Download
  * 
  */
-class Model_Product_Subscription extends Pet_Model_Abstract {
-    
+class Model_Product_Download extends Pet_Model_Abstract {
+
     public $_data = array(
         'product_id' => null,
         'product_type_id' => null,
@@ -12,12 +12,15 @@ class Model_Product_Subscription extends Pet_Model_Abstract {
         'cost' => null,
         'image' => null,
         'active' => null,
-        'zone_id' => null,
+        'download_format_id' => null,
         'name' => null,
         'description' => null,
-        'term' => null,
-        'is_renewal' => null
+        'date' => null,
+        'path' => null,
+        'size' => null,
+        'thumb' => null,
+        'subscriber_only' => null
     );
-    
+
 }
 

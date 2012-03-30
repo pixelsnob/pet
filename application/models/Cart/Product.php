@@ -10,7 +10,7 @@ class Model_Cart_Product extends Pet_Model_Abstract {
      * 
      */
     protected $_data = array(
-        'id' => null,
+        'product_id' => null,
         'product_type_id' => null,
         'sku' => null,
         'cost' => null,

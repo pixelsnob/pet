@@ -14,7 +14,7 @@ class Model_Cart_Products extends Pet_Model_Abstract {
     );
     
     public function add(Model_Cart_Product $product) {
-        $this->_data['products'][$product->id] = $product;
+        $this->_data['products'][$product->product_id] = $product;
     }
 
     public function remove($product_id) {

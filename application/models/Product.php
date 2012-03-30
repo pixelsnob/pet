@@ -20,4 +20,3 @@ class Model_Product extends Pet_Model_Abstract {
     );
 
 }
-
