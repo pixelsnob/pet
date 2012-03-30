@@ -15,6 +15,10 @@ class Service_Cart {
         $this->_cart = new Model_Mapper_Cart;
         $this->_products = new Model_Mapper_Products;
     }
+    
+    public function get() {
+        return $this->_cart->get();
+    }
 
     public function addProduct($product_id) {
         $product = $this->_products->getById($product_id);

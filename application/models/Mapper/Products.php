@@ -14,7 +14,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         if ($db_product) {
             $product = new Model_Product($db_product->toArray());
             switch ($product->product_type_id) {
-                case Model_Product::PRODUCT_TYPE_DOWNLOAD;
+                case Model_ProductType::DOWNLOAD;
                     $dl = $this->_products->getDownloadByProductId($id);
                     if ($dl) {
                         $data = array_merge($product->toArray(),
@@ -22,7 +22,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                         return new Model_Product_Download($data);
                     }
                     break;
-                case Model_Product::PRODUCT_TYPE_PHYSICAL;
+                case Model_ProductType::PHYSICAL;
                     $physical = $this->_products
                         ->getPhysicalProductByProductId($id);
                     if ($physical) {
@@ -31,7 +31,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                         return new Model_Product_Physical($data);
                     }
                     break;
-                case Model_Product::PRODUCT_TYPE_COURSE;
+                case Model_ProductType::COURSE;
                     $course = $this->_products->getCourseByProductId($id);
                     if ($course) {
                         $data = array_merge($product->toArray(),
@@ -39,7 +39,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                         return new Model_Product_Course($data);
                     }
                     break;
-                case Model_Product::PRODUCT_TYPE_SUBSCRIPTION;
+                case Model_ProductType::SUBSCRIPTION;
                     $mapper = new Model_Mapper_Subscriptions; 
                     $sub = $this->_products->getSubscriptionByProductId($id);
                     if ($sub) {

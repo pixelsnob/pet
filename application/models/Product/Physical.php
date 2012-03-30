@@ -3,7 +3,7 @@
  * @package Model_Product
  * 
  */
-class Model_Product_Physical extends Pet_Model_Abstract {
+class Model_Product_Physical extends Model_Product_Abstract {
     
     public $_data = array(
         'product_id' => null,

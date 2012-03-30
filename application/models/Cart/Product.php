@@ -9,7 +9,7 @@ class Model_Cart_Product extends Pet_Model_Abstract {
      * @var array
      * 
      */
-    protected $_data = array(
+    /*protected $_data = array(
         'product_id' => null,
         'product_type_id' => null,
         'sku' => null,
@@ -32,6 +32,26 @@ class Model_Cart_Product extends Pet_Model_Abstract {
         'subscriber_only' => null,
 
         'qty'  => 1
+    );*/
+
+    protected $_data = array(
+        'product' => null,
+        'qty' => 1
     );
-    
+
+    /**
+     * Enable direct access to product properties: eliminates need to type
+     * $product->name instead of $product->product->name 
+     * 
+     * @param string $field Name of field to get
+     * @return mixed Field value
+     * 
+     */
+    public function __get($field) {
+        if (isset($this->_data['product']->$field)) {
+            return $this->_data['product']->$field;
+        } else {
+            return parent::__get($field);
+        }
+    }
 }

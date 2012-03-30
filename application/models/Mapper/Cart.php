@@ -14,25 +14,29 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_checkTimestamp();
     }
     
-    public function addProduct($product) {
-        $product = new Model_Cart_Product($product->toArray());
-        $this->_cart->products->add($product); 
-    }
-
-    public function removeProduct($product_id) {
-        $this->_cart->products->remove($product_id); 
-    }
-    
-    public function setProductQty($product_id, $qty) {
-        $this->_cart->products->setQty($product_id, $qty); 
-    }
-    
     public function init() {
         $session = new Zend_Session_Namespace;
         if (!isset($session->cart)) {
             $session->cart = new Model_Cart;
         }
         $this->_cart = $session->cart;
+    }
+    
+    public function get() {
+        return $this->_cart;
+    }
+
+    public function addProduct($product) {
+        $product = new Model_Cart_Product(array('product' => $product));
+        $this->_cart->addProduct($product); 
+    }
+
+    public function removeProduct($product_id) {
+        $this->_cart->removeProduct($product_id); 
+    }
+    
+    public function setProductQty($product_id, $qty) {
+        $this->_cart->setProductQty($product_id, $qty); 
     }
 
     public function reset() {

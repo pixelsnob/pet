@@ -14,10 +14,7 @@ class Model_Cart extends Pet_Model_Abstract {
         'billing'             => null, // Model_Cart_Billing
         'shipping'            => null, // Model_Cart_Shipping
         'payment'             => null,
-        'timestamp'           => null, // Unix timestamp of last update
-        /*'coupon_code'         => '',
-        'user_id'             => 0,
-        'order_id'            => 0*/
+        'timestamp'           => null // Unix timestamp of last update
     );
     
     /**
@@ -27,7 +24,7 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function __construct() {
-        $this->_data['products'] = new Model_Cart_Products;
+        $this->_data['products'] = array();
         $this->_data['billing'] = new Model_Cart_Billing;
         $this->_data['shipping'] = new Model_Cart_Shipping;
         $this->_data['payment'] = new Model_Cart_Payment;
@@ -55,39 +52,47 @@ class Model_Cart extends Pet_Model_Abstract {
     }
     
     /**
-     * @param string $id
-     * @return Model_Cart_Prod|false
-     * 
-     */
-    public function getProduct($id) {
-        if (!array_key_exists($id, $this->_data['products'])) {
-            return false;
-        }
-        return $this->_data['products'][$key];
-    }
-
-    /**
-     * @param int $key
+     * @param Model_Cart_Product $product
      * @return void
      * 
      */
-    public function incrementProductQty($key) {
-        if (isset($this->_data['products'][$key])) {
-            $this->_data['products'][$key]->qty++;
-        }
+    public function addProduct(Model_Cart_Product $product) {
+        $this->_data['products'][$product->product_id] = $product;
     }
     
     /**
-     * Returns number of products in the cart
-     * 
-     * @return int
+     * @param Model_Cart_Product $product
+     * @return void
      */
-    public function getQty() {
-        $qty = 0;
-        foreach ($this->products as $product) {
-            $qty += $product->qty;
+    public function validateProduct(Model_Cart_Product $product) {
+        $ptid = $product->product_type_id;
+        switch ($ptid) {
+            case Model_ProductType::DOWNLOAD:
+                
+                break;
+            case Model_ProductType::PHYSICAL:
+                
+                break;
+            case Model_ProductType::COURSE:
+                
+                break;
+            case Model_ProductType::SUBSCRIPTION:
+                if ($this->getQtyByProductTypeId($ptid)) {
+                    //throw new Exception('Multiple subscriptions not allowed'); 
+                }
+                break;
         }
-        return $qty;
+    }
+
+    /**
+     * @param int $product_id
+     * @return void
+     * 
+     */
+    public function removeProduct($product_id) {
+        if (in_array($product_id, array_keys($this->_data['products']))) {
+            unset($this->_data['products'][$product_id]);
+        }
     }
 
     /** 
@@ -101,6 +106,76 @@ class Model_Cart extends Pet_Model_Abstract {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param int $key
+     * @return void
+     * 
+     */
+    public function incrementProductQty($key) {
+        if (isset($this->_data['products'][$key])) {
+            $this->_data['products'][$key]->qty++;
+        }
+    }
+
+    /**
+     * Returns number of products in the cart
+     * 
+     * @return int
+     */
+    public function getQty() {
+        $qty = 0;
+        foreach ($this->products as $product) {
+            $qty += $product->qty;
+        }
+        return $qty;
+    }
+
+    /**
+     * @param int $product_type_id
+     * @return int
+     */
+    public function getQtyByProductTypeId($product_type_id) {
+        $qty = 0;
+        foreach ($this->_data['products'] as $product) {
+            if ($product->product_type_id == $product_type_id) {
+                $qty += $product->qty;
+            }
+        }
+        return $qty;
+    }
+
+    /**
+     * @param string $id
+     * @return Model_Cart_Prod|false
+     * 
+     */
+    public function getProduct($id) {
+        if (!array_key_exists($id, $this->_data['products'])) {
+            return false;
+        }
+        return $this->_data['products'][$key];
+    }
+    
+    public function hasDownload() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::SUBSCRIPTION);
+    }
+    
+    public function hasPhysical() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::PHYSICAL);
+    }
+
+    public function hasCourse() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::COURSE);
+    }
+    
+    public function hasSubscription() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::SUBSCRIPTION);
     }
 
     /**

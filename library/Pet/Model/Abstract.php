@@ -92,8 +92,16 @@ abstract class Pet_Model_Abstract {
             return $this->_data[$field];
         } elseif (method_exists(get_class($this), $method)) {
             return call_user_func(array($this, $method));
-
         }
+    }
+    
+    /**
+     * @param string $field
+     * @return bool
+     * 
+     */
+    public function __isset($field) {
+        return array_key_exists($field, $this->_data);
     }
 
     /**
