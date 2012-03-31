@@ -13,7 +13,7 @@ class Service_Users {
      */
     public function __construct() {
         $this->_user_profiles = new Model_Mapper_UserProfiles;
-        $this->_user_subs = new Model_Mapper_UserSubscriptions;
+        //$this->_user_subs = new Model_Mapper_UserSubscriptions;
         $this->_user_actions = new Model_Mapper_UserActions;
         $this->_users = new Model_Mapper_Users;
     }
@@ -112,12 +112,12 @@ class Service_Users {
      * @return Model_UserSubscription 
      * 
      */
-    public function getSubscription($user_id = null) {
+    /*public function getSubscription($user_id = null) {
         if (!$user_id) {
             $user_id = $this->getId();
         }
         return $this->_user_subs->getByUserId($this->getId());
-    }
+    }*/
 
     /**
      * @param string $token

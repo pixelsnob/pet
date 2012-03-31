@@ -15,7 +15,7 @@
                 <?php echo $this->profile_form->email->renderErrors(); ?>
             </dd>
             <dt>Expiration</dt>
-            <dd><?php echo $this->escape($this->subscription->expiration); ?></dd>
+            <dd><?php /*echo $this->escape($this->subscription->expiration);*/ ?></dd>
         </dl>
         <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>
     </fieldset>

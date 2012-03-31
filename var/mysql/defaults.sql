@@ -9,7 +9,8 @@
  **************************************************************************************************/
  
 insert into pet.product_types values (1, 'Download', 'download'), (2, 'Physical', 'physical'),
-(3, 'Course', 'course'), (4, 'Subscription', 'subscription');
+(3, 'Course', 'course'), (4, 'Subscription', 'subscription'),
+(5, 'Digital Subscription', 'digital_subscription');
 
 /* Digital products */
 
@@ -100,6 +101,17 @@ on p.sku = sp.code
 left join pet.subscriptions s
 on sp.name = s.name
 where p.product_type_id = 4;
+
+/* Digital Subscriptions */
+
+insert into pet.products values
+(300, 5, 'XXXXX', 50, '', 1);
+
+insert into digital_subscriptions
+values (1, 'Placeholder Digital Subscription', 'Temporary', 1, 0);
+
+insert into pet.products_digital_subscriptions
+values (null, 300, 1);
 
 /* Add products that were deleted that still exist in the ordered_products table */
 

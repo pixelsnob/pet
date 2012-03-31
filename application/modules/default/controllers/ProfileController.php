@@ -59,11 +59,11 @@ class ProfileController extends Zend_Controller_Action {
         } else {
             throw new Exception('User not found');
         }
-        if ($subscription = $this->_users_svc->getSubscription()) {
+        /*if ($subscription = $this->_users_svc->getSubscription()) {
             $this->view->subscription = $subscription;
         } else {
             throw new Exception('User subscription not found');
-        }
+        }*/
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
             $this->_users_svc->updateProfile($post);

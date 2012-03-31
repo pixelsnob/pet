@@ -13,6 +13,7 @@ class Service_Cart {
      */
     public function __construct() {
         $this->_cart = new Model_Mapper_Cart;
+        $this->_cart->get()->setValidator(new Model_Cart_Validator_Default);
         $this->_products = new Model_Mapper_Products;
     }
     

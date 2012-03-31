@@ -69,6 +69,7 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
+        print_r($this->_validator); 
         if ($this->_validator && !$this->_validator->isProductValid($product)) {
             throw new Exception('Error adding product');
         }
