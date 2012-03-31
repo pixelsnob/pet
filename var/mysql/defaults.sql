@@ -173,8 +173,8 @@ show warnings;
 
 /* Current expirations */
 
-insert into pet.user_subscriptions
-select null, u.id, null, sp.expiration
+insert into pet.ordered_product_subscriptions
+select null, u.id, null, null, sp.expiration
 from pet.users u
 left join pet_old.subscriber_profile sp
 on u.id = sp.user_id
@@ -182,8 +182,8 @@ where sp.expiration is not null;
 
 /* Previous expirations */
 
-insert into pet.user_subscriptions
-select null, u.id, null, so.previous_expiration
+insert into pet.ordered_product_subscriptions
+select null, u.id, null, null, so.previous_expiration
 from pet.users u
 left join pet_old.sales_order so
 on u.id = so.user_id
@@ -191,7 +191,7 @@ where so.previous_expiration is not null;
 
 /* There are duplicate emails in the users table. Change any references in the user_subscriptions
    table, because we are about to delete the duplicate users. */
-delete from pet.user_subscriptions where user_id in (884338, 893654, 1078835, 809224, 866185,
+delete from pet.ordered_product_subscriptions where user_id in (884338, 893654, 1078835, 809224, 866185,
 887013, 902945, 1079210, 881059, 87670873, 843818);
 
 /***************************************************************************************************
