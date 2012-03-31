@@ -69,7 +69,6 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
-        print_r($this->_validator); 
         if ($this->_validator && !$this->_validator->isProductValid($product)) {
             throw new Exception('Error adding product');
         }
@@ -184,6 +183,15 @@ class Model_Cart extends Pet_Model_Abstract {
     public function hasSubscription() {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::SUBSCRIPTION);
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function hasDigitalSubscription() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::DIGITAL_SUBSCRIPTION);
     }
 
     /**

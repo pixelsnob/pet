@@ -23,7 +23,24 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
                 break;
             case Model_ProductType::SUBSCRIPTION:
                 if ($this->_cart->hasSubscription()) {
-                    throw new Exception('Multiple subscriptions not allowed'); 
+                    throw new Exception(
+                        'Multiple subscriptions not allowed'); 
+                }
+                if ($this->_cart->hasDigitalSubscription()) {
+                    $msg = 'Digital and print subscriptions not ' .
+                        'allowed in same cart';
+                    throw new Exception($msg); 
+                }
+                break;
+            case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                if ($this->_cart->hasSubscription()) {
+                    $msg = 'Digital and print subscriptions not ' .
+                        'allowed in same cart';
+                    throw new Exception($msg); 
+                }
+                if ($this->_cart->hasDigitalSubscription()) {
+                    throw new Exception(
+                        'Multiple digital subscriptions not allowed'); 
                 }
                 break;
         }

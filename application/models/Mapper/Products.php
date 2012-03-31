@@ -40,12 +40,19 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::SUBSCRIPTION;
-                    $mapper = new Model_Mapper_Subscriptions; 
                     $sub = $this->_products->getSubscriptionByProductId($id);
                     if ($sub) {
                         $data = array_merge($product->toArray(),
                             $sub->toArray());
                         return new Model_Product_Subscription($data);
+                    }
+                    break;
+                case Model_ProductType::DIGITAL_SUBSCRIPTION;
+                    $sub = $this->_products->getDigitalSubscriptionByProductId($id);
+                    if ($sub) {
+                        $data = array_merge($product->toArray(),
+                            $sub->toArray());
+                        return new Model_Product_DigitalSubscription($data);
                     }
                     break;
 
