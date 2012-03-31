@@ -23,9 +23,7 @@ class Service_Cart {
     public function addProduct($product_id) {
         $product = $this->_products->getById($product_id);
         if ($product) {
-            if ($this->_cart->isProductValid($product)) {
-                $this->_cart->addProduct($product);
-            }
+            $this->_cart->addProduct($product);
         } else {
             $msg = "Product with product_id $product_id not found";
             throw new Exception($msg);

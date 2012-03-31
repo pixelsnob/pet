@@ -17,6 +17,8 @@ class Model_Cart extends Pet_Model_Abstract {
         'timestamp'           => null // Unix timestamp of last update
     );
     
+    protected $_validator;
+
     /**
      * Set defaults
      * 
@@ -31,6 +33,16 @@ class Model_Cart extends Pet_Model_Abstract {
         $this->updateTimestamp();
     }
     
+    /**
+     * @param Model_Cart_Validator_Abstract $validator
+     * @return void
+     * 
+     */
+    public function setValidator(Model_Cart_Validator_Abstract $validator) {
+        $this->_validator = $validator;
+        $this->_validator->setCart($this);
+    }
+
     /**
      * Makes sure that billing is set to an instance of Model_Cart_BillInfo
      * 
@@ -57,34 +69,12 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
+        if ($this->_validator && !$this->_validator->isProductValid($product)) {
+            throw new Exception('Error adding product');
+        }
         $this->_data['products'][$product->product_id] = $product;
     }
     
-    /**
-     * @param Model_Cart_Product $product
-     * @return bool
-     */
-    public function isProductValid(Model_Cart_Product $product) {
-        $ptid = $product->product_type_id;
-        switch ($ptid) {
-            case Model_ProductType::DOWNLOAD:
-                
-                break;
-            case Model_ProductType::PHYSICAL:
-                
-                break;
-            case Model_ProductType::COURSE:
-                
-                break;
-            case Model_ProductType::SUBSCRIPTION:
-                if ($this->hasSubscription()) {
-                    throw new Exception('Multiple subscriptions not allowed'); 
-                }
-                break;
-        }
-        return true;
-    }
-
     /**
      * @param int $product_id
      * @return void
