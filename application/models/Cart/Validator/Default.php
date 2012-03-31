@@ -17,13 +17,13 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
             case Model_ProductType::SUBSCRIPTION:
                 if ($this->_cart->hasSubscription()) {
                     $msg = 'Multiple subscriptions not allowed'; 
-                    $this->_setMessage($msg);
+                    $this->_message = $msg;
                     return false;
                 }
                 if ($this->_cart->hasDigitalSubscription()) {
                     $msg = 'Digital and print subscriptions not ' .
                         'allowed in same cart';
-                    $this->_setMessage($msg);
+                    $this->_message = $msg;
                     return false;
                 }
                 break;
@@ -31,23 +31,19 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
                 if ($this->_cart->hasSubscription()) {
                     $msg = 'Digital and print subscriptions not ' .
                         'allowed in same cart';
-                    $this->_setMessage($msg);
+                    $this->_message = $msg;
                     return false;
                 }
                 if ($this->_cart->hasDigitalSubscription()) {
                     $msg = 'Multiple digital subscriptions not allowed'; 
-                    $this->_setMessage($msg);
+                    $this->_message = $msg;
                     return false;
                 }
                 break;
         }
         return true;
     } 
-
-    protected function _setMessage($message) {
-        $this->_message = $message;
-    }
-
+    
     public function getMessage() {
         return $this->_message;
     }

@@ -7,13 +7,15 @@
  */
 class Service_Cart {
     
+    protected $_message = '';
+
     /**
      * @return void
      * 
      */
     public function __construct() {
         $this->_cart = new Model_Mapper_Cart;
-        $this->_cart->get()->setValidator(new Model_Cart_Validator_Default);
+        $this->_cart->setValidator(new Model_Cart_Validator_Default);
         $this->_products = new Model_Mapper_Products;
     }
     
@@ -21,19 +23,22 @@ class Service_Cart {
         return $this->_cart->get();
     }
 
+    public function getMessage() {
+        return $this->_message;
+    }
+
     public function addProduct($product_id) {
         $product = $this->_products->getById($product_id);
         if ($product) {
-            /*try {
-                $this->_cart->addProduct($product);
-            } catch (Exception $e) {
-                echo $this->_cart->get()->getMessage();
-            }*/
-            $this->_cart->addProduct($product);
+            if (!$this->_cart->addProduct($product)) {
+                $this->_message = $this->_cart->getMessage();
+                return false;
+            }
         } else {
-            $msg = "Product with product_id $product_id not found";
-            throw new Exception($msg);
+            $this->_message = 'Product not found';
+            return false;
         }
+        return true;
     }
     
     public function setProductQty($product_id, $qty) {

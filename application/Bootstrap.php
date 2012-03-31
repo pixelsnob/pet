@@ -32,7 +32,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
     
     protected function _initActionHelpers() {
-        Zend_Controller_Action_HelperBroker::addPrefix('Pet_Controller_Action_Helper');
+        Zend_Controller_Action_HelperBroker::addPrefix(
+            'Pet_Controller_Action_Helper');
     }
 }
 

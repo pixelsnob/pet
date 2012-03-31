@@ -5,8 +5,6 @@
  */
 class Model_Cart extends Pet_Model_Abstract {
     
-    protected $_message = '';
-
     /**
      * @var array
      * 
@@ -20,6 +18,12 @@ class Model_Cart extends Pet_Model_Abstract {
     );
     
     protected $_validator;
+
+    /**
+     * @var string
+     * 
+     */
+    protected $_message = '';
 
     /**
      * Set defaults
@@ -67,15 +71,16 @@ class Model_Cart extends Pet_Model_Abstract {
     
     /**
      * @param Model_Cart_Product $product
-     * @return void
+     * @return bool
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
         if ($this->_validator && !$this->_validator->isProductValid($product)) {
-            $this->_setMessage($this->_validator->getMessage());
-            throw new Exception('Error adding product');
+            $this->_message = $this->_validator->getMessage();
+            return false;
         }
         $this->_data['products'][$product->product_id] = $product;
+        return true;
     }
     
     /**
@@ -204,10 +209,6 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     public function updateTimestamp() {
         $this->_data['timestamp'] = time();
-    }
-
-    protected function _setMessage($message) {
-        $this->_message = $message;
     }
 
     public function getMessage() {
