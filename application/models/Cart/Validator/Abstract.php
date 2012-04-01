@@ -4,7 +4,7 @@
  * 
  * 
  */
-abstract class Model_Cart_Validator_Abstract extends Pet_Model_Abstract {
+abstract class Model_Cart_Validator_Abstract {
     
     /**
      * @param Model_Cart

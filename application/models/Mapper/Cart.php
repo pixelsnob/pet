@@ -54,6 +54,14 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         return $this->_cart->getMessage();
     }
 
+    public function addPromo(Model_Promo $promo) {
+        return $this->_cart->addPromo($promo);
+    }
+
+    public function removePromo() {
+        $this->_cart->removePromo($promo);
+    }
+
     /**
      * Checks the timestamp, to make sure the cart hasn't timed out
      * 

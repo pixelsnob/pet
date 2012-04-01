@@ -52,4 +52,19 @@ class Service_Cart {
     public function reset() {
         $this->_cart->reset();
     }
+
+    public function addPromo($code) {
+        $promo_svc = new Service_Promos;
+        $promo = $promo_svc->getUnexpiredPromoByCode($code);
+        if ($promo) {
+            if (!$this->_cart->addPromo($promo)) {
+                $this->_message = $this->_cart->getMessage();
+                return false;
+            }
+        } else {
+            $this->_message = "Promo \"$code\" is not valid";
+            return false;
+        }
+        return true;
+    }
 }

@@ -4,6 +4,7 @@ class CartController extends Zend_Controller_Action {
 
     public function init() {
         $this->_cart_svc = new Service_Cart;
+        $this->_messages = $this->_helper->FlashMessenger;
         //$this->view->headLink()->appendStylesheet('/css/store.css');
     }
 
@@ -11,9 +12,11 @@ class CartController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        $session = new Zend_Session_Namespace;
         echo '<pre>';
-        print_r($session->cart);
+        $cart = $this->_cart_svc->get();
+        print_r($this->_helper->FlashMessenger->getMessages());
+        print_r($cart->getTotals());
+        print_r($cart);
         echo '</pre>';
         exit;
     }
@@ -24,7 +27,17 @@ class CartController extends Zend_Controller_Action {
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
         if (!$this->_cart_svc->addProduct($product_id)) {
-            throw new Exception($this->_cart_svc->getMessage());
+            $this->_messages->addMessage($this->_cart_svc->getMessage());
+        }
+        $this->_helper->Redirector->setGotoSimple('index');
+    }
+    
+    public function addPromoAction() {
+        $code = $this->_request->getParam('code');
+        if ($this->_cart_svc->addPromo($code)) {
+            $this->_messages->addMessage("Promo \"$code\" added");
+        } else {
+            $this->_messages->addMessage($this->_cart_svc->getMessage());
         }
         $this->_helper->Redirector->setGotoSimple('index');
     }
@@ -39,14 +52,11 @@ class CartController extends Zend_Controller_Action {
     public function removeAction() {
         $product_id = $this->_request->getParam('product_id');
         $this->_cart_svc->removeProduct($product_id);
-        exit;
-        //$this->_helper->Redirector->setGotoSimple('index');
     }
     
     public function resetAction() {
         $this->_cart_svc->reset();
-        //$this->_helper->Redirector->setGotoSimple('index');
-        exit;
+        $this->_helper->Redirector->setGotoSimple('index');
     }
 
     public function test1Action() {

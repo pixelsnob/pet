@@ -11,6 +11,7 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     protected $_data = array(
         'products'            => null, // Model_Cart_Products
+        'promo'               => null, // Model_Promo
         'billing'             => null, // Model_Cart_Billing
         'shipping'            => null, // Model_Cart_Shipping
         'payment'             => null,
@@ -201,6 +202,25 @@ class Model_Cart extends Pet_Model_Abstract {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::DIGITAL_SUBSCRIPTION);
     }
+    
+    public function getTotals() {
+        $totals['subtotal'] = 0;
+        $totals['total'] = 0;
+        foreach ($this->_data['products'] as $product) {
+            $totals['subtotal'] += ($product->qty * $product->cost);
+        }
+        return $totals;
+    }
+
+    public function addPromo(Model_Promo $promo) {
+        // validate
+        $this->_data['promo'] = $promo;
+        return true;
+    }
+
+    public function removePromo(Model_Promo $promo) {
+        $this->_data['promo'] = null;
+    }
 
     /**
      * Sets timestamp to current time
@@ -210,7 +230,11 @@ class Model_Cart extends Pet_Model_Abstract {
     public function updateTimestamp() {
         $this->_data['timestamp'] = time();
     }
-
+    
+    /**
+     * @return string
+     * 
+     */
     public function getMessage() {
         return $this->_message;
     }
