@@ -34,7 +34,6 @@ class CartController extends Zend_Controller_Action {
     public function addPromoAction() {
         $code = $this->_request->getParam('code');
         $this->_cart_svc->addPromo($code);
-            //$this->_messages->addMessage("Promo \"$code\" added");
         $this->_messages->addMessage($this->_cart_svc->getMessage());
         $this->_helper->Redirector->setGotoSimple('index');
     }

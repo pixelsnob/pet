@@ -1,5 +1,5 @@
 
-<?php if ($this->profile_updated): ?><p class="flash-message">Profile updated</p><?php endif; ?>
+<?php echo $this->flashMessenger(true); ?>
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
     <fieldset class="account">
         <legend>Account Information</legend>

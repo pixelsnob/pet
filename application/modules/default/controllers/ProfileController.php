@@ -6,6 +6,7 @@ class ProfileController extends Zend_Controller_Action {
         $this->view->getHelper('serverUrl')->setScheme('https');
         $this->view->inlineScriptMin()->loadGroup('profile');
         $this->_users_svc = new Service_Users;
+        $this->_messages = $this->_helper->FlashMessenger;
     }
 
     /**
@@ -67,7 +68,9 @@ class ProfileController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
             $this->_users_svc->updateProfile($post);
-            $this->view->profile_updated = true;
+            $this->_messages->addMessage('Profile updated');
+        } else {
+            $this->_messages->addMessage('Please correct errors below');
         }
     }
 
