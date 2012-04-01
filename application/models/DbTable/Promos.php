@@ -12,5 +12,6 @@ class Model_DbTable_Promos extends Zend_Db_Table_Abstract {
             ->where('expiration >= ?', date('Y-m-d', time()));
         return $this->fetchRow($sel);
     }
+
 }
 

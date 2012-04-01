@@ -14,12 +14,17 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param string $code Promo code
+     * @return Model_Promo|void
      * 
      */
     public function getUnexpiredPromoByCode($code) {
+        $promo_products_mapper = new Model_Mapper_PromoProducts;
         $promo = $this->_promos->getUnexpiredPromoByCode($code);
         if ($promo) {
-            return new Model_Promo($promo->toArray());
+            $promo = new Model_Promo($promo->toArray());
+            $promo->promo_products = $promo_products_mapper->getByPromoId($promo->id);
+            return $promo;
         }
     }
 }

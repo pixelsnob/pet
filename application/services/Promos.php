@@ -7,6 +7,10 @@
  */
 class Service_Promos {
     
+    /**
+     * @param string
+     * 
+     */
     protected $_message = '';
 
     /**
@@ -17,6 +21,11 @@ class Service_Promos {
         $this->_promos = new Model_Mapper_Promos;
     }
     
+    /**
+     * @param string $code
+     * @return Model_Promo 
+     * 
+     */
     public function getUnexpiredPromoByCode($code) {
         return $this->_promos->getUnexpiredPromoByCode($code);
     }

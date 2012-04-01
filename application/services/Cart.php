@@ -7,6 +7,10 @@
  */
 class Service_Cart {
     
+    /**
+     * @param string
+     * 
+     */
     protected $_message = '';
 
     /**
@@ -19,14 +23,27 @@ class Service_Cart {
         $this->_products = new Model_Mapper_Products;
     }
     
+    /**
+     * @return Model_Cart
+     * 
+     */
     public function get() {
         return $this->_cart->get();
     }
 
+    /**
+     * @return string
+     * 
+     */
     public function getMessage() {
-        return $this->_message;
+        return $this->_cart->getMessage();
     }
 
+    /**
+     * @param int $product_id
+     * @return bool
+     * 
+     */
     public function addProduct($product_id) {
         $product = $this->_products->getById($product_id);
         if ($product) {
@@ -41,10 +58,20 @@ class Service_Cart {
         return true;
     }
     
+    /**
+     * @param int $product_id
+     * @param int $qty
+     * @return void
+     * 
+     */
     public function setProductQty($product_id, $qty) {
         $this->_cart->setProductQty($product_id, $qty);
     }
 
+    /**
+     * @param int $product_id
+     * @return void
+     */
     public function removeProduct($product_id) {
         $this->_cart->removeProduct($product_id);
     }
@@ -53,6 +80,11 @@ class Service_Cart {
         $this->_cart->reset();
     }
 
+    /**
+     * @param string $code
+     * @return void
+     * 
+     */
     public function addPromo($code) {
         $promo_svc = new Service_Promos;
         $promo = $promo_svc->getUnexpiredPromoByCode($code);

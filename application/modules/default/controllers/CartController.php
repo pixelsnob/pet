@@ -26,19 +26,16 @@ class CartController extends Zend_Controller_Action {
      */
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
-        if (!$this->_cart_svc->addProduct($product_id)) {
-            $this->_messages->addMessage($this->_cart_svc->getMessage());
-        }
+        $this->_cart_svc->addProduct($product_id);
+        $this->_messages->addMessage($this->_cart_svc->getMessage());
         $this->_helper->Redirector->setGotoSimple('index');
     }
     
     public function addPromoAction() {
         $code = $this->_request->getParam('code');
-        if ($this->_cart_svc->addPromo($code)) {
-            $this->_messages->addMessage("Promo \"$code\" added");
-        } else {
-            $this->_messages->addMessage($this->_cart_svc->getMessage());
-        }
+        $this->_cart_svc->addPromo($code);
+            //$this->_messages->addMessage("Promo \"$code\" added");
+        $this->_messages->addMessage($this->_cart_svc->getMessage());
         $this->_helper->Redirector->setGotoSimple('index');
     }
 

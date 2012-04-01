@@ -11,10 +11,10 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     protected $_data = array(
         'products'            => null, // Model_Cart_Products
-        'promo'               => null, // Model_Promo
         'billing'             => null, // Model_Cart_Billing
         'shipping'            => null, // Model_Cart_Shipping
         'payment'             => null,
+        'promo'               => null, // Model_Promo
         'timestamp'           => null // Unix timestamp of last update
     );
     
@@ -76,11 +76,13 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
+        $this->_message = 'wtf?';
         if ($this->_validator && !$this->_validator->isProductValid($product)) {
             $this->_message = $this->_validator->getMessage();
             return false;
         }
         $this->_data['products'][$product->product_id] = $product;
+        $this->_message = 'Product "' . $product->name . '" added';
         return true;
     }
     
@@ -215,6 +217,7 @@ class Model_Cart extends Pet_Model_Abstract {
     public function addPromo(Model_Promo $promo) {
         // validate
         $this->_data['promo'] = $promo;
+        $this->_message = 'Promo "' . $promo->code . '" added';
         return true;
     }
 
