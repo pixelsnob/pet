@@ -48,6 +48,8 @@ class CartController extends Zend_Controller_Action {
     public function removeAction() {
         $product_id = $this->_request->getParam('product_id');
         $this->_cart_svc->removeProduct($product_id);
+        $this->_messages->addMessage($this->_cart_svc->getMessage());
+        $this->_helper->Redirector->setGotoSimple('index');
     }
     
     public function resetAction() {

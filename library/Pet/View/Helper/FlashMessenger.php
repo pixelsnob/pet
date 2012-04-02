@@ -1,7 +1,8 @@
 <?php
 /**
- * @package Pet_View_Helper_FlashMessenger
+ * Outputs HTML formatted flash messages
  * 
+ * @package Pet_View_Helper_FlashMessenger
  * 
  */
 class Pet_View_Helper_FlashMessenger extends Zend_View_Helper_Abstract {

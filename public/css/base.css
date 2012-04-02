@@ -87,7 +87,9 @@ p.update {
 }
 
 .flash-message {
-    color: #348d03;
     font-weight: bold;
+    background-color: #fdffbf;
+    padding: 2px 6px;
+    display: block;
 }
 

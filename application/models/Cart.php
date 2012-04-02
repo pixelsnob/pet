@@ -76,7 +76,6 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
-        $this->_message = 'wtf?';
         if ($this->_validator && !$this->_validator->isProductValid($product)) {
             $this->_message = $this->_validator->getMessage();
             return false;
@@ -93,6 +92,8 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     public function removeProduct($product_id) {
         if (in_array($product_id, array_keys($this->_data['products']))) {
+            $this->_message = 'Product "' .
+                $this->_data['products'][$product_id]->name . '" removed';
             unset($this->_data['products'][$product_id]);
         }
     }

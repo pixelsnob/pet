@@ -69,8 +69,8 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
             $this->_users_svc->updateProfile($post);
             $this->_messages->addMessage('Profile updated');
-        } else {
-            $this->_messages->addMessage('Please correct errors below');
+        } elseif ($this->_request->isPost()) {
+            $this->_messages->addMessage('Submitted information is not valid');
         }
     }
 

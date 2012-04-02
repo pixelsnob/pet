@@ -36,7 +36,11 @@ class Service_Cart {
      * 
      */
     public function getMessage() {
-        return $this->_cart->getMessage();
+        if ($this->_message) {
+            return $this->_message;
+        } else {
+            return $this->_cart->getMessage(); 
+        }
     }
 
     /**
@@ -76,6 +80,9 @@ class Service_Cart {
         $this->_cart->removeProduct($product_id);
     }
 
+    /**
+     * @return void
+     */
     public function reset() {
         $this->_cart->reset();
     }
