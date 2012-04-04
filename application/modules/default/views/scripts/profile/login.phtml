@@ -1,5 +1,5 @@
 
-<form action="<?php echo $this->serverUrl($this->url()); ?>" method="<?php echo $this->login_form->getMethod(); ?>" name="<?php echo $this->login_form->getName(); ?>">
+<form action="<?php echo $this->login_form->getAction(); ?>" method="<?php echo $this->login_form->getMethod(); ?>" name="<?php echo $this->login_form->getName(); ?>">
     <dl class="form">
         <dt><?php echo $this->login_form->username->getLabel(); ?></dt>
         <dd>

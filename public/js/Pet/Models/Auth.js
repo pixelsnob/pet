@@ -4,6 +4,6 @@
  */
 Pet.AuthModel = Backbone.Model.extend({
     is_authenticated: null,
-    url: 'profile/is-authenticated'
+    url: '/profile/is-authenticated'
 });
 

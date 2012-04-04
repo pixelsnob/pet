@@ -1,5 +1,5 @@
 
-<form action="<?php echo $this->serverUrl($this->url()); ?>" method="<?php echo $this->select_term_form->getMethod(); ?>" name="<?php echo $this->select_term_form->getName(); ?>">
+<form action="<?php echo $this->select_term_form->getAction(); ?>" method="<?php echo $this->select_term_form->getMethod(); ?>" name="<?php echo $this->select_term_form->getName(); ?>">
     <fieldset class="account">
         <legend>Select Term</legend>
         <?php echo $this->select_term_form->product_id->renderViewHelper(); ?>

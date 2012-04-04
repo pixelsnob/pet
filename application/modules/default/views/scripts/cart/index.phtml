@@ -1,2 +1,16 @@
 
-cart
+<?php if (!empty($this->cart->products)):  ?>
+    <?php echo $this->flashMessenger(true); ?>
+    <ul id="cart"> 
+        <?php foreach ($this->cart->products as $product): ?>
+        <li>
+            <h4><?php echo $this->escape($product->name); ?></h4>
+            <?php if ($product->description): ?>
+                <p><?php echo $this->escape($product->description); ?></p>
+            <?php endif; ?>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p>You have no items in your cart</p> 
+<?php endif; ?>

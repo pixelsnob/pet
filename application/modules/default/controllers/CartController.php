@@ -12,13 +12,15 @@ class CartController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        echo '<pre>';
+        /*echo '<pre>';
         $cart = $this->_cart_svc->get();
         print_r($this->_helper->FlashMessenger->getMessages());
         print_r($cart->getTotals());
         print_r($cart);
         echo '</pre>';
-        exit;
+        exit;*/
+        $this->view->cart = $this->_cart_svc->get();
+        $this->_messages->addMessage($this->_cart_svc->getMessage());
     }
 
     /**

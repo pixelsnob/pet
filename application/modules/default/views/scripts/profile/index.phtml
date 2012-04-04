@@ -1,6 +1,7 @@
 
 <?php echo $this->flashMessenger(true); ?>
-<form action="<?php echo $this->serverUrl($this->url()); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
+
+<form action="<?php echo $this->profile_form->getAction(); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
     <fieldset class="account">
         <legend>Account Information</legend>
         <dl class="form">
