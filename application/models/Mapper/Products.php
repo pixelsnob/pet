@@ -75,6 +75,15 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         return $this->_products->getSubscriptionByProductId($product_id);
     }
 
+    public function getSubscriptionsByZoneId($zone_id, $is_renewal = null) {
+        $subs = $this->_products->getSubscriptionsByZoneId($zone_id, $is_renewal);
+        $out = array();
+        foreach ($subs as $sub) {
+            $out[] = new Model_Product_Subscription($sub->toArray());
+        }
+        return $out;
+    }
+
     public function getDigitalSubscriptionByProductId($product_id) {
         return $this->_products->getDigitalSubscriptionByProductId($product_id);
     }

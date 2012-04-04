@@ -23,7 +23,22 @@ class Service_Products {
         return $this->_products->getById($product_id);
     }
 
-    public function getSubscriptionByProductId($product_id) {
+    /*public function getSubscriptionByProductId($product_id) {
         return $this->_products->getSubscriptionByProductId($product_id);
+    }*/
+
+    public function getSubscriptionsByZoneId($zone_id, $is_renewal = null) {
+        return $this->_products->getSubscriptionsByZoneId($zone_id,
+            $is_renewal);
+    }
+
+    public function getSubscriptionTermSelectForm(array $subscriptions) {
+        $form = new Default_Form_SubscriptionTermSelect;
+        $subs = array();
+        foreach ($subscriptions as $sub) {
+            $subs[$sub->product_id] = $sub->name;
+        }
+        $form->subscriptions->setMultiOptions($subs);
+        return $form; 
     }
 }

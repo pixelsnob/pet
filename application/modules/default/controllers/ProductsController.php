@@ -18,17 +18,18 @@ class ProductsController extends Zend_Controller_Action {
     /**
      * 
      */
-    public function magazineAction() {
+    public function subscriptionAction() {
         
     }
 
-    public function magazineSelectAction() {
-        $product_id = $this->_request->getParam('product_id');
-        $sub = $this->_products_svc->getSubscriptionByProductId($product_id);
-        if ($sub) {
-            print_r($sub); 
+    public function subscriptionSelectTermAction() {
+        $zone_id = $this->_request->getParam('zone_id');
+        $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, false);
+        if ($subs) {
+            $this->view->select_term_form = $this->_products_svc
+                ->getSubscriptionTermSelectForm($subs);
         } else {
-            throw new Exception('Magazine not found'); 
+            throw new Exception('Zone not found'); 
         }
     }
 

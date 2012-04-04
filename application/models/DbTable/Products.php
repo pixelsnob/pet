@@ -71,5 +71,22 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->where('p.active');
         return $this->fetchRow($sel);
     }
+
+    public function getSubscriptionsByZoneId($zone_id, $is_renewal = null) {
+        $sel = $this->select()->setIntegrityCheck(false)
+            ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
+            ->join(array('ps' => 'products_subscriptions'),
+                'ps.product_id = p.id')
+            ->join(array('s' => 'subscriptions'), 's.id = ps.subscription_id')
+            ->where('s.zone_id = ?', $zone_id)
+            ->where('p.active')
+            ->order('s.name');
+        if ($is_renewal === true) {
+            $sel->where('s.is_renewal = 1');
+        } elseif ($is_renewal === false) {
+            $sel->where('s.is_renewal = 0');
+        }
+        return $this->fetchAll($sel);
+    }
 }
 
