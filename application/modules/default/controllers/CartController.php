@@ -12,6 +12,10 @@ class CartController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
+        $this->view->cart = $this->_cart_svc->get();
+        if ($this->_cart_svc->getMessage()) {
+            $this->_messages->addMessage($this->_cart_svc->getMessage());
+        }
         /*echo '<pre>';
         $cart = $this->_cart_svc->get();
         print_r($this->_helper->FlashMessenger->getMessages());
@@ -19,8 +23,6 @@ class CartController extends Zend_Controller_Action {
         print_r($cart);
         echo '</pre>';
         exit;*/
-        $this->view->cart = $this->_cart_svc->get();
-        $this->_messages->addMessage($this->_cart_svc->getMessage());
     }
 
     /**
