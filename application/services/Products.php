@@ -23,10 +23,6 @@ class Service_Products {
         return $this->_products->getById($product_id);
     }
 
-    /*public function getSubscriptionByProductId($product_id) {
-        return $this->_products->getSubscriptionByProductId($product_id);
-    }*/
-
     public function getSubscriptionsByZoneId($zone_id, $is_renewal = null) {
         return $this->_products->getSubscriptionsByZoneId($zone_id,
             $is_renewal);
@@ -38,7 +34,7 @@ class Service_Products {
         foreach ($subscriptions as $sub) {
             $subs[$sub->product_id] = $sub->name;
         }
-        $form->subscriptions->setMultiOptions($subs);
+        $form->product_id->setMultiOptions($subs);
         return $form; 
     }
 }

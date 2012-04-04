@@ -52,8 +52,8 @@ legend {
     font-weight: normal;
 }
 
-p.update {
-    margin-top: 20px;
+form p.submit {
+    margin-top: 10px;
 }
 
 .form .errors {

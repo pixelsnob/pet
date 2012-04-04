@@ -26,9 +26,8 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
     public function init() {
         parent::init();
         $this->setMethod('post')->setName('susbscription_term_select');
-        $this->addElement('radio', 'subscriptions', array(
-            'label' => 'Subscription',
-            'id' => 'subscription_id',
+        $this->addElement('radio', 'product_id', array(
+            'label' => 'Subscriptions',
             'required' => true/*,
             'validators'   => array(
                 array('NotEmpty', true, array(

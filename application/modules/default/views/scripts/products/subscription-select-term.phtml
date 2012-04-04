@@ -1,2 +1,9 @@
 
-<?php echo $this->select_term_form ?>
+<form action="<?php echo $this->serverUrl($this->url(array('product_id' => null), 'cart_add')); ?>" method="<?php echo $this->select_term_form->getMethod(); ?>" name="<?php echo $this->select_term_form->getName(); ?>">
+    <fieldset class="account">
+        <legend>Select Region</legend>
+        <?php echo $this->select_term_form->product_id->renderViewHelper(); ?>
+    </fieldset>
+    <p class="submit"><input type="submit" value="Buy"></p>
+</form>
+
