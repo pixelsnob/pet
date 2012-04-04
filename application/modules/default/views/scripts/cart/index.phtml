@@ -1,6 +1,6 @@
 
 <?php if (!empty($this->cart->products)):  ?>
-    <?php echo $this->flashMessenger(true); ?>
+    <?php echo $this->flashMessenger(); ?>
     <ul id="cart"> 
         <?php foreach ($this->cart->products as $product): ?>
         <li>
@@ -14,3 +14,6 @@
 <?php else: ?>
     <p>You have no items in your cart</p> 
 <?php endif; ?>
+<pre>
+<?php print_r($this->cart); ?>
+</pre>

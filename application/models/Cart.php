@@ -81,7 +81,7 @@ class Model_Cart extends Pet_Model_Abstract {
             return false;
         }
         $this->_data['products'][$product->product_id] = $product;
-        $this->_message = 'Product "' . $product->name . '" added';
+        $this->_message = '"' . $product->name . '" was added to your cart';
         return true;
     }
     
@@ -92,8 +92,8 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     public function removeProduct($product_id) {
         if (in_array($product_id, array_keys($this->_data['products']))) {
-            $this->_message = 'Product "' .
-                $this->_data['products'][$product_id]->name . '" removed';
+            $this->_message = '"' . $this->_data['products'][$product_id]->name .
+                '" was removed from your cart';
             unset($this->_data['products'][$product_id]);
         }
     }
@@ -241,6 +241,14 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     public function getMessage() {
         return $this->_message;
+    }
+
+    /**
+     * @return string
+     * 
+     */
+    public function clearMessage() {
+        $this->_message = '';
     }
 
     /**

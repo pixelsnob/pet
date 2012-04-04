@@ -90,7 +90,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function getMessage() {
-        return $this->_cart->getMessage();
+        $message = $this->_cart->getMessage();
+        $this->_cart->clearMessage();
+        return $message;
     }
 
     /**
