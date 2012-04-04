@@ -26,8 +26,16 @@ class ProductsController extends Zend_Controller_Action {
         $zone_id = $this->_request->getParam('zone_id');
         $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, false);
         if ($subs) {
-            $this->view->select_term_form = $this->_products_svc
-                ->getSubscriptionTermSelectForm($subs);
+            $form = $this->_products_svc->getSubscriptionTermSelectForm($subs);
+            $post = $this->_request->getPost();
+            if ($this->_request->isPost() && $form->isValid($post)) {
+                $product_id = $this->_request->getPost('product_id');
+                $this->_helper->Redirector->setGotoRoute(array(
+                    'product_id' => $product_id), 'cart_add');
+            } else {
+                $form->populate($post);
+            }
+            $this->view->select_term_form = $form;
         } else {
             throw new Exception('Zone not found'); 
         }

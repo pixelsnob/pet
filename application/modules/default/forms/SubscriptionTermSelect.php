@@ -28,22 +28,12 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
         $this->setMethod('post')->setName('susbscription_term_select');
         $this->addElement('radio', 'product_id', array(
             'label' => 'Subscriptions',
-            'required' => true/*,
+            'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your username'
-                )),
-                array('StringLength', true, array(
-                    'max' => 30,
-                    'messages' => 'Username must be %max% characters or less'
-                )),
-
-                array(new Pet_Validate_UsernameNotExists(
-                    $this->_identity, $this->_mapper), true),
-                array('Alnum', true, array(
-                    'messages' => 'Only letters and numbers allowed'
+                    'messages' => 'Please select a term'
                 ))
-            )*/
+            )
         ));
         
     }
