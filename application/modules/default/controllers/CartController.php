@@ -21,10 +21,6 @@ class CartController extends Zend_Controller_Action {
             $this->_cart_svc->update($post);
             $this->view->use_current_msg = true;
         }
-        $msg = $this->_cart_svc->getMessage();
-        if ($msg) {
-            $this->_messages->addMessage($msg);
-        }
     }
 
     /**
@@ -33,14 +29,12 @@ class CartController extends Zend_Controller_Action {
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
         $this->_cart_svc->addProduct($product_id);
-        $this->_messages->addMessage($this->_cart_svc->getMessage());
         $this->_helper->Redirector->setGotoSimple('index');
     }
     
     public function addPromoAction() {
         $code = $this->_request->getParam('code');
         $this->_cart_svc->addPromo($code);
-        $this->_messages->addMessage($this->_cart_svc->getMessage());
         $this->_helper->Redirector->setGotoSimple('index');
     }
 
@@ -54,7 +48,6 @@ class CartController extends Zend_Controller_Action {
     public function removeAction() {
         $product_id = $this->_request->getParam('product_id');
         $this->_cart_svc->removeProduct($product_id);
-        $this->_messages->addMessage($this->_cart_svc->getMessage());
         $this->_helper->Redirector->setGotoSimple('index');
     }
     

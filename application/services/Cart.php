@@ -21,6 +21,7 @@ class Service_Cart {
         $this->_cart = new Model_Mapper_Cart;
         $this->_cart->setValidator(new Model_Cart_Validator_Default);
         $this->_products_svc = new Service_Products;
+        $this->_messenger = Zend_Registry::get('messenger');
     }
     
     /**
@@ -31,18 +32,6 @@ class Service_Cart {
         return $this->_cart->get();
     }
 
-    /**
-     * @return string
-     * 
-     */
-    public function getMessage() {
-        if (strlen(trim($this->_message))) {
-            return $this->_message;
-        } else {
-            return $this->_cart->getMessage(); 
-        }
-    }
-    
     public function update(array $data) {
         $this->_cart->update($data);
     }
@@ -56,11 +45,10 @@ class Service_Cart {
         $product = $this->_products_svc->getById($product_id);
         if ($product) {
             if (!$this->_cart->addProduct($product)) {
-                $this->_message = $this->_cart->getMessage();
                 return false;
             }
         } else {
-            $this->_message = 'Product not found';
+            $this->_messenger->addMessage('Product not found');
             return false;
         }
         return true;
@@ -101,11 +89,10 @@ class Service_Cart {
         $promo = $promo_svc->getUnexpiredPromoByCode($code);
         if ($promo) {
             if (!$this->_cart->addPromo($promo)) {
-                $this->_message = $this->_cart->getMessage();
                 return false;
             }
         } else {
-            $this->_message = "Promo \"$code\" is not valid";
+            $this->_messenger->addMessage("Promo \"$code\" is not valid");
             return false;
         }
         return true;

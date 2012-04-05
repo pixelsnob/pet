@@ -35,5 +35,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Controller_Action_HelperBroker::addPrefix(
             'Pet_Controller_Action_Helper');
     }
+
+    protected function _initMessenger() {
+        Zend_Registry::set('messenger', new Pet_FlashMessenger);
+    }
 }
 

@@ -18,13 +18,17 @@ class Model_Cart extends Pet_Model_Abstract {
         'timestamp'           => null // Unix timestamp of last update
     );
     
+    /**
+     * @var Model_Cart_Validator_Abstract
+     * 
+     */
     protected $_validator;
 
     /**
-     * @var string
+     * @var Zend_Controller_Action_Helper_FlashMessenger
      * 
      */
-    protected $_message = '';
+    protected $_messenger;
 
     /**
      * Set defaults
@@ -77,11 +81,12 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     public function addProduct(Model_Cart_Product $product) {
         if ($this->_validator && !$this->_validator->isProductValid($product)) {
-            $this->_message = $this->_validator->getMessage();
             return false;
         }
         $this->_data['products'][$product->product_id] = $product;
-        $this->_message = '"' . $product->name . '" was added to your cart';
+        $messenger = Zend_Registry::get('messenger');
+        $msg = '"' . $product->name . '" was added to your cart';
+        $messenger->addMessage($msg);
         return true;
     }
     
@@ -92,8 +97,10 @@ class Model_Cart extends Pet_Model_Abstract {
      */
     public function removeProduct($product_id) {
         if (in_array($product_id, array_keys($this->_data['products']))) {
-            $this->_message = '"' . $this->_data['products'][$product_id]->name .
+            $msg = '"' . $this->_data['products'][$product_id]->name .
                 '" was removed from your cart';
+            $messenger = Zend_Registry::get('messenger');
+            $messenger->addMessage($msg);
             unset($this->_data['products'][$product_id]);
         }
     }
@@ -107,7 +114,8 @@ class Model_Cart extends Pet_Model_Abstract {
         if (isset($this->_data['products'][$product_id])) {
             if ($qty) {
                 $this->_data['products'][$product_id]->qty = $qty;
-                $this->_message = 'Cart updated';
+                $messenger = Zend_Registry::get('messenger');
+                $messenger->addMessage('Cart updated');
             } else {
                 $this->removeProduct($product_id);
             }
@@ -241,11 +249,11 @@ class Model_Cart extends Pet_Model_Abstract {
 
     public function addPromo(Model_Promo $promo) {
         if ($this->_validator && !$this->_validator->isPromoValid($promo)) {
-            $this->_message = $this->_validator->getMessage();
             return false;
         }
         $this->_data['promo'] = $promo;
-        $this->_message = 'Promo "' . $promo->code . '" added';
+        $messenger = Zend_Registry::get('messenger');
+        $messenger->addMessage('Promo "' . $promo->code . '" added');
         return true;
     }
 
@@ -262,22 +270,6 @@ class Model_Cart extends Pet_Model_Abstract {
         $this->_data['timestamp'] = time();
     }
     
-    /**
-     * @return string
-     * 
-     */
-    public function getMessage() {
-        return $this->_message;
-    }
-
-    /**
-     * @return string
-     * 
-     */
-    public function clearMessage() {
-        $this->_message = '';
-    }
-
     /**
      * @return array 
      */
