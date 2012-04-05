@@ -5,14 +5,8 @@
  * @package Service_Promos
  * 
  */
-class Service_Promos {
+class Service_Promos extends Pet_Service {
     
-    /**
-     * @param string
-     * 
-     */
-    protected $_message = '';
-
     /**
      * @return void
      * 

@@ -76,6 +76,13 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_cart = $session->cart;
     }
     
+    public function update(array $data) {
+        foreach ($this->_cart->products as $product) {
+            $qty = (int) $data['qty'][$product->product_id];
+            $this->_cart->setProductQty($product->product_id, $qty);
+        }
+    }
+
     /**
      * @param Model_Cart_Validator_Abstract $validator
      * @return void
@@ -110,6 +117,10 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      */
     public function removePromo() {
         $this->_cart->removePromo($promo);
+    }
+
+    public function getTotals() {
+        return $this->_cart->getTotals();
     }
 
     /**

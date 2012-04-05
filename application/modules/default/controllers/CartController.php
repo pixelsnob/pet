@@ -13,16 +13,26 @@ class CartController extends Zend_Controller_Action {
      */
     public function indexAction() {
         $this->view->cart = $this->_cart_svc->get();
-        if ($this->_cart_svc->getMessage()) {
-            $this->_messages->addMessage($this->_cart_svc->getMessage());
+        $cart_form = $this->_cart_svc->getCartForm();
+        $this->view->cart_form = $cart_form;
+        $post = $this->_request->getPost();
+        $this->view->use_current_msg = false;
+        if ($this->_request->isPost() && $cart_form->isValid($post)) {
+            $this->_cart_svc->update($post);
+            $this->view->use_current_msg = true;
+            //$this->_messages->addMessage('Cart updated');
+            //print_r($this->_cart_svc->get());
+            //exit;
         }
-        /*echo '<pre>';
-        $cart = $this->_cart_svc->get();
-        print_r($this->_helper->FlashMessenger->getMessages());
-        print_r($cart->getTotals());
-        print_r($cart);
-        echo '</pre>';
-        exit;*/
+        //var_dump($this->_cart_svc->getMessage());
+        //$this->_messages->addMessage($this->_cart_svc->getMessage());
+        $msg = $this->_cart_svc->getMessage();
+        if ($msg) {
+            echo $msg;
+            $this->_messages->addMessage($msg);
+        }
+        //$this->_messages->addMessage('test');
+        //print_r($this->_messages->getMessages());
     }
 
     /**

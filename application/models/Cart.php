@@ -99,26 +99,31 @@ class Model_Cart extends Pet_Model_Abstract {
     }
 
     /** 
-     * @param int $key
+     * @param int $product_id
      * @param int $qty
      * @return bool
      */
-    public function setProductQty($key, $qty) {
-        if (isset($this->_data['products'][$key])) {
-            $this->_data['products'][$key]->qty = $qty;
+    public function setProductQty($product_id, $qty) {
+        if (isset($this->_data['products'][$product_id])) {
+            if ($qty) {
+                $this->_data['products'][$product_id]->qty = $qty;
+                $this->_message = 'Cart updated';
+            } else {
+                $this->removeProduct($product_id);
+            }
             return true;
         }
         return false;
     }
 
     /**
-     * @param int $key
+     * @param int $product_id
      * @return void
      * 
      */
-    public function incrementProductQty($key) {
-        if (isset($this->_data['products'][$key])) {
-            $this->_data['products'][$key]->qty++;
+    public function incrementProductQty($product_id) {
+        if (isset($this->_data['products'][$product_id])) {
+            $this->_data['products'][$product_id]->qty++;
         }
     }
 

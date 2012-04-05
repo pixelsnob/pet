@@ -1,19 +1,30 @@
 
-<?php if (!empty($this->cart->products)):  ?>
-    <?php echo $this->flashMessenger(); ?>
-    <ul id="cart"> 
-        <?php foreach ($this->cart->products as $product): ?>
-        <li>
-            <h4><?php echo $this->escape($product->name); ?></h4>
-            <?php if ($product->description): ?>
-                <p><?php echo $this->escape($product->description); ?></p>
-            <?php endif; ?>
-        </li>
-        <?php endforeach; ?>
-    </ul>
-<?php else: ?>
-    <p>You have no items in your cart</p> 
-<?php endif; ?>
-<pre>
-<?php print_r($this->cart); ?>
-</pre>
+<form action="<?php echo $this->cart_form->getAction(); ?>" method="<?php echo $this->cart_form->getMethod(); ?>" name="<?php echo $this->cart_form->getName(); ?>">
+    <fieldset class="account">
+        <legend>Shopping Cart</legend>
+    </fieldset>
+    <?php echo $this->flashMessenger($this->use_current_msg); ?>
+    <?php if (!empty($this->cart->products)):  ?>
+        <ul id="cart"> 
+            <?php foreach ($this->cart->products as $product): ?>
+            <li>
+                <h4><?php echo $this->escape($product->name); ?></h4>
+                <?php
+                $qty = $this->cart_form->qty->getElement($product->product_id);
+                if ($qty) {
+                    echo $qty->renderLabel() . $qty->renderViewHelper() . $qty->renderErrors();
+                }
+                ?>
+                <p><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>">Remove</a></p>
+                <hr>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+        <p class="submit"><input type="submit" value="Update"></p>
+    <?php else: ?>
+        <p>You have no items in your cart</p> 
+    <?php endif; ?>
+</form>
+<p><a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>">Continue shopping?</a></p>
+<?php print_r($this->cart->getTotals()); ?>
+<?php /*print_r($this->cart);*/ ?>

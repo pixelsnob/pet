@@ -36,11 +36,15 @@ class Service_Cart {
      * 
      */
     public function getMessage() {
-        if ($this->_message) {
+        if (strlen(trim($this->_message))) {
             return $this->_message;
         } else {
             return $this->_cart->getMessage(); 
         }
+    }
+    
+    public function update(array $data) {
+        $this->_cart->update($data);
     }
 
     /**
@@ -105,5 +109,18 @@ class Service_Cart {
             return false;
         }
         return true;
+    }
+
+    public function getCartForm() {
+        $cart = $this->_cart->get();
+        $form = new Default_Form_Cart(array(
+            'cart' => $cart
+        ));
+        $form_data = array();
+        foreach ($cart->products as $product) {
+            $form_data['qty'][$product->product_id] = $product->qty;
+        }
+        $form->populate($form_data);
+        return $form;
     }
 }

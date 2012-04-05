@@ -105,7 +105,7 @@ where p.product_type_id = 4;
 /* Digital Subscriptions */
 
 insert into pet.products values
-(300, 5, 'XXXXX', 50, '', 1);
+(300, 5, 'XXXXX', 50, '', 1, 1);
 
 insert into digital_subscriptions
 values (1, 'Placeholder Digital Subscription', 'Temporary', 1, 0);

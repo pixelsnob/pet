@@ -5,7 +5,7 @@
  * @package Service_Users
  * 
  */
-class Service_Users {
+class Service_Users extends Pet_Service {
     
     /**
      * @return void
@@ -13,7 +13,6 @@ class Service_Users {
      */
     public function __construct() {
         $this->_user_profiles = new Model_Mapper_UserProfiles;
-        //$this->_user_subs = new Model_Mapper_UserSubscriptions;
         $this->_user_actions = new Model_Mapper_UserActions;
         $this->_users = new Model_Mapper_Users;
     }
@@ -108,18 +107,6 @@ class Service_Users {
     }
 
     /**
-     * @param null|int $user_id
-     * @return Model_UserSubscription 
-     * 
-     */
-    /*public function getSubscription($user_id = null) {
-        if (!$user_id) {
-            $user_id = $this->getId();
-        }
-        return $this->_user_subs->getByUserId($this->getId());
-    }*/
-
-    /**
      * @param string $token
      * @return void|Model_UserPasswordToken
      * 
@@ -129,7 +116,6 @@ class Service_Users {
         return $pw_tokens->getByMaxAge($token, 1800);
     }
 
-    
     /**
      * @return Default_Form_Login
      * 
