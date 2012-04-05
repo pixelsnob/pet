@@ -5,7 +5,7 @@ class CartController extends Zend_Controller_Action {
     public function init() {
         $this->_cart_svc = new Service_Cart;
         $this->_messages = $this->_helper->FlashMessenger;
-        //$this->view->headLink()->appendStylesheet('/css/store.css');
+        $this->view->headLink()->appendStylesheet('/css/cart.css');
     }
 
     /**
@@ -20,19 +20,11 @@ class CartController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $cart_form->isValid($post)) {
             $this->_cart_svc->update($post);
             $this->view->use_current_msg = true;
-            //$this->_messages->addMessage('Cart updated');
-            //print_r($this->_cart_svc->get());
-            //exit;
         }
-        //var_dump($this->_cart_svc->getMessage());
-        //$this->_messages->addMessage($this->_cart_svc->getMessage());
         $msg = $this->_cart_svc->getMessage();
         if ($msg) {
-            echo $msg;
             $this->_messages->addMessage($msg);
         }
-        //$this->_messages->addMessage('test');
-        //print_r($this->_messages->getMessages());
     }
 
     /**

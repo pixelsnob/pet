@@ -1,0 +1,17 @@
+
+#cart {
+    width: 500px;
+}
+
+#cart {
+}
+
+#cart li {
+    background: none;
+    padding: 0;
+}
+
+#cart li h4 {
+    font-size: 14px;
+    font-weight: bold;
+}

@@ -25,7 +25,6 @@ class Default_Form_Cart extends Pet_Form {
             Model_ProductType::DIGITAL_SUBSCRIPTION
         );
         foreach ($this->_cart->products as $product) {
-            $readonly = null;
             $qty->addElement('text', $product->product_id, array(
                 'label' => 'Quantity',
                 'belongsTo' => 'qty',
@@ -38,6 +37,11 @@ class Default_Form_Cart extends Pet_Form {
                     array('Callback', true, array('callback' => function($v) {
                         return (preg_match('/\D/', $v) == 0 && $v >= 0);
                     }, 'messages' => 'Quantity is not valid'))
+                ),
+                'decorators' => array(
+                    'ViewHelper',
+                    'Label',
+                    'Errors'
                 )
             ));
             if (in_array($product->product_type_id, $no_qty_types)) {

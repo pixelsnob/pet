@@ -12,11 +12,10 @@
                 <?php
                 $qty = $this->cart_form->qty->getElement($product->product_id);
                 if ($qty) {
-                    echo $qty->renderLabel() . $qty->renderViewHelper() . $qty->renderErrors();
+                    echo $qty;
                 }
                 ?>
                 <p><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>">Remove</a></p>
-                <hr>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -26,5 +25,6 @@
     <?php endif; ?>
 </form>
 <p><a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>">Continue shopping?</a></p>
-<?php print_r($this->cart->getTotals()); ?>
-<?php /*print_r($this->cart);*/ ?>
+<pre>
+<?php /*print_r($this->cart);*/ print_r($this->cart->getTotals()); ?>
+</pre>

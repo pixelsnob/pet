@@ -44,6 +44,20 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
         return true;
     } 
     
+    public function isPromoValid(Model_Promo $promo) {
+        $valid = false;
+        foreach ($promo->promo_products as $pp) {
+            if (in_array($pp->product_id, $this->_cart->getProductIds())) {
+                $valid = true;
+            }
+        }
+        if (!$valid) {
+            $this->_message = 'A qualifying product is not in your cart';
+        }
+        // validate total
+        return $valid;
+    }
+
     public function getMessage() {
         return $this->_message;
     }

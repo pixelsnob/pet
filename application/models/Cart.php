@@ -155,15 +155,23 @@ class Model_Cart extends Pet_Model_Abstract {
     }
 
     /**
-     * @param string $id
+     * @param string $product_id
      * @return Model_Cart_Prod|false
      * 
      */
-    public function getProduct($id) {
-        if (!array_key_exists($id, $this->_data['products'])) {
+    public function getProduct($product_id) {
+        if (!array_key_exists($product_id, $this->_data['products'])) {
             return false;
         }
-        return $this->_data['products'][$key];
+        return $this->_data['products'][$product_id];
+    }
+
+    /**
+     * @return array
+     * 
+     */
+    public function getProductIds() {
+        return array_keys($this->_data['products']);
     }
     
     /**
@@ -214,14 +222,28 @@ class Model_Cart extends Pet_Model_Abstract {
     public function getTotals() {
         $totals['subtotal'] = 0;
         $totals['total'] = 0;
+        $totals = array(
+            'subtotal' => 0,
+            'discount' => 0,
+            'total'    => 0
+        );
         foreach ($this->_data['products'] as $product) {
             $totals['subtotal'] += ($product->qty * $product->cost);
+        }
+        $totals['total'] = $totals['subtotal'];
+        $promo = $this->_data['promo'];
+        if ($promo && $promo->discount) {
+            $totals['discount'] = $promo->discount;
+            $totals['total'] = $totals['total'] - $totals['discount'];
         }
         return $totals;
     }
 
     public function addPromo(Model_Promo $promo) {
-        // validate
+        if ($this->_validator && !$this->_validator->isPromoValid($promo)) {
+            $this->_message = $this->_validator->getMessage();
+            return false;
+        }
         $this->_data['promo'] = $promo;
         $this->_message = 'Promo "' . $promo->code . '" added';
         return true;
