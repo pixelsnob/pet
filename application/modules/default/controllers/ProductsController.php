@@ -5,6 +5,8 @@ class ProductsController extends Zend_Controller_Action {
     public function init() {
         $this->_products_svc = new Service_Products;
         //$this->view->headLink()->appendStylesheet('/css/store.css');
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript('new Pet.ProductsView;');
     }
 
     /**
@@ -12,7 +14,6 @@ class ProductsController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        
     }
 
     /**
@@ -30,8 +31,8 @@ class ProductsController extends Zend_Controller_Action {
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
-                $this->_helper->Redirector->setGotoRoute(array(
-                    'product_id' => $product_id), 'cart_add');
+                $this->_helper->Redirector->setGotoSimple('add', 'cart', 'default',  array(
+                    'product_id' => $product_id));
             } else {
                 $form->populate($post);
             }
