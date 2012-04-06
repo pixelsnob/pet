@@ -31,8 +31,8 @@ class ProductsController extends Zend_Controller_Action {
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
-                $this->_helper->Redirector->setGotoSimple('add', 'cart', 'default',  array(
-                    'product_id' => $product_id));
+                $this->_helper->Redirector->setGotoSimple('add', 'cart',
+                    'default',  array('product_id' => $product_id));
             } else {
                 $form->populate($post);
             }
@@ -47,6 +47,24 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function digitalAction() {
         
+    }
+    
+    public function digitalSelectAction() {
+        $subs = $this->_products_svc->getDigitalSubscriptions();
+        if ($subs) {
+            $form = $this->_products_svc->getDigitalSubscriptionSelectForm($subs);
+            $post = $this->_request->getPost();
+            if ($this->_request->isPost() && $form->isValid($post)) {
+                $product_id = $this->_request->getPost('product_id');
+                $this->_helper->Redirector->setGotoSimple('add', 'cart',
+                    'default',  array('product_id' => $product_id));
+            } else {
+                $form->populate($post);
+            }
+            $this->view->digital_select_form = $form;
+        } else {
+            throw new Exception('Zone not found'); 
+        }
     }
 
     /**

@@ -1,0 +1,10 @@
+
+<form action="<?php echo $this->digital_select_form->getAction(); ?>" method="<?php echo $this->digital_select_form->getMethod(); ?>" name="<?php echo $this->digital_select_form->getName(); ?>">
+    <fieldset class="account">
+        <legend>Select Subscription</legend>
+        <?php echo $this->digital_select_form->product_id->renderViewHelper(); ?>
+        <?php echo $this->digital_select_form->product_id->renderErrors(); ?>
+    </fieldset>
+    <p class="submit"><input type="submit" value="Buy"></p>
+</form>
+

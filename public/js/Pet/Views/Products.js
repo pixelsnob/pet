@@ -7,7 +7,7 @@ Pet.ProductsView = Backbone.View.extend({
     el: $('body'),
     
     events: {
-        'click .terms a': 'openTermSelectPopup'
+        'click .select a': 'openTermSelectPopup'
     },
     
     initialize: function(){

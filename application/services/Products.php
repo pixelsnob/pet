@@ -37,4 +37,18 @@ class Service_Products extends Pet_Service {
         $form->product_id->setMultiOptions($subs);
         return $form; 
     }
+
+    public function getDigitalSubscriptions() {
+        return $this->_products->getDigitalSubscriptions();
+    }
+
+    public function getDigitalSubscriptionSelectForm(array $subscriptions) {
+        $form = new Default_Form_DigitalSubscriptionSelect;
+        $subs = array();
+        foreach ($subscriptions as $sub) {
+            $subs[$sub->product_id] = $sub->name;
+        }
+        $form->product_id->setMultiOptions($subs);
+        return $form; 
+    }
 }
