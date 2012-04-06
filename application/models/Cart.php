@@ -3,7 +3,7 @@
  * Cart model
  * 
  */
-class Model_Cart extends Pet_Model_Abstract {
+class Model_Cart extends Pet_Model_Abstract implements Serializable {
     
     /**
      * @var array
@@ -25,12 +25,6 @@ class Model_Cart extends Pet_Model_Abstract {
     protected $_validator;
 
     /**
-     * @var Zend_Controller_Action_Helper_FlashMessenger
-     * 
-     */
-    protected $_messenger;
-
-    /**
      * Set defaults
      * 
      * @return void
@@ -45,13 +39,39 @@ class Model_Cart extends Pet_Model_Abstract {
     }
     
     /**
-     * @param Model_Cart_Validator_Abstract $validator
+     * @return string
+     * 
+     */
+    public function serialize() {
+        return serialize($this->_data);
+    }
+    
+    /**
+     * @param $data string
      * @return void
      * 
      */
-    public function setValidator(Model_Cart_Validator_Abstract $validator) {
+    public function unserialize($data) {
+        $this->_data = unserialize($data);
+    }
+
+    /**
+     * @param Model_Cart_ $validator
+     * @return void
+     * 
+     */
+    public function setValidator($validator) {
         $this->_validator = $validator;
-        $this->_validator->setCart($this);
+    }
+    
+    /**
+     * @return Model_Cart_Validator_Abstract
+     * 
+     */
+    public function getValidator() {
+        $validator = new $this->_validator;
+        $validator->setCart($this);
+        return $validator;
     }
 
     /**
@@ -80,7 +100,7 @@ class Model_Cart extends Pet_Model_Abstract {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
-        if ($this->_validator && !$this->_validator->isProductValid($product)) {
+        if (!$this->getValidator()->validateProduct($product)) {
             return false;
         }
         $this->_data['products'][$product->product_id] = $product;
@@ -99,9 +119,16 @@ class Model_Cart extends Pet_Model_Abstract {
         if (in_array($product_id, array_keys($this->_data['products']))) {
             $msg = '"' . $this->_data['products'][$product_id]->name .
                 '" was removed from your cart';
+            unset($this->_data['products'][$product_id]);
             $messenger = Zend_Registry::get('messenger');
             $messenger->addMessage($msg);
-            unset($this->_data['products'][$product_id]);
+            if ($this->_data['promo']) {
+                $valid = $this->getValidator()
+                    ->validatePromo($this->_data['promo']); 
+                if (!$valid) {
+                    $this->removePromo();
+                }
+            }
         }
     }
 
@@ -240,7 +267,7 @@ class Model_Cart extends Pet_Model_Abstract {
         }
         $totals['total'] = $totals['subtotal'];
         $promo = $this->_data['promo'];
-        if ($promo && $promo->discount) {
+        if ($promo && isset($promo->discount)) {
             $totals['discount'] = $promo->discount;
             $totals['total'] = $totals['total'] - $totals['discount'];
         }
@@ -248,7 +275,7 @@ class Model_Cart extends Pet_Model_Abstract {
     }
 
     public function addPromo(Model_Promo $promo) {
-        if ($this->_validator && !$this->_validator->isPromoValid($promo)) {
+        if (!$this->getValidator()->validatePromo($promo)) {
             return false;
         }
         $this->_data['promo'] = $promo;
@@ -256,9 +283,16 @@ class Model_Cart extends Pet_Model_Abstract {
         $messenger->addMessage('Promo "' . $promo->code . '" added');
         return true;
     }
-
-    public function removePromo(Model_Promo $promo) {
+    
+    /**
+     * @return void
+     * 
+     */
+    public function removePromo() {
+        $code = $this->_data['promo']->code;
         $this->_data['promo'] = null;
+        $messenger = Zend_Registry::get('messenger');
+        $messenger->addMessage('Promo "' . $code . '" removed');
     }
 
     /**

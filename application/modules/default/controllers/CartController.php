@@ -4,7 +4,6 @@ class CartController extends Zend_Controller_Action {
 
     public function init() {
         $this->_cart_svc = new Service_Cart;
-        $this->_messages = $this->_helper->FlashMessenger;
         $this->view->headLink()->appendStylesheet('/css/cart.css');
     }
 
@@ -16,10 +15,8 @@ class CartController extends Zend_Controller_Action {
         $cart_form = $this->_cart_svc->getCartForm();
         $this->view->cart_form = $cart_form;
         $post = $this->_request->getPost();
-        $this->view->use_current_msg = false;
         if ($this->_request->isPost() && $cart_form->isValid($post)) {
             $this->_cart_svc->update($post);
-            $this->view->use_current_msg = true;
         }
     }
 

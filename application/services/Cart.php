@@ -19,7 +19,7 @@ class Service_Cart {
      */
     public function __construct() {
         $this->_cart = new Model_Mapper_Cart;
-        $this->_cart->setValidator(new Model_Cart_Validator_Default);
+        $this->_cart->setValidator('Model_Cart_Validator_Default');
         $this->_products_svc = new Service_Products;
         $this->_messenger = Zend_Registry::get('messenger');
     }

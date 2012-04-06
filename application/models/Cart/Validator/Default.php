@@ -7,12 +7,6 @@
 class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
     
     /**
-     * @var Zend_Controller_Action_Helper_FlashMessenger
-     * 
-     */
-    protected $_messenger;
-
-    /**
      * @return void
      * 
      */
@@ -23,7 +17,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      * @param Model_Cart_Product $product
      * @return bool
      */
-    public function isProductValid(Model_Cart_Product $product) {
+    public function validateProduct(Model_Cart_Product $product) {
         $messenger = Zend_Registry::get('messenger');
         switch ($product->product_type_id) {
             case Model_ProductType::SUBSCRIPTION:
@@ -56,7 +50,12 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
         return true;
     } 
     
-    public function isPromoValid(Model_Promo $promo) {
+    /**
+     * @param Model_Promo $promo
+     * @return bool
+     * 
+     */
+    public function validatePromo(Model_Promo $promo) {
         $messenger = Zend_Registry::get('messenger');
         $valid = false;
         foreach ($promo->promo_products as $pp) {
@@ -64,7 +63,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
                 $valid = true;
             }
         }
-        if (!$valid) {
+        if (!$valid && $this->_cart->products) {
             $messenger->addMessage('A qualifying product is not in your cart');
         }
         return $valid;

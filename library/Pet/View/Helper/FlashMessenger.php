@@ -17,7 +17,8 @@ class Pet_View_Helper_FlashMessenger extends Zend_View_Helper_Abstract {
         if (count($messages) > 1) {
             $out = '<ul class="flash-message">';
             foreach ($messages as $message) {
-                $out .= sprintf('<li>%s<li>', $this->view->escape($message));
+                $message = $this->view->escape($message);;
+                $out .= "<li>$message</li>";
             }
             $out .= '</ul>';
             return $out;

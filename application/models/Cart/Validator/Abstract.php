@@ -13,12 +13,6 @@ abstract class Model_Cart_Validator_Abstract {
     protected $_cart;
     
     /**
-     * @param Model_Cart_Product $product
-     * 
-     */
-    abstract public function isProductValid(Model_Cart_Product $product);
-    
-    /**
      * @param Model_Cart $cart
      * @return void 
      * 
@@ -26,4 +20,16 @@ abstract class Model_Cart_Validator_Abstract {
     public function setCart(Model_Cart $cart) {
         $this->_cart = $cart;
     }
+    
+    /**
+     * @param Model_Cart_Product $product
+     * 
+     */
+    abstract public function validateProduct(Model_Cart_Product $product);
+    
+    /**
+     * @param Model_Cart_Promo $promo
+     * 
+     */
+    abstract public function validatePromo(Model_Promo $promo);
 }

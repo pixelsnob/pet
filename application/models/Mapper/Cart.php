@@ -84,11 +84,11 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * @param Model_Cart_Validator_Abstract $validator
+     * @param string $validator
      * @return void
      * 
      */
-    public function setValidator(Model_Cart_Validator_Abstract $validator) {
+    public function setValidator($validator) {
         $this->_cart->setValidator($validator);
     }
 
