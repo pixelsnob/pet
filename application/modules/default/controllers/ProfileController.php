@@ -5,7 +5,7 @@ class ProfileController extends Zend_Controller_Action {
     public function init() {
         $this->view->getHelper('serverUrl')->setScheme('https');
         $this->_users_svc = new Service_Users;
-        $this->_messages = $this->_helper->FlashMessenger;
+        $this->_messenger = Zend_Registry::get('messenger');
     }
 
     /**
@@ -67,9 +67,9 @@ class ProfileController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
             $this->_users_svc->updateProfile($post);
-            $this->_messages->addMessage('Profile updated');
+            $this->_messenger->addMessage('Profile updated');
         } elseif ($this->_request->isPost()) {
-            $this->_messages->addMessage('Submitted information is not valid');
+            $this->_messenger->addMessage('Submitted information is not valid');
         }
         $this->view->inlineScriptMin()->loadGroup('profile')
             ->appendScript('new Pet.ProfileFormView;');

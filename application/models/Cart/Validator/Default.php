@@ -7,13 +7,6 @@
 class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
     
     /**
-     * @return void
-     * 
-     */
-    public function __construct() {
-    }
-
-    /**
      * @param Model_Cart_Product $product
      * @return bool
      */
