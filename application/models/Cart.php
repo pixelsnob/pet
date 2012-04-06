@@ -124,7 +124,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             $messenger->addMessage($msg);
             if ($this->_data['promo']) {
                 $valid = $this->getValidator()
-                    ->validatePromo($this->_data['promo']); 
+                    ->validatePromo($this->_data['promo'], false); 
                 if (!$valid) {
                     $this->removePromo();
                 }

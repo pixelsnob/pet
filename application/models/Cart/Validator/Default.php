@@ -28,7 +28,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
                 }
                 if ($this->_cart->hasDigitalSubscription()) {
                     $msg = 'Digital and print subscriptions not ' .
-                        'allowed in same cart';
+                        'allowed together';
                     $messenger->addMessage($msg);
                     return false;
                 }
@@ -36,7 +36,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
             case Model_ProductType::DIGITAL_SUBSCRIPTION:
                 if ($this->_cart->hasSubscription()) {
                     $msg = 'Digital and print subscriptions not ' .
-                        'allowed in same cart';
+                        'allowed together';
                     $messenger->addMessage($msg);
                     return false;
                 }
@@ -55,7 +55,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      * @return bool
      * 
      */
-    public function validatePromo(Model_Promo $promo) {
+    public function validatePromo(Model_Promo $promo, $msg = true) {
         $messenger = Zend_Registry::get('messenger');
         $valid = false;
         foreach ($promo->promo_products as $pp) {
@@ -63,7 +63,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
                 $valid = true;
             }
         }
-        if (!$valid && $this->_cart->products) {
+        if ($msg && !$valid && $this->_cart->products) {
             $messenger->addMessage('A qualifying product is not in your cart');
         }
         return $valid;
