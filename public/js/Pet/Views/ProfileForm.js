@@ -25,7 +25,7 @@ Pet.ProfileFormView = Backbone.View.extend({
             if (model.get('is_authenticated')) {
                 $.fancybox({
                     href: '/profile/change-password/nolayout/1',
-                    type: 'iframe',
+                    type: 'ajax',
                     scrolling: 'no'
                 });
             } else {

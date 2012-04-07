@@ -19,7 +19,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function subscriptionAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView;');
+            ->appendScript('new Pet.ProductsView; new Pet.CartView;');
     }
 
     public function subscriptionSelectTermAction() {

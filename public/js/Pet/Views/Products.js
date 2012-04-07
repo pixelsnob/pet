@@ -2,15 +2,13 @@
  * Products view
  * 
  */
-Pet.ProductsView = Backbone.View.extend({
+Pet.ProductsView = Pet.View.extend({
     
     el: $('body'),
     
     events: {
         'click form[name=subscription-select-term] .submit input':
-            'submitSelectTermForm',
-        'click form[name=cart] .submit input': 'updateCart',
-        'click form[name=cart] .remove': 'removeProduct'
+            'submitSelectTermForm'
     },
     
     initialize: function(){
@@ -29,39 +27,8 @@ Pet.ProductsView = Backbone.View.extend({
     
     submitSelectTermForm: function(el) {
         var qs = $('form[name=subscription-select-term]', this.el).serialize();
-        $.ajax({
-            'url': '/products/subscription/term/?nolayout',
-            'type': 'post',
-            'data': qs,
-            'success': function(data) {
-                $('.fancybox-inner').html(data);
-            }
-        });
+        this.populateFancyboxPost('/products/subscription/term', qs);
         return false; 
-    },
-
-    updateCart: function() {
-        var qs = $('form[name=cart]', this.el).serialize();
-        $.ajax({
-            'url': '/cart?nolayout',
-            'type': 'post',
-            'data': qs,
-            'success': function(data) {
-                $('.fancybox-inner').html(data);
-            }
-        });
-        return false; 
-    },
-
-    removeProduct: function(el) {
-        $.ajax({
-            'url': $(el.target).attr('href'),
-            'type': 'get',
-            'success': function(data) {
-                $('.fancybox-inner').html(data);
-            }
-        });
-        return false;
     }
 
 });
