@@ -18,8 +18,8 @@ class CartController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $cart_form->isValid($post)) {
             $this->_cart_svc->update($post);
         }
-        //$this->view->inlineScriptMin()->loadGroup('cart')
-        //    ->appendScript('new Pet.CartView;');
+        $this->view->inlineScriptMin()->loadGroup('cart')
+            ->appendScript('new Pet.CartView;');
     }
 
     /**

@@ -1,5 +1,5 @@
 
-<form action="<?php echo $this->cart_form->getAction(); ?>" method="<?php echo $this->cart_form->getMethod(); ?>" name="<?php echo $this->cart_form->getName(); ?>">
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="cart">
     <fieldset class="account">
         <legend>Shopping Cart</legend>
     </fieldset>
@@ -15,7 +15,7 @@
                     echo $qty;
                 }
                 ?>
-                <p><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>">Remove</a></p>
+                <p><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>" class="remove">Remove</a></p>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -24,7 +24,6 @@
         <p>You have no items in your cart</p> 
     <?php endif; ?>
 </form>
-<p><a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>">Continue shopping?</a></p>
 <!--<pre style="font-size:9px;line-height:12px;">
 <?php print_r($this->cart); print_r($this->cart->getTotals()); ?>
 </pre>-->

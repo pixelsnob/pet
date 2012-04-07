@@ -5,8 +5,6 @@ class ProductsController extends Zend_Controller_Action {
     public function init() {
         $this->_products_svc = new Service_Products;
         //$this->view->headLink()->appendStylesheet('/css/store.css');
-        $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView;');
     }
 
     /**
@@ -20,14 +18,16 @@ class ProductsController extends Zend_Controller_Action {
      * 
      */
     public function subscriptionAction() {
-        
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript('new Pet.ProductsView;');
     }
 
     public function subscriptionSelectTermAction() {
         $zone_id = $this->_request->getParam('zone_id');
         $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, false);
         if ($subs) {
-            $form = $this->_products_svc->getSubscriptionTermSelectForm($subs);
+            $form = $this->_products_svc->getSubscriptionTermSelectForm(
+                $subs, $zone_id);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');

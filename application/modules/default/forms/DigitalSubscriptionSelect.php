@@ -17,7 +17,7 @@ class Default_Form_DigitalSubscriptionSelect extends Pet_Form {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please select am option'
+                    'messages' => 'Please select an option'
                 ))
             )
         ));

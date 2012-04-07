@@ -6,17 +6,17 @@
 class Default_Form_SubscriptionTermSelect extends Pet_Form {
     
     /**
-     * @var array 
+     * @var int
      * 
      */
-    protected $_zones = array();
-    
+    protected $_zone_id;
+
     /**
-     * @param Pet_Model_Mapper_Abstract $mapper
+     * @param int
      * @return void
      */
-    public function setZones(array $zones) {
-        $this->_zones = $zones;
+    public function setZoneId($zone_id) {
+        $this->_zone_id = $zone_id;
     }
 
     /**
@@ -25,7 +25,6 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
      */
     public function init() {
         parent::init();
-        $this->setMethod('post')->setName('susbscription_term_select');
         $this->addElement('radio', 'product_id', array(
             'label' => 'Subscriptions',
             'required' => true,
@@ -34,6 +33,8 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
                     'messages' => 'Please select a term'
                 ))
             )
+        ))->addElement('hidden', 'zone_id', array(
+            'value' => $this->_zone_id
         ));
         
     }

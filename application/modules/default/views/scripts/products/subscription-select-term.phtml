@@ -1,10 +1,13 @@
 
-<form action="<?php echo $this->select_term_form->getAction(); ?>" method="<?php echo $this->select_term_form->getMethod(); ?>" name="<?php echo $this->select_term_form->getName(); ?>">
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="subscription-select-term">
     <fieldset class="account">
         <legend>Select Term</legend>
         <?php echo $this->select_term_form->product_id->renderViewHelper(); ?>
         <?php echo $this->select_term_form->product_id->renderErrors(); ?>
     </fieldset>
-    <p class="submit"><input type="submit" value="Buy"></p>
+    <p class="submit">
+        <?php echo $this->select_term_form->zone_id->renderViewHelper(); ?>
+        <input type="submit" value="Buy">
+    </p>
 </form>
 
