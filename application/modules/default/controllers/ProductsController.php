@@ -16,15 +16,21 @@ class ProductsController extends Zend_Controller_Action {
     }
 
     /**
+     * Regular subscriptions 
      * 
      */
     public function subscriptionAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
-        $this->view->gift = $this->_request->getParam('gift');
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
+        // We need to load profile.css because login form needs it
+        $this->view->headLink()->appendStylesheet('/css/profile.css');
     }
 
+    /**
+     * Renewals
+     * 
+     */
     public function subscriptionRenewAction() {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_forward('subscription-term-select', 'products',
@@ -39,6 +45,10 @@ class ProductsController extends Zend_Controller_Action {
         }
     }
 
+    /**
+     * Term select form, subscriptions, gift and non
+     * 
+     */
     public function subscriptionTermSelectAction() {
         $zone_id = $this->_request->getParam('zone_id');
         $gift    = $this->_request->getParam('gift');
@@ -75,6 +85,7 @@ class ProductsController extends Zend_Controller_Action {
     }
 
     /**
+     * Digital subscriptions 
      * 
      */
     public function digitalAction() {
@@ -82,6 +93,11 @@ class ProductsController extends Zend_Controller_Action {
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
     }
     
+    /**
+     * Term select form, digital subscriptions
+     * 
+     * 
+     */
     public function digitalSelectAction() {
         $subs = $this->_products_svc->getDigitalSubscriptions();
         if ($subs) {
@@ -99,5 +115,13 @@ class ProductsController extends Zend_Controller_Action {
             throw new Exception('Zone not found'); 
         }
     }
-
+    
+    /**
+     * Gift subscriptions
+     * 
+     */
+    public function giftSubscriptionAction() {
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript('new Pet.ProductsView; new Pet.CartView;');
+    }
 }

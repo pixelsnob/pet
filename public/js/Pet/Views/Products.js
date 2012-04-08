@@ -12,12 +12,14 @@ Pet.ProductsView = Pet.View.extend({
         'click form[name=digital-subscription-select] .submit input':
             'submitDigitalSelectForm',
         'click form[name=login] .submit input':
-            'submitLoginForm'
+            'submitLoginForm',
+        'click .forgot-password a': 'resetPasswordRequestForm',
+        'click form[name=reset-password-request] .submit input':
+            'submitResetPasswordRequestForm',
     },
     
     initialize: function(){
         var sel = '.subscription-zones a, .digital-subscription a';
-            //'.renew a';
         $(sel, this.el).fancybox(this.getFancyboxOpts());
         $('.renew a', this.el).fancybox(this.getFancyboxOpts({
             afterClose: function() {
@@ -49,6 +51,17 @@ Pet.ProductsView = Pet.View.extend({
             '&redirect_params[renewal]=1&redirect_params[nolayout]=1';
         this.populateFancyboxPost('/profile/login/', qs);
         return false; 
+    },
+
+    resetPasswordRequestForm: function() {
+        this.populateFancyboxGet('/profile/reset-password-request/');
+        return false; 
+    },
+
+    submitResetPasswordRequestForm: function() {
+        var qs = $('form[name=reset-password-request]', this.el).serialize();
+        this.populateFancyboxPost('/profile/reset-password-request', qs);
+        return false;
     }
 
 });

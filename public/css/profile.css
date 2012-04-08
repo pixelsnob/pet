@@ -17,3 +17,6 @@ fieldset.profile dd, fieldset.profile dt {
     padding-bottom: 20px;
 }
 
+.forgot-password {
+    margin-top: 20px;
+}

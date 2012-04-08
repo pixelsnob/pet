@@ -177,11 +177,16 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
 
     /**
      * @param int $product_type_id
+     * @param bool $gift
      * @return int
+     * 
      */
-    public function getQtyByProductTypeId($product_type_id) {
+    public function getQtyByProductTypeId($product_type_id, $gift = false) {
         $qty = 0;
         foreach ($this->_data['products'] as $product) {
+            if ($gift && $product->gift) {
+                continue;
+            }
             if ($product->product_type_id == $product_type_id) {
                 $qty += $product->qty;
             }
@@ -242,7 +247,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      */
     public function hasSubscription() {
         return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::SUBSCRIPTION);
+            Model_ProductType::SUBSCRIPTION, true);
     }
 
     /**

@@ -6,6 +6,7 @@ class ProfileController extends Zend_Controller_Action {
         $this->view->getHelper('serverUrl')->setScheme('https');
         $this->_users_svc = new Service_Users;
         $this->_messenger = Zend_Registry::get('messenger');
+        $this->view->headLink()->appendStylesheet('/css/profile.css');
     }
 
     /**
@@ -13,7 +14,6 @@ class ProfileController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        $this->view->headLink()->appendStylesheet('/css/profile.css');
         if (!$this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('login');
         }
