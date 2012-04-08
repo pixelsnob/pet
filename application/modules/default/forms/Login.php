@@ -10,7 +10,6 @@ class Default_Form_Login extends Pet_Form {
      * 
      */
     public function init() {
-        $this->setMethod('post')->setName('login_form');
         $this->addElement('text', 'username', array(
             'label' => 'Username',
             'id' => 'login-username',
