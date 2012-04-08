@@ -3,7 +3,8 @@
     width: 500px;
 }
 
-#cart {
+#cart, .no-items {
+    margin-top: 20px;
 }
 
 #cart li {

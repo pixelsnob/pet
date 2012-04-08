@@ -93,3 +93,6 @@ form p.submit {
     display: block;
 }
 
+label input {
+    margin-right: 7px;
+}

@@ -31,6 +31,8 @@ Pet.ProductsView = Pet.View.extend({
             var href = $(this).attr('href');
             $(this).attr('href', href + '?nolayout');
         });
+        this.addStylesheet('/css/cart.css'); 
+        this.addStylesheet('/css/profile.css'); 
     },
     
     submitSubscriptionTermSelectForm: function() {

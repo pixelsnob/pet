@@ -5,7 +5,6 @@ class ProductsController extends Zend_Controller_Action {
     public function init() {
         $this->_products_svc = new Service_Products;
         $this->_users_svc = new Service_Users;
-        //$this->view->headLink()->appendStylesheet('/css/store.css');
     }
 
     /**
@@ -24,7 +23,7 @@ class ProductsController extends Zend_Controller_Action {
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         // We need to load profile.css because login form needs it
-        $this->view->headLink()->appendStylesheet('/css/profile.css');
+        //$this->view->headLink()->appendStylesheet('/css/profile.css');
     }
 
     /**

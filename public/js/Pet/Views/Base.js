@@ -41,6 +41,14 @@ Pet.View = Backbone.View.extend({
             height: 350,
             autoSize: false
         }, opts);
+    },
+
+    addStylesheet: function(href) {
+        $('head').append($('<link>').attr({
+            rel: 'stylesheet',
+            type: 'text/css',
+            href: href
+        }));
     }
 
 });
