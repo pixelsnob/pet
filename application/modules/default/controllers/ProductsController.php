@@ -27,19 +27,19 @@ class ProductsController extends Zend_Controller_Action {
 
     public function subscriptionRenewAction() {
         if ($this->_users_svc->isAuthenticated()) {
-            $this->_forward('subscription-select-term', 'products',
+            $this->_forward('subscription-term-select', 'products',
                 'default', array('renewal' => 1));
         } else {
             $this->_forward('login', 'profile', 'default', 
                 array(
-                    'redirect_to'     => 'products_subscription_select_term',
+                    'redirect_to'     => 'products_subscription_term_select',
                     'redirect_params' => array('renewal' => 1)
                 )
             );
         }
     }
 
-    public function subscriptionSelectTermAction() {
+    public function subscriptionTermSelectAction() {
         $zone_id = $this->_request->getParam('zone_id');
         $gift    = $this->_request->getParam('gift');
         $renewal = (bool) $this->_request->getParam('renewal');
@@ -56,7 +56,7 @@ class ProductsController extends Zend_Controller_Action {
         $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, $renewal);
         if ($subs) {
             $form = $this->_products_svc->getSubscriptionTermSelectForm(
-                $subs, $zone_id, $gift);
+                $subs, $zone_id, $gift, $renewal);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');

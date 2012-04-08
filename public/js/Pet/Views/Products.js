@@ -45,7 +45,8 @@ Pet.ProductsView = Pet.View.extend({
 
     submitLoginForm: function() {
         var qs = $('form[name=login]', this.el).serialize();
-        qs += '&redirect_to=products_subscription_select_term&redirect_params[renewal]=1&redirect_params[nolayout]=1';
+        qs += '&redirect_to=products_subscription_select_term' +
+            '&redirect_params[renewal]=1&redirect_params[nolayout]=1';
         this.populateFancyboxPost('/profile/login/', qs);
         return false; 
     }

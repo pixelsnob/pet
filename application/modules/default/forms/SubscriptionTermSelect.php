@@ -34,6 +34,20 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
     }
 
     /**
+     * @var int
+     * 
+     */
+    protected $_renewal;
+
+    /**
+     * @param int
+     * @return void
+     */
+    public function setRenewal($renewal) {
+        $this->_renewal = $renewal;
+    }
+
+    /**
      * @return void
      * 
      */
@@ -51,6 +65,8 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
             'value' => $this->_zone_id
         ))->addElement('hidden', 'gift', array(
             'value' => $this->_gift
+        ))->addElement('hidden', 'renewal', array(
+            'value' => $this->_renewal
         ));
         
     }
