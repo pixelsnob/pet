@@ -18,10 +18,10 @@ class Default_Form_UserProfile extends Pet_Form {
     protected $_mapper;
 
     /**
-     * @param Model_User $user
+     * @param StdClass $identity
      * @return void
      */
-    public function setIdentity(Model_User $identity) {
+    public function setIdentity(StdClass $identity) {
         $this->_identity = $identity;
     }
 

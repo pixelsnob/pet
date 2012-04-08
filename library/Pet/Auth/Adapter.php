@@ -39,9 +39,9 @@ class Pet_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         $code = Zend_Auth_Result::FAILURE;
         $identity = null;
         $messages = array();
-        $users = new Model_Mapper_Users;
         $users_svc = new Service_Users;
-        $user = $users->getActiveByUsername($this->_username);
+        $user = $users_svc->getActiveUserByUsername($this->_username);
+        //$profile = $users_svc->getProfile($user->id);
         if ($user && $users_svc->validatePassword($user->password,
             $this->_password)) {
             $code = Zend_Auth_Result::SUCCESS;

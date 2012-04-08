@@ -1,20 +1,24 @@
 
 <h2>Magazine</h2>
-<ul class="subscription-zones">
-    <li>
-        <h3>USA</h3>
-        <p>From $59</p>
-        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2, 'gift' => $this->gift), 'products_subscription_select_term')); ?>">Select Term</a>
-    </li>
-    <li>
-        <h3>Canada</h3>
-        <p>From $59</p>
-        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1, 'gift' => $this->gift), 'products_subscription_select_term')); ?>">Select Term</a>
-    </li>
-    <li>
-        <h3>International</h3>
-        <p>From $59</p>
-        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3, 'gift' => $this->gift), 'products_subscription_select_term')); ?>">Select Term</a>
-    </li>
-</ul>
 
+<?php if (!$this->is_authenticated): ?>
+    <ul class="subscription-zones">
+        <li>
+            <h3>USA</h3>
+            <p>From $59</p>
+            <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2, 'gift' => $this->gift), 'products_subscription_select_term')); ?>">Select Term</a>
+        </li>
+        <li>
+            <h3>Canada</h3>
+            <p>From $59</p>
+            <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1, 'gift' => $this->gift), 'products_subscription_select_term')); ?>">Select Term</a>
+        </li>
+        <li>
+            <h3>International</h3>
+            <p>From $59</p>
+            <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3, 'gift' => $this->gift), 'products_subscription_select_term')); ?>">Select Term</a>
+        </li>
+    </ul>
+<?php endif; ?>
+
+<a href="<?php echo $this->serverUrl($this->url(array(), 'products_subscription_renew')); ?>">Renew</a>

@@ -6,12 +6,6 @@
 class Service_Products extends Pet_Service {
     
     /**
-     * @param string
-     * 
-     */
-    protected $_message = '';
-
-    /**
      * @return void
      * 
      */
@@ -23,7 +17,7 @@ class Service_Products extends Pet_Service {
         return $this->_products->getById($product_id);
     }
 
-    public function getSubscriptionsByZoneId($zone_id, $is_renewal = null) {
+    public function getSubscriptionsByZoneId($zone_id, $is_renewal = false) {
         return $this->_products->getSubscriptionsByZoneId($zone_id,
             $is_renewal);
     }
@@ -54,5 +48,10 @@ class Service_Products extends Pet_Service {
         }
         $form->product_id->setMultiOptions($subs);
         return $form; 
+    }
+
+    public function getSubscriptionZoneByName($country_name) {
+        $sz_mapper = new Model_Mapper_SubscriptionZones;
+        return $sz_mapper->getByName($country_name);
     }
 }

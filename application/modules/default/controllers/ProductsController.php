@@ -4,6 +4,7 @@ class ProductsController extends Zend_Controller_Action {
 
     public function init() {
         $this->_products_svc = new Service_Products;
+        $this->_users_svc = new Service_Users;
         //$this->view->headLink()->appendStylesheet('/css/store.css');
     }
 
@@ -21,12 +22,38 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
         $this->view->gift = $this->_request->getParam('gift');
+        $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
+    }
+
+    public function subscriptionRenewAction() {
+        if ($this->_users_svc->isAuthenticated()) {
+            $this->_forward('subscription-select-term', 'products',
+                'default', array('renewal' => 1));
+        } else {
+            $this->_forward('login', 'profile', 'default', 
+                array(
+                    'redirect_to'     => 'products_subscription_select_term',
+                    'redirect_params' => array('renewal' => 1)
+                )
+            );
+        }
     }
 
     public function subscriptionSelectTermAction() {
         $zone_id = $this->_request->getParam('zone_id');
-        $gift = $this->_request->getParam('gift');
-        $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, false);
+        $gift    = $this->_request->getParam('gift');
+        $renewal = (bool) $this->_request->getParam('renewal');
+        // Attempt to get the user's zone from their profile if zone_id is not
+        // passed
+        if ($renewal && !$zone_id && $this->_users_svc->isAuthenticated()) {
+            $profile = $this->_users_svc->getProfile();
+            $sz = $this->_products_svc->getSubscriptionZoneByName(
+                $profile->billing_country);
+            if ($sz) {
+                $zone_id = $sz->id;
+            }
+        }
+        $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, $renewal);
         if ($subs) {
             $form = $this->_products_svc->getSubscriptionTermSelectForm(
                 $subs, $zone_id, $gift);

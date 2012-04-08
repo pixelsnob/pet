@@ -9,43 +9,6 @@ class ProfileController extends Zend_Controller_Action {
     }
 
     /**
-     * Shows the login form
-     * 
-     */
-    public function loginAction() {
-        if ($this->_users_svc->isAuthenticated()) {
-            $this->_helper->Redirector->gotoSimple('index');
-        }
-        // Don't let the user log in if "nolayout" param is present
-        if ($this->_request->getParam('nolayout')) {
-            $this->_helper->Redirector->gotoSimple('timeout');
-        }
-        $login_form = $this->_users_svc->getLoginForm();
-        $this->view->login_form = $login_form;
-        $post = $this->_request->getPost();
-        if ($this->_request->isPost() && $login_form->isValid($post)) {
-            if ($this->_users_svc->login($post)) {
-                $this->_users_svc->updateLastLogin();
-                $this->_users_svc->logUserAction('User logged in');
-                $this->_helper->Redirector->gotoSimple('index');
-            } else {
-                $this->view->login_failed = true;
-            } 
-        }
-    }
-    
-    /**
-     * Logs out a user
-     * 
-     */
-    public function logoutAction() {
-        if ($this->_users_svc->isAuthenticated()) {
-            $this->_users_svc->logout(); 
-        }
-        $this->_helper->Redirector->gotoSimple('login');
-    }
-
-    /**
      * Profile form for logged-in users
      * 
      */
@@ -73,6 +36,50 @@ class ProfileController extends Zend_Controller_Action {
         }
         $this->view->inlineScriptMin()->loadGroup('profile')
             ->appendScript('new Pet.ProfileFormView;');
+    }
+
+    /**
+     * Shows the login form
+     * 
+     */
+    public function loginAction() {
+        if ($this->_users_svc->isAuthenticated()) {
+            $this->_helper->Redirector->gotoSimple('index');
+        }
+        // Don't let the user log in if "nolayout" param is present
+        if ($this->_request->getParam('nolayout')) {
+            $this->_helper->Redirector->gotoSimple('timeout');
+        }
+        $redirect = $this->_request->getParam('redirect_to');
+        $redirect_params = (array) $this->_request->getParam('redirect_params');
+        $login_form = $this->_users_svc->getLoginForm();
+        $this->view->login_form = $login_form;
+        $post = $this->_request->getPost();
+        if ($this->_request->isPost() && $login_form->isValid($post)) {
+            if ($this->_users_svc->login($post)) {
+                $this->_users_svc->updateLastLogin();
+                $this->_users_svc->logUserAction('User logged in');
+                if ($redirect) {
+                    $this->_helper->Redirector->gotoRoute($redirect_params,
+                        $redirect);
+                } else {
+                    $this->_helper->Redirector->gotoSimple('index');
+                }
+            } else {
+                $this->view->login_failed = true;
+            } 
+        }
+    }
+    
+    /**
+     * Logs out a user
+     * 
+     */
+    public function logoutAction() {
+        if ($this->_users_svc->isAuthenticated()) {
+            $this->_users_svc->logout(); 
+        }
+        $this->_helper->Redirector->gotoSimple('login');
     }
 
     /**

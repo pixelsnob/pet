@@ -74,6 +74,14 @@ class Service_Users extends Pet_Service {
         }
         return $this->_users->getById($user_id);
     }
+
+    /**
+     * @return Model_User
+     * 
+     */
+    public function getActiveUserByUsername($username) {
+        return $this->_users->getActiveByUsername($username); 
+    }
     
     /**
      * @return Model_User
