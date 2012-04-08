@@ -26,7 +26,6 @@ class Default_Form_ChangePassword extends Pet_Form {
      */
     public function init() {
         parent::init();
-        $this->setMethod('post')->setName('change_pw_form');
         // Password
         $this->addElement('password', 'password', array(
             'label' => 'Password',

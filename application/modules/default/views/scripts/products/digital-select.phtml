@@ -1,5 +1,5 @@
 
-<form action="<?php echo $this->digital_select_form->getAction(); ?>" method="<?php echo $this->digital_select_form->getMethod(); ?>" name="<?php echo $this->digital_select_form->getName(); ?>">
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="digital-subscription-select">
     <fieldset class="account">
         <legend>Select Subscription</legend>
         <?php echo $this->digital_select_form->product_id->renderViewHelper(); ?>

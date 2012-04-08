@@ -20,6 +20,20 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
     }
 
     /**
+     * @var int
+     * 
+     */
+    protected $_gift;
+
+    /**
+     * @param int
+     * @return void
+     */
+    public function setGift($gift) {
+        $this->_gift = $gift;
+    }
+
+    /**
      * @return void
      * 
      */
@@ -35,6 +49,8 @@ class Default_Form_SubscriptionTermSelect extends Pet_Form {
             )
         ))->addElement('hidden', 'zone_id', array(
             'value' => $this->_zone_id
+        ))->addElement('hidden', 'gift', array(
+            'value' => $this->_gift
         ));
         
     }

@@ -17,6 +17,7 @@ class CartController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $cart_form->isValid($post)) {
             $this->_cart_svc->update($post);
+            $this->view->use_current_messages = true;
         }
         //$this->view->inlineScriptMin()->loadGroup('cart')
         //    ->appendScript('new Pet.CartView;');
@@ -27,7 +28,8 @@ class CartController extends Zend_Controller_Action {
      */
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
-        $this->_cart_svc->addProduct($product_id);
+        $gift = $this->_request->getParam('gift');
+        $this->_cart_svc->addProduct($product_id, $gift);
         $this->_helper->Redirector->setGotoSimple('index');
     }
     

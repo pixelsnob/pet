@@ -38,13 +38,14 @@ class Service_Cart {
 
     /**
      * @param int $product_id
+     * @param int $gift
      * @return bool
      * 
      */
-    public function addProduct($product_id) {
+    public function addProduct($product_id, $gift) {
         $product = $this->_products_svc->getById($product_id);
         if ($product) {
-            if (!$this->_cart->addProduct($product)) {
+            if (!$this->_cart->addProduct($product, $gift)) {
                 return false;
             }
         } else {

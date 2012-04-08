@@ -28,13 +28,15 @@ class Service_Products extends Pet_Service {
             $is_renewal);
     }
 
-    public function getSubscriptionTermSelectForm(array $subscriptions, $zone_id) {
+    public function getSubscriptionTermSelectForm(array $subscriptions,
+                                                  $zone_id, $gift) {
         $form = new Default_Form_SubscriptionTermSelect(array(
-            'zoneId' => $zone_id
+            'zoneId' => $zone_id,
+            'gift'   => $gift
         ));
         $subs = array();
         foreach ($subscriptions as $sub) {
-            $subs[$sub->product_id] = $sub->name;
+            $subs[$sub->product_id] = $sub->name . ($gift ? ' (gift)' : '');
         }
         $form->product_id->setMultiOptions($subs);
         return $form; 

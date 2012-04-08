@@ -20,19 +20,24 @@ class ProductsController extends Zend_Controller_Action {
     public function subscriptionAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
+        $this->view->gift = $this->_request->getParam('gift');
     }
 
     public function subscriptionSelectTermAction() {
         $zone_id = $this->_request->getParam('zone_id');
+        $gift = $this->_request->getParam('gift');
         $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, false);
         if ($subs) {
             $form = $this->_products_svc->getSubscriptionTermSelectForm(
-                $subs, $zone_id);
+                $subs, $zone_id, $gift);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
                 $this->_helper->Redirector->setGotoSimple('add', 'cart',
-                    'default',  array('product_id' => $product_id));
+                    'default',  array(
+                        'product_id' => $product_id,
+                        'gift' => $gift
+                    ));
             } else {
                 $form->populate($post);
             }
@@ -46,7 +51,8 @@ class ProductsController extends Zend_Controller_Action {
      * 
      */
     public function digitalAction() {
-        
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript('new Pet.ProductsView; new Pet.CartView;');
     }
     
     public function digitalSelectAction() {
@@ -67,9 +73,4 @@ class ProductsController extends Zend_Controller_Action {
         }
     }
 
-    /**
-     * 
-     */
-    public function giftAction() {
-    }
 }

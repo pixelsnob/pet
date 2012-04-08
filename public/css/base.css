@@ -44,7 +44,7 @@ ul.errors li {
     margin: 0;
 }
 
-legend {
+legend, h2 {
     padding-bottom: 25px;
     color: #AD6A51;
     font-family: Georgia, serif;
