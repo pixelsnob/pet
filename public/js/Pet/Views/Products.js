@@ -31,8 +31,6 @@ Pet.ProductsView = Pet.View.extend({
             var href = $(this).attr('href');
             $(this).attr('href', href + '?nolayout');
         });
-        this.addStylesheet('/css/cart.css'); 
-        this.addStylesheet('/css/profile.css'); 
     },
     
     submitSubscriptionTermSelectForm: function() {
@@ -48,7 +46,11 @@ Pet.ProductsView = Pet.View.extend({
     },
 
     submitLoginForm: function() {
-        var qs = $('form[name=login]', this.el).serialize();
+        var login_form = $('form[name=login]', this.el);
+        if (login_form.attr('action').substr(0, 5) == 'https') {
+            window.location.port = 443;
+        }
+        var qs = login_form.serialize();
         qs += '&redirect_to=products_subscription_select_term' +
             '&redirect_params[renewal]=1&redirect_params[nolayout]=1';
         this.populateFancyboxPost('/profile/login/', qs);
@@ -61,7 +63,11 @@ Pet.ProductsView = Pet.View.extend({
     },
 
     submitResetPasswordRequestForm: function() {
-        var qs = $('form[name=reset-password-request]', this.el).serialize();
+        var rpr_form = $('form[name=reset-password-request]', this.el);
+        if (rpr_form.attr('action').substr(0, 5) == 'https') {
+            window.location.port = 443;
+        }
+        var qs = rpr_form.serialize();
         this.populateFancyboxPost('/profile/reset-password-request', qs);
         return false;
     }

@@ -22,8 +22,8 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
-        // We need to load profile.css because login form needs it
-        //$this->view->headLink()->appendStylesheet('/css/profile.css');
+        $this->view->headLink()->appendStylesheet('/css/cart.css')
+            ->appendStylesheet('/css/profile.css');
     }
 
     /**
