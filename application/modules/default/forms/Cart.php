@@ -46,6 +46,7 @@ class Default_Form_Cart extends Pet_Form {
             if (!$product->gift && in_array($product->product_type_id, $no_qty_types)) {
                 $qty->getElement($product->product_id)
                     ->setAttrib('readonly', true)
+                    ->setOptions(array('class' => 'readonly'))
                     ->addValidator('LessThan', true, array(
                         'max' => 2,
                         'messages' => 'Multiple quantities of this item not allowed'

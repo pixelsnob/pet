@@ -39,6 +39,11 @@
     margin: 0 10px;
 }
 
+#cart .item input.readonly {
+    opacity: 0.3;
+
+}
+
 #nolayout #cart .items {
     height: 280px;
     width: 650px;
