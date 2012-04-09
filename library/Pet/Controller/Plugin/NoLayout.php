@@ -13,7 +13,7 @@ class Pet_Controller_Plugin_NoLayout extends Zend_Controller_Plugin_Abstract {
         $fc = Zend_Controller_Front::getInstance();
         if (strpos($request->getRequestUri(), 'nolayout') !== false) {
             $layout = $fc->getParam('bootstrap')->getResource('layout');
-            $layout->disableLayout();
+            $layout->setLayout('nolayout');
             $request->setParam('nolayout', true);
         }
     }

@@ -8,19 +8,24 @@ Pet.View = Backbone.View.extend({
 
     populateFancyboxGet: function(url) {
         url += '?nolayout';
+        var obj = this;
         $.ajax({
             'url': url,
             'type': 'get',
             'async': false,
             'success': function(data) {
                 $('.fancybox-inner').html(data);
+                $.fancybox.update();
             },
-            'error': $('.fancybox-inner').html(this.error_msg)
+            'error': function() {
+                $('.fancybox-inner').html(obj.error_msg);
+            }
         });
     },
 
     populateFancyboxPost: function(url, post_data) {
         url += '?nolayout';
+        var obj = this;
         $.ajax({
             'url': url,
             'type': 'post',
@@ -28,8 +33,11 @@ Pet.View = Backbone.View.extend({
             'async': false,
             'success': function(data) {
                 $('.fancybox-inner').html(data);
+                $.fancybox.update();
             },
-            'error': $('.fancybox-inner').html(this.error_msg)
+            'error': function() {
+                $('.fancybox-inner').html(obj.error_msg);
+            }
         });
     },
 
@@ -38,7 +46,7 @@ Pet.View = Backbone.View.extend({
             type: 'ajax',
             scrolling: 'no',
             width: 550,
-            height: 350,
+            height: 380,
             autoSize: false
         }, opts);
     }

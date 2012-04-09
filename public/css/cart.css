@@ -1,18 +1,20 @@
 
-#cart {
-    width: 500px;
+#cart .items {
+    height: 230px;
+    width: 550px;
+    overflow: auto;
 }
 
-#cart, .no-items {
+#cart .items, .no-items {
     margin-top: 20px;
 }
 
-#cart li {
+#cart .items li {
     background: none;
     padding: 0;
 }
 
-#cart li h4 {
+#cart .items li h4 {
     font-size: 14px;
     font-weight: bold;
 }

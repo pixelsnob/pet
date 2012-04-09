@@ -31,11 +31,13 @@ Pet.ProductsView = Pet.View.extend({
             var href = $(this).attr('href');
             $(this).attr('href', href + '?nolayout');
         });
+        this.addContinueShoppingButton();
     },
     
     submitSubscriptionTermSelectForm: function() {
         var qs = $('form[name=subscription-select-term]', this.el).serialize();
         this.populateFancyboxPost('/products/subscription/term', qs);
+        //$('#cart .submit', this.el).hide();
         return false; 
     },
 
@@ -70,6 +72,9 @@ Pet.ProductsView = Pet.View.extend({
         var qs = rpr_form.serialize();
         this.populateFancyboxPost('/profile/reset-password-request', qs);
         return false;
+    },
+
+    addContinueShoppingButton: function() {
     }
 
 });

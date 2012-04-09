@@ -1,32 +1,36 @@
 
-<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="cart">
-    <fieldset class="account">
-        <legend>Shopping Cart</legend>
-    </fieldset>
-    <?php echo $this->flashMessenger($this->use_current_messages); ?>
-    <?php if (!empty($this->cart->products)):  ?>
-        <ul id="cart"> 
-            <?php foreach ($this->cart->products as $product): ?>
-            <li>
-                <h4><?php echo $this->escape($product->name) . ($product->gift ? ' (gift)' : ''); ?></h4>
-                <?php
-                $qty = $this->cart_form->qty->getElement($product->product_id);
-                if ($qty) {
-                    echo $qty;
-                }
-                ?>
-                <p><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>" class="remove">Remove</a></p>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-        <p class="submit"><input type="submit" value="Update"></p>
-    <?php else: ?>
-        <p class="no-items">You have no items in your cart</p> 
-    <?php endif; ?>
-</form>
+<div id="cart">
+    <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="cart">
+        <fieldset class="account">
+            <legend>Shopping Cart</legend>
+        </fieldset>
+        <?php echo $this->flashMessenger($this->use_current_messages); ?>
+        <?php if (!empty($this->cart->products)):  ?>
+            <div class="items">
+                <ul> 
+                    <?php foreach ($this->cart->products as $product): ?>
+                    <li>
+                        <h4><?php echo $this->escape($product->name) . ($product->gift ? ' (gift)' : ''); ?></h4>
+                        <?php
+                        $qty = $this->cart_form->qty->getElement($product->product_id);
+                        if ($qty) {
+                            echo $qty;
+                        }
+                        ?>
+                        <p><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>" class="remove">Remove</a></p>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <p class="submit"><input type="submit" value="Update"></p>
+        <?php else: ?>
+            <p class="no-items">You have no items in your cart</p> 
+        <?php endif; ?>
+    </form>
 
-<!--
-<pre style="font-size:9px;line-height:12px;">
-<?php print_r($this->cart); print_r($this->cart->getTotals()); ?>
-</pre>
--->
+    <!--
+    <pre style="font-size:9px;line-height:12px;">
+    <?php /*print_r($this->cart); print_r($this->cart->getTotals());*/ ?>
+    </pre>
+    -->
+</div>

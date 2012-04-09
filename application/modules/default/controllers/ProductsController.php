@@ -90,6 +90,8 @@ class ProductsController extends Zend_Controller_Action {
     public function digitalAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
+        $this->view->headLink()->appendStylesheet('/css/cart.css')
+            ->appendStylesheet('/css/profile.css');
     }
     
     /**
@@ -122,5 +124,7 @@ class ProductsController extends Zend_Controller_Action {
     public function giftSubscriptionAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView; new Pet.CartView;');
+        $this->view->headLink()->appendStylesheet('/css/cart.css')
+            ->appendStylesheet('/css/profile.css');
     }
 }
