@@ -46,10 +46,6 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('index');
         }
-        // Don't let the user log in if "nolayout" param is present
-        /*if ($this->_request->getParam('nolayout')) {
-            $this->_helper->Redirector->gotoSimple('timeout');
-        }*/
         $redirect = $this->_request->getParam('redirect_to');
         $redirect_params = (array) $this->_request->getParam('redirect_params');
         $login_form = $this->_users_svc->getLoginForm();
@@ -66,7 +62,9 @@ class ProfileController extends Zend_Controller_Action {
                     $this->_helper->Redirector->gotoSimple('index');
                 }
             } else {
-                $this->view->login_failed = true;
+                $messenger = Zend_Registry::get('messenger');
+                $messenger->addMessage('Login failed');
+
             } 
         }
     }

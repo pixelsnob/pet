@@ -1,4 +1,5 @@
 
+<?php echo $this->flashMessenger(true); ?>
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="login">
     <dl class="form">
         <dt><?php echo $this->login_form->username->getLabel(); ?></dt>
@@ -14,5 +15,4 @@
     </dl>
     <p class="submit"><input type="submit" value="Login" id="login-submit"></p>
 </form>
-<?php if ($this->login_failed): ?><p class="error">Login failed</p><?php endif; ?>
 <p class="forgot-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'reset_password_request')); ?>">Forgot your password?</a></p>
