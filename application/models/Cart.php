@@ -180,10 +180,13 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return int
      * 
      */
-    public function getQtyByProductTypeId($product_type_id) {
+    public function getQtyByProductTypeId($product_type_id, $gift = false) {
         $qty = 0;
         foreach ($this->_data['products'] as $product) {
             if ($product->product_type_id == $product_type_id) {
+                if (!$gift && $product->gift) {
+                    continue; 
+                }
                 $qty += $product->qty;
             }
         }
@@ -241,20 +244,24 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return bool
      * 
      */
-    public function hasSubscription() {
+    public function hasSubscription($gift = false) {
         return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::SUBSCRIPTION, true);
+            Model_ProductType::SUBSCRIPTION, $gift);
     }
 
     /**
      * @return bool
      * 
      */
-    public function hasDigitalSubscription() {
+    public function hasDigitalSubscription($gift = false) {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::DIGITAL_SUBSCRIPTION);
     }
     
+    /**
+     * @return array An array of totals
+     * 
+     */
     public function getTotals() {
         $totals['subtotal'] = 0;
         $totals['total'] = 0;
@@ -274,7 +281,12 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         }
         return $totals;
     }
-
+    
+    /**
+     * @param Model_Promo $promo
+     * @return bool
+     * 
+     */
     public function addPromo(Model_Promo $promo) {
         if (!$this->getValidator()->validatePromo($promo)) {
             return false;
