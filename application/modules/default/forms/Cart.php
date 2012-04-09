@@ -25,7 +25,7 @@ class Default_Form_Cart extends Pet_Form {
         );
         foreach ($this->_cart->products as $product) {
             $qty->addElement('text', $product->product_id, array(
-                'label' => 'Quantity',
+                'label' => 'Quantity:',
                 'belongsTo' => 'qty',
                 'required' => true,
                 'validators'   => array(

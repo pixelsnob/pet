@@ -45,8 +45,8 @@ Pet.View = Backbone.View.extend({
         return $.extend({
             type: 'ajax',
             scrolling: 'no',
-            width: 550,
-            height: 380,
+            width: 650,
+            height: 420,
             autoSize: false
         }, opts);
     }

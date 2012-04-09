@@ -15,12 +15,15 @@ class CartController extends Zend_Controller_Action {
         $cart_form = $this->_cart_svc->getCartForm();
         $this->view->cart_form = $cart_form;
         $post = $this->_request->getPost();
-        if ($this->_request->isPost() && $cart_form->isValid($post)) {
-            $this->_cart_svc->update($post);
+        if ($this->_request->isPost()) {
+            if ($cart_form->isValid($post)) {
+                $this->_cart_svc->update($post);
+            } else {
+                $messenger = Zend_Registry::get('messenger');
+                $messenger->addMessage('Submitted information is not valid');
+            }
             $this->view->use_current_messages = true;
         }
-        //$this->view->inlineScriptMin()->loadGroup('cart')
-        //    ->appendScript('new Pet.CartView;');
     }
 
     /**

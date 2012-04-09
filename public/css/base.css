@@ -37,7 +37,7 @@ ul.errors li {
     width: 200px;
 }
 
-.form dd input {
+.form input {
     width: 180px;
     border: 1px solid #ddd;
     padding: 4px 3px;
