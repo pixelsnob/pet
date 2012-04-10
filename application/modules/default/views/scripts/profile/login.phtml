@@ -1,5 +1,5 @@
 
-<?php echo $this->flashMessenger(true); ?>
+<?php echo $this->flashMessenger('login', true); ?>
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="login">
     <dl class="form">
         <dt><?php echo $this->login_form->username->getLabel(); ?></dt>

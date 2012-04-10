@@ -106,7 +106,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $this->_data['products'][$product->product_id] = $product;
         $messenger = Zend_Registry::get('messenger');
         $msg = '"' . $product->name . '" was added to your cart';
-        $messenger->addMessage($msg);
+        $messenger->setNamespace('cart')->addMessage($msg);
         return true;
     }
     
@@ -121,7 +121,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
                 '" was removed from your cart';
             unset($this->_data['products'][$product_id]);
             $messenger = Zend_Registry::get('messenger');
-            $messenger->addMessage($msg);
+            $messenger->setNamespace('cart')->addMessage($msg);
             if ($this->_data['promo']) {
                 $valid = $this->getValidator()
                     ->validatePromo($this->_data['promo'], false); 
@@ -142,7 +142,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             if ($qty) {
                 $this->_data['products'][$product_id]->qty = $qty;
                 $messenger = Zend_Registry::get('messenger');
-                $messenger->addMessage('Cart updated');
+                $messenger->setNamespace('cart')->addMessage('Cart updated');
             } else {
                 $this->removeProduct($product_id);
             }
@@ -293,7 +293,8 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         }
         $this->_data['promo'] = $promo;
         $messenger = Zend_Registry::get('messenger');
-        $messenger->addMessage('Promo "' . $promo->code . '" added');
+        $messenger->setNamespace('cart')
+            ->addMessage('Promo "' . $promo->code . '" added');
         return true;
     }
     
@@ -305,7 +306,8 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $code = $this->_data['promo']->code;
         $this->_data['promo'] = null;
         $messenger = Zend_Registry::get('messenger');
-        $messenger->addMessage('Promo "' . $code . '" removed');
+        $messenger->setNamespace('cart')
+            ->addMessage('Promo "' . $code . '" removed');
     }
 
     /**

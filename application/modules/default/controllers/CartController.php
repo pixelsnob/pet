@@ -20,7 +20,8 @@ class CartController extends Zend_Controller_Action {
                 $this->_cart_svc->update($post);
             } else {
                 $messenger = Zend_Registry::get('messenger');
-                $messenger->addMessage('Submitted information is not valid');
+                $messenger->setMessage('cart')
+                    ->addMessage('Submitted information is not valid');
             }
             $this->view->use_current_messages = true;
         }

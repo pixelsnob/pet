@@ -6,6 +6,7 @@ class ProfileController extends Zend_Controller_Action {
         $this->view->getHelper('serverUrl')->setScheme('https');
         $this->_users_svc = new Service_Users;
         $this->_messenger = Zend_Registry::get('messenger');
+        $this->_messenger->setNamespace('profile');
         $this->view->headLink()->appendStylesheet('/css/profile.css');
     }
 
@@ -63,8 +64,8 @@ class ProfileController extends Zend_Controller_Action {
                 }
             } else {
                 $messenger = Zend_Registry::get('messenger');
+                $messenger->setNamespace('login');
                 $messenger->addMessage('Login failed');
-
             } 
         }
     }

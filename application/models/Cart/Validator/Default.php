@@ -15,6 +15,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
             return true;
         }
         $messenger = Zend_Registry::get('messenger');
+        $messenger->setNamespace('cart');
         switch ($product->product_type_id) {
             case Model_ProductType::SUBSCRIPTION:
                 if ($this->_cart->hasSubscription()) {
@@ -53,6 +54,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      */
     public function validatePromo(Model_Promo $promo, $msg = true) {
         $messenger = Zend_Registry::get('messenger');
+        $messenger->setNamespace('cart');
         $valid = false;
         foreach ($promo->promo_products as $pp) {
             if (in_array($pp->product_id, $this->_cart->getProductIds())) {
