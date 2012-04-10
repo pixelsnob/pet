@@ -10,7 +10,6 @@ Pet.CartView = Pet.View.extend({
         'click form[name=cart] .submit input': 'update',
         'click form[name=cart] .remove': 'removeProduct',
         'focus #cart .items input': 'selectQty'
-        //'change #cart .items input': 'update'
     },
     
     initialize: function(){
@@ -19,18 +18,37 @@ Pet.CartView = Pet.View.extend({
     update: function() {
         var qs = $('form[name=cart]', this.el).serialize();
         this.populateFancyboxPost('/cart', qs);
-        //$('#cart .submit', this.el).hide();
+        this.configureCart();
         return false; 
     },
 
     removeProduct: function(el) {
         this.populateFancyboxGet($(el.target).attr('href'));
+        this.configureCart();
         return false;
     },
 
     selectQty: function(el) {
         el.target.select();
         return false;
+    },
+
+    configureCart: function() {
+        var obj = this;
+        $('#cart .submit', this.el).hide();
+        $('#cart .item', this.el).each(function() {
+            var qty = $(this).find('input');
+            if (qty.hasClass('readonly')) {
+                return true;
+            }
+            $(this).find('.links').prepend(
+                $('<a>').attr('href', '#').text('Update').on(
+                    'click', function() {
+                        obj.update();
+                    }
+                )
+            );
+        });
     }
 
 });

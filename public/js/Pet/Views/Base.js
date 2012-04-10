@@ -45,9 +45,14 @@ Pet.View = Backbone.View.extend({
         return $.extend({
             type: 'ajax',
             scrolling: 'no',
-            width: 650,
-            height: 420,
-            autoSize: false
+            minWidth: 650,
+            minHeight: 300,
+            fitToView: true,
+            autoSize: true,
+            scrolling: true,
+            afterLoad: function() {
+                $.fancybox.update();
+            }
         }, opts);
     }
 

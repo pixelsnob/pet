@@ -20,7 +20,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function subscriptionAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView; new Pet.CartView;');
+            ->appendScript('new Pet.ProductsView;');
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         $this->view->headLink()->appendStylesheet('/css/cart.css')
             ->appendStylesheet('/css/profile.css');
@@ -89,7 +89,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function digitalAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView; new Pet.CartView;');
+            ->appendScript('new Pet.ProductsView;');
         $this->view->headLink()->appendStylesheet('/css/cart.css')
             ->appendStylesheet('/css/profile.css');
     }
@@ -123,7 +123,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function giftSubscriptionAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView; new Pet.CartView;');
+            ->appendScript('new Pet.ProductsView;');
         $this->view->headLink()->appendStylesheet('/css/cart.css')
             ->appendStylesheet('/css/profile.css');
     }

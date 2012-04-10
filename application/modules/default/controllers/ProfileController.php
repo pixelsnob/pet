@@ -124,8 +124,6 @@ class ProfileController extends Zend_Controller_Action {
                 $this->_users_svc->resetPasswordRequest($user);
                 $this->_helper->Redirector->gotoSimple(
                     'reset-password-request-success');
-            } else {
-                $this->view->email_invalid = true;
             }
         }
     }

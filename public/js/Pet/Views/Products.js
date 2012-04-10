@@ -19,6 +19,7 @@ Pet.ProductsView = Pet.View.extend({
     },
     
     initialize: function(){
+        this.cart_view = new Pet.CartView;
         var sel = '.subscription-zones a, .digital-subscription a';
         $(sel, this.el).fancybox(this.getFancyboxOpts());
         $('.renew a', this.el).fancybox(this.getFancyboxOpts({
@@ -31,19 +32,19 @@ Pet.ProductsView = Pet.View.extend({
             var href = $(this).attr('href');
             $(this).attr('href', href + '?nolayout');
         });
-        this.addContinueShoppingButton();
     },
     
     submitSubscriptionTermSelectForm: function() {
         var qs = $('form[name=subscription-select-term]', this.el).serialize();
         this.populateFancyboxPost('/products/subscription/term', qs);
-        //$('#cart .submit', this.el).hide();
+        this.cart_view.configureCart();
         return false; 
     },
 
     submitDigitalSelectForm: function() {
         var qs = $('form[name=digital-subscription-select]', this.el).serialize();
         this.populateFancyboxPost('/products/digital/select', qs);
+        this.cart_view.configureCart();
         return false; 
     },
 
@@ -72,9 +73,6 @@ Pet.ProductsView = Pet.View.extend({
         var qs = rpr_form.serialize();
         this.populateFancyboxPost('/profile/reset-password-request', qs);
         return false;
-    },
-
-    addContinueShoppingButton: function() {
     }
 
 });

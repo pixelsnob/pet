@@ -15,16 +15,19 @@
                             <?php
                             $qty = $this->cart_form->qty->getElement($product->product_id);
                             if ($qty) {
-                                echo $qty;
+                                echo $qty->renderLabel() . $qty->renderViewHelper();
                             }
                             ?>
                             <ul class="links">
                                 <li>
-                                </li>
-                                <li>
                                     <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>" class="remove">Remove</a>
                                 </li>
                             </ul>
+                            <?php
+                            if ($qty) {
+                                echo $qty->renderErrors();
+                            }
+                            ?>
                         </div>
                         <div class="cart-right">
                             
