@@ -75,8 +75,8 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         return $this->_products->getSubscriptionByProductId($product_id);
     }
 
-    public function getDigitalSubscriptions() {
-        $subs = $this->_products->getDigitalSubscriptions();
+    public function getDigitalSubscriptions($is_gift) {
+        $subs = $this->_products->getDigitalSubscriptions($is_gift);
         $out = array();
         foreach ($subs as $sub) {
             $out[] = new Model_Product_DigitalSubscription($sub->toArray());

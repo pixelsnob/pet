@@ -18,7 +18,7 @@ class ProductsController extends Zend_Controller_Action {
      * Regular subscriptions 
      * 
      */
-    public function subscriptionAction() {
+    public function subscriptionsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView;');
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
@@ -74,9 +74,7 @@ class ProductsController extends Zend_Controller_Action {
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
                 $this->_helper->Redirector->setGotoSimple('add', 'cart',
-                    'default',  array(
-                        'product_id' => $product_id
-                    ));
+                    'default',  array('product_id' => $product_id));
             } else {
                 $form->populate($post);
             }
@@ -103,9 +101,10 @@ class ProductsController extends Zend_Controller_Action {
      * 
      */
     public function digitalSelectAction() {
-        $subs = $this->_products_svc->getDigitalSubscriptions();
+        $is_gift    = $this->_request->getParam('is_gift');
+        $subs = $this->_products_svc->getDigitalSubscriptions($is_gift);
         if ($subs) {
-            $form = $this->_products_svc->getDigitalSubscriptionSelectForm($subs);
+            $form = $this->_products_svc->getDigitalSubscriptionSelectForm($subs, $is_gift);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
@@ -116,7 +115,7 @@ class ProductsController extends Zend_Controller_Action {
             }
             $this->view->digital_select_form = $form;
         } else {
-            throw new Exception('Zone not found'); 
+            throw new Exception('Digital subscriptions not found'); 
         }
     }
     
@@ -124,7 +123,7 @@ class ProductsController extends Zend_Controller_Action {
      * Gift subscriptions
      * 
      */
-    public function giftSubscriptionAction() {
+    public function giftSubscriptionsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView;');
         $this->view->headLink()->appendStylesheet('/css/cart.css')

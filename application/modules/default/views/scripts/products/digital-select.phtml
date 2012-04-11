@@ -5,6 +5,9 @@
         <?php echo $this->digital_select_form->product_id->renderViewHelper(); ?>
         <?php echo $this->digital_select_form->product_id->renderErrors(); ?>
     </fieldset>
-    <p class="submit"><input type="submit" value="Buy"></p>
+    <p class="submit">
+        <?php echo $this->digital_select_form->is_gift->renderViewHelper(); ?>
+        <input type="submit" value="Buy">
+    </p>
 </form>
 

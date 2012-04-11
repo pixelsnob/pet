@@ -37,15 +37,17 @@ class Service_Products extends Pet_Service {
         return $form; 
     }
 
-    public function getDigitalSubscriptions() {
-        return $this->_products->getDigitalSubscriptions();
+    public function getDigitalSubscriptions($is_gift) {
+        return $this->_products->getDigitalSubscriptions($is_gift);
     }
 
-    public function getDigitalSubscriptionSelectForm(array $subscriptions) {
-        $form = new Default_Form_DigitalSubscriptionSelect;
+    public function getDigitalSubscriptionSelectForm(array $subscriptions, $is_gift) {
+        $form = new Default_Form_DigitalSubscriptionSelect(array(
+            'isGift' => $is_gift
+        ));
         $subs = array();
         foreach ($subscriptions as $sub) {
-            $subs[$sub->product_id] = $sub->name;
+            $subs[$sub->product_id] = $sub->name . ($is_gift ? ' (gift)' : '');
         }
         $form->product_id->setMultiOptions($subs);
         return $form; 

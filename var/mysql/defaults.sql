@@ -76,8 +76,8 @@ where sp.category = 'stream';
 /* Subscriptions */
 
 insert into pet.products
-(product_type_id, sku, cost, image, active) 
-select 4, code, price, image, 1
+(product_type_id, sku, cost, image, active, max_qty) 
+select 4, code, price, image, 1, 1
 from pet_old.sales_product
 where category = 'subscription';
 
@@ -124,13 +124,20 @@ and p.is_gift = 1;
 /* Digital Subscriptions */
 
 insert into pet.products values
-(300, 5, 'XXXXX', 50, '', 1, 1, 0);
+(300, 5, 'DIGITAL-MONTHLY', 50, '', 1, 1, 0),
+(301, 5, 'DIGITAL-MONTHLY-GIFT', 50, '', 1, 0, 1),
+(302, 5, 'DIGITAL-YEARLY', 50, '', 1, 1, 0),
+(303, 5, 'DIGITAL-YEARLY-GIFT', 50, '', 1, 0, 1);
 
-insert into digital_subscriptions
-values (1, 'Placeholder Digital Subscription', 'Temporary', 1, 0);
+insert into digital_subscriptions values
+(1, 'Digital Subscription, Monthly', '', 1, 0),
+(2, 'Digital Subscription, Yearly', '', 1, 0);
 
-insert into pet.products_digital_subscriptions
-values (null, 300, 1);
+insert into pet.products_digital_subscriptions values
+(null, 300, 1),
+(null, 301, 1),
+(null, 302, 2),
+(null, 303, 2);
 
 /* Add products that were deleted that still exist in the ordered_products table */
 

@@ -90,14 +90,15 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchAll($sel);
     }
 
-    public function getDigitalSubscriptions() {
+    public function getDigitalSubscriptions($is_gift = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('pds' => 'products_digital_subscriptions'),
                 'pds.product_id = p.id')
             ->join(array('ds' => 'digital_subscriptions'),
                 'pds.digital_subscription_id = ds.id')
-            ->where('p.active');
+            ->where('p.active')
+            ->where('p.is_gift = ?', (int) $is_gift);
         return $this->fetchAll($sel);
     }
 

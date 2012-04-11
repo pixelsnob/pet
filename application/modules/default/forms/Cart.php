@@ -43,7 +43,7 @@ class Default_Form_Cart extends Pet_Form {
                     'Errors'
                 )
             ));
-            if (!$product->gift && in_array($product->product_type_id, $no_qty_types)) {
+            if (!$product->is_gift && in_array($product->product_type_id, $no_qty_types)) {
                 $qty->getElement($product->product_id)
                     ->setAttrib('readonly', true)
                     ->setOptions(array('class' => 'readonly'))
