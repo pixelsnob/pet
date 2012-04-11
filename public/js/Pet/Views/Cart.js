@@ -34,11 +34,14 @@ Pet.CartView = Pet.View.extend({
 
     configureCart: function() {
         var obj = this;
-        $('#cart .submit input', this.el).attr('value', 'Continue Shopping')
-            .on('click', function() {
-                $.fancybox.close();
-                return false;
-            });
+        $('#cart .submit input', this.el).hide();
+        $('#cart form').append(
+            $('<input>').attr({ type: 'submit', value: 'Continue Shopping' })
+                .on('click', function() {
+                    $.fancybox.close();
+                    return false;
+                })
+        );
         $('#cart .item', this.el).each(function() {
             var qty = $(this).find('input');
             if (qty.hasClass('readonly')) {
