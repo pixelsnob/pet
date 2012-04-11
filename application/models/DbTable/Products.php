@@ -72,7 +72,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
-    public function getSubscriptionsByZoneId($zone_id, $is_renewal = null) {
+    public function getSubscriptionsByZoneId($zone_id, $is_gift = false, $is_renewal = null) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('ps' => 'products_subscriptions'),
@@ -80,7 +80,8 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->join(array('s' => 'subscriptions'), 's.id = ps.subscription_id')
             ->where('s.zone_id = ?', $zone_id)
             ->where('p.active')
-            ->order('s.name');
+            ->order('s.name')
+            ->where('p.is_gift = ?', (int) $is_gift);
         if ($is_renewal === true) {
             $sel->where('s.is_renewal = 1');
         } elseif ($is_renewal === false) {

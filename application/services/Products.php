@@ -17,8 +17,8 @@ class Service_Products extends Pet_Service {
         return $this->_products->getById($product_id);
     }
 
-    public function getSubscriptionsByZoneId($zone_id, $is_renewal = false) {
-        return $this->_products->getSubscriptionsByZoneId($zone_id,
+    public function getSubscriptionsByZoneId($zone_id, $is_gift, $is_renewal = null) {
+        return $this->_products->getSubscriptionsByZoneId($zone_id, $is_gift,
             $is_renewal);
     }
 

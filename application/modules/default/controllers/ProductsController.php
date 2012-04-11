@@ -50,7 +50,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function subscriptionTermSelectAction() {
         $zone_id = $this->_request->getParam('zone_id');
-        $gift    = $this->_request->getParam('gift');
+        $is_gift    = $this->_request->getParam('gift');
         $renewal = (bool) $this->_request->getParam('renewal');
         // Attempt to get the user's zone from their profile if zone_id is not
         // passed
@@ -62,10 +62,14 @@ class ProductsController extends Zend_Controller_Action {
                 $zone_id = $sz->id;
             }
         }
-        $subs = $this->_products_svc->getSubscriptionsByZoneId($zone_id, $renewal);
+        if (!$zone_id) {
+            throw new Exception('Zone not defined');
+        }
+        $subs = $this->_products_svc->getSubscriptionsByZoneId(
+            $zone_id, $is_gift, $renewal);
         if ($subs) {
             $form = $this->_products_svc->getSubscriptionTermSelectForm(
-                $subs, $zone_id, $gift, $renewal);
+                $subs, $zone_id, $is_gift, $renewal);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');

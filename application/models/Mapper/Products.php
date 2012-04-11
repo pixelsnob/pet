@@ -88,11 +88,12 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         return $this->_products->getDigitalSubscriptionByProductId($product_id);
     }
 
-    public function getSubscriptionsByZoneId($zone_id, $is_renewal = false) {
-        $subs = $this->_products->getSubscriptionsByZoneId($zone_id, $is_renewal);
+    public function getSubscriptionsByZoneId($zone_id, $is_gift = false, $is_renewal = null) {
+        $subs = $this->_products->getSubscriptionsByZoneId($zone_id, $is_gift, $is_renewal);
         $out = array();
         foreach ($subs as $sub) {
-            $out[] = new Model_Product_Subscription($sub->toArray());
+            $sub = new Model_Product_Subscription($sub->toArray());
+            $out[] = $sub;
         }
         return $out;
     }

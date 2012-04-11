@@ -11,7 +11,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      * @return bool
      */
     public function validateProduct(Model_Cart_Product $product) {
-        if ($product->gift) {
+        if ($product->is_gift) {
             return true;
         }
         $messenger = Zend_Registry::get('messenger');

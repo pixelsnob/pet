@@ -100,12 +100,31 @@ left join pet_old.sales_product sp
 on p.sku = sp.code
 left join pet.subscriptions s
 on sp.name = s.name
-where p.product_type_id = 4;
+where p.product_type_id = 4
+and p.is_gift = 0;
+
+/* Gift subscriptions */
+
+insert into pet.products
+(product_type_id, sku, cost, image, active, is_gift)
+select 4, concat(code, '-GIFT'), price, image, 1, 1
+from pet_old.sales_product
+where category = 'subscription';
+
+insert into pet.products_subscriptions
+select null, p.id, s.id
+from pet.products p
+left join pet_old.sales_product sp
+on replace(p.sku, '-GIFT', '') = sp.code
+left join pet.subscriptions s
+on sp.name = s.name
+where p.product_type_id = 4
+and p.is_gift = 1;
 
 /* Digital Subscriptions */
 
 insert into pet.products values
-(300, 5, 'XXXXX', 50, '', 1, 1);
+(300, 5, 'XXXXX', 50, '', 1, 1, 0);
 
 insert into digital_subscriptions
 values (1, 'Placeholder Digital Subscription', 'Temporary', 1, 0);

@@ -177,14 +177,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
 
     /**
      * @param int $product_type_id
+     * @param bool $is_gift
      * @return int
      * 
      */
-    public function getQtyByProductTypeId($product_type_id, $gift = false) {
+    public function getQtyByProductTypeId($product_type_id, $is_gift = false) {
         $qty = 0;
         foreach ($this->_data['products'] as $product) {
             if ($product->product_type_id == $product_type_id) {
-                if (!$gift && $product->gift) {
+                if (!$gift && $product->is_gift) {
                     continue; 
                 }
                 $qty += $product->qty;
