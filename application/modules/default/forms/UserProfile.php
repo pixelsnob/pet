@@ -184,13 +184,13 @@ class Default_Form_UserProfile extends Pet_Form {
                 ))
             )
         // Bill country
-        ))->addElement('text', 'billing_country', array(
+        ))->addElement('select', 'billing_country', array(
             'label' => 'Country',
             'id' => 'billing_country',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your country'
+                    'messages' => 'Please select your country'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,
@@ -324,13 +324,13 @@ class Default_Form_UserProfile extends Pet_Form {
                 ))
             )
         // Ship country
-        ))->addElement('text', 'shipping_country', array(
+        ))->addElement('select', 'shipping_country', array(
             'label' => 'Country',
             'id' => 'shipping_country',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your country'
+                    'messages' => 'Please select your country'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,
