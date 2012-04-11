@@ -242,12 +242,13 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     }
     
     /**
+     * @param bool $is_gift
      * @return bool
      * 
      */
-    public function hasSubscription($gift = false) {
+    public function hasSubscription($is_gift = false) {
         return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::SUBSCRIPTION, $gift);
+            Model_ProductType::SUBSCRIPTION, $is_gift);
     }
 
     /**

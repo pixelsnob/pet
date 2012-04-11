@@ -36,14 +36,12 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param Model_Product_Abstract $product
-     * @param int $gift
      * @return bool
      * 
      */
 
-    public function addProduct(Model_Product_Abstract $product, $gift) {
-        $product = new Model_Cart_Product(
-            array('product' => $product, 'gift' => (int) $gift));
+    public function addProduct(Model_Product_Abstract $product) {
+        $product = new Model_Cart_Product(array('product' => $product));
         return $this->_cart->addProduct($product); 
     }
 

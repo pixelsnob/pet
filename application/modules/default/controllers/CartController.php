@@ -32,8 +32,7 @@ class CartController extends Zend_Controller_Action {
      */
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
-        $gift = $this->_request->getParam('gift');
-        $this->_cart_svc->addProduct($product_id, $gift);
+        $this->_cart_svc->addProduct($product_id);
         $this->_helper->Redirector->setGotoSimple('index');
     }
     

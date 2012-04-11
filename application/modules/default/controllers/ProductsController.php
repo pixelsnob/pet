@@ -50,7 +50,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function subscriptionTermSelectAction() {
         $zone_id = $this->_request->getParam('zone_id');
-        $is_gift    = $this->_request->getParam('gift');
+        $is_gift    = $this->_request->getParam('is_gift');
         $renewal = (bool) $this->_request->getParam('renewal');
         // Attempt to get the user's zone from their profile if zone_id is not
         // passed
@@ -75,8 +75,7 @@ class ProductsController extends Zend_Controller_Action {
                 $product_id = $this->_request->getPost('product_id');
                 $this->_helper->Redirector->setGotoSimple('add', 'cart',
                     'default',  array(
-                        'product_id' => $product_id,
-                        'gift' => $gift
+                        'product_id' => $product_id
                     ));
             } else {
                 $form->populate($post);
