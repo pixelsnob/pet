@@ -1,3 +1,7 @@
 
 <h2>Digital</h2>
-<p class="digital-subscription"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_select')); ?>">Go</a></p>
+
+<?php if (!$this->is_authenticated): ?>
+    <p class="digital-subscriptions"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_select')); ?>">Go</a></p>
+<?php endif; ?>
+<p class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_renew')); ?>">Renew</a></p>

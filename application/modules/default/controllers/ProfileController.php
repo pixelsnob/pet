@@ -47,18 +47,19 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('index');
         }
-        $redirect = $this->_request->getParam('redirect_to');
+        $redirect_to = $this->_request->getParam('redirect_to');
         $redirect_params = (array) $this->_request->getParam('redirect_params');
-        $login_form = $this->_users_svc->getLoginForm();
+        $login_form = $this->_users_svc->getLoginForm($redirect_to,
+            $redirect_params);
         $this->view->login_form = $login_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $login_form->isValid($post)) {
             if ($this->_users_svc->login($post)) {
                 $this->_users_svc->updateLastLogin();
                 $this->_users_svc->logUserAction('User logged in');
-                if ($redirect) {
+                if ($redirect_to) {
                     $this->_helper->Redirector->gotoRoute($redirect_params,
-                        $redirect);
+                        $redirect_to);
                 } else {
                     $this->_helper->Redirector->gotoSimple('index');
                 }

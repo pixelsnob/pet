@@ -54,6 +54,25 @@ Pet.View = Backbone.View.extend({
                 $.fancybox.update();
             }
         }, opts);
+    },
+
+    showFancybox: function(opts) {
+        if (opts.href) {
+            opts.href += '?nolayout';
+        }
+        opts = $.extend({
+            type: 'ajax',
+            scrolling: 'no',
+            minWidth: 650,
+            minHeight: 300,
+            fitToView: true,
+            autoSize: true,
+            scrolling: true,
+            afterLoad: function() {
+                $.fancybox.update();
+            }
+        }, opts);
+        $.fancybox(opts);
     }
 
 });

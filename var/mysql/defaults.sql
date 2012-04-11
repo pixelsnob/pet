@@ -125,19 +125,25 @@ and p.is_gift = 1;
 
 insert into pet.products values
 (300, 5, 'DIGITAL-MONTHLY', 50, '', 1, 1, 0),
-(301, 5, 'DIGITAL-MONTHLY-GIFT', 50, '', 1, 0, 1),
-(302, 5, 'DIGITAL-YEARLY', 50, '', 1, 1, 0),
-(303, 5, 'DIGITAL-YEARLY-GIFT', 50, '', 1, 0, 1);
+(301, 5, 'DIGITAL-MONTHLY-RENEWAL', 30, '', 1, 1, 0),
+(302, 5, 'DIGITAL-MONTHLY-GIFT', 50, '', 1, 0, 1),
+(303, 5, 'DIGITAL-YEARLY', 80, '', 1, 1, 0),
+(304, 5, 'DIGITAL-YEARLY-RENEWAL', 70, '', 1, 1, 0),
+(305, 5, 'DIGITAL-YEARLY-GIFT', 80, '', 1, 0, 1);
 
 insert into digital_subscriptions values
 (1, 'Digital Subscription, Monthly', '', 1, 0),
-(2, 'Digital Subscription, Yearly', '', 1, 0);
+(2, 'Digital Subscription, Monthly, Renewal', '', 1, 1),
+(3, 'Digital Subscription, Yearly', '', 1, 0),
+(4, 'Digital Subscription, Yearly, Renewal', '', 1, 1);
 
 insert into pet.products_digital_subscriptions values
 (null, 300, 1),
-(null, 301, 1),
-(null, 302, 2),
-(null, 303, 2);
+(null, 301, 2),
+(null, 302, 1),
+(null, 303, 3),
+(null, 304, 4),
+(null, 305, 3);
 
 /* Add products that were deleted that still exist in the ordered_products table */
 

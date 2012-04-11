@@ -16,24 +16,30 @@ Pet.ProductsView = Pet.View.extend({
         'click .forgot-password a': 'resetPasswordRequestForm',
         'click form[name=reset-password-request] .submit input':
             'submitResetPasswordRequestForm',
+        'click .subscription-zones a, .digital-subscriptions a':
+            'openSubscriptionSelectPopup',
+        'click .renew': 'openRenewPopup'
     },
     
     initialize: function(){
         this.cart_view = new Pet.CartView;
-        var sel = '.subscription-zones a, .digital-subscription a';
-        $(sel, this.el).fancybox(this.getFancyboxOpts());
-        $('.renew a', this.el).fancybox(this.getFancyboxOpts({
+    },
+    
+    openSubscriptionSelectPopup: function(el) {
+        this.showFancybox({ href: $(el.target).attr('href') });
+        return false;
+    },
+
+    openRenewPopup: function(el) {
+        this.showFancybox({
+            href: $(el.target).attr('href') + '?redirect_params[nolayout]=1',
             afterClose: function() {
                 window.location.href = window.location.href;
             }
-        }));
-        sel += ', .renew a';
-        $(sel, this.el).each(function() {
-            var href = $(this).attr('href');
-            $(this).attr('href', href + '?nolayout');
         });
+        return false;
     },
-    
+
     submitSubscriptionTermSelectForm: function() {
         var qs = $('form[name=subscription-select-term]', this.el).serialize();
         this.populateFancyboxPost('/products/subscription/term', qs);
@@ -54,8 +60,8 @@ Pet.ProductsView = Pet.View.extend({
             window.location.port = 443;
         }
         var qs = login_form.serialize();
-        qs += '&redirect_to=products_subscription_select_term' +
-            '&redirect_params[renewal]=1&redirect_params[nolayout]=1';
+        qs += '&redirect_params[nolayout]=1';
+        
         this.populateFancyboxPost('/profile/login/', qs);
         return false; 
     },

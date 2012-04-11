@@ -18,7 +18,21 @@ class Default_Form_DigitalSubscriptionSelect extends Pet_Form {
     public function setIsGift($is_gift) {
         $this->_is_gift = $is_gift;
     }
-    
+
+    /**
+     * @var int
+     * 
+     */
+    protected $_is_renewal;
+
+    /**
+     * @param int
+     * @return void
+     */
+    public function setIsRenewal($is_renewal) {
+        $this->_is_renewal = $is_renewal;
+    }
+
     /**
      * @return void
      * 
@@ -36,6 +50,8 @@ class Default_Form_DigitalSubscriptionSelect extends Pet_Form {
             )
         ))->addElement('hidden', 'is_gift', array(
             'value' => $this->_is_gift
+        ))->addElement('hidden', 'is_renewal', array(
+            'value' => $this->_is_renewal
         ));
         
     }

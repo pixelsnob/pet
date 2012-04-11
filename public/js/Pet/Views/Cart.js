@@ -7,7 +7,6 @@ Pet.CartView = Pet.View.extend({
     el: $('body'),
     
     events: {
-        'click form[name=cart] .submit input': 'update',
         'click form[name=cart] .remove': 'removeProduct',
         'focus #cart .items input': 'selectQty'
     },
@@ -35,17 +34,23 @@ Pet.CartView = Pet.View.extend({
 
     configureCart: function() {
         var obj = this;
-        $('#cart .submit', this.el).hide();
+        $('#cart .submit input', this.el).attr('value', 'Continue Shopping')
+            .on('click', function() {
+                $.fancybox.close();
+                return false;
+            });
         $('#cart .item', this.el).each(function() {
             var qty = $(this).find('input');
             if (qty.hasClass('readonly')) {
                 return true;
             }
             $(this).find('.links').prepend(
-                $('<a>').attr('href', '#').text('Update').on(
-                    'click', function() {
-                        obj.update();
-                    }
+                $('<li>').append(
+                    $('<a>').attr('href', '#').text('Update').on(
+                        'click', function() {
+                            obj.update();
+                        }
+                    )
                 )
             );
         });

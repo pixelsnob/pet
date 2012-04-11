@@ -17,7 +17,7 @@ class Default_Form_Cart extends Pet_Form {
      */
     public function init() {
         parent::init();
-        $qty = new Zend_Form_Subform;
+        $qty = new Zend_Form_SubForm;
         $this->addSubForm($qty, 'qty');
         $no_qty_types = array(
             Model_ProductType::SUBSCRIPTION,

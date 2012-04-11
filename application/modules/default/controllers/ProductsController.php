@@ -27,18 +27,18 @@ class ProductsController extends Zend_Controller_Action {
     }
 
     /**
-     * Renewals
+     * Subscription renewals
      * 
      */
     public function subscriptionRenewAction() {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_forward('subscription-term-select', 'products',
-                'default', array('renewal' => 1));
+                'default', array('is_renewal' => 1));
         } else {
             $this->_forward('login', 'profile', 'default', 
                 array(
                     'redirect_to'     => 'products_subscription_term_select',
-                    'redirect_params' => array('renewal' => 1)
+                    'redirect_params' => array('is_renewal' => 1)
                 )
             );
         }
@@ -51,10 +51,10 @@ class ProductsController extends Zend_Controller_Action {
     public function subscriptionTermSelectAction() {
         $zone_id = $this->_request->getParam('zone_id');
         $is_gift    = $this->_request->getParam('is_gift');
-        $renewal = (bool) $this->_request->getParam('renewal');
+        $is_renewal = $this->_request->getParam('is_renewal');
         // Attempt to get the user's zone from their profile if zone_id is not
         // passed
-        if ($renewal && !$zone_id && $this->_users_svc->isAuthenticated()) {
+        if ($is_renewal && !$zone_id && $this->_users_svc->isAuthenticated()) {
             $profile = $this->_users_svc->getProfile();
             $sz = $this->_products_svc->getSubscriptionZoneByName(
                 $profile->billing_country);
@@ -66,10 +66,10 @@ class ProductsController extends Zend_Controller_Action {
             throw new Exception('Zone not defined');
         }
         $subs = $this->_products_svc->getSubscriptionsByZoneId(
-            $zone_id, $is_gift, $renewal);
+            $zone_id, $is_gift, $is_renewal);
         if ($subs) {
             $form = $this->_products_svc->getSubscriptionTermSelectForm(
-                $subs, $zone_id, $is_gift, $renewal);
+                $subs, $zone_id, $is_gift, $is_renewal);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
@@ -93,6 +93,25 @@ class ProductsController extends Zend_Controller_Action {
             ->appendScript('new Pet.ProductsView;');
         $this->view->headLink()->appendStylesheet('/css/cart.css')
             ->appendStylesheet('/css/profile.css');
+        $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
+    }
+
+    /**
+     * Subscription renewals
+     * 
+     */
+    public function digitalRenewAction() {
+        if ($this->_users_svc->isAuthenticated()) {
+            $this->_forward('digital-select', 'products',
+                'default', array('is_renewal' => 1));
+        } else {
+            $this->_forward('login', 'profile', 'default', 
+                array(
+                    'redirect_to'     => 'products_digital_select',
+                    'redirect_params' => array('is_renewal' => 1)
+                )
+            );
+        }
     }
     
     /**
@@ -102,9 +121,10 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function digitalSelectAction() {
         $is_gift    = $this->_request->getParam('is_gift');
-        $subs = $this->_products_svc->getDigitalSubscriptions($is_gift);
+        $is_renewal = $this->_request->getParam('is_renewal');
+        $subs = $this->_products_svc->getDigitalSubscriptions($is_gift, $is_renewal);
         if ($subs) {
-            $form = $this->_products_svc->getDigitalSubscriptionSelectForm($subs, $is_gift);
+            $form = $this->_products_svc->getDigitalSubscriptionSelectForm($subs, $is_gift, $is_renewal);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');

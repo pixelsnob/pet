@@ -26,10 +26,9 @@ Pet.ProfileFormView = Pet.View.extend({
         auth.fetch();
         auth.on('change', function(model) {
             if (model.get('is_authenticated')) {
-                $.fancybox(obj.getFancyboxOpts({
+                obj.showFancybox({
                     href: '/profile/change-password/nolayout/1'
-
-                }));
+                });
             } else {
                 alert('You have been logged out.');
                 window.location.href = '/profile/login';

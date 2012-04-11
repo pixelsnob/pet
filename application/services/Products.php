@@ -17,17 +17,17 @@ class Service_Products extends Pet_Service {
         return $this->_products->getById($product_id);
     }
 
-    public function getSubscriptionsByZoneId($zone_id, $is_gift, $is_renewal = null) {
-        return $this->_products->getSubscriptionsByZoneId($zone_id, $is_gift,
-            $is_renewal);
+    public function getSubscriptionsByZoneId($zone_id, $is_gift = false,
+                                             $is_renewal = false) {
+        return $this->_products->getSubscriptionsByZoneId($zone_id, $is_gift, $is_renewal);
     }
 
     public function getSubscriptionTermSelectForm(array $subscriptions,
-                                                  $zone_id, $is_gift, $renewal) {
+                                                  $zone_id, $is_gift, $is_renewal) {
         $form = new Default_Form_SubscriptionTermSelect(array(
             'zoneId'  => $zone_id,
             'isGift'    => $is_gift,
-            'renewal' => $renewal
+            'isRenewal' => $is_renewal
         ));
         $subs = array();
         foreach ($subscriptions as $sub) {
@@ -37,13 +37,14 @@ class Service_Products extends Pet_Service {
         return $form; 
     }
 
-    public function getDigitalSubscriptions($is_gift) {
-        return $this->_products->getDigitalSubscriptions($is_gift);
+    public function getDigitalSubscriptions($is_gift = false, $is_renewal = false) {
+        return $this->_products->getDigitalSubscriptions($is_gift, $is_renewal);
     }
 
-    public function getDigitalSubscriptionSelectForm(array $subscriptions, $is_gift) {
+    public function getDigitalSubscriptionSelectForm(array $subscriptions, $is_gift, $is_renewal) {
         $form = new Default_Form_DigitalSubscriptionSelect(array(
-            'isGift' => $is_gift
+            'isGift'    => $is_gift,
+            'isRenewal' => $is_renewal
         ));
         $subs = array();
         foreach ($subscriptions as $sub) {

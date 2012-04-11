@@ -72,7 +72,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
-    public function getSubscriptionsByZoneId($zone_id, $is_gift = false, $is_renewal = null) {
+    public function getSubscriptionsByZoneId($zone_id, $is_gift = false, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('ps' => 'products_subscriptions'),
@@ -81,16 +81,12 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->where('s.zone_id = ?', $zone_id)
             ->where('p.active')
             ->order('s.name')
-            ->where('p.is_gift = ?', (int) $is_gift);
-        if ($is_renewal === true) {
-            $sel->where('s.is_renewal = 1');
-        } elseif ($is_renewal === false) {
-            $sel->where('s.is_renewal = 0');
-        }
+            ->where('p.is_gift = ?', (int) $is_gift)
+            ->where('s.is_renewal = ?', (int) $is_renewal);
         return $this->fetchAll($sel);
     }
 
-    public function getDigitalSubscriptions($is_gift = false) {
+    public function getDigitalSubscriptions($is_gift = false, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('pds' => 'products_digital_subscriptions'),
@@ -98,7 +94,8 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->join(array('ds' => 'digital_subscriptions'),
                 'pds.digital_subscription_id = ds.id')
             ->where('p.active')
-            ->where('p.is_gift = ?', (int) $is_gift);
+            ->where('p.is_gift = ?', (int) $is_gift)
+            ->where('ds.is_renewal = ?', (int) $is_renewal);
         return $this->fetchAll($sel);
     }
 
