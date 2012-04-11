@@ -37,7 +37,7 @@ class ProductsController extends Zend_Controller_Action {
         } else {
             $this->_forward('login', 'profile', 'default', 
                 array(
-                    'redirect_to'     => 'products_subscription_term_select',
+                    'redirect_to'     => 'products_subscription_select_term',
                     'redirect_params' => array('is_renewal' => 1)
                 )
             );
