@@ -9,12 +9,23 @@ Pet.CartView = Pet.View.extend({
     events: {
         'click #cart .remove': 'removeProduct',
         'mousedown #cart .remove, #cart .update': 'fadeOutItem',
-        'mouseup #cart .update, #cart .remove': 'fadeInItem'
+        'mouseup #cart .update, #cart .remove': 'fadeInItem',
+        'click .add-to-cart': 'openCartPopup' 
     },
     
     initialize: function(){
     },
     
+    openCartPopup: function(el) {
+        var obj = this;
+        this.showFancybox({
+            href: $(el.target).attr('href')
+        }, function() {
+            obj.configureCart();
+        });
+        return false;
+    },
+
     update: function() {
         var qs = $('form[name=cart]', this.el).serialize();
         this.populateFancyboxPost('/cart', qs);
@@ -41,6 +52,7 @@ Pet.CartView = Pet.View.extend({
 
     configureCart: function() {
         var obj = this;
+        console.log($('#cart .submit input'));
         $('#cart .submit input', this.el).hide();
         // The mouseup is due to a bug: http://code.google.com/p/chromium/issues/detail?id=4505
         $('#cart .items input', this.el).on('mouseup', function(e) {

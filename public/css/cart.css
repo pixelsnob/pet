@@ -51,7 +51,7 @@
 
 #nolayout #cart .items {
     /*height: 380px;*/
-    width: 610px;
+    /*width: 610px;*/
     overflow: auto;
     max-height:350px;
     height: auto !important;

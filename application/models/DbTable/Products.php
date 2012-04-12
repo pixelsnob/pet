@@ -99,5 +99,15 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchAll($sel);
     }
 
+    public function getPhysicalProducts() {
+        $sel = $this->select()->setIntegrityCheck(false)
+            ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
+            ->join(array('pp' => 'physical_products'),
+                'pp.product_id = p.id')
+            ->where('p.active');
+        return $this->fetchAll($sel);
+    }
+
+
 }
 

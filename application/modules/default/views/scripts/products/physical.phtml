@@ -1,0 +1,19 @@
+
+
+<h2>DVDs, Other Products</h2>
+
+<?php if (!empty($this->products)): ?>
+    <ul class="physical-products">
+        <?php foreach ($this->products as $product): ?>
+        <li>
+            <h3><?php echo $this->escape($product->name); ?></h3>
+            <p><?php echo $this->dollarFormat($product->cost); ?></p>
+            <p>
+                <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_add')); ?>" class="add-to-cart">Add to Cart</a>
+            </p>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p class="no-products">No products found</p>
+<?php endif; ?>

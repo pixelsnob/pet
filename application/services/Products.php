@@ -100,4 +100,8 @@ class Service_Products extends Pet_Service {
         $sz_mapper = new Model_Mapper_SubscriptionZones;
         return $sz_mapper->getByName($country_name);
     }
+
+    public function getPhysicalProducts() {
+        return $this->_products->getPhysicalProducts();
+    }
 }

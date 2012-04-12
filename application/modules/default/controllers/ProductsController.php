@@ -149,4 +149,12 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->headLink()->appendStylesheet('/css/cart.css')
             ->appendStylesheet('/css/profile.css');
     }
+
+    public function physicalAction() {
+        $this->view->products = $this->_products_svc->getPhysicalProducts(); 
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript('new Pet.ProductsView;');
+        $this->view->headLink()->appendStylesheet('/css/cart.css')
+            ->appendStylesheet('/css/profile.css');
+    }
 }

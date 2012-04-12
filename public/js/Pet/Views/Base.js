@@ -56,10 +56,11 @@ Pet.View = Backbone.View.extend({
         }, opts);
     },
 
-    showFancybox: function(opts) {
+    showFancybox: function(opts, cb) {
         if (opts.href) {
             opts.href += '?nolayout';
         }
+        cb = (typeof cb == 'function' ? cb : function() {});
         opts = $.extend({
             type: 'ajax',
             scrolling: 'no',
@@ -68,8 +69,9 @@ Pet.View = Backbone.View.extend({
             fitToView: true,
             autoSize: true,
             scrolling: true,
-            afterLoad: function() {
+            beforeShow: function() {
                 $.fancybox.update();
+                cb();
             }
         }, opts);
         $.fancybox(opts);

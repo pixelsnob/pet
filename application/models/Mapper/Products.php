@@ -101,4 +101,20 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         }
         return $out;
     }
+
+    /**
+     * @param int $zone_id
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return array
+     * 
+     */
+    public function getPhysicalProducts() {
+        $products = $this->_products->getPhysicalProducts();
+        $out = array();
+        foreach ($products as $product) {
+            $out[] = new Model_Product_Physical($product->toArray());
+        }
+        return $out;
+    }
 }
