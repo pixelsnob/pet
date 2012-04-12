@@ -4,3 +4,4 @@ library/Zend
 *.swo
 *.bak
 .DS_Store
+public/version
