@@ -83,8 +83,12 @@ class Pet_View_Helper_HeadScriptMin extends Pet_View_Helper_HeadScript {
         }
         // Clear stack of scripts
         $this->getContainer()->exchangeArray(array());
+        // Append version, to control caching
+        $version = $this->view->version();
+        $version = ($version ? '?version=' . $version : '');
+        $url = self::MIN_URL . 'f=' . implode(',', $files) . $version;
         // Replace scripts with one call to minify
-        $this->appendFile(self::MIN_URL . 'f=' . implode(',', $files));
+        $this->appendFile($url);
         $this->appendScript($scripts);
         return parent::toString();
     }
