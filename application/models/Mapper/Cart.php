@@ -22,9 +22,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $session = new Zend_Session_Namespace;
         if (!isset($session->cart)) {
             $session->cart = new Model_Cart;
+            $session->cart->setValidator('Model_Cart_Validator_Default');
+            $session->cart->getValidator()->validate();
         }
-        $session->cart->setValidator('Model_Cart_Validator_Default');
-        $session->cart->getValidator()->validate();
         $this->_cart = $session->cart;
     }
     
