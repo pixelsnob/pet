@@ -7,7 +7,9 @@ Pet.CartView = Pet.View.extend({
     el: $('body'),
     
     events: {
-        'click form[name=cart] .remove': 'removeProduct'
+        'click #cart .remove': 'removeProduct',
+        'mousedown #cart .remove, #cart .update': 'fadeOutItem',
+        'mouseup #cart .update, #cart .remove': 'fadeInItem'
     },
     
     initialize: function(){
@@ -20,12 +22,20 @@ Pet.CartView = Pet.View.extend({
         return false; 
     },
 
+    fadeOutItem: function(el) {
+        $(el.target).parents('li.item').css('opacity', 0.5);
+    },
+
+    fadeInItem: function(el) {
+        $(el.target).parents('li.item').css('opacity', 1);
+    },
+
     removeProduct: function(el) {
         var obj = this;
-        $(el.target).parents('li.item').fadeTo(30, .2, function() {
+        //$(el.target).parents('li.item').fadeTo(400, .2, function() {
             obj.populateFancyboxGet($(el.target).attr('href'));
             obj.configureCart();
-        });
+        //});
         return false;
     },
 
@@ -57,11 +67,13 @@ Pet.CartView = Pet.View.extend({
             }
             $(this).find('.links').prepend(
                 $('<li>').append(
-                    $('<a>').attr('href', '#').text('Update').on(
-                        'click', function() {
-                            obj.update();
-                        }
-                    )
+                    $('<a>').attr('href', '#').text('Update')
+                        .addClass('update')
+                        .on(
+                            'click', function() {
+                                obj.update();
+                            }
+                        )
                 )
             );
         });
