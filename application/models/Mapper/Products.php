@@ -5,17 +5,26 @@
  */
 class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     
+    /**
+     * @return void 
+     * 
+     */
     public function __construct() {
         $this->_products = new Model_DbTable_Products;
     }
     
+    /**
+     * @param int $id
+     * @return Model_Product_Abstract
+     * 
+     */
     public function getById($id) {
         $db_product = $this->_products->getById($id);
         if ($db_product) {
             $product = new Model_Product($db_product->toArray());
             switch ($product->product_type_id) {
                 case Model_ProductType::DOWNLOAD;
-                    $dl = $this->getDownloadByProductId($id);
+                    $dl = $this->_products->getDownloadByProductId($id);
                     if ($dl) {
                         $data = array_merge($product->toArray(),
                             $dl->toArray());
@@ -23,7 +32,8 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::PHYSICAL;
-                    $physical = $this->getPhysicalProductByProductId($id);
+                    $physical = $this->_products
+                        ->getPhysicalProductByProductId($id);
                     if ($physical) {
                         $data = array_merge($product->toArray(),
                             $physical->toArray());
@@ -31,7 +41,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::COURSE;
-                    $course = $this->getCourseByProductId($id);
+                    $course = $this->_products->getCourseByProductId($id);
                     if ($course) {
                         $data = array_merge($product->toArray(),
                             $course->toArray());
@@ -39,7 +49,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::SUBSCRIPTION;
-                    $sub = $this->getSubscriptionByProductId($id);
+                    $sub = $this->_products->getSubscriptionByProductId($id);
                     if ($sub) {
                         $data = array_merge($product->toArray(),
                             $sub->toArray());
@@ -47,7 +57,8 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::DIGITAL_SUBSCRIPTION;
-                    $sub = $this->getDigitalSubscriptionByProductId($id);
+                    $sub = $this->_products
+                        ->getDigitalSubscriptionByProductId($id);
                     if ($sub) {
                         $data = array_merge($product->toArray(),
                             $sub->toArray());
@@ -59,22 +70,12 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         }
     }
 
-    public function getDownloadByProductId($product_id) {
-        return $this->_products->getDownloadByProductId($product_id);
-    }
-
-    public function getPhysicalProductByProductId($product_id) {
-        return $this->_products->getPhysicalProductByProductId($product_id);
-    }
-    
-    public function getCourseByProductId($product_id) {
-        return $this->_products->getCourseByProductId($product_id);
-    }
-    
-    public function getSubscriptionByProductId($product_id) {
-        return $this->_products->getSubscriptionByProductId($product_id);
-    }
-
+    /**
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return array
+     * 
+     */
     public function getDigitalSubscriptions($is_gift = false, $is_renewal = false) {
         $subs = $this->_products->getDigitalSubscriptions($is_gift, $is_renewal);
         $out = array();
@@ -84,10 +85,13 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         return $out;
     }
 
-    public function getDigitalSubscriptionByProductId($product_id) {
-        return $this->_products->getDigitalSubscriptionByProductId($product_id);
-    }
-
+    /**
+     * @param int $zone_id
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return array
+     * 
+     */
     public function getSubscriptionsByZoneId($zone_id, $is_gift = false, $is_renewal = false) {
         $subs = $this->_products->getSubscriptionsByZoneId($zone_id, $is_gift, $is_renewal);
         $out = array();
@@ -97,5 +101,4 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         }
         return $out;
     }
-
 }

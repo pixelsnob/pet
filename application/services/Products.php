@@ -13,17 +13,38 @@ class Service_Products extends Pet_Service {
         $this->_products = new Model_Mapper_Products;
     }
     
+    /**
+     * @return Model_Product_Abstract
+     * 
+     */
     public function getById($product_id) {
         return $this->_products->getById($product_id);
     }
 
+    /**
+     * @param int $zone_id
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return array
+     * 
+     */
     public function getSubscriptionsByZoneId($zone_id, $is_gift = false,
                                              $is_renewal = false) {
-        return $this->_products->getSubscriptionsByZoneId($zone_id, $is_gift, $is_renewal);
+        return $this->_products->getSubscriptionsByZoneId($zone_id,
+            $is_gift, $is_renewal);
     }
 
+    /**
+     * @param array $subscriptions
+     * @param int $zone_id
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return Default_Form_SubscriptionTermSelect
+     * 
+     */
     public function getSubscriptionTermSelectForm(array $subscriptions,
-                                                  $zone_id, $is_gift, $is_renewal) {
+                                                  $zone_id, $is_gift,
+                                                  $is_renewal) {
         $form = new Default_Form_SubscriptionTermSelect(array(
             'zoneId'  => $zone_id,
             'isGift'    => $is_gift,
@@ -37,11 +58,27 @@ class Service_Products extends Pet_Service {
         return $form; 
     }
 
-    public function getDigitalSubscriptions($is_gift = false, $is_renewal = false) {
+    /**
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return array
+     * 
+     */
+    public function getDigitalSubscriptions($is_gift = false,
+                                            $is_renewal = false) {
         return $this->_products->getDigitalSubscriptions($is_gift, $is_renewal);
     }
 
-    public function getDigitalSubscriptionSelectForm(array $subscriptions, $is_gift, $is_renewal) {
+    /**
+     * @param array $subscriptions
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return Default_Form_DigitalSubscriptionSelect 
+     * 
+     */
+    public function getDigitalSubscriptionSelectForm(array $subscriptions,
+                                                     $is_gift = false,
+                                                     $is_renewal = false) {
         $form = new Default_Form_DigitalSubscriptionSelect(array(
             'isGift'    => $is_gift,
             'isRenewal' => $is_renewal
@@ -54,6 +91,11 @@ class Service_Products extends Pet_Service {
         return $form; 
     }
 
+    /**
+     * @param string $country_name
+     * @return Model_SubscriptionZone 
+     * 
+     */
     public function getSubscriptionZoneByName($country_name) {
         $sz_mapper = new Model_Mapper_SubscriptionZones;
         return $sz_mapper->getByName($country_name);

@@ -30,7 +30,12 @@ class Service_Cart {
     public function get() {
         return $this->_cart->get();
     }
-
+    
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
     public function update(array $data) {
         $this->_cart->update($data);
     }
@@ -41,10 +46,10 @@ class Service_Cart {
      * @return bool
      * 
      */
-    public function addProduct($product_id, $is_gift) {
+    public function addProduct($product_id) {
         $product = $this->_products_svc->getById($product_id);
         if ($product) {
-            if (!$this->_cart->addProduct($product, $is_gift)) {
+            if (!$this->_cart->addProduct($product)) {
                 return false;
             }
         } else {
@@ -97,7 +102,11 @@ class Service_Cart {
         }
         return true;
     }
-
+    
+    /**
+     * @return Default_Form_Cart
+     * 
+     */
     public function getCartForm() {
         $cart = $this->_cart->get();
         $form = new Default_Form_Cart(array(
