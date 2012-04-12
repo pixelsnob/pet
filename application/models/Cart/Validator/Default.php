@@ -66,4 +66,33 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
         }
         return $valid;
     }
+    
+    /**
+     * If cart has renewals, and user is not logged in, renewals are removed
+     * from cart
+     * 
+     * @return bool 
+     */
+    public function validateRenewals() {
+        $users_svc = new Service_Users;
+        $messenger = Zend_Registry::get('messenger');
+        $messenger->setNamespace('cart');
+        if ($this->_cart->hasRenewal() && !$users_svc->isAuthenticated()) {
+            $msg = 'You must be logged in to purchase renewals';
+            $messenger->clearMessages();
+            $messenger->addMessage($msg);
+            $this->_cart->removeRenewals();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * For validating the state of the cart at any given time
+     * 
+     * @return bool
+     */
+    public function validate() {
+        return $this->validateRenewals();
+    }
 }

@@ -273,6 +273,20 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         }
         return (bool) $c;
     }
+    
+    /**
+     * Removes all renewals in the cart 
+     * 
+     * @return void 
+     */
+    public function removeRenewals() {
+        $c = 0;
+        foreach ($this->_data['products'] as $product) {
+            if ($product->is_renewal) {
+                $this->removeProduct($product->product_id);
+            }
+        }
+    }
 
     /**
      * @return array An array of totals
