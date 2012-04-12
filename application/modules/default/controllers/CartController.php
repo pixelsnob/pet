@@ -64,6 +64,7 @@ class CartController extends Zend_Controller_Action {
         $cart = $this->_cart_svc->get();
         echo '<pre>';
         print_r($cart);
+        print_r($cart->getTotals());
         foreach ($cart->products as $product) {
             echo $product->name . ' ' . $product->qty . "\n";
 
