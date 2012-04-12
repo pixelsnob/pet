@@ -26,7 +26,6 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $session->cart->setValidator('Model_Cart_Validator_Default');
         $session->cart->getValidator()->validate();
         $this->_cart = $session->cart;
-    
     }
     
     /**
@@ -79,6 +78,11 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_cart = $session->cart;
     }
     
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
     public function update(array $data) {
         foreach ($this->_cart->products as $product) {
             $qty = (int) $data['qty'][$product->product_id];
@@ -111,7 +115,11 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function removePromo() {
         $this->_cart->removePromo($promo);
     }
-
+    
+    /**
+     * @return array
+     * 
+     */
     public function getTotals() {
         return $this->_cart->getTotals();
     }
