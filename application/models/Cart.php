@@ -22,7 +22,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @var Model_Cart_Validator_Abstract
      * 
      */
-    protected $_validator;
+    protected $_validator = 'Model_Cart_Validator_Default';
 
     /**
      * Set defaults
@@ -55,15 +55,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $this->_data = unserialize($data);
     }
 
-    /**
-     * @param Model_Cart_ $validator
-     * @return void
-     * 
-     */
-    public function setValidator($validator) {
-        $this->_validator = $validator;
-    }
-    
     /**
      * @return Model_Cart_Validator_Abstract
      * 
