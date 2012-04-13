@@ -94,7 +94,11 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         if (!$this->getValidator()->validateProduct($product)) {
             return false;
         }
-        $this->_data['products'][$product->product_id] = $product;
+        if (isset($this->_data['products'][$product->product_id])) {
+            $this->_data['products'][$product->product_id]->qty++;
+        } else {
+            $this->_data['products'][$product->product_id] = $product;
+        }
         $messenger = Zend_Registry::get('messenger');
         $msg = '"' . $product->name . '" was added to your cart';
         $messenger->setNamespace('cart')->addMessage($msg);
@@ -132,14 +136,28 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         if (isset($this->_data['products'][$product_id])) {
             if ($qty) {
                 $this->_data['products'][$product_id]->qty = $qty;
-                $messenger = Zend_Registry::get('messenger');
-                $messenger->setNamespace('cart')->addMessage('Cart updated');
             } else {
                 $this->removeProduct($product_id);
             }
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function update(array $data) {
+        foreach ($this->_data['products'] as $product) {
+            if (isset($data['qty'][$product->product_id])) {
+                $qty = (int) $data['qty'][$product->product_id];
+                $this->setProductQty($product->product_id, $qty);
+            }
+        }
+        $messenger = Zend_Registry::get('messenger');
+        $messenger->setNamespace('cart')->addMessage('Cart updated');
     }
 
     /**

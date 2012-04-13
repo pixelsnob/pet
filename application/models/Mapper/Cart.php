@@ -22,8 +22,8 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $session = new Zend_Session_Namespace;
         if (!isset($session->cart)) {
             $session->cart = new Model_Cart;
-            $session->cart->getValidator()->validate();
         }
+        $session->cart->getValidator()->validate();
         $this->_cart = $session->cart;
     }
     
@@ -83,10 +83,7 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function update(array $data) {
-        foreach ($this->_cart->products as $product) {
-            $qty = (int) $data['qty'][$product->product_id];
-            $this->_cart->setProductQty($product->product_id, $qty);
-        }
+        $this->_cart->update($data);
     }
 
     /**
@@ -108,11 +105,11 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * @return void
+     * @return string
      * 
      */
     public function removePromo() {
-        $this->_cart->removePromo($promo);
+        return $this->_cart->removePromo($promo);
     }
     
     /**

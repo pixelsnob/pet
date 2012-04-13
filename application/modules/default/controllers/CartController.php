@@ -11,19 +11,20 @@ class CartController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
+        $messenger = Zend_Registry::get('messenger');
+        $messenger->setNamespace('cart');
         $this->view->cart = $this->_cart_svc->get();
         $cart_form = $this->_cart_svc->getCartForm();
         $this->view->cart_form = $cart_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
+            $messenger->clearMessages(); 
+            $this->view->use_current_messages = true;
             if ($cart_form->isValid($post)) {
                 $this->_cart_svc->update($post);
             } else {
-                $messenger = Zend_Registry::get('messenger');
-                $messenger->setNamespace('cart')
-                    ->addMessage('Submitted information is not valid');
+                $messenger->addMessage('Submitted information is not valid');
             }
-            $this->view->use_current_messages = true;
         }
     }
 
