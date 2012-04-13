@@ -8,11 +8,14 @@
 class Pet_View_Helper_Version extends Pet_View_Helper_HeadScript {
     
     /**
-     * @return string
+     * @return mixed
      * 
      */
     public function version() {
-        $version = file_get_contents(APPLICATION_PATH . '/../public/version');
-        return trim($version);
+        $file = APPLICATION_PATH . '/../public/version';
+        if (is_readable($file)) {
+            $version = file_get_contents(APPLICATION_PATH . '/../public/version');
+            return trim($version);
+        }
     }
 }
