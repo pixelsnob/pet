@@ -27,9 +27,11 @@ Pet.CartView = Pet.View.extend({
     },
 
     update: function() {
+        var obj = this;
         var qs = $('form[name=cart]', this.el).serialize();
-        this.populateFancyboxPost('/cart', qs);
-        this.configureCart();
+        this.populateFancyboxPost('/cart', qs, function() {
+            obj.configureCart();
+        });
         return false; 
     },
 
@@ -43,16 +45,14 @@ Pet.CartView = Pet.View.extend({
 
     removeProduct: function(el) {
         var obj = this;
-        //$(el.target).parents('li.item').fadeTo(400, .2, function() {
-            obj.populateFancyboxGet($(el.target).attr('href'));
+        obj.populateFancyboxGet($(el.target).attr('href'), function() {
             obj.configureCart();
-        //});
+        });
         return false;
     },
 
     configureCart: function() {
         var obj = this;
-        console.log($('#cart .submit input'));
         $('#cart .submit input', this.el).hide();
         // The mouseup is due to a bug: http://code.google.com/p/chromium/issues/detail?id=4505
         $('#cart .items input', this.el).on('mouseup', function(e) {
@@ -84,6 +84,7 @@ Pet.CartView = Pet.View.extend({
                         .on(
                             'click', function() {
                                 obj.update();
+                                return false;
                             }
                         )
                 )

@@ -41,16 +41,20 @@ Pet.ProductsView = Pet.View.extend({
     },
 
     submitSubscriptionTermSelectForm: function() {
+        var obj = this;
         var qs = $('form[name=subscription-select-term]', this.el).serialize();
-        this.populateFancyboxPost('/products/subscription/term', qs);
-        this.cart_view.configureCart();
+        this.populateFancyboxPost('/products/subscription/term', qs, function() {
+            obj.cart_view.configureCart();
+        });
         return false; 
     },
 
     submitDigitalSelectForm: function() {
+        var obj = this;
         var qs = $('form[name=digital-subscription-select]', this.el).serialize();
-        this.populateFancyboxPost('/products/digital/select', qs);
-        this.cart_view.configureCart();
+        this.populateFancyboxPost('/products/digital/select', qs, function() {
+            obj.cart_view.configureCart();
+        });
         return false; 
     },
 
@@ -61,7 +65,6 @@ Pet.ProductsView = Pet.View.extend({
         }
         var qs = login_form.serialize();
         qs += '&redirect_params[nolayout]=1';
-        
         this.populateFancyboxPost('/profile/login/', qs);
         return false; 
     },

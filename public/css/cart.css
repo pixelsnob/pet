@@ -50,10 +50,11 @@
 }
 
 #nolayout #cart .items {
-    /*height: 380px;*/
-    /*width: 610px;*/
-    overflow: auto;
-    max-height:350px;
+    height: 380px;
+    /* Allow for scrollbar */
+    width: 650px;
+    overflow: auto !important;
+    max-height: 350px;
     height: auto !important;
     height: 350px;
 }

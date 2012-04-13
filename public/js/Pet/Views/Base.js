@@ -6,7 +6,8 @@ Pet.View = Backbone.View.extend({
     
     error_msg: '<p class="error">An error has ocurred</p>',
 
-    populateFancyboxGet: function(url) {
+    populateFancyboxGet: function(url, cb) {
+        cb = (typeof cb == 'function' ? cb : function() {});
         url += '?nolayout';
         var obj = this;
         $.ajax({
@@ -15,6 +16,7 @@ Pet.View = Backbone.View.extend({
             'async': false,
             'success': function(data) {
                 $('.fancybox-inner').html(data);
+                cb();
                 $.fancybox.update();
             },
             'error': function() {
@@ -23,7 +25,8 @@ Pet.View = Backbone.View.extend({
         });
     },
 
-    populateFancyboxPost: function(url, post_data) {
+    populateFancyboxPost: function(url, post_data, cb) {
+        cb = (typeof cb == 'function' ? cb : function() {});
         url += '?nolayout';
         var obj = this;
         $.ajax({
@@ -33,6 +36,7 @@ Pet.View = Backbone.View.extend({
             'async': false,
             'success': function(data) {
                 $('.fancybox-inner').html(data);
+                cb();
                 $.fancybox.update();
             },
             'error': function() {
@@ -41,22 +45,8 @@ Pet.View = Backbone.View.extend({
         });
     },
 
-    getFancyboxOpts: function(opts) {
-        return $.extend({
-            type: 'ajax',
-            scrolling: 'no',
-            minWidth: 650,
-            minHeight: 300,
-            fitToView: true,
-            autoSize: true,
-            scrolling: true,
-            afterLoad: function() {
-                $.fancybox.update();
-            }
-        }, opts);
-    },
-
     showFancybox: function(opts, cb) {
+        console.log('showFancybox');
         if (opts.href) {
             opts.href += '?nolayout';
         }
@@ -64,7 +54,7 @@ Pet.View = Backbone.View.extend({
         opts = $.extend({
             type: 'ajax',
             scrolling: 'no',
-            minWidth: 650,
+            minWidth: 680,
             minHeight: 300,
             fitToView: true,
             autoSize: true,
