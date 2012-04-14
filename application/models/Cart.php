@@ -71,9 +71,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @param Model_Cart_BillInfo $billing
      * @return void
      */
-    public function setBilling(Model_Cart_Billing $billing) {
+    /*public function setBilling(Model_Cart_Billing $billing) {
         return $billing;
-    }
+    }*/
     
     /**
      * Makes sure that shipping is set to an instance of Model_Cart_Shipping
@@ -81,9 +81,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @param Model_Cart_Shipping $shipping
      * @return void
      */
-    public function setShipping(Model_Cart_Shipping $shipping) {
+    /*public function setShipping(Model_Cart_Shipping $shipping) {
         return $shipping;
-    }
+    }*/
     
     /**
      * @param Model_Cart_Product $product
