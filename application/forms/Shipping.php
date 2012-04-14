@@ -11,7 +11,6 @@ class Form_Shipping extends Pet_Form {
      */
     public function init() {
         parent::init();
-        $this->setDecorators(array('ViewHelper'));
         $this->addElement('text', 'shipping_first_name', array(
             'label' => 'First Name',
             'id' => 'shipping_first_name',
