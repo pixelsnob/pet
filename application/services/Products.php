@@ -39,13 +39,13 @@ class Service_Products extends Pet_Service {
      * @param int $zone_id
      * @param bool $is_gift
      * @param bool $is_renewal
-     * @return Default_Form_SubscriptionTermSelect
+     * @return Form_SubscriptionTermSelect
      * 
      */
     public function getSubscriptionTermSelectForm(array $subscriptions,
                                                   $zone_id, $is_gift,
                                                   $is_renewal) {
-        $form = new Default_Form_SubscriptionTermSelect(array(
+        $form = new Form_SubscriptionTermSelect(array(
             'zoneId'  => $zone_id,
             'isGift'    => $is_gift,
             'isRenewal' => $is_renewal
@@ -73,13 +73,13 @@ class Service_Products extends Pet_Service {
      * @param array $subscriptions
      * @param bool $is_gift
      * @param bool $is_renewal
-     * @return Default_Form_DigitalSubscriptionSelect 
+     * @return Form_DigitalSubscriptionSelect 
      * 
      */
     public function getDigitalSubscriptionSelectForm(array $subscriptions,
                                                      $is_gift = false,
                                                      $is_renewal = false) {
-        $form = new Default_Form_DigitalSubscriptionSelect(array(
+        $form = new Form_DigitalSubscriptionSelect(array(
             'isGift'    => $is_gift,
             'isRenewal' => $is_renewal
         ));

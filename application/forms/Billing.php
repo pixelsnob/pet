@@ -3,7 +3,7 @@
  * Billing fields for user profile
  * 
  */
-class Default_Form_Billing extends Pet_Form {
+class Form_Billing extends Pet_Form {
 
     /**
      * @return void

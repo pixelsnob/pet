@@ -3,7 +3,7 @@
  * Login form
  * 
  */
-class Default_Form_Login extends Pet_Form {
+class Form_Login extends Pet_Form {
     
     /**
      * @var string

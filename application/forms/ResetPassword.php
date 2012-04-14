@@ -3,7 +3,7 @@
  * Reset password form
  * 
  */
-class Default_Form_ResetPassword extends Pet_Form {
+class Form_ResetPassword extends Pet_Form {
     
     /**
      * @var Model_User 

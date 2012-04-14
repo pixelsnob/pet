@@ -125,11 +125,11 @@ class Service_Users extends Pet_Service {
     }
 
     /**
-     * @return Default_Form_Login
+     * @return Form_Login
      * 
      */ 
     public function getLoginForm($redirect_to, $redirect_params) {
-        $login_form = new Default_Form_Login(array(
+        $login_form = new Form_Login(array(
             'redirectTo'     => $redirect_to,
             'redirectParams' => $redirect_params
         ));
@@ -137,7 +137,7 @@ class Service_Users extends Pet_Service {
     }
 
     /**
-     * @return bool|Default_Form_UserProfile
+     * @return bool|Form_UserProfile
      * 
      */
     public function getProfileForm() {
@@ -148,7 +148,7 @@ class Service_Users extends Pet_Service {
         $user = $this->getUser();
         $profile = $this->getProfile();
         if ($user && $profile) {
-            $profile_form = new Default_Form_UserProfile(array(
+            $profile_form = new Form_UserProfile(array(
                 'identity' => $identity,
                 'mapper'   => $this->_users
             ));
@@ -172,31 +172,31 @@ class Service_Users extends Pet_Service {
     }
     
     /**
-     * @return Default_Form_ResetPasswordRequest
+     * @return Form_ResetPasswordRequest
      * 
      */
     public function getResetPasswordRequestForm() {
-        return new Default_Form_ResetPasswordRequest;    
+        return new Form_ResetPasswordRequest;    
         return $form;
     }
     
     /**
      * @param null|int $user_id
-     * @return Default_Form_ResetPassword 
+     * @return Form_ResetPassword 
      * 
      */
     public function getResetPasswordForm($user_id = null) {
         $user = $this->getUser($user_id);
-        return new Default_Form_ResetPassword(array('user' => $user));
+        return new Form_ResetPassword(array('user' => $user));
     }
     
     /**
-     * @return Default_Form_ChangePassword
+     * @return Form_ChangePassword
      * 
      */ 
     public function getChangePasswordForm() {
         $identity = Zend_Auth::getInstance()->getIdentity();
-        $login_form = new Default_Form_ChangePassword(array(
+        $login_form = new Form_ChangePassword(array(
             'user' => $identity)); 
         return $login_form;
     }    

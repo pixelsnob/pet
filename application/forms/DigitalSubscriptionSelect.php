@@ -3,7 +3,7 @@
  * Digital subscription select form
  * 
  */
-class Default_Form_DigitalSubscriptionSelect extends Pet_Form {
+class Form_DigitalSubscriptionSelect extends Pet_Form {
     
     /**
      * @var int

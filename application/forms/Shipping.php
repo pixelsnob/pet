@@ -3,7 +3,7 @@
  * Shipping fields for user profile
  * 
  */
-class Default_Form_Shipping extends Pet_Form {
+class Form_Shipping extends Pet_Form {
 
     /**
      * @return void

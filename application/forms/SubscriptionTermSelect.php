@@ -3,7 +3,7 @@
  * Magazine term select form
  * 
  */
-class Default_Form_SubscriptionTermSelect extends Pet_Form {
+class Form_SubscriptionTermSelect extends Pet_Form {
     
     /**
      * @var int

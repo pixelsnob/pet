@@ -3,7 +3,7 @@
  * Reset password request form
  * 
  */
-class Default_Form_ResetPasswordRequest extends Pet_Form {
+class Form_ResetPasswordRequest extends Pet_Form {
     
     /**
      * @return void

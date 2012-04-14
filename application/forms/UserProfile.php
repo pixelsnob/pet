@@ -3,7 +3,7 @@
  * User profile form
  * 
  */
-class Default_Form_UserProfile extends Pet_Form {
+class Form_UserProfile extends Pet_Form {
     
     /**
      * @var Model_User 
@@ -39,13 +39,13 @@ class Default_Form_UserProfile extends Pet_Form {
      */
     public function init() {
         parent::init();
-        $user_form = new Default_Form_User(array(
+        $user_form = new Form_User(array(
             'mapper' => $this->_mapper,
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
-        $this->addSubform(new Default_Form_Billing, 'billing');
-        $this->addSubform(new Default_Form_Shipping, 'shipping');
+        $this->addSubform(new Form_Billing, 'billing');
+        $this->addSubform(new Form_Shipping, 'shipping');
         // Version
         $this->addElement('select', 'version', array(
             'label' => 'Version',

@@ -3,7 +3,7 @@
  * Cart form
  * 
  */
-class Default_Form_Cart extends Pet_Form {
+class Form_Cart extends Pet_Form {
     
     protected $_cart = array();
     

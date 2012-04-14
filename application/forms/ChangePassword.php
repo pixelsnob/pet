@@ -3,7 +3,7 @@
  * Change password form for logged in users
  * 
  */
-class Default_Form_ChangePassword extends Pet_Form {
+class Form_ChangePassword extends Pet_Form {
     
     /**
      * @var Model_User 

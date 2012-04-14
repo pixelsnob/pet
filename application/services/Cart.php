@@ -104,12 +104,12 @@ class Service_Cart {
     }
     
     /**
-     * @return Default_Form_Cart
+     * @return Form_Cart
      * 
      */
     public function getCartForm() {
         $cart = $this->_cart->get();
-        $form = new Default_Form_Cart(array(
+        $form = new Form_Cart(array(
             'cart' => $cart
         ));
         $form_data = array();
