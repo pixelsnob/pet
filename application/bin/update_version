@@ -1,0 +1,7 @@
+#!/bin/sh
+# 
+# Updates a file with a commit id, used for js/css caching, etc.
+# 
+
+git rev-parse HEAD > /var/www/pet/public/version
+
