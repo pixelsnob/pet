@@ -30,3 +30,5 @@ class Model_Cart_Product extends Pet_Model_Abstract {
         }
     }
 }
+
+
