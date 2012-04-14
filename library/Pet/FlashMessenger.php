@@ -27,9 +27,9 @@ class Pet_FlashMessenger {
         }
     }
 
-    public function addMessage($message) {
+    /*public function addMessage($message) {
         $this->_messenger->addMessage($message);
-    }
+    }*/
 
     public function __toString() {
         return $this->_messenger->__toString();
