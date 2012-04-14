@@ -1,9 +1,9 @@
 <?php
 /**
- * Shipping fields for user profile
+ * Billing fields for user profile
  * 
  */
-class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
+class Default_Form_Billing extends Pet_Form {
 
     /**
      * @return void
@@ -11,38 +11,9 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
      */
     public function init() {
         parent::init();
-        $this->setDecorators(array('ViewHelper'));
-        $this->addElement('text', 'shipping_first_name', array(
-            'label' => 'First Name',
-            'id' => 'shipping_first_name',
-            'required' => true,
-            'validators'   => array(
-                array('NotEmpty', true, array(
-                    'messages' => 'Please enter your first name'
-                )),
-                array('StringLength', true, array(
-                    'max' => 30,
-                    'messages' => 'Username must be %max% characters or less'
-                ))
-            )
-        // Ship last name
-        ))->addElement('text', 'shipping_last_name', array(
-            'label' => 'Last Name',
-            'id' => 'shipping_last_name',
-            'required' => true,
-            'validators'   => array(
-                array('NotEmpty', true, array(
-                    'messages' => 'Please enter your last name'
-                )),
-                array('StringLength', true, array(
-                    'max' => 30,
-                    'messages' => 'Last name must be %max% characters or less'
-                ))
-            )
-        // Ship address
-        ))->addElement('text', 'shipping_address', array(
+        $this->addElement('text', 'billing_address', array(
             'label' => 'Address',
-            'id' => 'shipping_address',
+            'id' => 'billing_address',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -53,10 +24,10 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                     'messages' => 'Address must be %max% characters or less'
                 ))
             )
-        // Ship address 2
-        ))->addElement('text', 'shipping_address_2', array(
+        // Bill address 2
+        ))->addElement('text', 'billing_address_2', array(
             'label' => 'Address 2',
-            'id' => 'shipping_address_2',
+            'id' => 'billing_address_2',
             'required' => false,
             'validators'   => array(
                 array('StringLength', true, array(
@@ -64,10 +35,10 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                     'messages' => 'Address 2 must be %max% characters or less'
                 ))
             )
-        // Ship company
-        ))->addElement('text', 'shipping_company', array(
+        // Bill company
+        ))->addElement('text', 'billing_company', array(
             'label' => 'Company',
-            'id' => 'shipping_company',
+            'id' => 'billing_company',
             'required' => false,
             'validators'   => array(
                 array('StringLength', true, array(
@@ -75,10 +46,10 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                     'messages' => 'Company must be %max% characters or less'
                 ))
             )
-        // Ship city
-        ))->addElement('text', 'shipping_city', array(
+        // Bill city
+        ))->addElement('text', 'billing_city', array(
             'label' => 'City',
-            'id' => 'shipping_city',
+            'id' => 'billing_city',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -89,10 +60,10 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                     'messages' => 'City must be %max% characters or less'
                 ))
             )
-        // Ship state
-        ))->addElement('select', 'shipping_state', array(
+        // Bill state
+        ))->addElement('select', 'billing_state', array(
             'label' => 'State',
-            'id' => 'shipping_state',
+            'id' => 'billing_state',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -103,10 +74,10 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                     'messages' => 'State must be %max% characters or less'
                 ))
             )
-        // Ship postal code
-        ))->addElement('text', 'shipping_postal_code', array(
+        // Bill postal code
+        ))->addElement('text', 'billing_postal_code', array(
             'label' => 'Zip/Postal Code',
-            'id' => 'shipping_postal_code',
+            'id' => 'billing_postal_code',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -117,10 +88,10 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                     'messages' => 'Postal code must be %max% characters or less'
                 ))
             )
-        // Ship country
-        ))->addElement('select', 'shipping_country', array(
+        // Bill country
+        ))->addElement('select', 'billing_country', array(
             'label' => 'Country',
-            'id' => 'shipping_country',
+            'id' => 'billing_country',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -131,10 +102,10 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                     'messages' => 'Country must be %max% characters or less'
                 ))
             )
-        // Ship phone
-        ))->addElement('text', 'shipping_phone', array(
+        // Bill phone
+        ))->addElement('text', 'billing_phone', array(
             'label' => 'Phone',
-            'id' => 'shipping_phone',
+            'id' => 'billing_phone',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -146,7 +117,6 @@ class Default_Form_SubForm_Shipping extends Zend_Form_SubForm {
                 )),
                 array(new Pet_Validate_Phone)
             )
-
         ))->setElementFilters(array('StringTrim'));
 
     }

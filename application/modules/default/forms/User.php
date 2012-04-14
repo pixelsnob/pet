@@ -3,7 +3,7 @@
  * User form
  * 
  */
-class Default_Form_SubForm_User extends Zend_Form_SubForm {
+class Default_Form_User extends Pet_Form {
 
     /**
      * @var Model_User 
