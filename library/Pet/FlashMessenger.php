@@ -20,16 +20,18 @@ class Pet_FlashMessenger {
         $this->_messenger = Zend_Controller_Action_HelperBroker::getStaticHelper(
             'FlashMessenger');
     }
-
+    
+    /**
+     * @param string $name
+     * @param array $args
+     * @return mixed
+     * 
+     */
     public function __call($name, $args) {
         if (method_exists($this->_messenger, $name)) {
             return call_user_func_array(array($this->_messenger, $name), $args);
         }
     }
-
-    /*public function addMessage($message) {
-        $this->_messenger->addMessage($message);
-    }*/
 
     public function __toString() {
         return $this->_messenger->__toString();
