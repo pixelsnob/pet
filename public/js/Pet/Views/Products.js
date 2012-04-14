@@ -32,10 +32,10 @@ Pet.ProductsView = Pet.View.extend({
 
     openRenewPopup: function(el) {
         this.showFancybox({
-            href: $(el.target).attr('href') + '?redirect_params[nolayout]=1',
-            afterClose: function() {
+            href: $(el.target).attr('href') + '?redirect_params[nolayout]=1'
+            /*afterClose: function() {
                 window.location.href = window.location.href;
-            }
+            }*/
         });
         return false;
     },

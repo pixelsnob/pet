@@ -156,13 +156,13 @@ class Service_Users extends Pet_Service {
                 '/configs/states.php');
             $countries = new Zend_Config(require APPLICATION_PATH .
                 '/configs/countries.php');
-            $profile_form->billing_state->setMultiOptions(
+            $profile_form->billing->billing_state->setMultiOptions(
                 $states->toArray());
-            $profile_form->shipping_state->setMultiOptions(
+            $profile_form->shipping->shipping_state->setMultiOptions(
                 $states->toArray());
-            $profile_form->billing_country->setMultiOptions(
+            $profile_form->billing->billing_country->setMultiOptions(
                 $countries->toArray());
-            $profile_form->shipping_country->setMultiOptions(
+            $profile_form->shipping->shipping_country->setMultiOptions(
                 $countries->toArray());
             $form_data = array_merge($user->toArray(), $profile->toArray());
             $profile_form->populate($form_data);
