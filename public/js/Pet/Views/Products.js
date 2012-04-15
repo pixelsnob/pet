@@ -84,6 +84,5 @@ Pet.ProductsView = Pet.View.extend({
         return false;
     }
 
-
 });
 

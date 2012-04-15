@@ -11,6 +11,10 @@ class CartController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
+        if ($this->_request->isXmlHttpRequest() &&
+                !$this->_request->getParam('nolayout')) {
+            $this->_helper->json($this->_cart_svc->get()->toArray());
+        }
         $messenger = Zend_Registry::get('messenger');
         $messenger->setNamespace('cart');
         $this->view->cart = $this->_cart_svc->get();
@@ -26,6 +30,7 @@ class CartController extends Zend_Controller_Action {
                 $messenger->addMessage('Submitted information is not valid');
             }
         }
+        $this->view->nolayout = $this->_request->getParam('nolayout');
     }
 
     /**
@@ -74,6 +79,9 @@ class CartController extends Zend_Controller_Action {
         echo 'download: ' . $cart->hasDownload();
         echo '</pre>';
         exit;
+    }
+
+    public function test2Action() {
     }
 
 }

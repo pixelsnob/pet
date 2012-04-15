@@ -19,6 +19,11 @@
                             }
                             ?>
                             <ul class="links">
+                                <?php if ($this->nolayout): ?>
+                                <li>
+                                    <a href="<?php echo $this->serverUrl($this->url(array())); ?>" class="update">Update</a>
+                                </li>
+                                <?php endif; ?>
                                 <li>
                                     <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>" class="remove">Remove</a>
                                 </li>
@@ -36,7 +41,19 @@
                     <?php $c++; endforeach; ?>
                 </ul>
             </div>
-            <p class="submit"><input type="submit" value="Update"></p>
+            <ul>
+                <li class="submit"><input type="submit" value="Update"></li>
+                <?php if ($this->nolayout): ?>
+                    <li class="continue-shopping">
+                        <input type="submit" value="Continue Shopping">
+                    </li>
+                    <?php if ($this->cart->hasProducts()): ?>
+                        <li class="checkout">
+                            <input type="submit" value="Checkout">
+                        </li>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </ul>
         <?php else: ?>
             <p class="no-items">You have no items in your cart</p> 
         <?php endif; ?>

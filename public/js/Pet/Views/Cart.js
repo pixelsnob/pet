@@ -6,10 +6,14 @@ Pet.CartView = Pet.View.extend({
     
     el: $('body'),
     
+    model: new Pet.CartModel,
+
     events: {
         'click #cart .remove': 'removeProduct',
+        'click #cart .update': 'update',
         'mousedown #cart .remove, #cart .update': 'fadeOutItem',
         'mouseup #cart .update, #cart .remove': 'fadeInItem',
+        'click #cart .checkout': 'goToCheckout',
         'click .add-to-cart': 'openCartPopup' 
     },
     
@@ -52,9 +56,9 @@ Pet.CartView = Pet.View.extend({
     },
 
     configureCart: function() {
-        var obj = this;
         $('#cart .submit input', this.el).hide();
-        // The mouseup is due to a bug: http://code.google.com/p/chromium/issues/detail?id=4505
+        // The mouseup is due to a bug:
+        // http://code.google.com/p/chromium/issues/detail?id=4505
         $('#cart .items input', this.el).on('mouseup', function(e) {
             e.preventDefault();
         // Make text inside input selected
@@ -62,34 +66,14 @@ Pet.CartView = Pet.View.extend({
             this.select();
             return true;
         });
-        // Continue shopping button
-        $('#cart form').append(
-            $('<input>').attr({ type: 'submit', value: 'Continue Shopping' })
-                .on('click', function() {
-                    $.fancybox.close();
-                    return false;
-                })
-        );
-        // Add update links
-        $('#cart .item', this.el).each(function() {
-            var qty = $(this).find('input');
-            // Readonly inputs don't need an update link
-            if (qty.hasClass('readonly')) {
-                return true;
-            }
-            $(this).find('.links').prepend(
-                $('<li>').append(
-                    $('<a>').attr('href', '#').text('Update')
-                        .addClass('update')
-                        .on(
-                            'click', function() {
-                                obj.update();
-                                return false;
-                            }
-                        )
-                )
-            );
-        });
+    },
+
+    goToCheckout: function() {
+        $.fancybox.close();
+        window.setTimeout(function() {
+            window.location.href = '/checkout';
+        }, 400);
+        return false;
     }
 
 });

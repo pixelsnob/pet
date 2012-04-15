@@ -46,7 +46,6 @@ Pet.View = Backbone.View.extend({
     },
 
     showFancybox: function(opts, cb) {
-        console.log('showFancybox');
         if (opts.href) {
             opts.href += '?nolayout';
         }

@@ -19,9 +19,14 @@ return array(
     ),
     'products' => array(
         'js/Pet/Views/Products.js',
+        'js/Pet/Models/Cart.js',
         'js/Pet/Views/Cart.js'
     ),
     'cart' => array(
+        'js/Pet/Models/Cart.js',
         'js/Pet/Views/Cart.js'
+    ),
+    'checkout' => array(
+        'js/Pet/Views/Checkout.js'
     )
 );

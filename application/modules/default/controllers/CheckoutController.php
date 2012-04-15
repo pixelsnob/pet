@@ -14,11 +14,14 @@ class CheckoutController extends Zend_Controller_Action {
      */
     public function indexAction() {
         $cart = $this->_cart_svc->get();
+        $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         /*if ($cart->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
             $this->_forward('login', 'profile', 'default', 
                 array('redirect_to' => 'checkout'));
         }*/
         $this->view->cart = $cart;
+        $this->view->inlineScriptMin()->loadGroup('checkout')
+            ->appendScript('new Pet.CheckoutView;');
     }
 
 
