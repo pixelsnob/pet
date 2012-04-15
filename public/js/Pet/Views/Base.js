@@ -59,8 +59,8 @@ Pet.View = Backbone.View.extend({
             autoSize: true,
             scrolling: true,
             beforeShow: function() {
-                $.fancybox.update();
                 cb();
+                $.fancybox.update();
             }
         }, opts);
         $.fancybox(opts);
