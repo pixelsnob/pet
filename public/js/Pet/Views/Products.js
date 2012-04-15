@@ -43,18 +43,14 @@ Pet.ProductsView = Pet.View.extend({
     submitSubscriptionTermSelectForm: function() {
         var obj = this;
         var qs = $('form[name=subscription-select-term]', this.el).serialize();
-        this.populateFancyboxPost('/products/subscription/term', qs, function() {
-            obj.cart_view.configureCart();
-        });
+        this.populateFancyboxPost('/products/subscription/term', qs);
         return false; 
     },
 
     submitDigitalSelectForm: function() {
         var obj = this;
         var qs = $('form[name=digital-subscription-select]', this.el).serialize();
-        this.populateFancyboxPost('/products/digital/select', qs, function() {
-            obj.cart_view.configureCart();
-        });
+        this.populateFancyboxPost('/products/digital/select', qs);
         return false; 
     },
 

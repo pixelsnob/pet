@@ -13,6 +13,7 @@
                         <div class="cart-left">
                             <h4><?php echo $this->escape($product->name) . ($product->is_gift ? ' (gift)' : ''); ?></h4>
                             <?php
+                            // Qty input
                             $qty = $this->cart_form->qty->getElement($product->product_id);
                             if ($qty) {
                                 echo $qty->renderLabel() . $qty->renderViewHelper();

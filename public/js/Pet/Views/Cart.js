@@ -27,8 +27,6 @@ Pet.CartView = Pet.View.extend({
         var obj = this;
         this.showFancybox({
             href: $(el.target).attr('href')
-        }, function() {
-            obj.configureCart();
         });
         return false;
     },
@@ -36,9 +34,7 @@ Pet.CartView = Pet.View.extend({
     update: function() {
         var obj = this;
         var qs = $('form[name=cart]', this.el).serialize();
-        this.populateFancyboxPost('/cart', qs, function() {
-            obj.configureCart();
-        });
+        this.populateFancyboxPost('/cart', qs);
         return false; 
     },
 
@@ -52,25 +48,10 @@ Pet.CartView = Pet.View.extend({
 
     removeProduct: function(el) {
         var obj = this;
-        obj.populateFancyboxGet($(el.target).attr('href'), function() {
-            obj.configureCart();
-        });
+        obj.populateFancyboxGet($(el.target).attr('href'));
         return false;
     },
 
-    configureCart: function() {
-        //$('#cart .submit input', this.el).hide();
-        // The mouseup is due to a bug:
-        // http://code.google.com/p/chromium/issues/detail?id=4505
-        /*$('#cart .items input', this.el).on('mouseup', function(e) {
-            e.preventDefault();
-        // Make text inside input selected
-        }).on('focus', function() {
-            this.select();
-            return true;
-        });*/
-    },
-    
     continueShopping: function() {
         $.fancybox.close();
         return false;
