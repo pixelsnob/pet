@@ -1,0 +1,4 @@
+
+# Updates git version in a text file
+
+0 * * * *    /var/www/pet/application/bin/update_version
