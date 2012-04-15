@@ -1,0 +1,7 @@
+
+<?php if ($this->cart->hasProducts()): ?>
+    <h2>Checkout</h2>
+
+<?php else: ?>
+    <p>You have no items in your cart. <a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>">Continue shopping?</a></p>
+<?php endif; ?>

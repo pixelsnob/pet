@@ -23,7 +23,8 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         if (!isset($session->cart)) {
             $session->cart = new Model_Cart;
         }
-        $session->cart->getValidator()->validate();
+        //$session->cart->getValidator()->validate();
+        //print_r($session->cart);
         $this->_cart = $session->cart;
     }
     

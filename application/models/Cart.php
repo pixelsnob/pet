@@ -222,6 +222,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     public function getProductIds() {
         return array_keys($this->_data['products']);
     }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function hasProducts() {
+        return (bool) count($this->_data['products']);
+    }
+    
     
     /**
      * @return bool

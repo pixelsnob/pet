@@ -1,4 +1,6 @@
+# A list of cron jobs necessary (or helpful) for the pet app to run
+# 
+# 
 
 # Updates git version in a text file
-
 0 * * * *    /var/www/pet/application/bin/update_version
