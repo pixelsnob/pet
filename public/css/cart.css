@@ -62,3 +62,9 @@
 #nolayout #cart .items ul {
     width: 98%;
 }
+
+#cart .cart-nav li {
+    background: none;
+    display: inline;
+    padding: 0;
+}

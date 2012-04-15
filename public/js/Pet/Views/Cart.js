@@ -9,12 +9,15 @@ Pet.CartView = Pet.View.extend({
     model: new Pet.CartModel,
 
     events: {
+        'click .add-to-cart': 'openCartPopup',
         'click #cart .remove': 'removeProduct',
         'click #cart .update': 'update',
         'mousedown #cart .remove, #cart .update': 'fadeOutItem',
         'mouseup #cart .update, #cart .remove': 'fadeInItem',
-        'click #cart .checkout': 'goToCheckout',
-        'click .add-to-cart': 'openCartPopup' 
+        'click #cart .checkout input': 'goToCheckout',
+        'click #cart .continue-shopping input': 'continueShopping',
+        'mouseup #cart .items input': 'qtySelectMouseup',
+        'focus #cart .items input': 'qtySelectFocus'
     },
     
     initialize: function(){
@@ -56,16 +59,21 @@ Pet.CartView = Pet.View.extend({
     },
 
     configureCart: function() {
-        $('#cart .submit input', this.el).hide();
+        //$('#cart .submit input', this.el).hide();
         // The mouseup is due to a bug:
         // http://code.google.com/p/chromium/issues/detail?id=4505
-        $('#cart .items input', this.el).on('mouseup', function(e) {
+        /*$('#cart .items input', this.el).on('mouseup', function(e) {
             e.preventDefault();
         // Make text inside input selected
         }).on('focus', function() {
             this.select();
             return true;
-        });
+        });*/
+    },
+    
+    continueShopping: function() {
+        $.fancybox.close();
+        return false;
     },
 
     goToCheckout: function() {
@@ -73,6 +81,16 @@ Pet.CartView = Pet.View.extend({
         window.setTimeout(function() {
             window.location.href = '/checkout';
         }, 400);
+        return false;
+    },
+
+    qtySelectFocus: function(el) {
+        el.target.select();
+        return false;
+    },
+
+    qtySelectMouseup: function(el) {
+        el.preventDefault();
         return false;
     }
 

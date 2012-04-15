@@ -5,7 +5,7 @@
             <legend>Shopping Cart</legend>
         </fieldset>
             <?php echo $this->flashMessenger('cart', $this->use_current_messages); ?>
-        <?php if (!empty($this->cart->products)):  ?>
+        <?php if ($this->cart->hasProducts()): ?>
             <div class="items form">
                 <ul> 
                     <?php $c = 1; foreach ($this->cart->products as $product): ?>
@@ -25,7 +25,8 @@
                                 </li>
                                 <?php endif; ?>
                                 <li>
-                                    <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id), 'cart_remove')); ?>" class="remove">Remove</a>
+                                    <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id),
+                                                           'cart_remove')); ?>" class="remove">Remove</a>
                                 </li>
                             </ul>
                             <?php
@@ -41,22 +42,23 @@
                     <?php $c++; endforeach; ?>
                 </ul>
             </div>
-            <ul>
-                <li class="submit"><input type="submit" value="Update"></li>
-                <?php if ($this->nolayout): ?>
-                    <li class="continue-shopping">
-                        <input type="submit" value="Continue Shopping">
-                    </li>
-                    <?php if ($this->cart->hasProducts()): ?>
-                        <li class="checkout">
-                            <input type="submit" value="Checkout">
-                        </li>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </ul>
         <?php else: ?>
             <p class="no-items">You have no items in your cart</p> 
         <?php endif; ?>
+        <ul class="cart-nav">
+            <?php if ($this->nolayout): ?>
+                <li class="continue-shopping">
+                    <input type="submit" value="Continue Shopping">
+                </li>
+                <?php if ($this->cart->hasProducts()): ?>
+                <li class="checkout">
+                    <input type="submit" value="Checkout">
+                </li>
+                <?php endif; ?>
+            <?php else: ?>
+                <li class="submit"><input type="submit" value="Update"></li>
+            <?php endif; ?>
+        </ul>
     </form>
 
     <!--
