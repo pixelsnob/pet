@@ -119,4 +119,21 @@ class Service_Cart {
         $form->populate($form_data);
         return $form;
     }
+
+    /**
+     * @return Form_Checkout
+     * 
+     */
+    public function getCheckoutForm() {
+        //$cart = $this->_cart->get();
+        $form = new Form_Checkout(array(
+            //'cart' => $cart
+        ));
+        /*$form_data = array();
+        foreach ($cart->products as $product) {
+            $form_data['qty'][$product->product_id] = $product->qty;
+        }
+        $form->populate($form_data);*/
+        return $form;
+    }
 }
