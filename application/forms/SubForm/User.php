@@ -3,7 +3,7 @@
  * User form
  * 
  */
-class Form_User extends Pet_Form {
+class Form_SubForm_User extends Zend_Form_SubForm {
 
     /**
      * @var Model_User 
@@ -18,10 +18,10 @@ class Form_User extends Pet_Form {
     protected $_mapper;
 
     /**
-     * @param Model_User $identity
+     * @param mixed $identity
      * @return void
      */
-    public function setIdentity(Model_User $identity) {
+    public function setIdentity($identity) {
         $this->_identity = $identity;
     }
 
@@ -106,6 +106,52 @@ class Form_User extends Pet_Form {
             )
         ))->setElementFilters(array('StringTrim'));
 
+    }
+    
+    /**
+     * @return void
+     * 
+     */
+    public function addPasswordFields() {
+        $this->addElement('password', 'password', array(
+            'label' => 'New Password',
+            'id' => 'password',
+            'required' => true,
+            'renderPassword' => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Please enter your new password'
+                )),
+                array('Callback', true, array(
+                    'callback' => array($this, 'isNewPasswordValid'),
+                    'messages' => 'New password must be different than old password'
+                )),
+                array(new Pet_Validate_PasswordStrength, true),
+                array('StringLength', true, array(
+                    'max' => 40,
+                    'messages' => 'Password must be %max% characters or less'
+                ))
+            )
+        ))->addElement('password', 'confirm_password', array(
+            'label' => 'Confirm Password',
+            'id' => 'confirm-password',
+            'required' => true,
+            'renderPassword' => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Please confirm your password'
+                )),
+                array('StringLength', true, array(
+                    'max' => 40,
+                    'messages' => 'Password must be %max% characters or less'
+                )),
+                array('Identical', true, array(
+                    'token' => 'password',
+                    'messages' => 'Password and confirm password must be the same'
+                ))
+            )
+        ))->setElementFilters(array('StringTrim'));
+        
     }
 }
 

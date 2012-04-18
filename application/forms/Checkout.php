@@ -6,52 +6,85 @@
 class Form_Checkout extends Pet_Form {
     
     /**
+     * @var Model_User 
+     * 
+     */
+    protected $_identity;
+    
+    /**
+     * @var Pet_Model_Mapper_Abstract 
+     * 
+     */
+    protected $_mapper;
+
+    /**
+     * @var array
+     * 
+     */
+    protected $_countries;
+
+    /**
+     * @var array
+     * 
+     */
+    protected $_states;
+
+    /**
+     * @param mixed $identity
+     * @return void
+     */
+    public function setIdentity($identity) {
+        $this->_identity = $identity;
+    }
+
+    /**
+     * @param Pet_Model_Mapper_Abstract $mapper
+     * @return void
+     */
+    public function setMapper(Pet_Model_Mapper_Abstract $mapper) {
+        $this->_mapper = $mapper;
+    }
+
+    /**
+     * @param array $countries
+     * @return void
+     */
+    public function setCountries(array $countries) {
+        $this->_countries = $countries;
+    }
+
+    /**
+     * @param array $countries
+     * @return void
+     */
+    public function setStates(array $states) {
+        $this->_states = $states;
+    }
+
+    /**
      * @return void
      * 
      */
     public function init() {
         parent::init();
-        /*$qty = new Zend_Form_SubForm;
-        $this->addSubForm($qty, 'qty');
-        $no_qty_types = array(
-            Model_ProductType::SUBSCRIPTION,
-            Model_ProductType::DIGITAL_SUBSCRIPTION
-        );
-        foreach ($this->_cart->products as $product) {
-            $qty->addElement('text', $product->product_id, array(
-                'label' => 'Quantity:',
-                'belongsTo' => 'qty',
-                'required' => true,
-                'validators'   => array(
-                    array('NotEmpty', true, array(
-                        'messages' => 'Please enter a quantity'
-                    )),
-                    // Value must be a number and 0 or greater
-                    array('Callback', true, array('callback' => function($v) {
-                        return (preg_match('/\D/', $v) == 0 && $v >= 0);
-                    }, 'messages' => 'Quantity is not valid'))
-                ),
-                'decorators' => array(
-                    'ViewHelper',
-                    'Label',
-                    'Errors'
-                )
-            ));
-            if (!$product->is_gift && in_array($product->product_type_id, $no_qty_types)) {
-                $qty->getElement($product->product_id)
-                    ->setAttrib('readonly', true)
-                    ->setOptions(array('class' => 'readonly'))
-                    ->addValidator('LessThan', true, array(
-                        'max' => 2,
-                        'messages' => 'Multiple quantities of this item not allowed'
-                    ));
-            } else {
-                $qty->getElement($product->product_id)
-                    ->addValidator('LessThan', true, array(
-                        'max' => 10,
-                        'messages' => 'Maximum quantity exceeded'
-                    ));
-            }
-        }*/
+        $user_form = new Form_SubForm_User(array(
+            'mapper' => $this->_mapper,
+            'identity' => $this->_identity
+        ));
+        $user_form->addPasswordFields();
+        $this->addSubform($user_form, 'user');
+        $this->addSubform(new Form_SubForm_Billing, 'billing');
+        $billing_form = new Form_SubForm_Billing(array(
+            'countries' => $this->_countries,
+            'states'    => $this->_states
+        ));
+        $this->addSubform($billing_form, 'billing');
+        $shipping_form = new Form_SubForm_Shipping(array(
+            'countries' => $this->_countries,
+            'states'    => $this->_states
+        ));
+        $this->addSubform($shipping_form, 'shipping');
+        $this->addSubform(new Form_SubForm_UserInfo, 'info');
+        //$this->setElementFilters(array('StringTrim'));
     }
 }

@@ -51,7 +51,9 @@ class Pet_Validate_UsernameNotExists extends Zend_Validate_Abstract {
      */
     public function isValid($value, $context = null) {
         $user = $this->_mapper->getByUsername($value);
-        if ($user && $user->id && $user->id != $this->_identity->id) {
+        $current_id = (isset($this->_identity->id)
+            ? $this->_identity->id : null);
+        if ($user && $user->id && $user->id != $current_id) {
             $this->_error(self::INVALID);
             return false;    
         }

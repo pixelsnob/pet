@@ -18,6 +18,18 @@ class Form_UserProfile extends Pet_Form {
     protected $_mapper;
 
     /**
+     * @var array
+     * 
+     */
+    protected $_countries;
+
+    /**
+     * @var array
+     * 
+     */
+    protected $_states;
+
+    /**
      * @param Model_User $identity
      * @return void
      */
@@ -34,46 +46,42 @@ class Form_UserProfile extends Pet_Form {
     }
 
     /**
+     * @param array $countries
+     * @return void
+     */
+    public function setCountries(array $countries) {
+        $this->_countries = $countries;
+    }
+
+    /**
+     * @param array $countries
+     * @return void
+     */
+    public function setStates(array $states) {
+        $this->_states = $states;
+    }
+
+    /**
      * @return void
      * 
      */
     public function init() {
         parent::init();
-        $user_form = new Form_User(array(
+        $user_form = new Form_SubForm_User(array(
             'mapper' => $this->_mapper,
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
-        $this->addSubform(new Form_Billing, 'billing');
-        $this->addSubform(new Form_Shipping, 'shipping');
-        // Version
-        $this->addElement('select', 'version', array(
-            'label' => 'Version',
-            'id' => 'version',
-            'required' => false,
-            'validators'   => array(
-                array('StringLength', true, array(
-                    'max' => 50,
-                    'messages' => 'Phone must be %max% characters or less'
-                ))
-            ),
-            'multiOptions' => array(
-                '' => 'Please select...',
-                7  => 'Version 7',
-                8  => 'Version 8',
-                9  => 'Version 9',
-                'other' => 'Other'
-            )
-        // Opt-in
-        ))->addElement('checkbox', 'opt_in', array(
-            'label' => 'Opt In',
-            'id' => 'opt-in',
-            'required' => false
-        // Opt-in partner
-        ))->addElement('checkbox', 'opt_in_partner', array(
-            'label' => 'Opt In (Sponsors)',
-            'id' => 'opt-in-partner',
-            'required' => false
-        ))->setElementFilters(array('StringTrim'));
+        $billing_form = new Form_SubForm_Billing(array(
+            'countries' => $this->_countries,
+            'states'    => $this->_states
+        ));
+        $this->addSubform($billing_form, 'billing');
+        $shipping_form = new Form_SubForm_Shipping(array(
+            'countries' => $this->_countries,
+            'states'    => $this->_states
+        ));
+        $this->addSubform($shipping_form, 'shipping');
+        $this->addSubform(new Form_SubForm_UserInfo, 'info');
     }
 }

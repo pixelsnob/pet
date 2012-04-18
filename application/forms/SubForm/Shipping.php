@@ -1,9 +1,38 @@
 <?php
 /**
- * Billing fields for user profile
+ * Shipping fields for user profile
  * 
  */
-class Form_Billing extends Pet_Form {
+class Form_SubForm_Shipping extends Zend_Form_SubForm {
+
+    /**
+     * @var array
+     * 
+     */
+    protected $_countries;
+
+    /**
+     * @var array
+     * 
+     */
+    protected $_states;
+
+    /**
+     * @param array $countries
+     * @return void
+     */
+    public function setCountries(array $countries) {
+        $this->_countries = $countries;
+    }
+
+    /**
+     * @param array $countries
+     * @return void
+     */
+    public function setStates(array $states) {
+        $this->_states = $states;
+    }
+
 
     /**
      * @return void
@@ -11,9 +40,37 @@ class Form_Billing extends Pet_Form {
      */
     public function init() {
         parent::init();
-        $this->addElement('text', 'billing_address', array(
+        $this->addElement('text', 'shipping_first_name', array(
+            'label' => 'First Name',
+            'id' => 'shipping_first_name',
+            'required' => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Please enter your first name'
+                )),
+                array('StringLength', true, array(
+                    'max' => 30,
+                    'messages' => 'Username must be %max% characters or less'
+                ))
+            )
+        // Ship last name
+        ))->addElement('text', 'shipping_last_name', array(
+            'label' => 'Last Name',
+            'id' => 'shipping_last_name',
+            'required' => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Please enter your last name'
+                )),
+                array('StringLength', true, array(
+                    'max' => 30,
+                    'messages' => 'Last name must be %max% characters or less'
+                ))
+            )
+        // Ship address
+        ))->addElement('text', 'shipping_address', array(
             'label' => 'Address',
-            'id' => 'billing_address',
+            'id' => 'shipping_address',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -24,10 +81,10 @@ class Form_Billing extends Pet_Form {
                     'messages' => 'Address must be %max% characters or less'
                 ))
             )
-        // Bill address 2
-        ))->addElement('text', 'billing_address_2', array(
+        // Ship address 2
+        ))->addElement('text', 'shipping_address_2', array(
             'label' => 'Address 2',
-            'id' => 'billing_address_2',
+            'id' => 'shipping_address_2',
             'required' => false,
             'validators'   => array(
                 array('StringLength', true, array(
@@ -35,10 +92,10 @@ class Form_Billing extends Pet_Form {
                     'messages' => 'Address 2 must be %max% characters or less'
                 ))
             )
-        // Bill company
-        ))->addElement('text', 'billing_company', array(
+        // Ship company
+        ))->addElement('text', 'shipping_company', array(
             'label' => 'Company',
-            'id' => 'billing_company',
+            'id' => 'shipping_company',
             'required' => false,
             'validators'   => array(
                 array('StringLength', true, array(
@@ -46,10 +103,10 @@ class Form_Billing extends Pet_Form {
                     'messages' => 'Company must be %max% characters or less'
                 ))
             )
-        // Bill city
-        ))->addElement('text', 'billing_city', array(
+        // Ship city
+        ))->addElement('text', 'shipping_city', array(
             'label' => 'City',
-            'id' => 'billing_city',
+            'id' => 'shipping_city',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -60,10 +117,10 @@ class Form_Billing extends Pet_Form {
                     'messages' => 'City must be %max% characters or less'
                 ))
             )
-        // Bill state
-        ))->addElement('select', 'billing_state', array(
+        // Ship state
+        ))->addElement('select', 'shipping_state', array(
             'label' => 'State',
-            'id' => 'billing_state',
+            'id' => 'shipping_state',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -74,10 +131,10 @@ class Form_Billing extends Pet_Form {
                     'messages' => 'State must be %max% characters or less'
                 ))
             )
-        // Bill postal code
-        ))->addElement('text', 'billing_postal_code', array(
+        // Ship postal code
+        ))->addElement('text', 'shipping_postal_code', array(
             'label' => 'Zip/Postal Code',
-            'id' => 'billing_postal_code',
+            'id' => 'shipping_postal_code',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -88,10 +145,10 @@ class Form_Billing extends Pet_Form {
                     'messages' => 'Postal code must be %max% characters or less'
                 ))
             )
-        // Bill country
-        ))->addElement('select', 'billing_country', array(
+        // Ship country
+        ))->addElement('select', 'shipping_country', array(
             'label' => 'Country',
-            'id' => 'billing_country',
+            'id' => 'shipping_country',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -102,10 +159,10 @@ class Form_Billing extends Pet_Form {
                     'messages' => 'Country must be %max% characters or less'
                 ))
             )
-        // Bill phone
-        ))->addElement('text', 'billing_phone', array(
+        // Ship phone
+        ))->addElement('text', 'shipping_phone', array(
             'label' => 'Phone',
-            'id' => 'billing_phone',
+            'id' => 'shipping_phone',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -117,7 +174,14 @@ class Form_Billing extends Pet_Form {
                 )),
                 array(new Pet_Validate_Phone)
             )
+
         ))->setElementFilters(array('StringTrim'));
+        if (!empty($this->_countries)) {
+           $this->shipping_country->setMultiOptions($this->_countries); 
+        }
+        if (!empty($this->_states)) {
+           $this->shipping_state->setMultiOptions($this->_states); 
+        }
 
     }
 }

@@ -137,20 +137,20 @@
                 <label for="version">What version of Photoshop Elements are you using?</label>
             </dt>
             <dd class="version">
-                <?php echo $this->profile_form->version->renderViewHelper(); ?>
-                <?php echo $this->profile_form->version->renderErrors(); ?>
+                <?php echo $this->profile_form->info->version->renderViewHelper(); ?>
+                <?php echo $this->profile_form->info->version->renderErrors(); ?>
             </dd>
             <dt class="checkbox"></dt>
             <dd class="checkbox">
-                <?php echo $this->profile_form->opt_in->renderViewHelper(); ?>
+                <?php echo $this->profile_form->info->opt_in->renderViewHelper(); ?>
                 <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
-                <?php echo $this->profile_form->opt_in->renderErrors(); ?>
+                <?php echo $this->profile_form->info->opt_in->renderErrors(); ?>
             </dd>
             <dt class="checkbox"></dt>
             <dd class="checkbox">
-                <?php echo $this->profile_form->opt_in_partner->renderViewHelper(); ?>
+                <?php echo $this->profile_form->info->opt_in_partner->renderViewHelper(); ?>
                 <label for="opt-in-partner">I'd like to receive information from Photoshop Elements Techniques sponsors</label>
-                <?php echo $this->profile_form->opt_in_partner->renderErrors(); ?>
+                <?php echo $this->profile_form->info->opt_in_partner->renderErrors(); ?>
                 <p class="note">
                     <strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
                     companies or entities.

@@ -125,15 +125,18 @@ class Service_Cart {
      * 
      */
     public function getCheckoutForm() {
-        //$cart = $this->_cart->get();
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        $states = new Zend_Config(require APPLICATION_PATH .
+            '/configs/states.php');
+        $countries = new Zend_Config(require APPLICATION_PATH .
+            '/configs/countries.php');
         $form = new Form_Checkout(array(
             //'cart' => $cart
+            'identity' => $identity,
+            'mapper'   => new Model_Mapper_Users,
+            'states'    => $states->toArray(),
+            'countries' => $countries->toArray()
         ));
-        /*$form_data = array();
-        foreach ($cart->products as $product) {
-            $form_data['qty'][$product->product_id] = $product->qty;
-        }
-        $form->populate($form_data);*/
         return $form;
     }
 }
