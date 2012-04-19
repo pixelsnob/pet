@@ -1,4 +1,5 @@
 
+<!--
 <h2>PET Store Home</h2>
 <ul class="products">
     <li><a href="<?php echo $this->serverUrl($this->url(array(), 'products_subscription')); ?>">Magazine Subscription</a></li>
@@ -6,4 +7,35 @@
     <li><a href="<?php echo $this->serverUrl($this->url(array(), 'products_gift_subscription')); ?>">Gift</a></li>
     <li><a href="<?php echo $this->serverUrl($this->url(array(), 'products_physical')); ?>">DVDs</a></li>
 </ul>
+-->
 
+<div id="products-main">
+    <section class="subscriptions">
+        <h3>Full Subscription</h3>
+        <div class="description">
+            <p>Description goes here</p>
+        </div>
+        <a href="<?php echo $this->serverUrl($this->url(array(), 'products_subscription')); ?>" class="select">Subscribe Now</a>
+    </section>
+    <section class="digital">
+        <h3>Digital-Only Subscription</h3>
+        <div class="description">
+            <p>Description goes here</p>
+        </div>
+        <a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital')); ?>" class="select">Subscribe Now</a>
+    </section>
+    <section class="dvds">
+        <h3>DVDs</h3>
+        <div class="description">
+            <p>Description goes here</p>
+        </div>
+        <a href="<?php echo $this->serverUrl($this->url(array(), 'products_physical')); ?>" class="select">Subscribe Now</a>
+    </section>
+    <section class="gifts">
+        <h3>Gifts</h3>
+        <div class="description">
+            <p>Description goes here</p>
+        </div>
+        <a href="<?php echo $this->serverUrl($this->url(array(), 'products_gift_subscription')); ?>" class="select">Subscribe Now</a>
+    </section>
+</div>

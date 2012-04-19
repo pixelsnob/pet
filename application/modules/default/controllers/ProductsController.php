@@ -22,8 +22,6 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView;');
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
-        $this->view->headLink()->appendStylesheet('/css/cart.css')
-            ->appendStylesheet('/css/profile.css');
     }
 
     /**
@@ -91,8 +89,6 @@ class ProductsController extends Zend_Controller_Action {
     public function digitalAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView;');
-        $this->view->headLink()->appendStylesheet('/css/cart.css')
-            ->appendStylesheet('/css/profile.css');
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
     }
 
@@ -146,8 +142,6 @@ class ProductsController extends Zend_Controller_Action {
     public function giftSubscriptionsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView;');
-        $this->view->headLink()->appendStylesheet('/css/cart.css')
-            ->appendStylesheet('/css/profile.css');
     }
     
     /**
@@ -158,7 +152,5 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->products = $this->_products_svc->getPhysicalProducts(); 
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView;');
-        $this->view->headLink()->appendStylesheet('/css/cart.css')
-            ->appendStylesheet('/css/profile.css');
     }
 }

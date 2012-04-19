@@ -7,7 +7,6 @@ class ProfileController extends Zend_Controller_Action {
         $this->_users_svc = new Service_Users;
         $this->_messenger = Zend_Registry::get('messenger');
         $this->_messenger->setNamespace('profile');
-        $this->view->headLink()->appendStylesheet('/css/profile.css');
     }
 
     /**

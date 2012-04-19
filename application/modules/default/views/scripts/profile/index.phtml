@@ -1,163 +1,164 @@
 
-<?php echo $this->flashMessenger('profile', true); ?>
+<div id="profile">
+    <?php echo $this->flashMessenger('profile', true); ?>
 
-<form action="<?php echo $this->profile_form->getAction(); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
-    <fieldset class="account">
-        <legend>Account Information</legend>
-        <dl class="form">
-            <dt><?php echo $this->profile_form->user->username->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->user->username->renderViewHelper(); ?>
-                <?php echo $this->profile_form->user->username->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->user->email->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->user->email->renderViewHelper(); ?>
-                <?php echo $this->profile_form->user->email->renderErrors(); ?>
-            </dd>
-            <dt>Expiration</dt>
-            <dd><?php /*echo $this->escape($this->subscription->expiration);*/ ?></dd>
-        </dl>
-        <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>
-    </fieldset>
-    <fieldset class="billing">
-        <legend>Billing Information</legend>
-        <dl class="form">
-            <dt><?php echo $this->profile_form->user->first_name->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->user->first_name->renderViewHelper(); ?>
-                <?php echo $this->profile_form->user->first_name->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->user->last_name->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->user->last_name->renderViewHelper(); ?>
-                <?php echo $this->profile_form->user->last_name->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_address->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_address->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_address->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_address_2->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_address_2->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_address_2->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_company->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_company->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_company->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_city->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_city->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_city->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_state->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_state->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_state->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_postal_code->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_postal_code->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_postal_code->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_country->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_country->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_country->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->billing->billing_phone->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->billing->billing_phone->renderViewHelper(); ?>
-                <?php echo $this->profile_form->billing->billing_phone->renderErrors(); ?>
-            </dd>
-        </dl>
-    </fieldset>
-    <fieldset class="shipping">
-        <legend>Shipping Information</legend>
-        <dl class="form">
-            <dt><?php echo $this->profile_form->shipping->shipping_first_name->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_first_name->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_first_name->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_last_name->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_last_name->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_last_name->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_address->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_address->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_address->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_address_2->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_address_2->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_address_2->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_company->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_company->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_company->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_city->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_city->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_city->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_state->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_state->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_state->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_postal_code->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_postal_code->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_postal_code->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_country->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_country->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_country->renderErrors(); ?>
-            </dd>
-            <dt><?php echo $this->profile_form->shipping->shipping_phone->getLabel(); ?></dt>
-            <dd>
-                <?php echo $this->profile_form->shipping->shipping_phone->renderViewHelper(); ?>
-                <?php echo $this->profile_form->shipping->shipping_phone->renderErrors(); ?>
-            </dd>
-        </dl>
-    </fieldset>
-    <fieldset class="profile">
-        <legend>Profile Information</legend>
-        <dl class="form">
-            <dt class="version">
-                <label for="version">What version of Photoshop Elements are you using?</label>
-            </dt>
-            <dd class="version">
-                <?php echo $this->profile_form->info->version->renderViewHelper(); ?>
-                <?php echo $this->profile_form->info->version->renderErrors(); ?>
-            </dd>
-            <dt class="checkbox"></dt>
-            <dd class="checkbox">
-                <?php echo $this->profile_form->info->opt_in->renderViewHelper(); ?>
-                <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
-                <?php echo $this->profile_form->info->opt_in->renderErrors(); ?>
-            </dd>
-            <dt class="checkbox"></dt>
-            <dd class="checkbox">
-                <?php echo $this->profile_form->info->opt_in_partner->renderViewHelper(); ?>
-                <label for="opt-in-partner">I'd like to receive information from Photoshop Elements Techniques sponsors</label>
-                <?php echo $this->profile_form->info->opt_in_partner->renderErrors(); ?>
-                <p class="note">
-                    <strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
-                    companies or entities.
-                </p>
-            </dd>
-        </dl>
-    </fieldset>
-    <p class="update"><input type="submit" value="Update" id="update-submit" class="button-grad"></p>
-</form>
-
+    <form action="<?php echo $this->profile_form->getAction(); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
+        <fieldset class="account">
+            <legend>Account Information</legend>
+            <dl class="form">
+                <dt><?php echo $this->profile_form->user->username->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->user->username->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->user->username->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->user->email->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->user->email->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->user->email->renderErrors(); ?>
+                </dd>
+                <dt>Expiration</dt>
+                <dd><?php /*echo $this->escape($this->subscription->expiration);*/ ?></dd>
+            </dl>
+            <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>
+        </fieldset>
+        <fieldset class="billing">
+            <legend>Billing Information</legend>
+            <dl class="form">
+                <dt><?php echo $this->profile_form->user->first_name->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->user->first_name->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->user->first_name->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->user->last_name->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->user->last_name->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->user->last_name->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_address->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_address->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_address->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_address_2->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_address_2->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_address_2->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_company->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_company->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_company->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_city->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_city->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_city->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_state->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_state->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_state->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_postal_code->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_postal_code->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_postal_code->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_country->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_country->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_country->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->billing->billing_phone->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->billing->billing_phone->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->billing->billing_phone->renderErrors(); ?>
+                </dd>
+            </dl>
+        </fieldset>
+        <fieldset class="shipping">
+            <legend>Shipping Information</legend>
+            <dl class="form">
+                <dt><?php echo $this->profile_form->shipping->shipping_first_name->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_first_name->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_first_name->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_last_name->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_last_name->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_last_name->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_address->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_address->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_address->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_address_2->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_address_2->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_address_2->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_company->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_company->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_company->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_city->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_city->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_city->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_state->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_state->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_state->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_postal_code->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_postal_code->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_postal_code->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_country->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_country->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_country->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->profile_form->shipping->shipping_phone->getLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->profile_form->shipping->shipping_phone->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->shipping->shipping_phone->renderErrors(); ?>
+                </dd>
+            </dl>
+        </fieldset>
+        <fieldset class="profile">
+            <legend>Profile Information</legend>
+            <dl class="form">
+                <dt class="version">
+                    <label for="version">What version of Photoshop Elements are you using?</label>
+                </dt>
+                <dd class="version">
+                    <?php echo $this->profile_form->info->version->renderViewHelper(); ?>
+                    <?php echo $this->profile_form->info->version->renderErrors(); ?>
+                </dd>
+                <dt class="checkbox"></dt>
+                <dd class="checkbox">
+                    <?php echo $this->profile_form->info->opt_in->renderViewHelper(); ?>
+                    <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
+                    <?php echo $this->profile_form->info->opt_in->renderErrors(); ?>
+                </dd>
+                <dt class="checkbox"></dt>
+                <dd class="checkbox">
+                    <?php echo $this->profile_form->info->opt_in_partner->renderViewHelper(); ?>
+                    <label for="opt-in-partner">I'd like to receive information from Photoshop Elements Techniques sponsors</label>
+                    <?php echo $this->profile_form->info->opt_in_partner->renderErrors(); ?>
+                    <p class="note">
+                        <strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
+                        companies or entities.
+                    </p>
+                </dd>
+            </dl>
+        </fieldset>
+        <p class="update"><input type="submit" value="Update" id="update-submit" class="button-grad"></p>
+    </form>
+</div>

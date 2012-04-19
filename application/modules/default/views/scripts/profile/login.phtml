@@ -1,28 +1,30 @@
 
-<?php echo $this->flashMessenger('login', true); ?>
-<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="login">
-    <dl class="form">
-        <dt><?php echo $this->login_form->username->getLabel(); ?></dt>
-        <dd>
-            <?php echo $this->login_form->username->renderViewHelper(); ?>
-            <?php echo $this->login_form->username->renderErrors(); ?>
-        </dd>
-        <dt><?php echo $this->login_form->password->getLabel(); ?></dt>
-        <dd>
-            <?php echo $this->login_form->password->renderViewHelper(); ?>
-            <?php echo $this->login_form->password->renderErrors(); ?>
-        </dd>
-    </dl>
-    <p class="submit">
-        <?php
-        if ($this->login_form->redirect_to) {
-            echo $this->login_form->redirect_to->renderViewHelper();
-        }
-        if ($this->login_form->redirect_to && $this->login_form->redirect_params) {
-            echo $this->login_form->redirect_params;
-        }
-        ?>
-        <input type="submit" value="Login" id="login-submit" class="button-grad">
-    </p>
-</form>
-<p class="forgot-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'reset_password_request')); ?>">Forgot your password?</a></p>
+<div id="login-form">
+    <?php echo $this->flashMessenger('login', true); ?>
+    <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="login">
+        <dl class="form">
+            <dt><?php echo $this->login_form->username->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->login_form->username->renderViewHelper(); ?>
+                <?php echo $this->login_form->username->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->login_form->password->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->login_form->password->renderViewHelper(); ?>
+                <?php echo $this->login_form->password->renderErrors(); ?>
+            </dd>
+        </dl>
+        <p class="submit">
+            <?php
+            if ($this->login_form->redirect_to) {
+                echo $this->login_form->redirect_to->renderViewHelper();
+            }
+            if ($this->login_form->redirect_to && $this->login_form->redirect_params) {
+                echo $this->login_form->redirect_params;
+            }
+            ?>
+            <input type="submit" value="Login" id="login-submit" class="button-grad">
+        </p>
+    </form>
+    <p class="forgot-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'reset_password_request')); ?>">Forgot your password?</a></p>
+</div>
