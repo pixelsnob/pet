@@ -1,0 +1,291 @@
+/* Products main */
+
+#products-main {
+    position: relative;
+    left: -10px;
+}
+
+#products-main section {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+#products-main .description {
+    color: #fff;
+}
+
+#products-main h3 {
+    color: #fff !important;
+    font-style: italic;
+    font-weight: normal !important;
+    font-size: 24px;
+}
+
+#products-main a.select {
+    width: 233px;
+    height: 63px;
+    display: block;
+    background: url(/images/sprites/buttons.png) -45px -32px no-repeat;
+    text-decoration: none;
+    color: #fff !important;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 55px;
+    font-size: 20px;
+}
+
+#products-main a.select:hover {
+    background-position: -320px -32px;
+}
+
+#products-main .subscriptions, #products-main .digital {
+    padding: 2px 12px;
+    width: 452px;
+    height: 476px;
+    display: block;
+    float: left;
+}
+
+#products-main .subscriptions {
+    margin-right: 30px;
+    background: url(/images/product-types/landing/subscriptions.jpg);
+}
+
+#products-main .digital {
+    background: url(/images/product-types/landing/digital.jpg);
+}
+
+#products-main .subscriptions h3, #products-main .digital h3 {
+    position: absolute;
+    top: 33px;
+    left: 30px;
+}
+
+#products-main .subscriptions .description, #products-main .digital .description {
+    position: absolute;
+    top: 80px;
+    left: 30px;
+    width: 120px;
+}
+
+#products-main .subscriptions a.select, #products-main .digital a.select {
+    position: absolute;
+    bottom: -5px;
+    left: 30px;
+}
+
+#products-main .dvds, #products-main .gifts {
+    clear: both;
+    width: 994px;
+    height: 232px;
+}
+
+#products-main .dvds {
+    background: url(/images/product-types/landing/dvds.jpg);
+    margin-bottom: 10px;
+}
+
+#products-main .gifts {
+    background: url(/images/product-types/landing/gifts.jpg);
+}
+
+
+#products-main .dvds h3, #products-main .gifts h3 {
+    position: absolute;
+    top: 44px;
+    left: 30px;
+}
+
+#products-main .dvds .description, #products-main .gifts .description {
+    position: absolute;
+    top: 90px;
+    left: 30px;
+}
+
+#products-main .dvds a.select, #products-main .gifts a.select {
+    position: absolute;
+    bottom: 7px;
+    left: 30px;
+}
+
+.product-select-left, .product-select-right {
+    float: left;
+}
+
+.product-select-left {
+    margin-right: 25px;
+    width: 450px;
+}
+
+.product-select-right {
+    width: 480px;
+}
+
+.product-select-right-inner {
+    margin: 16px 0 25px 0;
+    padding: 30px 0 10px 0;
+    border-top: 2px solid #dfdfdf;
+    border-bottom: 2px solid #dfdfdf;
+    overflow: hidden;
+}
+
+.product-select h2 {
+    text-transform: none;
+    font-style: italic;
+    font-size: 28px !important;
+    padding-bottom: 5px;
+}
+
+.product-select h3 {
+    font-size: 16px !important;
+    padding-bottom: 15px;
+}
+
+#subscription-zones ul li {
+    float: left;
+    display: block;
+    width: 150px;
+    height: 120px;
+    background: none;
+    padding: 0;
+    margin-right: 10px;
+}
+
+#subscription-zones h4 {
+    text-transform: uppercase;
+    font-size: 16px !important;
+}
+
+#subscription-zones p {
+    color: #888; 
+}
+
+#subscription-zones a {
+    color: #fff !important;
+    font-size: 14px !important;
+}
+
+#subscription-zones li a {
+    width: 30px;
+}
+
+#subscription-zones .renew a {
+    width: 100px;
+}
+
+
+/* Cart */
+
+#cart {
+    width: 610px;
+}
+
+#cart .items {
+    margin-bottom: 20px;
+}
+
+#cart .no-items {
+    margin-bottom: 20px;
+}
+
+#cart .item {
+    background: none;
+    padding: 9px 0 24px 0;
+    border-bottom: 1px solid #ccc;
+    line-height: 30px;
+}
+
+#cart .item.last {
+}
+
+#cart .item h4 {
+    font-size: 14px;
+    color: #505b7d;
+    font-weight: bold;
+}
+
+#cart .item .links {
+    display: inline;
+}
+
+#cart .item .links li {
+    line-height: 10px;
+    display: inline;
+    background: none;
+    padding: 0;
+    margin-right: 5px;
+}
+
+#cart .item input {
+    width: 40px;
+    margin: 0 10px;
+}
+
+#cart .item input.readonly {
+    opacity: 0.3;
+
+}
+
+#nolayout #cart .items {
+    height: 380px;
+    /* Allow for scrollbar */
+    width: 610px;
+    overflow: auto !important;
+    max-height: 350px;
+    height: auto !important;
+    height: 350px;
+}
+
+#nolayout #cart .items ul {
+    width: 98%;
+}
+
+#cart .cart-nav li {
+    background: none;
+    display: inline;
+    padding: 0;
+}
+
+#cart .flash-message {
+    margin-bottom: 10px;
+}
+
+
+/* User profile */
+
+#profile dt.version {
+    width: auto;
+    white-space: nowrap;
+    margin-right: 7px;
+}
+
+#profile dd.version {
+    width: auto;
+}
+
+#profile fieldset.profile dd, #profile fieldset.profile dt {
+    line-height: 24px;
+}
+
+#profile .change-password {
+    padding-bottom: 20px;
+}
+
+#login-form .forgot-password {
+    margin-top: 20px;
+}
+
+
+/* Checkout */
+
+#checkout .form dt.checkbox {
+    width: 250px;
+}
+
+#checkout .form dd.checkbox {
+    clear: both;
+}
+
+#checkout .form dd.checkbox input {
+    margin-right: 7px;
+}

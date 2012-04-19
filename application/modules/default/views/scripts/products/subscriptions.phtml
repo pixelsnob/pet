@@ -1,24 +1,37 @@
 
-<h2>Magazine</h2>
-
-<?php if (!$this->is_authenticated): ?>
-    <ul class="subscription-zones">
-        <li>
-            <h3>USA</h3>
-            <p>From $59</p>
-            <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_subscription_select_term')); ?>">Select Term</a>
-        </li>
-        <li>
-            <h3>Canada</h3>
-            <p>From $59</p>
-            <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_subscription_select_term')); ?>">Select Term</a>
-        </li>
-        <li>
-            <h3>International</h3>
-            <p>From $59</p>
-            <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3), 'products_subscription_select_term')); ?>">Select Term</a>
-        </li>
-    </ul>
-<?php endif; ?>
+<!--
 
 <p class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_subscription_renew')); ?>">Renew</a></p>
+-->
+
+<div id="subscription-zones" class="product-select">
+    <div class="product-select-left subscriptions-large"></div>
+    <div class="product-select-right">
+        <div class="product-select-right-inner">
+            <h2>Full Subscription</h2>  
+            <p>You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don't know exactly when we turned on each other, but I know that seven of us survived</p>
+            <h3>Pricing for your subscription to the magazine:</h3>
+            <?php if (!$this->is_authenticated): ?>
+                <ul>
+                    <li>
+                        <h4>USA</h4>
+                        <p>From $59</p>
+                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_subscription_select_term')); ?>" class="button-grad">Go</a>
+                    </li>
+                    <li>
+                        <h4>Canada</h4>
+                        <p>From $59</p>
+                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_subscription_select_term')); ?>" class="button-grad">Go</a>
+                    </li>
+                    <li>
+                        <h4>International</h4>
+                        <p>From $59</p>
+                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3), 'products_subscription_select_term')); ?>" class="button-grad">Go</a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+        </div>
+        <p class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_subscription_renew')); ?>" class="button-grad">Renewing?</a></p>
+    </div>
+</div>
+

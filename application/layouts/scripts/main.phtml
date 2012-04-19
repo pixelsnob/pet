@@ -8,10 +8,12 @@
 <meta name="google-site-verification" content="yxFgFAShYWbqXMOs28hBBdBqeqiPh0LGs9e2-ocHe_E" />
 
 <link rel="stylesheet" type="text/css" href="http://www.photoshopelementsuser.com/wp-content/themes/pet/style.css" />
-<link rel="stylesheet" type="text/css" href="/css/base.css" />
 <link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
 
-<?php echo $this->headLink(); ?>
+<?php
+    echo $this->headLink()->prependStylesheet('/css/sections.css')
+                          ->prependStylesheet('/css/base.css');
+?>
 
 <!--[if IE 9]>
 <style type="text/css">
