@@ -85,6 +85,6 @@ class Form_Checkout extends Pet_Form {
         ));
         $this->addSubform($shipping_form, 'shipping');
         $this->addSubform(new Form_SubForm_UserInfo, 'info');
-        //$this->setElementFilters(array('StringTrim'));
+        $this->addSubform(new Form_SubForm_Payment, 'payment');
     }
 }

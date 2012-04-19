@@ -6,7 +6,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->_cart_svc = new Service_Cart;
         $this->_users_svc = new Service_Users;
         $this->_messenger = Zend_Registry::get('messenger');
-        $this->view->headLink()->appendStylesheet('/css/cart.css');
+        $this->view->headLink()->appendStylesheet('/css/checkout.css');
     }
 
     /**

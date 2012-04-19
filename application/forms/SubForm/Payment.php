@@ -2,37 +2,19 @@
 /**
  * Payment info subform
  * 
- * @package Form_Cart_SubForm_Payment
- * 
  */
-class Form_Cart_SubForm_Payment extends Zend_Form_SubForm {
-    
-    /**
-     * @var Model_Mapper_Cart
-     */
-    private $_cart_mapper;
-
-    /**
-     * Configures form
-     * 
-     * @return void
-     * 
-     */
-    public function init() {
-        parent::init();
-        $this->setElementFilters(array('StringTrim'));
-    }
+class Form_SubForm_Payment extends Zend_Form_SubForm {
     
     /** 
      * @return void
      * 
      */
-    private function init() {
+    public function init() {
         $payment_opts = array(
             'credit_card' => 'Credit Card',
             'paypal'      => 'Paypal Express Checkout'
         );
-        /*$this->addElement('radio', 'payment_method', array(
+        $this->addElement('radio', 'payment_method', array(
             'multiOptions' => $payment_opts, 
             'label'        => 'Payment Method',
             'required'     => true,
@@ -41,14 +23,16 @@ class Form_Cart_SubForm_Payment extends Zend_Form_SubForm {
                     'messages' => 'Payment method is required'
                 ))
             ),
-            'viewScript' => 'decorators/radio_list.phtml',
+            'separator' => '</li><li>',
             'decorators'   => array(
-                'ViewScript',
+                'ViewHelper',
+                array(array('data' => 'HtmlTag'), array('tag' => 'li')),
+                array(array('row' => 'HtmlTag'), array('tag' => 'ul')),
                 'Errors'
             ),
-            'disableLoadDefaultDecorators' => true,
-            'registerInArrayValidator' => false,
-        ))->addElement('text', 'cc_num', array(
+            'disableLoadDefaultDecorators' => true
+
+        ));/*->addElement('text', 'cc_num', array(
             'value'        => $cart->payment->cc_num,
             'label'        => 'Card Number',
             'required'     => false,

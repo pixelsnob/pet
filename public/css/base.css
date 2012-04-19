@@ -1,4 +1,8 @@
 
+#content {
+    font-family: Lucida Grande, sans-serif;
+}
+
 .error, .errors {
     font-weight: bold;
     color: red;
@@ -95,4 +99,36 @@ form p.submit {
 
 label input {
     margin-right: 7px;
+}
+
+/* Butons */
+
+.button-grad {
+    border: none;
+    color: white;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 30px;
+    border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    -webkit-border-radius: 5px;
+    cursor: pointer; 
+    border: 1px solid #000000;
+    background: #5267aa; /* Old browsers */
+    background: -moz-linear-gradient(top,  #6582d2 0%, #3b4b6d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6582d2), color-stop(100%,#3b4b6d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #6582d2 0%,#3b4b6d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #6582d2 0%,#3b4b6d 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #6582d2 0%,#3b4b6d 100%); /* IE10+ */
+    background: linear-gradient(top,  #6582d2 0%,#3b4b6d 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6582d2', endColorstr='#3b4b6d',GradientType=0 ); /* IE6-9 */
+}
+
+.button-grad:hover {
+    background: #5267aa;
+}
+
+.button-grad:active {
+    background: #495d9c;
 }
