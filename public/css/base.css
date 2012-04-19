@@ -1,6 +1,15 @@
 
-#content {
+#content, #nolayout {
     font-family: Lucida Grande, sans-serif;
+    color: #a7a7a7;
+}
+
+#content a:link, #content a:visited, #nolayout a:link, #nolayout a:visited {
+    color: #5267aa !important;
+}
+
+#content a:hover, #nolayout a:hover {
+    color: #6d81c2 !important;
 }
 
 .error, .errors {
@@ -23,8 +32,8 @@ ul.errors li {
 }
 
 .form {
-    margin: 15px 0 25px 0;
     overflow: hidden;
+    margin-bottom: 15px;
 }
 
 .form dt, .form dd {
@@ -46,18 +55,26 @@ ul.errors li {
     border: 1px solid #ddd;
     padding: 4px 3px;
     margin: 0;
+    border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    -webkit-border-radius: 5px;
+}
+
+fieldset, form {
+    margin: 0;
+    padding: 0;
 }
 
 legend, h2 {
-    padding-bottom: 25px;
-    color: #AD6A51;
-    font-family: Georgia, serif;
-    font-size: 24px;
-    font-weight: normal;
+    padding-bottom: 15px;
+    color: #505b7d;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
 }
 
-form p.submit {
-    margin-top: 10px;
+form .submit {
+    margin-top: 35px;
 }
 
 .form .errors {
@@ -93,13 +110,18 @@ form p.submit {
 .flash-message {
     font-weight: bold;
     background-color: #fdffbf;
-    padding: 2px 6px;
+    padding: 2px 0;
     display: block;
 }
 
 label input {
     margin-right: 7px;
 }
+
+#nolayout {
+    padding: 10px 20px;
+}
+
 
 /* Butons */
 
@@ -132,3 +154,5 @@ label input {
 .button-grad:active {
     background: #495d9c;
 }
+
+

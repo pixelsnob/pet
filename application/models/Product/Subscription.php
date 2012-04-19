@@ -13,6 +13,7 @@ class Model_Product_Subscription extends Model_Product_Abstract {
         'image' => null,
         'active' => null,
         'zone_id' => null,
+        'zone' => null,
         'name' => null,
         'description' => null,
         'term' => null,

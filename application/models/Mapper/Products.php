@@ -53,7 +53,13 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     if ($sub) {
                         $data = array_merge($product->toArray(),
                             $sub->toArray());
-                        return new Model_Product_Subscription($data);
+                        $model = new Model_Product_Subscription($data);
+                        $sz_mapper = new Model_Mapper_SubscriptionZones;
+                        $sz = $sz_mapper->getById($model->zone_id);
+                        if ($sz) {
+                            $model->zone = $sz->name;
+                        }
+                        return $model;
                     }
                     break;
                 case Model_ProductType::DIGITAL_SUBSCRIPTION;

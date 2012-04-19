@@ -3,63 +3,73 @@
     <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="cart">
         <fieldset class="account">
             <legend>Shopping Cart</legend>
-        </fieldset>
-            <?php echo $this->flashMessenger('cart', $this->use_current_messages); ?>
-        <?php if ($this->cart->hasProducts()): ?>
-            <div class="items form">
-                <ul> 
-                    <?php $c = 1; foreach ($this->cart->products as $product): ?>
-                    <li class="item<?php echo ($c == count($this->cart->products) ? ' last' : ''); ?>">
-                        <div class="cart-left">
-                            <h4><?php echo $this->escape($product->name) . ($product->is_gift ? ' (gift)' : ''); ?></h4>
-                            <?php
-                            // Qty input
-                            $qty = $this->cart_form->qty->getElement($product->product_id);
-                            if ($qty) {
-                                echo $qty->renderLabel() . $qty->renderViewHelper();
-                            }
-                            ?>
-                            <ul class="links">
-                                <?php if ($this->nolayout): ?>
-                                <li>
-                                    <a href="<?php echo $this->serverUrl($this->url(array())); ?>" class="update">Update</a>
-                                </li>
-                                <?php endif; ?>
-                                <li>
-                                    <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id),
-                                                           'cart_remove')); ?>" class="remove">Remove</a>
-                                </li>
-                            </ul>
-                            <?php
-                            if ($qty) {
-                                echo $qty->renderErrors();
-                            }
-                            ?>
-                        </div>
-                        <div class="cart-right">
-                            
-                        </div>
-                    </li>
-                    <?php $c++; endforeach; ?>
-                </ul>
-            </div>
-        <?php else: ?>
-            <p class="no-items">You have no items in your cart</p> 
-        <?php endif; ?>
-        <ul class="cart-nav">
-            <?php if ($this->nolayout): ?>
-                <li class="continue-shopping">
-                    <input type="submit" value="Continue Shopping" class="button-grad">
-                </li>
-                <?php if ($this->cart->hasProducts()): ?>
-                <li class="checkout">
-                    <input type="submit" value="Checkout" class="button-grad">
-                </li>
-                <?php endif; ?>
+            <?php if ($this->cart->hasProducts()): ?>
+                <?php echo $this->flashMessenger('cart', $this->use_current_messages); ?>
+                <div class="items form">
+                    <ul> 
+                        <?php $c = 1; foreach ($this->cart->products as $product): ?>
+                        <li class="item<?php echo ($c == count($this->cart->products) ? ' last' : ''); ?>">
+                            <div class="cart-left">
+                                <h4><?php echo $this->escape($product->name) . ($product->is_gift ? ' (gift)' : ''); ?></h4>
+                                <?php
+                                switch ($product->product_type_id) {
+                                    case Model_ProductType::SUBSCRIPTION:
+                                        echo '<div class="details">' . $this->escape("{$product->zone} - {$product->term} years - ") .
+                                             $this->dollarFormat($product->cost) . "</div>";
+                                        break;
+                                    default:
+                                        echo '<div class="details">' . $this->dollarFormat($product->cost) . "</div>";
+                                        
+                                        break;
+                                }
+                                // Qty input
+                                $qty = $this->cart_form->qty->getElement($product->product_id);
+                                if ($qty) {
+                                    echo $qty->renderLabel() . $qty->renderViewHelper();
+                                }
+                                ?>
+                                <ul class="links">
+                                    <?php if ($this->nolayout): ?>
+                                    <li>
+                                        <a href="<?php echo $this->serverUrl($this->url(array())); ?>" class="update">Update</a>
+                                    </li>
+                                    <?php endif; ?>
+                                    <li>
+                                        <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id),
+                                                               'cart_remove')); ?>" class="remove">Remove</a>
+                                    </li>
+                                </ul>
+                                <?php
+                                if ($qty) {
+                                    echo $qty->renderErrors();
+                                }
+                                ?>
+                            </div>
+                            <div class="cart-right">
+                                
+                            </div>
+                        </li>
+                        <?php $c++; endforeach; ?>
+                    </ul>
+                </div>
             <?php else: ?>
-                <li class="submit"><input type="submit" value="Update" class="button-grad"></li>
+                <p class="no-items">You have no items in your cart</p> 
             <?php endif; ?>
-        </ul>
+            <ul class="cart-nav submit">
+                <?php if ($this->nolayout): ?>
+                    <li class="continue-shopping">
+                        <input type="submit" value="Continue Shopping" class="button-grad">
+                    </li>
+                    <?php if ($this->cart->hasProducts()): ?>
+                    <li class="checkout">
+                        <input type="submit" value="Checkout" class="button-grad">
+                    </li>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <li class="submit"><input type="submit" value="Update" class="button-grad"></li>
+                <?php endif; ?>
+            </ul>
+        </fieldset>
     </form>
 
     <!--

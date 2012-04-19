@@ -29,5 +29,17 @@ class Model_Mapper_SubscriptionZones extends Pet_Model_Mapper_Abstract {
             return new Model_SubscriptionZone($sz->toArray());
         }
     }
+
+    /**
+     * @param int $id
+     * @return Model_SubscriptionZone
+     * 
+     */
+    public function getById($id) {
+        $sz = $this->_subscription_zones->getById($id);
+        if ($sz) {
+            return new Model_SubscriptionZone($sz->toArray());
+        }
+    }
 }
 
