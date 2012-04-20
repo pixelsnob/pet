@@ -1,31 +1,4 @@
 
-<!--
-<h2>Gift Subscriptions</h2>
-
-<ul class="subscription-zones">
-    <li>
-        <h3>USA</h3>
-        <p>From $59</p>
-        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_gift_subscription_select_term')); ?>">Select Term</a>
-    </li>
-    <li>
-        <h3>Canada</h3>
-        <p>From $59</p>
-        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_gift_subscription_select_term')); ?>">Select Term</a>
-    </li>
-    <li>
-        <h3>International</h3>
-        <p>From $59</p>
-        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3), 'products_gift_subscription_select_term')); ?>">Select Term</a>
-    </li>
-</ul>
-<p class="digital-subscriptions">
-    <a href="<?php echo $this->serverUrl($this->url(array('is_gift' => 1), 'products_digital_select')); ?>">Digital Subscriptions</a>
-</p>
-
--->
-
-
 <div id="gift-subscriptions" class="product-select">
     <div class="product-select-left gifts-large"></div>
     <div class="product-select-right">
@@ -53,7 +26,7 @@
                 </ul>
             <?php endif; ?>
         </div>
-        <p class="renew"><a href="<?php echo $this->serverUrl($this->url(array('is_gift' => 1), 'products_subscription_renew')); ?>" class="button-grad">Renewing?</a></p>
+        <p class="digital"><a href="<?php echo $this->serverUrl($this->url(array('is_gift' => 1), 'products_digital_select')); ?>" class="button-grad">Digital Subscriptions</a></p>
     </div>
 </div>
 

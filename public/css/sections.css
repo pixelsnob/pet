@@ -108,6 +108,9 @@
     left: 30px;
 }
 
+
+/* Individual product pages */
+
 .product-select-left, .product-select-right {
     float: left;
 }
@@ -157,6 +160,17 @@
     padding: 0 0 5px 0;
 }
 
+.product-select .subscription-options li a {
+    width: 30px;
+}
+
+.product-select .renew a {
+    width: 100px;
+}
+
+.product-select .digital a {
+    width: 150px;
+}
 
 /* temp */
 .subscription-option-left {
@@ -182,10 +196,6 @@
     text-transform: uppercase;
 }
 
-.product-select .renew a {
-    width: 100px;
-}
-
 #subscription-zones h4 {
     text-transform: uppercase;
     font-size: 16px !important;
@@ -198,10 +208,6 @@
 #subscription-zones a {
     color: #fff !important;
     font-size: 14px !important;
-}
-
-#subscription-zones li a {
-    width: 30px;
 }
 
 
