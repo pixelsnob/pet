@@ -1,3 +1,4 @@
+
 /* Products main */
 
 #products-main {
@@ -89,7 +90,6 @@
     background: url(/images/product-types/landing/gifts.jpg);
 }
 
-
 #products-main .dvds h3, #products-main .gifts h3 {
     position: absolute;
     top: 44px;
@@ -123,7 +123,7 @@
 
 .product-select-right-inner {
     margin: 16px 0 25px 0;
-    padding: 30px 0 10px 0;
+    padding: 30px 0 0px 0;
     border-top: 2px solid #dfdfdf;
     border-bottom: 2px solid #dfdfdf;
     overflow: hidden;
@@ -138,17 +138,26 @@
 
 .product-select h3 {
     font-size: 16px !important;
-    padding-bottom: 15px;
+    padding-bottom: 5px;
+}
+
+.product-select .subscription-options {
+    margin-bottom: 20px;
+    overflow: hidden;
 }
 
 .product-select .subscription-options li {
     float: left;
     display: block;
-    width: 150px;
-    height: 120px;
+    width: 140px;
     background: none;
     padding: 0;
     margin-right: 10px;
+}
+
+.product-select h4 {
+    margin-bottom: 5px !important;
+    text-transform: uppercase;
 }
 
 .product-select .renew a {
@@ -193,6 +202,7 @@
     padding: 9px 0 24px 0;
     border-bottom: 1px solid #ccc;
     line-height: 30px;
+    overflow: hidden;
 }
 
 #cart .item.last {
@@ -202,6 +212,7 @@
     font-size: 14px;
     color: #505b7d;
     font-weight: bold;
+    margin-bottom: 0 !important;
 }
 
 #cart .item .links {
@@ -224,6 +235,20 @@
 #cart .item input.readonly {
     opacity: 0.3;
 
+}
+
+#cart .cart-left {
+    width: 70%;
+    float: left;
+}
+
+#cart .cart-right {
+    width: 30%;
+    float: left;
+}
+
+#cart .cart-right div {
+    float: right;
 }
 
 #nolayout #cart .items {

@@ -78,6 +78,7 @@ legend, h2 {
 h3, h4 {
     color: #3c466b !important;
     font-weight: bold !important;
+    margin-bottom: 10px !important;
 }
 
 form .submit {
@@ -136,31 +137,47 @@ label input {
 
 /* Misc */
 
-.subscriptions-large {
+.subscriptions-large, .digital-large, .dvds-large, .gifts-large {
     width: 435px;
     height: 462px;
+}
+
+.subscriptions-large {
     background: url(/images/product-types/large/subscriptions.jpg);
 }
 
 .digital-large {
-    width: 435px;
-    height: 462px;
     background: url(/images/product-types/large/digital.jpg);
 }
 
 .dvds-large {
-    width: 435px;
-    height: 462px;
     background: url(/images/product-types/large/dvds.jpg);
 }
 
 .gifts-large {
-    width: 435px;
-    height: 462px;
     background: url(/images/product-types/large/gifts.jpg);
 }
 
+.subscriptions-small, .digital-small, .dvds-small, .gifts-small {
+    width: 115px;
+    height: 122px;
+}
 
+.subscriptions-small {
+    background: url(/images/product-types/small/subscriptions.jpg);
+}
+
+.digital-small {
+    background: url(/images/product-types/small/digital.jpg);
+}
+
+.dvds-small {
+    background: url(/images/product-types/small/dvds.jpg);
+}
+
+.gifts-small {
+    background: url(/images/product-types/small/gifts.jpg);
+}
 
 
 /* Butons */
@@ -219,8 +236,6 @@ label input {
 .button-grad-blue:active {
     background: #495d9c;
 }
-
-
 
 a.button-grad {
     display: block;

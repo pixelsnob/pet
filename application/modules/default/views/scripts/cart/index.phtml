@@ -14,14 +14,17 @@
                                 <?php
                                 switch ($product->product_type_id) {
                                     case Model_ProductType::SUBSCRIPTION:
-                                        echo '<div class="details">' . $this->escape("{$product->zone} - {$product->term} years - ") .
-                                             $this->dollarFormat($product->cost) . "</div>";
+                                        $details = $this->escape("{$product->zone} - {$product->term} years - ") .
+                                             $this->dollarFormat($product->cost);
                                         break;
                                     default:
-                                        echo '<div class="details">' . $this->dollarFormat($product->cost) . "</div>";
+                                        $details = $this->dollarFormat($product->cost);
                                         
                                         break;
                                 }
+                                ?>
+                                <div class="details"><?php echo $details; ?></div>
+                                <?php
                                 // Qty input
                                 $qty = $this->cart_form->qty->getElement($product->product_id);
                                 if ($qty) {
@@ -45,8 +48,25 @@
                                 }
                                 ?>
                             </div>
+                            <?php
+                            if ($product->is_gift) {
+                                $class_name = 'gifts-small';
+                            } else {
+                                switch ($product->product_type_id) {
+                                    case Model_ProductType::SUBSCRIPTION:
+                                        $class_name = 'subscriptions-small';
+                                        break;
+                                    case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                                        $class_name = 'digital-small';
+                                        break;
+                                    case Model_ProductType::PHYSICAL:
+                                        $class_name = 'dvds-small';
+                                        break;
+                                }
+                            }
+                            ?>
                             <div class="cart-right">
-                                
+                                <?php if (isset($class_name)): ?><div class="<?php echo $class_name; ?>"></div><?php endif; ?>
                             </div>
                         </li>
                         <?php $c++; endforeach; ?>
