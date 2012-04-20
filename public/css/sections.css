@@ -153,7 +153,29 @@
     background: none;
     padding: 0;
     margin-right: 10px;
+    overflow: hidden;
+    padding: 0 0 5px 0;
 }
+
+
+/* temp */
+.subscription-option-left {
+    width: 83%;
+    float: left;
+}
+
+.subscription-option-right {
+    width: 17%;
+    float: left;
+    padding-top: 2px;
+}
+
+#physical .subscription-options li {
+    width: auto;
+    float: none;
+}
+/* /temp */
+
 
 .product-select h4 {
     margin-bottom: 5px !important;

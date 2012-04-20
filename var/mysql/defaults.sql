@@ -41,9 +41,12 @@ select * from pet_old.sales_shipping;
 
 insert into pet.products
 (product_type_id, sku, cost, image, active) 
-select 2, code, price, image, 1
+select 2, code, price, image, 0
 from pet_old.sales_product
 where category = 'physical';
+
+update pet.products set active = 1
+where id in (169, 172, 170);
 
 insert into pet.physical_products
 select null, p.id, sp.shipping_id, sp.name, sp.description
