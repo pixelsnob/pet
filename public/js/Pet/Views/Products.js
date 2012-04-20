@@ -16,8 +16,7 @@ Pet.ProductsView = Pet.View.extend({
         'click .forgot-password a': 'resetPasswordRequestForm',
         'click form[name=reset-password-request] .submit input':
             'submitResetPasswordRequestForm',
-        'click #subscription-zones li a, .digital-subscriptions a':
-            'openSubscriptionSelectPopup',
+        'click .subscription-options a': 'openSubscriptionSelectPopup',
         'click .renew': 'openRenewPopup'
     },
     

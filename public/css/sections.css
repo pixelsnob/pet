@@ -141,7 +141,7 @@
     padding-bottom: 15px;
 }
 
-#subscription-zones ul li {
+.product-select .subscription-options li {
     float: left;
     display: block;
     width: 150px;
@@ -149,6 +149,10 @@
     background: none;
     padding: 0;
     margin-right: 10px;
+}
+
+.product-select .renew a {
+    width: 100px;
 }
 
 #subscription-zones h4 {
@@ -167,10 +171,6 @@
 
 #subscription-zones li a {
     width: 30px;
-}
-
-#subscription-zones .renew a {
-    width: 100px;
 }
 
 
@@ -275,6 +275,11 @@
     margin-top: 20px;
 }
 
+/* Reset pw request */
+
+#reset-password-request p {
+    margin-bottom: 10px;
+}
 
 /* Checkout */
 

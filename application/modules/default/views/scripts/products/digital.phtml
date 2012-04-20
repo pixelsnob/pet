@@ -1,7 +1,24 @@
 
-<h2>Digital</h2>
+<div id="digital" class="product-select">
+    <div class="product-select-left digital-large"></div>
+    <div class="product-select-right">
+        <div class="product-select-right-inner">
+            <h2>Digital Subscription</h2>  
+            <p>Ground round ball tip pig, in pork drumstick nisi cow laborum strip steak officia swine capicola. Brisket kielbasa pariatur ut, labore voluptate turkey quis mollit tail in sunt. In culpa flank, biltong pig duis fatback officia dolore. Beef ribs aliqua pork ut leberkas hamburger.</p>
+            <h3>Pricing for your digital subscription to the magazine:</h3>
+            <ul class="subscription-options">
+                <li>
+                    <h4>New</h4>
+                    <p>From $59</p>
+                    <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_digital_select')); ?>" class="button-grad-blue">Go</a>
+                </li>
+                <li>
+                    <h4>Renewing?</h4>
+                    <p>From $69</p>
+                    <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_digital_renew')); ?>" class="button-grad-blue">Go</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-<?php if (!$this->is_authenticated): ?>
-    <p class="digital-subscriptions"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_select')); ?>">Go</a></p>
-<?php endif; ?>
-<p class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_renew')); ?>">Renew</a></p>

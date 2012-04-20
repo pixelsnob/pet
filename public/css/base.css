@@ -142,6 +142,27 @@ label input {
     background: url(/images/product-types/large/subscriptions.jpg);
 }
 
+.digital-large {
+    width: 435px;
+    height: 462px;
+    background: url(/images/product-types/large/digital.jpg);
+}
+
+.dvds-large {
+    width: 435px;
+    height: 462px;
+    background: url(/images/product-types/large/dvds.jpg);
+}
+
+.gifts-large {
+    width: 435px;
+    height: 462px;
+    background: url(/images/product-types/large/gifts.jpg);
+}
+
+
+
+
 /* Butons */
 
 .button-grad, .button-grad-blue {
