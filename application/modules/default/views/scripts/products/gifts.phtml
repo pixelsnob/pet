@@ -1,0 +1,32 @@
+
+<div id="gift-subscriptions" class="product-select">
+    <div class="product-select-left gifts-large"></div>
+    <div class="product-select-right">
+        <div class="product-select-right-inner">
+            <h2>Gift Subscriptions</h2>  
+            <p>Frankfurter strip steak fatback, sirloin tenderloin leberkas shankle drumstick pig swine beef ribs. Cow capicola ball tip, hamburger ground round ham rump ham hock fatback shankle spare ribs pig turducken. Pork chop drumstick beef ribs, pork belly pig pancetta kielbasa. Hamburger sausage pig, chuck beef ribs ribeye t-bone.</p>
+            <?php if (!$this->is_authenticated): ?>
+                <h3>Pricing for your subscription to the magazine:</h3>
+                <ul class="subscription-options">
+                    <li>
+                        <h4>USA</h4>
+                        <p>From $59</p>
+                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_gifts_select_term')); ?>" class="button-grad-blue">Go</a>
+                    </li>
+                    <li>
+                        <h4>Canada</h4>
+                        <p>From $69</p>
+                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_gifts_select_term')); ?>" class="button-grad-blue">Go</a>
+                    </li>
+                    <li>
+                        <h4>International</h4>
+                        <p>From $95</p>
+                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3), 'products_gifts_select_term')); ?>" class="button-grad-blue">Go</a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+        </div>
+        <p class="digital"><a href="<?php echo $this->serverUrl($this->url(array('is_gift' => 1), 'products_digital_select')); ?>" class="button-grad">Digital Subscriptions</a></p>
+    </div>
+</div>
+

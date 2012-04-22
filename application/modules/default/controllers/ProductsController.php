@@ -139,7 +139,7 @@ class ProductsController extends Zend_Controller_Action {
      * Gift subscriptions
      * 
      */
-    public function giftSubscriptionsAction() {
+    public function giftsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript('new Pet.ProductsView;');
     }
