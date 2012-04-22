@@ -54,6 +54,9 @@ Pet.CartView = Pet.View.extend({
 
     continueShopping: function() {
         $.fancybox.close();
+        window.setTimeout(function() {
+            window.location.href = '/products';
+        }, 500);
         return false;
     },
 

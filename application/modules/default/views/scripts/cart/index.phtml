@@ -72,6 +72,7 @@
                         <?php $c++; endforeach; ?>
                     </ul>
                 </div>
+                <p class="total-qty">You have <?php echo count($this->cart->products); ?> item<?php echo (count($this->cart->products) > 1 ? 's' : ''); ?> in your cart</p>
             <?php else: ?>
                 <p class="no-items">You have no items in your cart</p> 
             <?php endif; ?>

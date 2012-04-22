@@ -210,6 +210,9 @@
     font-size: 14px !important;
 }
 
+#digital .subscription-options li {
+    width: 190px;
+}
 
 /* Cart */
 

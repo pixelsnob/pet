@@ -5,20 +5,21 @@
         <div class="product-select-right-inner">
             <h2>Digital Subscription</h2>  
             <p>Ham hock tongue turkey bacon tenderloin brisket, frankfurter biltong pork loin pig. Shoulder leberkas bresaola, pastrami flank biltong jerky venison prosciutto beef ribs speck salami. Fatback pork pork loin, strip steak tri-tip meatloaf shankle rump. Andouille meatball flank chuck, speck beef ham hock cow.</p>
-            <h3>Pricing for your digital subscription:</h3>
+            <h3>Digital subscription options:</h3>
             <ul class="subscription-options">
                 <li>
-                    <h4>New</h4>
-                    <p>From $59</p>
-                    <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_digital_select')); ?>" class="button-grad-blue">Go</a>
+                    <h4>Yearly</h4>
+                    <p>From $39</p>
+                    <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 303), 'cart_add')); ?>" class="button-grad-blue">Buy</a>
                 </li>
                 <li>
-                    <h4>Renewing?</h4>
-                    <p>From $69</p>
-                    <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_digital_renew')); ?>" class="button-grad-blue">Go</a>
+                    <h4>Monthly</h4>
+                    <p>$4 per month, auto-renewing</p>
+                    <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 300), 'cart_add')); ?>" class="button-grad-blue">Buy</a>
                 </li>
             </ul>
         </div>
+        <p class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_renew')); ?>" class="button-grad">Renewing?</a></p>
     </div>
 </div>
 
