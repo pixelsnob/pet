@@ -273,7 +273,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return bool
      * 
      */
-    public function hasDigitalSubscription($gift = false) {
+    public function hasDigitalSubscription() {
         return (bool) $this->getQtyByProductTypeId(
             Model_ProductType::DIGITAL_SUBSCRIPTION);
     }
@@ -292,6 +292,14 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         return (bool) $c;
     }
     
+    /**
+     * @return bool
+     * 
+     */
+    public function isShippingAddressRequired() {
+        return $this->hasSubscription() || $this->hasPhysical(); 
+    }
+
     /**
      * Removes all renewals in the cart 
      * 
