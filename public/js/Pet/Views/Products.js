@@ -33,9 +33,6 @@ Pet.ProductsView = Pet.View.extend({
     openRenewPopup: function(el) {
         this.showFancybox({
             href: $(el.target).attr('href') + '?redirect_params[nolayout]=1'
-            /*afterClose: function() {
-                window.location.href = window.location.href;
-            }*/
         });
         return false;
     },
@@ -43,14 +40,14 @@ Pet.ProductsView = Pet.View.extend({
     submitSubscriptionTermSelectForm: function() {
         var obj = this;
         var qs = $('form[name=subscription-select-term]', this.el).serialize();
-        this.populateFancyboxPost('/products/subscription/term', qs);
+        this.populateFancybox('/products/subscription/term', qs);
         return false; 
     },
 
     submitDigitalSelectForm: function() {
         var obj = this;
         var qs = $('form[name=digital-subscription-select]', this.el).serialize();
-        this.populateFancyboxPost('/products/digital/select', qs);
+        this.populateFancybox('/products/digital/select', qs);
         return false; 
     },
 
@@ -61,12 +58,12 @@ Pet.ProductsView = Pet.View.extend({
         }
         var qs = login_form.serialize();
         qs += '&redirect_params[nolayout]=1';
-        this.populateFancyboxPost('/profile/login/', qs);
+        this.populateFancybox('/profile/login/', qs);
         return false; 
     },
 
     resetPasswordRequestForm: function() {
-        this.populateFancyboxGet('/profile/reset-password-request/');
+        this.populateFancybox('/profile/reset-password-request/');
         return false; 
     },
 
@@ -76,7 +73,7 @@ Pet.ProductsView = Pet.View.extend({
             window.location.port = 443;
         }
         var qs = rpr_form.serialize();
-        this.populateFancyboxPost('/profile/reset-password-request', qs);
+        this.populateFancybox('/profile/reset-password-request', qs);
         return false;
     }
 

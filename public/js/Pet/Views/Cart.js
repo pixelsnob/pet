@@ -20,8 +20,7 @@ Pet.CartView = Pet.View.extend({
         'focus #cart .items input': 'qtySelectFocus'
     },
     
-    initialize: function(){
-    },
+    initialize: function() {},
     
     openCartPopup: function(el) {
         var obj = this;
@@ -34,7 +33,7 @@ Pet.CartView = Pet.View.extend({
     update: function() {
         var obj = this;
         var qs = $('form[name=cart]', this.el).serialize();
-        this.populateFancyboxPost('/cart', qs);
+        this.populateFancybox('/cart', qs);
         return false; 
     },
 
@@ -48,7 +47,7 @@ Pet.CartView = Pet.View.extend({
 
     removeProduct: function(el) {
         var obj = this;
-        obj.populateFancyboxGet($(el.target).attr('href'));
+        obj.populateFancybox($(el.target).attr('href'));
         return false;
     },
 

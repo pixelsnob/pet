@@ -5,34 +5,18 @@
 Pet.View = Backbone.View.extend({
     
     error_msg: '<p class="error">An error has ocurred</p>',
-
-    populateFancyboxGet: function(url, cb) {
-        cb = (typeof cb == 'function' ? cb : function() {});
+    
+    /**
+     * Populates an existing fancybox
+     * 
+     */
+    populateFancybox: function(url, post_data, cb) {
         url += '?nolayout';
-        var obj = this;
-        $.ajax({
-            'url': url,
-            'type': 'get',
-            'async': false,
-            'success': function(data) {
-                $('.fancybox-inner').html(data);
-                cb();
-                $.fancybox.update();
-            },
-            'error': function() {
-                $('.fancybox-inner').html(obj.error_msg);
-            }
-        });
-    },
-
-    populateFancyboxPost: function(url, post_data, cb) {
         cb = (typeof cb == 'function' ? cb : function() {});
-        url += '?nolayout';
-        var obj = this;
-        $.ajax({
+        var obj = this,
+        ajax_params = {
             'url': url,
             'type': 'post',
-            'data': post_data,
             'async': false,
             'success': function(data) {
                 $('.fancybox-inner').html(data);
@@ -42,9 +26,17 @@ Pet.View = Backbone.View.extend({
             'error': function() {
                 $('.fancybox-inner').html(obj.error_msg);
             }
-        });
+        };
+        if (post_data && typeof post_data == 'string') {
+            ajax_params.data = post_data;
+        }
+        $.ajax(ajax_params);
     },
 
+    /**
+     * Creates a new fancybox
+     * 
+     */
     showFancybox: function(opts, cb) {
         if (opts.href) {
             opts.href += '?nolayout';
@@ -64,6 +56,26 @@ Pet.View = Backbone.View.extend({
             }
         }, opts);
         $.fancybox(opts);
+    },
+    
+    /**
+     * Smooth scroll
+     * 
+     */
+    scrollTo: function(sel, callback) {
+        callback = (typeof callback == 'function' ? callback : function() {});
+        var el_top = this._$(sel).position().top;
+        var c = 0;
+        this._$('body, html').animate({
+            scrollTop: el_top
+        }, 450, function() {
+            // Make sure this only runs once
+            if (c) {
+                callback();
+                return;
+            }
+            c++;
+        });
     }
 
 });

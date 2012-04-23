@@ -306,6 +306,21 @@
     margin-bottom: 10px;
 }
 
+/* Checkout */
+
+#checkout .checkout-left, #checkout .checkout-right {
+    width: 400px;
+    float: left;
+}
+
+#checkout .checkout-left {
+    padding-right: 30px;
+}
+
+#checkout .checkout-right {
+    padding-left: 35px;
+    border-left: 2px solid #ccc;
+}
 
 /* User profile */
 
