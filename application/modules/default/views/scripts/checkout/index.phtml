@@ -89,11 +89,9 @@
                     </dl>
                 </fieldset>
             </div>
-            <div class="checkout-right">
+            <div class="checkout-middle">
                 <fieldset class="payment">
                     <legend>Enter Promo/Coupon Code Here</legend>
-                    <dl class="form">
-                    </dl>
                 </fieldset>
                 <fieldset class="shipping">
                     <legend>Enter your Shipping Address</legend>
@@ -160,25 +158,27 @@
                             <?php echo $this->checkout_form->info->version->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->info->version->renderErrors(); ?>
                         </dd>
-                        <dt class="checkbox"></dt>
-                        <dd class="checkbox">
+                        <dt class="opt-in checkbox"></dt>
+                        <dd class="opt-in checkbox">
                             <?php echo $this->checkout_form->info->opt_in->renderViewHelper(); ?>
                             <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
                             <?php echo $this->checkout_form->info->opt_in->renderErrors(); ?>
                         </dd>
-                        <dt class="checkbox"></dt>
-                        <dd class="checkbox">
+                        <dt class="opt-in-partner checkbox"></dt>
+                        <dd class="opt-in-partner checkbox">
                             <?php echo $this->checkout_form->info->opt_in_partner->renderViewHelper(); ?>
                             <label for="opt-in-partner">I'd like to receive information from Photoshop Elements Techniques sponsors</label>
                             <?php echo $this->checkout_form->info->opt_in_partner->renderErrors(); ?>
                             <p class="note">
-                                <strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
-                                companies or entities.
+                                <em><strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
+                                companies or entities.</em>
                             </p>
                         </dd>
                     </dl>
                 </fieldset>
                 <p class="update"><input type="submit" value="Update" id="update-submit" class="button-grad"></p>
+            </div>
+            <div class="checkout-right">
             </div>
         </form>
     <?php else: ?>

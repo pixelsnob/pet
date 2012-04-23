@@ -38,7 +38,7 @@ ul.errors li {
 
 .form dt, .form dd {
     float: left;
-    line-height: 30px;
+    line-height: 35px;
 }
 
 .form dt {
@@ -62,7 +62,7 @@ ul.errors li {
 }
 
 fieldset, form {
-    margin: 0;
+    margin: 0 0 20px 0;
     padding: 0;
 }
 
