@@ -10,16 +10,15 @@ class Model_Cart_Shipping extends Pet_Model_Abstract {
      * 
      */
     protected $_data = array(
-        'ship_first_nm'       => '',
-        'ship_last_nm'        => '',
-        'ship_company_nm'     => '',
-        'ship_addr1'          => '',
-        'ship_addr2'          => '',
-        'ship_city'           => '',
-        'ship_state'          => '',
-        'ship_zip'            => '',
-        'ship_phone'          => '',
-        'ship_country'        => '',
-        'shipping_method'     => ''
+        'shipping_first_name'  => '',
+        'shipping_last_name'   => '',
+        'shipping_address'     => '',
+        'shipping_address_2'   => '',
+        'shipping_company'     => '',
+        'shipping_city'        => '',
+        'shipping_state'       => '',
+        'shipping_postal_code' => '',
+        'shipping_country'     => '',
+        'shipping_phone'       => ''
     );
 }

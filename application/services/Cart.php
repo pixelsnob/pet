@@ -21,6 +21,7 @@ class Service_Cart {
         $this->_cart = new Model_Mapper_Cart;
         $this->_products_svc = new Service_Products;
         $this->_messenger = Zend_Registry::get('messenger');
+        $this->_messenger->setNamespace('cart');
     }
     
     /**
@@ -92,15 +93,12 @@ class Service_Cart {
     public function addPromo($code) {
         $promo_svc = new Service_Promos;
         $promo = $promo_svc->getUnexpiredPromoByCode($code);
-        if ($promo) {
-            if (!$this->_cart->addPromo($promo)) {
-                return false;
-            }
+        if ($promo && $this->_cart->addPromo($promo)) {
+            return true;
         } else {
             $this->_messenger->addMessage("Promo \"$code\" is not valid");
             return false;
         }
-        return true;
     }
     
     /**
@@ -125,18 +123,28 @@ class Service_Cart {
      * 
      */
     public function getCheckoutForm() {
+        $cart = $this->_cart->get();
         $identity = Zend_Auth::getInstance()->getIdentity();
         $states = new Zend_Config(require APPLICATION_PATH .
             '/configs/states.php');
         $countries = new Zend_Config(require APPLICATION_PATH .
             '/configs/countries.php');
         $form = new Form_Checkout(array(
-            //'cart' => $cart
-            'identity' => $identity,
-            'mapper'   => new Model_Mapper_Users,
+            //'cart' => $cart,
+            'identity'  => $identity,
+            'mapper'    => new Model_Mapper_Users,
             'states'    => $states->toArray(),
             'countries' => $countries->toArray()
         ));
+        $form_data = array_merge(
+            $cart->billing->toArray(),
+            $cart->shipping->toArray() 
+        );
+        if ($cart->promo) {
+            $form_data = array_merge($form_data, array('promo_code' =>
+                $cart->promo->code));
+        }
+        $form->populate($form_data);
         return $form;
     }
 }

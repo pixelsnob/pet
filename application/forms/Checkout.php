@@ -72,6 +72,7 @@ class Form_Checkout extends Pet_Form {
             'identity' => $this->_identity
         ));
         $user_form->addPasswordFields();
+        $user_form->password->removeValidator('Callback');
         $this->addSubform(new Form_SubForm_Promo, 'promo');
         $this->addSubform($user_form, 'user');
         $this->addSubform(new Form_SubForm_Billing, 'billing');

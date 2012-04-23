@@ -1,13 +1,13 @@
 <?php
 
 return array(
+    '' => 'Please select...',
     'USA' => 'USA',
     'Canada' => 'Canada',
     'France' => 'France',
     'Germany' => 'Germany',
     'United Kingdom' => 'United Kingdom',
     'India' => 'India',
-    '' => '---------------------',
     'Afghanistan' => 'Afghanistan',
     'Albania' => 'Albania',
     'Algeria' => 'Algeria',

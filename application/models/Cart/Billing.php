@@ -10,18 +10,15 @@ class Model_Cart_Billing extends Pet_Model_Abstract {
      * 
      */
     protected $_data = array(
-        'bill_first_nm'       => '',
-        'bill_last_nm'        => '',
-        'bill_company_nm'     => '',
-        'bill_addr1'          => '',
-        'bill_addr2'          => '',
-        'bill_city'           => '',
-        'bill_state'          => '',
-        'bill_zip'            => '',
-        'bill_country'        => '',
-        'email'               => '',
-        'confirm_email'       => '',
-        'bill_phone'          => '',
-        'bill_to_ship'        => '1'
+        'first_name'          => '',
+        'last_name'           => '',
+        'billing_address'     => '',
+        'billing_address_2'   => '',
+        'billing_company'     => '',
+        'billing_city'        => '',
+        'billing_state'       => '',
+        'billing_postal_code' => '',
+        'billing_country'     => '',
+        'billing_phone'       => ''
     );
 }
