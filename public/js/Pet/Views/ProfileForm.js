@@ -39,7 +39,7 @@ Pet.ProfileFormView = Pet.View.extend({
 
     submitChangePasswordForm: function() {
         var qs = $('form[name=change-password]', this.el).serialize();
-        this.populateFancyboxPost('/profile/change-password', qs);
+        this.populateFancybox('/profile/change-password', qs);
         return false;
     }
 
