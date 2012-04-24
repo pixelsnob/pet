@@ -131,14 +131,31 @@ class Service_Cart {
             '/configs/countries.php');
         $form = new Form_Checkout(array(
             'identity'  => $identity,
-            'mapper'    => new Model_Mapper_Users,
+            'users'     => new Model_Mapper_Users,
             'states'    => $states->toArray(),
-            'countries' => $countries->toArray()
+            'countries' => $countries->toArray(),
+            'cart'      => $cart,
+            'promos'    => new Model_Mapper_Promos
         ));
+        $users_svc = new Service_Users;
+        if ($users_svc->isAuthenticated()) {
+            $form->user->removeElement('username');
+            $form->user->removeElement('password');
+            $form->user->removeElement('confirm_password');
+        }
+        if (!$cart->isShippingAddressRequired()) {
+            $form->removeSubform('shipping');
+        }
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray() 
         );
+        if ($users_svc->isAuthenticated()) {
+            $user = $users_svc->getUser();
+            $form_data = array_merge($form_data, $user->toArray()); 
+        } else {
+            $form_data = array_merge($form_data, $cart->user->toArray());
+        }
         if ($cart->promo) {
             $form_data = array_merge($form_data, array('promo_code' =>
                 $cart->promo->code));
@@ -152,10 +169,14 @@ class Service_Cart {
      * 
      */
     public function saveCheckoutForm($data) {
+        $cart = $this->_cart->get();
         $this->_cart->saveBilling($data);
-        $form = $this->getCheckoutForm();
-        foreach ($data as $k => $v) {
-            print_r($form->getElement($k)); 
+        if ($cart->isShippingAddressRequired()) {
+            $this->_cart->saveShipping($data);
+        }
+        $users_svc = new Service_Users;
+        if (!$users_svc->isAuthenticated()) {
+            $this->_cart->saveUser($data);
         }
     }
 }

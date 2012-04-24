@@ -5,10 +5,10 @@
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
             <?php echo $this->flashMessenger('checkout', true); ?>
             <div class="checkout-left">
-                <?php if (!$this->is_authenticated): ?>
-                    <fieldset class="account">
-                        <legend>Please create a username/password</legend>
-                        <dl class="form">
+                <fieldset class="account">
+                    <legend>Account Information</legend>
+                    <dl class="form">
+                        <?php if (!$this->is_authenticated): ?>
                             <dt><?php echo $this->checkout_form->user->username->getLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->user->username->renderViewHelper(); ?>
@@ -24,9 +24,14 @@
                                 <?php echo $this->checkout_form->user->confirm_password->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->user->confirm_password->renderErrors(); ?>
                             </dd>
-                        </dl>
-                    </fieldset>
-                <?php endif; ?>
+                        <?php endif; ?>
+                        <dt><?php echo $this->checkout_form->user->email->getLabel(); ?></dt>
+                        <dd>
+                            <?php echo $this->checkout_form->user->email->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->user->email->renderErrors(); ?>
+                        </dd>
+                    </dl>
+                </fieldset>
                 <fieldset class="billing">
                     <legend>Enter your Billing Address</legend>
                     <dl class="form">
@@ -40,6 +45,7 @@
                             <?php echo $this->checkout_form->user->last_name->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->user->last_name->renderErrors(); ?>
                         </dd>
+
                         <dt><?php echo $this->checkout_form->billing->billing_address->getLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_address->renderViewHelper(); ?>

@@ -35,6 +35,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $this->_data['billing'] = new Model_Cart_Billing;
         $this->_data['shipping'] = new Model_Cart_Shipping;
         $this->_data['payment'] = new Model_Cart_Payment;
+        $this->_data['user'] = new Model_Cart_User;
         $this->updateTimestamp();
     }
     
@@ -65,26 +66,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         return $validator;
     }
 
-    /**
-     * Makes sure that billing is set to an instance of Model_Cart_BillInfo
-     * 
-     * @param Model_Cart_BillInfo $billing
-     * @return void
-     */
-    /*public function setBilling(Model_Cart_Billing $billing) {
-        return $billing;
-    }*/
-    
-    /**
-     * Makes sure that shipping is set to an instance of Model_Cart_Shipping
-     * 
-     * @param Model_Cart_Shipping $shipping
-     * @return void
-     */
-    /*public function setShipping(Model_Cart_Shipping $shipping) {
-        return $shipping;
-    }*/
-    
     /**
      * @param Model_Cart_Product $product
      * @return bool
@@ -176,6 +157,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      */
     public function saveShipping(Model_Cart_Shipping $shipping) {
         $this->_data['shipping'] = $shipping;
+    }
+
+    /**
+     * @param Model_Cart_User
+     * @return void
+     * 
+     */
+    public function saveUser(Model_Cart_User $user) {
+        $this->_data['user'] = $user;
     }
 
     /**

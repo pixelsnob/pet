@@ -12,10 +12,10 @@ class Form_Checkout extends Pet_Form {
     protected $_identity;
     
     /**
-     * @var Pet_Model_Mapper_Abstract 
+     * @var Model_Mapper_Users
      * 
      */
-    protected $_mapper;
+    protected $_users;
 
     /**
      * @var array
@@ -30,6 +30,19 @@ class Form_Checkout extends Pet_Form {
     protected $_states;
 
     /**
+     * @var Model_Cart
+     * 
+     */
+    protected $_cart;
+
+    /**
+     * @var Model_Mapper_Promos
+     * 
+     */
+    protected $_promos;
+    
+    
+    /**
      * @param mixed $identity
      * @return void
      */
@@ -38,12 +51,21 @@ class Form_Checkout extends Pet_Form {
     }
 
     /**
-     * @param Pet_Model_Mapper_Abstract $mapper
+     * @param Model_Mapper_Users $mapper
      * @return void
      */
-    public function setMapper(Pet_Model_Mapper_Abstract $mapper) {
-        $this->_mapper = $mapper;
+    public function setUsers(Model_Mapper_Users $users_mapper) {
+        $this->_users = $users_mapper;
     }
+
+    /**
+     * @param Model_Mapper_Promos $mapper
+     * @return void
+     */
+    public function setPromos(Model_Mapper_Promos $promos_mapper) {
+        $this->_promos = $promos_mapper;
+    }
+
 
     /**
      * @param array $countries
@@ -61,6 +83,15 @@ class Form_Checkout extends Pet_Form {
         $this->_states = $states;
     }
 
+    /** 
+     * @param Model_Cart $cart
+     * @return void
+     * 
+     */
+    public function setCart(Model_Cart $cart) {
+        $this->_cart = $cart;
+    }
+
     /**
      * @return void
      * 
@@ -68,11 +99,15 @@ class Form_Checkout extends Pet_Form {
     public function init() {
         parent::init();
         $user_form = new Form_SubForm_User(array(
-            'mapper' => $this->_mapper,
+            'mapper' => $this->_users,
             'identity' => $this->_identity
         ));
         $user_form->addPasswordFields();
-        $this->addSubform(new Form_SubForm_Promo, 'promo');
+        $promo_form = new Form_SubForm_Promo(array(
+            'cart' => $this->_cart,
+            'mapper' => $this->_promos
+        ));
+        $this->addSubform($promo_form, 'promo');
         $this->addSubform($user_form, 'user');
         $this->addSubform(new Form_SubForm_Billing, 'billing');
         $billing_form = new Form_SubForm_Billing(array(

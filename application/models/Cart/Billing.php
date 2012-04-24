@@ -10,8 +10,6 @@ class Model_Cart_Billing extends Pet_Model_Abstract {
      * 
      */
     protected $_data = array(
-        'first_name'          => '',
-        'last_name'           => '',
         'billing_address'     => '',
         'billing_address_2'   => '',
         'billing_company'     => '',

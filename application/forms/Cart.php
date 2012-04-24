@@ -5,8 +5,17 @@
  */
 class Form_Cart extends Pet_Form {
     
-    protected $_cart = array();
+    /**
+     * @var Model_Cart
+     * 
+     */
+    protected $_cart;
     
+    /** 
+     * @param Model_Cart $cart
+     * @return void
+     * 
+     */
     public function setCart($cart) {
         $this->_cart = $cart;
     }

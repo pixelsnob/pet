@@ -51,7 +51,8 @@ class Pet_Validate_EmailNotExists extends Zend_Validate_Abstract {
      */
     public function isValid($value, $context = null) {
         $user = $this->_mapper->getByEmail($value);
-        if ($user && $user->id && $user->id != $this->_identity->id) {
+        
+        if ($user && $user->id && ($this->_identity && $user->id != $this->_identity->id || !$this->_identity)) {
             $this->_error(self::INVALID);
             return false;    
         }

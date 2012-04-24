@@ -96,15 +96,36 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_cart->setValidator($validator);
     }
     
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
     public function saveBilling($data) {
         $billing = new Model_Cart_Billing($data);
         $this->_cart->saveBilling($billing);
     }
 
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
     public function saveShipping($data) {
         $shipping = new Model_Cart_Shipping($data);
-        $this->_cart->saveShipping($billing);
+        $this->_cart->saveShipping($shipping);
     }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function saveUser($data) {
+        $user = new Model_Cart_User($data);
+        $this->_cart->saveUser($user);
+    }
+
 
     /**
      * @param Model_Promo $promo
