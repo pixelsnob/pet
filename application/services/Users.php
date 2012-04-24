@@ -239,7 +239,7 @@ class Service_Users extends Pet_Service {
         if (!$user_id) {
             $user_id = $this->getId();
         }
-        $enc_pw = $this->_generateHash($new_pw); 
+        $enc_pw = $this->generateHash($new_pw); 
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
         $this->_users->updatePassword($enc_pw, $user_id);
@@ -329,7 +329,7 @@ class Service_Users extends Pet_Service {
      */
     public function resetPasswordByToken($new_pw, $token) {
         $pw_tokens = new Model_Mapper_UserPasswordTokens; 
-        $enc_pw = $this->_generateHash($new_pw); 
+        $enc_pw = $this->generateHash($new_pw); 
         $db = Zend_Db_Table::getDefaultAdapter();
         $token = $pw_tokens->getByToken($token);
         $db->beginTransaction();
@@ -346,7 +346,7 @@ class Service_Users extends Pet_Service {
      * @return string
      * 
      */
-    protected function _generateHash($new_pw) {
+    public function generateHash($new_pw) {
         $salt = '';
         for ($i = 0; $i < 5; $i++) { 
             $salt .= chr(mt_rand(0, 255));

@@ -14,6 +14,6 @@ class Model_Cart_User extends Pet_Model_Abstract {
         'last_name'           => '',
         'username'            => '',
         'email'               => '',
-        'password'            => ''
+        'password_hash'       => ''
     );
 }

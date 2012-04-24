@@ -176,6 +176,7 @@ class Service_Cart {
         }
         $users_svc = new Service_Users;
         if (!$users_svc->isAuthenticated()) {
+            $data['password_hash'] = $users_svc->generateHash($data['password']);
             $this->_cart->saveUser($data);
         }
     }
