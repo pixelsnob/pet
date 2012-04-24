@@ -15,7 +15,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         'shipping'            => null, // Model_Cart_Shipping
         'payment'             => null,
         'promo'               => null, // Model_Promo
-        'timestamp'           => null // Unix timestamp of last update
+        'user'                => null, // Model_Cart_User
+        'user_info'           => null, // Model_Cart_UserInfo
+        'timestamp'           => null  // Unix timestamp of last update
     );
     
     /**
@@ -36,6 +38,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $this->_data['shipping'] = new Model_Cart_Shipping;
         $this->_data['payment'] = new Model_Cart_Payment;
         $this->_data['user'] = new Model_Cart_User;
+        $this->_data['user_info'] = new Model_Cart_UserInfo;
         $this->updateTimestamp();
     }
     
@@ -166,6 +169,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      */
     public function saveUser(Model_Cart_User $user) {
         $this->_data['user'] = $user;
+    }
+
+    /**
+     * @param Model_Cart_UserInfo
+     * @return void
+     * 
+     */
+    public function saveUserInfo(Model_Cart_UserInfo $user_info) {
+        $this->_data['user_info'] = $user_info;
     }
 
     /**

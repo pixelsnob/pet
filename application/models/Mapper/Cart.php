@@ -126,6 +126,15 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_cart->saveUser($user);
     }
 
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function saveUserInfo($data) {
+        $user_info = new Model_Cart_UserInfo($data);
+        $this->_cart->saveUserInfo($user_info);
+    }
 
     /**
      * @param Model_Promo $promo

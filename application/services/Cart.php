@@ -138,6 +138,7 @@ class Service_Cart {
             'promos'    => new Model_Mapper_Promos
         ));
         $users_svc = new Service_Users;
+        // We don't need pw/username fields if user is already logged in
         if ($users_svc->isAuthenticated()) {
             $form->user->removeElement('username');
             $form->user->removeElement('password');
@@ -148,13 +149,22 @@ class Service_Cart {
         }
         $form_data = array_merge(
             $cart->billing->toArray(),
-            $cart->shipping->toArray() 
+            $cart->shipping->toArray()
         );
+        // If user is logged in, use that data to populate form, otherwise
+        // show saved data if any
         if ($users_svc->isAuthenticated()) {
-            $user = $users_svc->getUser();
-            $form_data = array_merge($form_data, $user->toArray()); 
+            $form_data = array_merge(
+                $form_data,
+                $users_svc->getUser()->toArray(),
+                $users_svc->getProfile()->toArray()
+            );
         } else {
-            $form_data = array_merge($form_data, $cart->user->toArray());
+            $form_data = array_merge(
+                $form_data,
+                $cart->user->toArray(),
+                $cart->user_info->toArray()
+            );
         }
         if ($cart->promo) {
             $form_data = array_merge($form_data, array('promo_code' =>
@@ -179,5 +189,6 @@ class Service_Cart {
             $data['password_hash'] = $users_svc->generateHash($data['password']);
             $this->_cart->saveUser($data);
         }
+        $this->_cart->saveUserInfo($data);
     }
 }
