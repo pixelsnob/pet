@@ -32,15 +32,14 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             ),
             'disableLoadDefaultDecorators' => true
 
-        ));/*->addElement('text', 'cc_num', array(
-            'value'        => $cart->payment->cc_num,
+        ))->addElement('text', 'cc_num', array(
             'label'        => 'Card Number',
             'required'     => false,
             'allowEmpty'   => false,
             'class'        => 'text',
             'validators'   => array(
-                array(new Onone_Validate_CCNum(
-                    $cart->payment->payment_method == 'credit_card'), true)
+                array(new Pet_Validate_CCNum)
+                //    $cart->payment->payment_method == 'credit_card'), true)
             )
         ));
         $month_opts = array(
@@ -58,8 +57,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             '11' => '11 - November',
             '12' => '12 - December'
         );
-        $this->addElement('select', 'cc_exp_month', array(
-            'value'        => $cart->payment->cc_exp_month,
+        /*$this->addElement('select', 'cc_exp_month', array(
             'multiOptions' => $month_opts, 
             'label'        => 'Expiration Month',
             'required'     => false,
@@ -83,7 +81,6 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
         }
         $year_opts = array('' => 'Please select year...') + $year_opts;
         $this->addElement('select', 'cc_exp_year', array(
-            'value'        => $cart->payment->cc_exp_year,
             'multiOptions' => $year_opts, 
             'label'        => 'Expiration Month',
             'required'     => false,
@@ -111,10 +108,10 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
     }
     
     public function isRequiredForPaypal($value) {
-        $cart = $this->_cart_mapper->get();
+        /*$cart = $this->_cart_mapper->get();
         if ($cart->payment->payment_method == 'paypal') {
             return true;
         }
-        return (bool) $value;
+        return (bool) $value;*/
     }
 }

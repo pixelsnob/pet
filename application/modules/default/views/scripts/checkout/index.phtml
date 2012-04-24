@@ -91,15 +91,19 @@
                 <fieldset class="payment">
                     <legend>Payment Information</legend>
                     <dl class="form">
-                        <dt class="checkbox payment-method">Payment Method</dt>
+                        <dt><?php echo $this->checkout_form->payment->payment_method->getLabel(); ?></dt>
                         <dd class="checkbox payment-method">
                             <?php echo $this->checkout_form->payment->payment_method; ?>
+                        </dd>
+                        <dt><?php echo $this->checkout_form->payment->cc_num->getLabel(); ?></dt>
+                        <dd class="cc-num">
+                            <?php echo $this->checkout_form->payment->cc_num->renderViewHelper(); ?>
                         </dd>
                     </dl>
                 </fieldset>
             </div>
             <div class="checkout-middle">
-                <fieldset class="payment">
+                <fieldset class="promo-code">
                     <legend>Enter Promo Code Here</legend>
                     <dl class="form">
                         <dt><?php echo $this->checkout_form->promo->promo_code->getLabel(); ?></dt>
