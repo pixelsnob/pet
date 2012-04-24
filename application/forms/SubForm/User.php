@@ -122,10 +122,6 @@ class Form_SubForm_User extends Zend_Form_SubForm {
                 array('NotEmpty', true, array(
                     'messages' => 'Please enter your new password'
                 )),
-                array('Callback', true, array(
-                    'callback' => array($this, 'isNewPasswordValid'),
-                    'messages' => 'New password must be different than old password'
-                )),
                 array(new Pet_Validate_PasswordStrength, true),
                 array('StringLength', true, array(
                     'max' => 40,

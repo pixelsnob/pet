@@ -3,6 +3,7 @@
     <?php if ($this->cart->hasProducts()): ?>
         <h2>Checkout</h2>
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
+            <?php echo $this->flashMessenger('checkout', true); ?>
             <div class="checkout-left">
                 <?php if (!$this->is_authenticated): ?>
                     <fieldset class="account">

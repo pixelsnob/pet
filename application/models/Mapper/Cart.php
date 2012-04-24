@@ -95,6 +95,16 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function setValidator($validator) {
         $this->_cart->setValidator($validator);
     }
+    
+    public function saveBilling($data) {
+        $billing = new Model_Cart_Billing($data);
+        $this->_cart->saveBilling($billing);
+    }
+
+    public function saveShipping($data) {
+        $shipping = new Model_Cart_Shipping($data);
+        $this->_cart->saveShipping($billing);
+    }
 
     /**
      * @param Model_Promo $promo

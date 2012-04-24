@@ -130,7 +130,6 @@ class Service_Cart {
         $countries = new Zend_Config(require APPLICATION_PATH .
             '/configs/countries.php');
         $form = new Form_Checkout(array(
-            //'cart' => $cart,
             'identity'  => $identity,
             'mapper'    => new Model_Mapper_Users,
             'states'    => $states->toArray(),
@@ -146,5 +145,17 @@ class Service_Cart {
         }
         $form->populate($form_data);
         return $form;
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public function saveCheckoutForm($data) {
+        $this->_cart->saveBilling($data);
+        $form = $this->getCheckoutForm();
+        foreach ($data as $k => $v) {
+            print_r($form->getElement($k)); 
+        }
     }
 }

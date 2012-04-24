@@ -6,6 +6,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->_cart_svc = new Service_Cart;
         $this->_users_svc = new Service_Users;
         $this->_messenger = Zend_Registry::get('messenger');
+        $this->_messenger->setNamespace('checkout');
     }
 
     /**
@@ -26,10 +27,11 @@ class CheckoutController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
            if ($checkout_form->isValid($post)) {
-                // update
+                // redirect here
            } else {
-                // validation failed
+                $this->_messenger->addMessage('Submitted information is not valid');
            }
+           $this->_cart_svc->saveCheckoutForm($post);
         }
         $this->view->inlineScriptMin()->loadGroup('checkout')
             ->appendScript('new Pet.CheckoutView;');

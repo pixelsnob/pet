@@ -159,6 +159,24 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $messenger = Zend_Registry::get('messenger');
         $messenger->setNamespace('cart')->addMessage('Cart updated');
     }
+    
+    /**
+     * @param Model_Cart_Billing
+     * @return void
+     * 
+     */
+    public function saveBilling(Model_Cart_Billing $billing) {
+        $this->_data['billing'] = $billing;
+    }
+
+    /**
+     * @param Model_Cart_Shipping
+     * @return void
+     * 
+     */
+    public function saveShipping(Model_Cart_Shipping $shipping) {
+        $this->_data['shipping'] = $shipping;
+    }
 
     /**
      * @param int $product_id
