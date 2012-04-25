@@ -38,6 +38,10 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             'allowEmpty'   => false,
             'class'        => 'text',
             'validators'   => array(
+                array('Callback', true, array(
+                    'callback' => array($this, 'isRequiredForPaypal'),
+                    'messages' => 'Expiration year is required'
+                )),
                 array(new Pet_Validate_CCNum)
             )
         ));
@@ -121,5 +125,9 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             return true;
         }
         return ((bool) strlen(trim($value)));
+    }
+
+    public function isValid($data) {
+        return parent::isValid($data);
     }
 }
