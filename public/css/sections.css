@@ -132,12 +132,14 @@
     overflow: hidden;
 }
 
+/*
 .product-select h2 {
     text-transform: none;
     font-style: italic;
     font-size: 28px !important;
     padding-bottom: 5px;
 }
+*/
 
 .product-select h3 {
     font-size: 16px !important;
@@ -385,7 +387,7 @@
 }
 
 #checkout .update {
-    border-top: 2px solid #ccc;
+    border-top: 2px solid #ddd;
     padding-top: 15px;
     line-height: 30px;
 }
