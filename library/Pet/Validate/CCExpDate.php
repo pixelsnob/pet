@@ -1,9 +1,9 @@
 <?php
 /**
- * @package Onone_Validate_CCExpDate
+ * @package Pet_Validate_CCExpDate
  * 
  */
-class Onone_Validate_CCExpDate extends Zend_Validate_Abstract {
+class Pet_Validate_CCExpDate extends Zend_Validate_Abstract {
     
     /**
      * Field name of country field to look for in $context in isValid()

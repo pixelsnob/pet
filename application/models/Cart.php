@@ -181,6 +181,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     }
 
     /**
+     * @param Model_Cart_UserInfo
+     * @return void
+     * 
+     */
+    public function savePayment(Model_Cart_Payment $payment) {
+        $this->_data['payment'] = $payment;
+    }
+
+    /**
      * @param int $product_id
      * @return void
      * 

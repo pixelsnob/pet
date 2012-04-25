@@ -333,14 +333,36 @@
     padding-left: 35px;
 }
 
-#checkout .payment-method li {
-    display: inline;
-    background: none;
-    padding: 0;
-    margin-right: 15px;
-    white-space: nowrap;
+
+#checkout .payment-method input {
+    width: auto;
+    margin-right: 10px;
 }
 
+#checkout .payment-method ul {
+    margin-bottom: 0;
+}
+
+#checkout .payment-method li {
+    background: none;
+    padding: 0;
+    height: auto;
+    margin: 2px 0;
+    line-height: 20px;
+}
+
+#checkout .cc-exp {
+    line-height: 24px;
+}
+
+
+#checkout .cc-exp .errors {
+    margin-top: 5px;
+}
+
+#checkout .cc-exp .errors li {
+    line-height: 10px !important;
+}
 
 /* User profile */
 

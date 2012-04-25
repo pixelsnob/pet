@@ -122,7 +122,11 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function saveUser($data) {
+        $users_svc = new Service_Users;
         $user = new Model_Cart_User($data);
+        if (isset($data['password']) && strlen(trim($data['password']))) {
+            $user->password_hash = $users_svc->generateHash($data['password']);
+        }
         $this->_cart->saveUser($user);
     }
 
@@ -134,6 +138,17 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function saveUserInfo($data) {
         $user_info = new Model_Cart_UserInfo($data);
         $this->_cart->saveUserInfo($user_info);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function savePayment($data) {
+        $payment = new Model_Cart_Payment($data);
+        $payment->cc_num = '';
+        $this->_cart->savePayment($payment);
     }
 
     /**

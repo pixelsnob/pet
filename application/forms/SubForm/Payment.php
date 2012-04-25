@@ -43,7 +43,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             )
         ));
         $month_opts = array(
-            ''   => 'Please select month...',
+            ''   => 'Month...',
             '01' => '01 - January',
             '02' => '02 - February',
             '03' => '03 - March',
@@ -57,7 +57,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             '11' => '11 - November',
             '12' => '12 - December'
         );
-        /*$this->addElement('select', 'cc_exp_month', array(
+        $this->addElement('select', 'cc_exp_month', array(
             'multiOptions' => $month_opts, 
             'label'        => 'Expiration Month',
             'required'     => false,
@@ -67,7 +67,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
                     'callback' => array($this, 'isRequiredForPaypal'),
                     'messages' => 'Expiration month is required'
                 )),
-                array(new Onone_Validate_CCExpDate(array(
+                array(new Pet_Validate_CCExpDate(array(
                     'month' => 'cc_exp_month',
                     'year'  => 'cc_exp_year'
                 )))
@@ -79,7 +79,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
         for ($y = $year; $y < $year + 12; $y++) {
             $year_opts[$y] = $y;
         }
-        $year_opts = array('' => 'Please select year...') + $year_opts;
+        $year_opts = array('' => 'Year...') + $year_opts;
         $this->addElement('select', 'cc_exp_year', array(
             'multiOptions' => $year_opts, 
             'label'        => 'Expiration Month',
@@ -93,7 +93,6 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             ),
             'registerInArrayValidator' => false
         ))->addElement('text', 'cc_cvv', array(
-            'value'        => $cart->payment->cc_cvv,
             'label'        => 'Security Code',
             'required'     => false,
             'allowEmpty'   => false,
@@ -102,16 +101,26 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
                 array('Callback', true, array(
                     'callback' => array($this, 'isRequiredForPaypal'),
                     'messages' => 'Security code is required'
+                )),
+                array('StringLength', true, array(
+                    'max' => 4,
+                    'messages' => 'Security code must be %max% characters or less'
                 ))
             )
-        ));*/
+        ))->setElementFilters(array('StringTrim'));
     }
     
-    public function isRequiredForPaypal($value) {
-        /*$cart = $this->_cart_mapper->get();
-        if ($cart->payment->payment_method == 'paypal') {
+    /**
+     * @param string $value
+     * @param array $context
+     * 
+     */
+    public function isRequiredForPaypal($value, $context) {
+        $payment_method = (isset($context['payment_method']) ?
+            $context['payment_method'] : '');
+        if ($payment_method == 'paypal') {
             return true;
         }
-        return (bool) $value;*/
+        return ((bool) strlen(trim($value)));
     }
 }

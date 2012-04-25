@@ -91,13 +91,26 @@
                 <fieldset class="payment">
                     <legend>Payment Information</legend>
                     <dl class="form">
-                        <dt><?php echo $this->checkout_form->payment->payment_method->getLabel(); ?></dt>
-                        <dd class="checkbox payment-method">
+                        <dt class="payment-method"><?php echo $this->checkout_form->payment->payment_method->getLabel(); ?></dt>
+                        <dd class="payment-method">
                             <?php echo $this->checkout_form->payment->payment_method; ?>
                         </dd>
                         <dt><?php echo $this->checkout_form->payment->cc_num->getLabel(); ?></dt>
                         <dd class="cc-num">
                             <?php echo $this->checkout_form->payment->cc_num->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->payment->cc_num->renderErrors(); ?>
+                        </dd>
+                        <dt class="cc-exp"><label>Expiration</label></dt>
+                        <dd class="cc-exp">
+                            <?php echo $this->checkout_form->payment->cc_exp_month->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->payment->cc_exp_year->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->payment->cc_exp_month->renderErrors(); ?>
+                            <?php echo $this->checkout_form->payment->cc_exp_year->renderErrors(); ?>
+                        </dd>
+                        <dt class="cc-cvv"><?php echo $this->checkout_form->payment->cc_cvv->getLabel(); ?></dt>
+                        <dd class="cc-cvv">
+                            <?php echo $this->checkout_form->payment->cc_cvv->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->payment->cc_cvv->renderErrors(); ?>
                         </dd>
                     </dl>
                 </fieldset>

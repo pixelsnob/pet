@@ -13,12 +13,6 @@ class Pet_Validate_CCNum extends Zend_Validate_Abstract {
     const INVALID = 'invalid';
     
     /**
-     * @var bool
-     * 
-     */
-    private $_required = false;
-
-    /**
      * @var array $_messageTemplates
      * 
      */
@@ -26,14 +20,6 @@ class Pet_Validate_CCNum extends Zend_Validate_Abstract {
         self::REQUIRED => 'Credit card number is required',
         self::INVALID => 'Credit card number is not valid'
     );
-    
-    /**
-     * @param string $required Whether the field is required or not
-     * @return void
-     */
-    public function __construct($required = false) {
-        $this->_required = $required;
-    }
     
     /**
      * isValid() implementation
@@ -44,10 +30,13 @@ class Pet_Validate_CCNum extends Zend_Validate_Abstract {
      */
     public function isValid($value, $context = null) {
         $not_empty_validator = new Zend_Validate_NotEmpty;
-        /*if ($this->_required && !$not_empty_validator->isValid($value)) {
+        $payment_method = (isset($context['payment_method']) ?
+            $context['payment_method'] : '');
+        $is_cc = ($payment_method == 'credit_card');
+        if ($is_cc && !$not_empty_validator->isValid($value)) {
             $this->_error(self::REQUIRED);
             return false;
-        } elseif (!$this->_required) {
+        } elseif (!$is_cc) {
             return true;
         }
         $cc_validator = new Zend_Validate_CreditCard(array(
@@ -59,7 +48,7 @@ class Pet_Validate_CCNum extends Zend_Validate_Abstract {
         if (!$cc_validator->isValid($value)) {
             $this->_error(self::INVALID);
             return false;
-        }*/
+        }
         return true;
     }
 }

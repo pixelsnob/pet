@@ -52,7 +52,7 @@ ul.errors li {
 
 .form dt, .form dd {
     float: left;
-    line-height: 35px;
+    line-height: 40px;
 }
 
 .form dt {
@@ -84,8 +84,7 @@ fieldset {
 }
 
 legend, h2 {
-    padding-bottom: 15px;
-    /*color: #505b7d !important;*/
+    padding-bottom: 10px;
     color: #3c466b !important;
     text-transform: uppercase;
     font-size: 14px;

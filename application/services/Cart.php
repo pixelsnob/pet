@@ -149,7 +149,8 @@ class Service_Cart {
         }
         $form_data = array_merge(
             $cart->billing->toArray(),
-            $cart->shipping->toArray()
+            $cart->shipping->toArray(),
+            $cart->payment->toArray()
         );
         // If user is logged in, use that data to populate form, otherwise
         // show saved data if any
@@ -186,9 +187,9 @@ class Service_Cart {
         }
         $users_svc = new Service_Users;
         if (!$users_svc->isAuthenticated()) {
-            $data['password_hash'] = $users_svc->generateHash($data['password']);
             $this->_cart->saveUser($data);
         }
         $this->_cart->saveUserInfo($data);
+        $this->_cart->savePayment($data);
     }
 }
