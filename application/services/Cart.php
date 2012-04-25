@@ -195,5 +195,16 @@ class Service_Cart {
         }
         $this->_cart->setUserInfo($data);
         $this->_cart->setPayment($data);
+        $promo_code = (isset($data['promo_code']) ? $data['promo_code'] : '');
+        $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
+        if ($promo_code && $promo_code != $existing_promo_code) {
+            $promos_mapper = new Model_Mapper_Promos;
+            $promo = $promos_mapper->getUnexpiredPromoByCode($promo_code);
+            if ($promo) {
+                $this->_cart->addPromo($promo);
+            }
+        } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
+            $this->_cart->removePromo();
+        }
     }
 }

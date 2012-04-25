@@ -138,7 +138,7 @@ class Form_Checkout extends Pet_Form {
     public function isValid($data) {
         $valid = true;
         $valid = $this->billing->isValid($data) && $valid;
-        if ($data['payment_method'] == 'credit_card') {
+        if (isset($data['payment_method']) && $data['payment_method'] == 'credit_card') {
             $valid = $this->payment->isValid($data) && $valid;
         }
         $valid = $this->promo->isValid($data) && $valid;
