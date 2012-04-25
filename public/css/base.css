@@ -75,6 +75,10 @@ ul.errors li {
     -webkit-border-radius: 5px;
 }
 
+.hide {
+    display: none;
+}
+
 fieldset, form {
     padding: 0;
 }
@@ -267,8 +271,5 @@ a.button-grad, a.button-grad-blue {
     display: block;
 }
 
-input.button-grad {
-
-}
 
 

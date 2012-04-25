@@ -1,4 +1,5 @@
 
+<?php print_r($this->checkout_form->getErrorMessages()); ?>
 <div id="checkout">
     <?php if ($this->cart->hasProducts()): ?>
         <h2>Checkout</h2>
@@ -98,6 +99,8 @@
                         <dd class="payment-method">
                             <?php echo $this->checkout_form->payment->payment_method; ?>
                         </dd>
+                    </dl>
+                    <dl class="form cc<?php echo ($this->cart->payment->payment_method != 'credit_card' ? ' hide' : ''); ?>">
                         <dt><?php echo $this->checkout_form->payment->cc_num->getLabel(); ?></dt>
                         <dd class="cc-num">
                             <?php echo $this->checkout_form->payment->cc_num->renderViewHelper(); ?>
@@ -130,7 +133,7 @@
                     </dl>
                 </fieldset>
                 <?php if ($this->cart->isShippingAddressRequired()): ?>
-                    <fieldset class="shipping">
+                    <fieldset class="shipping<?php echo ($this->cart->use_shipping ? '' : ' hide'); ?>">
                         <legend>Enter your Shipping Address</legend>
                         <dl class="form">
                             <dt><?php echo $this->checkout_form->shipping->shipping_first_name->getLabel(); ?></dt>

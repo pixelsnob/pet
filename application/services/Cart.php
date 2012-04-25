@@ -150,7 +150,8 @@ class Service_Cart {
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray(),
-            $cart->payment->toArray()
+            $cart->payment->toArray(),
+            array('use_shipping' => $cart->use_shipping)
         );
         // If user is logged in, use that data to populate form, otherwise
         // show saved data if any
@@ -185,7 +186,7 @@ class Service_Cart {
         if ($cart->isShippingAddressRequired()) {
             $this->_cart->setShipping($data);
             $use_shipping = (isset($data['use_shipping']) ?
-                $data['use_shipping'] : false);
+                $data['use_shipping'] : 0);
             $this->_cart->setUseShipping($use_shipping);
         }
         $users_svc = new Service_Users;

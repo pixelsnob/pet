@@ -21,18 +21,20 @@ class CheckoutController extends Zend_Controller_Action {
             $this->_forward('login', 'profile', 'default', 
                 array('redirect_to' => 'checkout'));
         }
-        $this->view->cart = $cart;
-        $checkout_form = $this->_cart_svc->getCheckoutForm();
-        $this->view->checkout_form = $checkout_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
-           if ($checkout_form->isValid($post)) {
+            $this->_cart_svc->saveCheckoutForm($post);
+            $checkout_form = $this->_cart_svc->getCheckoutForm();
+            if ($checkout_form->isValid($post)) {
                 // redirect here
-           } else {
+            } else {
                 $this->_messenger->addMessage('Submitted information is not valid');
-           }
-           $this->_cart_svc->saveCheckoutForm($post);
+            }
+        } else {
+            $checkout_form = $this->_cart_svc->getCheckoutForm();
         }
+        $this->view->cart = $this->_cart_svc->get();
+        $this->view->checkout_form = $checkout_form;
         $this->view->inlineScriptMin()->loadGroup('checkout')
             ->appendScript('new Pet.CheckoutView;');
     }

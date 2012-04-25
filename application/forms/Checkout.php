@@ -134,4 +134,19 @@ class Form_Checkout extends Pet_Form {
             'disableLoadDefaultDecorators' => true
         ));
     }
+
+    public function isValid($data) {
+        $valid = true;
+        $valid = $this->billing->isValid($data) && $valid;
+        $valid = $this->payment->isValid($data) && $valid;
+        $valid = $this->promo->isValid($data) && $valid;
+        $valid = $this->user->isValid($data) && $valid;
+        $valid = $this->info->isValid($data) && $valid;
+        $use_shipping = (isset($data['use_shipping']) ?
+            $data['use_shipping'] : false);
+        if ($this->_cart->isShippingAddressRequired() && $use_shipping) {
+            $valid = $this->shipping->isValid($data) && $valid;
+        }       
+        return $valid;
+    }
 }

@@ -196,7 +196,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     public function setUseShipping($use_shipping) {
-        $this->_data['use_shipping'] = $use_shipping;
+        $this->_data['use_shipping'] = (int) $use_shipping;
     }
 
 
