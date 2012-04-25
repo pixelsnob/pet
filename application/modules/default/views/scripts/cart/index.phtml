@@ -19,7 +19,6 @@
                                         break;
                                     default:
                                         $details = $this->dollarFormat($product->cost);
-                                        
                                         break;
                                 }
                                 ?>
@@ -48,25 +47,8 @@
                                 }
                                 ?>
                             </div>
-                            <?php
-                            if ($product->is_gift) {
-                                $class_name = 'gifts-small';
-                            } else {
-                                switch ($product->product_type_id) {
-                                    case Model_ProductType::SUBSCRIPTION:
-                                        $class_name = 'subscriptions-small';
-                                        break;
-                                    case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                                        $class_name = 'digital-small';
-                                        break;
-                                    case Model_ProductType::PHYSICAL:
-                                        $class_name = 'dvds-small';
-                                        break;
-                                }
-                            }
-                            ?>
                             <div class="cart-right">
-                                <?php if (isset($class_name)): ?><div class="<?php echo $class_name; ?>"></div><?php endif; ?>
+                                <?php echo $this->productThumbnail($product->product); ?>
                             </div>
                         </li>
                         <?php $c++; endforeach; ?>

@@ -5,7 +5,7 @@
  * @package Pet_View_Helper_Version
  * 
  */
-class Pet_View_Helper_Version extends Pet_View_Helper_HeadScript {
+class Pet_View_Helper_Version extends Zend_View_Helper_Abstract {
     
     /**
      * @return mixed

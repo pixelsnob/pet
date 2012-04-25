@@ -5,7 +5,7 @@
  * @package Pet_View_Helper_DollarFormat
  * 
  */
-class Pet_View_Helper_DollarFormat extends Pet_View_Helper_HeadScript {
+class Pet_View_Helper_DollarFormat extends Zend_View_Helper_Abstract {
     
     /**
      * @return string

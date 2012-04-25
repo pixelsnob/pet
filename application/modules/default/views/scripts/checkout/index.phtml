@@ -2,8 +2,8 @@
 <div id="checkout">
     <?php if ($this->cart->hasProducts()): ?>
         <h2>Checkout</h2>
+        <?php echo $this->flashMessenger('checkout', true); ?>
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
-            <?php echo $this->flashMessenger('checkout', true); ?>
             <div class="checkout-left">
                 <fieldset class="account">
                     <legend>Account Information</legend>
@@ -218,9 +218,21 @@
                         </dd>
                     </dl>
                 </fieldset>
-                <p class="update"><input type="submit" value="Update" id="update-submit" class="button-grad"></p>
+                <p class="update">
+                    <strong class="total">Total: <?php echo $this->dollarFormat($this->cart_totals['total']); ?></strong>
+                    <input type="submit" value="Buy Now" id="update-submit" class="button-grad-blue">
+                </p>
             </div>
             <div class="checkout-right">
+                <h3>In your cart:</h3>
+                <ul class="cart">
+                    <?php foreach ($this->cart->products as $product): ?>
+                        <li class="product">
+                            <?php echo $this->productThumbnail($product->product); ?>
+                            <p><?php echo '(' . $product->qty . ') ' . $this->escape($product->name) . ' - ' . $this->dollarFormat($product->cost * $product->qty); ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         </form>
     <?php else: ?>
