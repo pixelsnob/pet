@@ -10,14 +10,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     protected $_data = array(
-        'products'            => null, // Model_Cart_Products
-        'billing'             => null, // Model_Cart_Billing
-        'shipping'            => null, // Model_Cart_Shipping
-        'payment'             => null,
-        'promo'               => null, // Model_Promo
-        'user'                => null, // Model_Cart_User
-        'user_info'           => null, // Model_Cart_UserInfo
-        'timestamp'           => null  // Unix timestamp of last update
+        'products'            => null,  // Model_Cart_Products
+        'billing'             => null,  // Model_Cart_Billing
+        'shipping'            => null,  // Model_Cart_Shipping
+        'payment'             => null,  // Model_Cart_Payment
+        'promo'               => null,  // Model_Promo
+        'user'                => null,  // Model_Cart_User
+        'user_info'           => null,  // Model_Cart_UserInfo
+        'timestamp'           => null,  // Unix timestamp of last update
+        'use_shipping'        => false  // Whether to show shipping subform
     );
     
     /**
@@ -149,7 +150,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return void
      * 
      */
-    public function saveBilling(Model_Cart_Billing $billing) {
+    public function setBilling(Model_Cart_Billing $billing) {
         $this->_data['billing'] = $billing;
     }
 
@@ -158,7 +159,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return void
      * 
      */
-    public function saveShipping(Model_Cart_Shipping $shipping) {
+    public function setShipping(Model_Cart_Shipping $shipping) {
         $this->_data['shipping'] = $shipping;
     }
 
@@ -167,7 +168,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return void
      * 
      */
-    public function saveUser(Model_Cart_User $user) {
+    public function setUser(Model_Cart_User $user) {
         $this->_data['user'] = $user;
     }
 
@@ -176,7 +177,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return void
      * 
      */
-    public function saveUserInfo(Model_Cart_UserInfo $user_info) {
+    public function setUserInfo(Model_Cart_UserInfo $user_info) {
         $this->_data['user_info'] = $user_info;
     }
 
@@ -185,9 +186,19 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return void
      * 
      */
-    public function savePayment(Model_Cart_Payment $payment) {
+    public function setPayment(Model_Cart_Payment $payment) {
         $this->_data['payment'] = $payment;
     }
+
+    /**
+     * @param bool $use_shipping
+     * @return void
+     * 
+     */
+    public function setUseShipping($use_shipping) {
+        $this->_data['use_shipping'] = $use_shipping;
+    }
+
 
     /**
      * @param int $product_id

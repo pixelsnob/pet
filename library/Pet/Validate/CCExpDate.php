@@ -42,6 +42,11 @@ class Pet_Validate_CCExpDate extends Zend_Validate_Abstract {
      * @return bool
      */
     public function isValid($value, $context = null) {
+        $payment_method = (isset($context['payment_method']) ?
+            $context['payment_method'] : '');
+        if ($payment_method != 'credit_card') {
+            return false;
+        }
         $m = (isset($context[$this->_field_names['month']]) ?
             $context[$this->_field_names['month']] : '');
         $y = (isset($context[$this->_field_names['year']]) ?

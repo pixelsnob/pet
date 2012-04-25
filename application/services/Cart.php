@@ -181,15 +181,18 @@ class Service_Cart {
      */
     public function saveCheckoutForm($data) {
         $cart = $this->_cart->get();
-        $this->_cart->saveBilling($data);
+        $this->_cart->setBilling($data);
         if ($cart->isShippingAddressRequired()) {
-            $this->_cart->saveShipping($data);
+            $this->_cart->setShipping($data);
+            $use_shipping = (isset($data['use_shipping']) ?
+                $data['use_shipping'] : false);
+            $this->_cart->setUseShipping($use_shipping);
         }
         $users_svc = new Service_Users;
         if (!$users_svc->isAuthenticated()) {
-            $this->_cart->saveUser($data);
+            $this->_cart->setUser($data);
         }
-        $this->_cart->saveUserInfo($data);
-        $this->_cart->savePayment($data);
+        $this->_cart->setUserInfo($data);
+        $this->_cart->setPayment($data);
     }
 }

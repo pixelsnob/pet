@@ -122,5 +122,16 @@ class Form_Checkout extends Pet_Form {
         $this->addSubform($shipping_form, 'shipping');
         $this->addSubform(new Form_SubForm_UserInfo, 'info');
         $this->addSubform(new Form_SubForm_Payment, 'payment');
+        $this->addElement('checkbox', 'use_shipping', array(
+            'label' => 'Check this box to enter a different delivery address',
+            'required' => false,
+            'validators'   => array(),
+            'decorators' => array(
+                'ViewHelper',
+                array('Label', array('placement' => 'APPEND')),
+                'Errors'
+            ),
+            'disableLoadDefaultDecorators' => true
+        ));
     }
 }

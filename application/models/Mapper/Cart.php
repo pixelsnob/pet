@@ -101,9 +101,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function saveBilling($data) {
+    public function setBilling($data) {
         $billing = new Model_Cart_Billing($data);
-        $this->_cart->saveBilling($billing);
+        $this->_cart->setBilling($billing);
     }
 
     /**
@@ -111,9 +111,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function saveShipping($data) {
+    public function setShipping($data) {
         $shipping = new Model_Cart_Shipping($data);
-        $this->_cart->saveShipping($shipping);
+        $this->_cart->setShipping($shipping);
     }
 
     /**
@@ -121,13 +121,13 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function saveUser($data) {
+    public function setUser($data) {
         $users_svc = new Service_Users;
         $user = new Model_Cart_User($data);
         if (isset($data['password']) && strlen(trim($data['password']))) {
             $user->password_hash = $users_svc->generateHash($data['password']);
         }
-        $this->_cart->saveUser($user);
+        $this->_cart->setUser($user);
     }
 
     /**
@@ -135,9 +135,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function saveUserInfo($data) {
+    public function setUserInfo($data) {
         $user_info = new Model_Cart_UserInfo($data);
-        $this->_cart->saveUserInfo($user_info);
+        $this->_cart->setUserInfo($user_info);
     }
 
     /**
@@ -145,10 +145,19 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function savePayment($data) {
+    public function setPayment($data) {
         $payment = new Model_Cart_Payment($data);
         $payment->cc_num = '';
-        $this->_cart->savePayment($payment);
+        $this->_cart->setPayment($payment);
+    }
+
+    /**
+     * @param bool $use_shipping
+     * @return void
+     * 
+     */
+    public function setUseShipping($use_shipping) {
+        $this->_cart->setUseShipping($use_shipping);
     }
 
     /**

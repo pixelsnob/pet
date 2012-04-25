@@ -39,7 +39,6 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             'class'        => 'text',
             'validators'   => array(
                 array(new Pet_Validate_CCNum)
-                //    $cart->payment->payment_method == 'credit_card'), true)
             )
         ));
         $month_opts = array(

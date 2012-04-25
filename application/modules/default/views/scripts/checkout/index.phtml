@@ -34,6 +34,9 @@
                 </fieldset>
                 <fieldset class="billing">
                     <legend>Enter your Billing Address</legend>
+                    <p class="billing-to-shipping">
+                        <?php echo $this->checkout_form->use_shipping; ?>
+                    </p>
                     <dl class="form">
                         <dt><?php echo $this->checkout_form->user->first_name->getLabel(); ?></dt>
                         <dd>
