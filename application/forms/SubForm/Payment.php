@@ -40,7 +40,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             'validators'   => array(
                 array('Callback', true, array(
                     'callback' => array($this, 'isRequiredForPaypal'),
-                    'messages' => 'Expiration year is required'
+                    'messages' => 'Credit card number is required'
                 )),
                 array(new Pet_Validate_CCNum)
             )

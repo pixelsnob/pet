@@ -12,11 +12,11 @@ class CartController extends Zend_Controller_Action {
     public function indexAction() {
         if ($this->_request->isXmlHttpRequest() &&
                 !$this->_request->getParam('nolayout')) {
-            $this->_helper->json($this->_cart_svc->get()->toArray());
+            $this->_helper->json($this->_cart_svc->get(true)->toArray());
         }
         $messenger = Zend_Registry::get('messenger');
         $messenger->setNamespace('cart');
-        $this->view->cart = $this->_cart_svc->get();
+        $this->view->cart = $this->_cart_svc->get(true);
         $cart_form = $this->_cart_svc->getCartForm();
         $this->view->cart_form = $cart_form;
         $post = $this->_request->getPost();

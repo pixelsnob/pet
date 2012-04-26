@@ -13,7 +13,7 @@ class CheckoutController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        $cart = $this->_cart_svc->get();
+        $cart = $this->_cart_svc->get(true);
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         if ($cart->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
             $msg = 'You must log in to purchase a renewal';
@@ -26,7 +26,14 @@ class CheckoutController extends Zend_Controller_Action {
             $this->_cart_svc->saveCheckoutForm($post);
             $checkout_form = $this->_cart_svc->getCheckoutForm();
             if ($checkout_form->isValid($post)) {
-                // redirect here
+                if ($this->_cart_svc->process()) {
+                    $this->_helper->Redirector->gotoSimple('confirmation');
+                } else {
+                    $msg = 'There was a problem with your order. Please check ' . 
+                           'your information and try again.';
+                    $this->_messenger->addMessage($msg);
+                }
+                return;
             } else {
                 $this->_messenger->addMessage('Submitted information is not valid');
             }
@@ -40,5 +47,11 @@ class CheckoutController extends Zend_Controller_Action {
             ->appendScript('new Pet.CheckoutView;');
     }
 
+    public function confirmationAction() {
+        exit('success');
+        $confirmation = $this->_cart_svc->getConfirmation();
+        print_r($confirmation);
+        $this->view->cart = $confirmation->cart;
+    }
 
 }

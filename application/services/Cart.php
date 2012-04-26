@@ -25,11 +25,12 @@ class Service_Cart {
     }
     
     /**
+     * @param bool $check_if_processed
      * @return Model_Cart
      * 
      */
-    public function get() {
-        return $this->_cart->get();
+    public function get($check_if_processed = false) {
+        return $this->_cart->get($check_if_processed);
     }
     
     /**
@@ -206,5 +207,27 @@ class Service_Cart {
         } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
             $this->_cart->removePromo();
         }
+    }
+    
+    /**
+     * @return bool
+     * 
+     */
+    public function process() {
+        $this->_cart->setConfirmation($this->_cart->get());
+        $this->_cart->reset();
+        return true;
+    }
+
+    public function getConfirmation() {
+        return $this->_cart->getConfirmation();
+    }
+    
+    /**
+     * @return Model_Checkout|void
+     * 
+     */
+    public function getCheckout() {
+        return $this->_cart->getCheckout();
     }
 }

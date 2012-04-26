@@ -199,7 +199,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $this->_data['use_shipping'] = (int) $use_shipping;
     }
 
-
     /**
      * @param int $product_id
      * @return void

@@ -5,6 +5,10 @@
  */
 class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     
+    protected $_cart;
+
+    protected $_confirmation;
+
     /**
      * @return void
      * 
@@ -12,6 +16,7 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function __construct() {
         $this->init();
         $this->_checkTimestamp();
+        $this->_checkConfirmationTimestamp();
     }
     
     /**
@@ -67,6 +72,29 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function setProductQty($product_id, $qty) {
         $this->_cart->setProductQty($product_id, $qty); 
     }
+    
+    /**
+     * @param Model_Cart $cart
+     * 
+     */
+    public function setConfirmation(Model_Cart $cart) {
+        $confirm = new Model_Cart_Confirmation;
+        $confirm->cart = $cart;
+        $session = new Zend_Session_Namespace;
+        $session->cart_confirmation = $confirm;
+        $this->_confirmation = $session->confirmation;
+    }
+    
+    /**
+     * @return Model_Confirmation|void
+     * 
+     */
+    public function getConfirmation() {
+        $session = new Zend_Session_Namespace;
+        if ($session->checkout) {
+            return $session->checkout;
+        }
+    }
 
     /**
      * @return void
@@ -76,6 +104,15 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $session = new Zend_Session_Namespace;
         $session->cart = new Model_Cart;
         $this->_cart = $session->cart;
+    }
+
+    /**
+     * @return void
+     * 
+     */
+    public function resetCheckout() {
+        $session = new Zend_Session_Namespace;
+        unset($session->checkout);
     }
     
     /**
@@ -186,8 +223,6 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * Checks the timestamp, to make sure the cart hasn't timed out
-     * 
      * @return void 
      */
     private function _checkTimestamp() {
@@ -197,6 +232,19 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
             $this->_cart->timestamp = time();
         }
     }
-    
+
+    /**
+     * @return void 
+     */
+    private function _checkConfirmationTimestamp() {
+        if (!$this->_confirmation) {
+            return;
+        }
+        if (time() - $this->_confirmation->timestamp > 1800) {
+            $this->resetCheckout();            
+        } else {
+            $this->_confirmation->timestamp = time();
+        }
+    }
 }
 
