@@ -15,7 +15,7 @@
                 <?php echo $this->escape($this->cart->billing->billing_country); ?>
             </section>
             <?php if ($this->cart->isShippingAddressRequired()): ?>
-                <section class="billing">
+                <section class="shipping">
                     <h4>Your shipping details:</h4>
                     <?php if ($this->cart->use_shipping): ?>
                         <?php echo $this->escape($this->cart->shipping->shipping_first_name); ?>
@@ -42,14 +42,20 @@
                 <thead>
                     <tr>
                         <th>What you will get:</th>
-                        <th>Details:</th>
+                        <?php if ($this->cart->promo): ?>
+                            <th>Details:</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($this->cart->products as $product): ?>
                         <tr>
                             <td><?php echo $this->escape($product->name); ?></td>
-                            <td></td>
+                            <td>
+                                <?php if ($this->cart->promo): ?>
+                                    <?php echo $this->escape($this->cart->promo->public_description); ?>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

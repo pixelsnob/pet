@@ -19,7 +19,7 @@
     color: #fff !important;
     font-style: italic;
     font-weight: normal !important;
-    font-size: 24px;
+    font-size: 24px !important;
 }
 
 #products-main a.select {
@@ -515,9 +515,14 @@ fieldset.profile .note {
     overflow: hidden;
 }
 
-#confirmation .billing, #confirmation .shipping {
+#confirmation section {
     width: 320px;
     float: left;
+}
+
+#confirmation section li {
+    background: none;
+    padding: 0;
 }
 
 #confirmation h4 {
@@ -528,7 +533,7 @@ fieldset.profile .note {
     color: #3c466b !important;
     font-weight: bold !important;
     text-transform: uppercase;
-    font-size: 16px !important;
+    font-size: 14px !important;
     width: 320px;
     text-align: left;
     padding-bottom: 10px;
