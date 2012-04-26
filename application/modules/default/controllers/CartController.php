@@ -4,29 +4,35 @@ class CartController extends Zend_Controller_Action {
 
     public function init() {
         $this->_cart_svc = new Service_Cart;
+        $this->_messenger = Zend_Registry::get('messenger');
+        $this->_messenger->setNamespace('cart');
     }
 
     /**
      * 
      */
     public function indexAction() {
+        $cart = $this->_cart_svc->get();
         if ($this->_request->isXmlHttpRequest() &&
                 !$this->_request->getParam('nolayout')) {
-            $this->_helper->json($this->_cart_svc->get(true)->toArray());
+            $json = array(
+                'cart' => $cart->toArray(),
+                'totals' => $cart->getTotals()
+            );
+            $this->_helper->json($json);
+            return;
         }
-        $messenger = Zend_Registry::get('messenger');
-        $messenger->setNamespace('cart');
-        $this->view->cart = $this->_cart_svc->get(true);
+        $this->view->cart = $cart;
         $cart_form = $this->_cart_svc->getCartForm();
         $this->view->cart_form = $cart_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
-            $messenger->clearMessages(); 
+            $this->_messenger->clearMessages(); 
             $this->view->use_current_messages = true;
             if ($cart_form->isValid($post)) {
                 $this->_cart_svc->update($post);
             } else {
-                $messenger->addMessage('Submitted information is not valid');
+                $this->_messenger->addMessage('Submitted information is not valid');
             }
         }
         $this->view->nolayout = $this->_request->getParam('nolayout');
@@ -42,9 +48,21 @@ class CartController extends Zend_Controller_Action {
     }
     
     public function addPromoAction() {
-        $code = $this->_request->getParam('code');
-        $this->_cart_svc->addPromo($code);
-        $this->_helper->Redirector->setGotoSimple('index');
+        if ($this->_request->isXMLHttpRequest()) {
+            $json = $this->_request->getParam('model');
+            $model = Zend_Json::decode($json);
+            $code = (isset($model['code']) ? $model['code'] : '');
+            $success = $this->_cart_svc->addPromo($code);
+            $msgs = $this->_messenger->getCurrentMessages();
+            $this->_helper->json(array(
+                'message' => (isset($msgs[0]) ? $msgs[0] : ''),
+                'success' => (int) $success
+            ));
+        } else {
+            $code = $this->_request->getParam('code');
+            $this->_cart_svc->addPromo($code);
+            $this->_helper->Redirector->setGotoSimple('index');
+        }
     }
 
     public function setQtyAction() {

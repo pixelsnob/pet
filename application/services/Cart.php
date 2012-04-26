@@ -92,6 +92,13 @@ class Service_Cart {
      * 
      */
     public function addPromo($code) {
+        $cart = $this->_cart->get();
+        if (!strlen(trim($code))) {
+            if ($cart->promo) {
+                $this->_cart->removePromo();
+            }
+            return true;
+        }
         $promo_svc = new Service_Promos;
         $promo = $promo_svc->getUnexpiredPromoByCode($code);
         if ($promo && $this->_cart->addPromo($promo)) {
@@ -102,6 +109,14 @@ class Service_Cart {
         }
     }
     
+    /**
+     * @return void
+     * 
+     */
+    public function removePromo() {
+        $this->_cart->removePromo();
+    }
+
     /**
      * @return Form_Cart
      * 

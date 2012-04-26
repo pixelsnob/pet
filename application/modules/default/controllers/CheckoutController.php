@@ -10,6 +10,7 @@ class CheckoutController extends Zend_Controller_Action {
     }
 
     /**
+     * Checkout form
      * 
      */
     public function indexAction() {
@@ -47,13 +48,16 @@ class CheckoutController extends Zend_Controller_Action {
             ->appendScript('new Pet.CheckoutView;');
     }
 
+    /**
+     * Confirmation page
+     * 
+     */
     public function confirmationAction() {
         $confirmation = $this->_cart_svc->getConfirmation();
         if (!$confirmation) {
             $this->_helper->Redirector->gotoSimple('index');
             return;
         }
-        //print_r($confirmation);
         $this->view->cart = $confirmation->cart;
     }
 

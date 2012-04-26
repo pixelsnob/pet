@@ -215,7 +215,7 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function removePromo() {
-        return $this->_cart->removePromo($promo);
+        return $this->_cart->removePromo();
     }
     
     /**

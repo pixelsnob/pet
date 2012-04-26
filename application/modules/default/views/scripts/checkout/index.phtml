@@ -93,6 +93,36 @@
                         </dd>
                     </dl>
                 </fieldset>
+                <fieldset class="profile">
+                    <legend>Profile Information</legend>
+                    <dl class="form">
+                        <dt class="version">
+                            <label for="version">What version of Photoshop Elements are you using?</label>
+                        </dt>
+                        <dd class="version">
+                            <?php echo $this->checkout_form->info->version->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->info->version->renderErrors(); ?>
+                        </dd>
+                        <dt class="opt-in checkbox"></dt>
+                        <dd class="opt-in checkbox">
+                            <?php echo $this->checkout_form->info->opt_in->renderViewHelper(); ?>
+                            <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
+                            <?php echo $this->checkout_form->info->opt_in->renderErrors(); ?>
+                        </dd>
+                        <dt class="opt-in-partner checkbox"></dt>
+                        <dd class="opt-in-partner checkbox">
+                            <?php echo $this->checkout_form->info->opt_in_partner->renderViewHelper(); ?>
+                            <label for="opt-in-partner">I'd like to receive information from Photoshop Elements Techniques sponsors</label>
+                            <?php echo $this->checkout_form->info->opt_in_partner->renderErrors(); ?>
+                            <p class="note">
+                                <em><strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
+                                companies or entities.</em>
+                            </p>
+                        </dd>
+                    </dl>
+                </fieldset>
+            </div>
+            <div class="checkout-middle">
                 <fieldset class="payment">
                     <legend>Payment Information</legend>
                     <dl class="form">
@@ -118,18 +148,6 @@
                         <dd class="cc-cvv">
                             <?php echo $this->checkout_form->payment->cc_cvv->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->payment->cc_cvv->renderErrors(); ?>
-                        </dd>
-                    </dl>
-                </fieldset>
-            </div>
-            <div class="checkout-middle">
-                <fieldset class="promo-code">
-                    <legend>Enter Promo Code Here</legend>
-                    <dl class="form">
-                        <dt><?php echo $this->checkout_form->promo->promo_code->getLabel(); ?></dt>
-                        <dd>
-                            <?php echo $this->checkout_form->promo->promo_code->renderViewHelper(); ?>
-                            <?php echo $this->checkout_form->promo->promo_code->renderErrors(); ?>
                         </dd>
                     </dl>
                 </fieldset>
@@ -190,38 +208,21 @@
                         </dl>
                     </fieldset>
                 <?php endif; ?>
-                <fieldset class="profile">
-                    <legend>Profile Information</legend>
+                <fieldset class="promo-code">
+                    <legend>Enter Promo Code Here</legend>
                     <dl class="form">
-                        <dt class="version">
-                            <label for="version">What version of Photoshop Elements are you using?</label>
-                        </dt>
-                        <dd class="version">
-                            <?php echo $this->checkout_form->info->version->renderViewHelper(); ?>
-                            <?php echo $this->checkout_form->info->version->renderErrors(); ?>
-                        </dd>
-                        <dt class="opt-in checkbox"></dt>
-                        <dd class="opt-in checkbox">
-                            <?php echo $this->checkout_form->info->opt_in->renderViewHelper(); ?>
-                            <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
-                            <?php echo $this->checkout_form->info->opt_in->renderErrors(); ?>
-                        </dd>
-                        <dt class="opt-in-partner checkbox"></dt>
-                        <dd class="opt-in-partner checkbox">
-                            <?php echo $this->checkout_form->info->opt_in_partner->renderViewHelper(); ?>
-                            <label for="opt-in-partner">I'd like to receive information from Photoshop Elements Techniques sponsors</label>
-                            <?php echo $this->checkout_form->info->opt_in_partner->renderErrors(); ?>
-                            <p class="note">
-                                <em><strong>Note:</strong> Your contact information WILL NOT be sold or shared with any third party
-                                companies or entities.</em>
-                            </p>
+                        <dt><?php echo $this->checkout_form->promo->promo_code->getLabel(); ?></dt>
+                        <dd>
+                            <?php echo $this->checkout_form->promo->promo_code->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->promo->promo_code->renderErrors(); ?>
                         </dd>
                     </dl>
                 </fieldset>
                 <p class="update">
-                    <strong class="total">Total: <?php echo $this->dollarFormat($this->cart_totals['total']); ?></strong>
+                    <strong class="total">Total: <span class="total-value"><?php echo $this->dollarFormat($this->cart_totals['total']); ?></span></strong>
                     <input type="submit" value="Buy Now" id="update-submit" class="button-grad-blue">
                 </p>
+                <p>We will email your purchase receipt once your transaction is complete</p>
             </div>
             <div class="checkout-right">
                 <h3>In your cart:</h3>

@@ -27,18 +27,20 @@
 }
 
 .error, .errors {
-    font-weight: bold;
     color: red;
 }
 
-ul.errors {
+ul.errors, ul.success {
     margin-bottom: 0;
+    font-weight: bold;
 }
 
-ul.errors li {
+ul.errors li, ul.success li {
     margin-bottom: 5px;
     background: none;
     padding-left: 0;
+    font-size: 11px !important;
+    line-height: 13px !important;
 }
 
 #content {

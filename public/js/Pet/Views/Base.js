@@ -76,6 +76,14 @@ Pet.View = Backbone.View.extend({
             }
             c++;
         });
+    },
+
+    addFormElementMessage: function(el, msg, type) {
+        type = (type ? type : 'success');
+        $(el).parent().find('.errors, .success').remove();
+        $(el).after($('<ul>').addClass(type).append(
+            $('<li>').text(msg)
+        ));
     }
 
 });
