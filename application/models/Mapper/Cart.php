@@ -31,6 +31,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         //$session->cart->getValidator()->validate();
         //print_r($session->cart);
         $this->_cart = $session->cart;
+        if (isset($session->cart_confirmation)) {
+            $this->_confirmation = $session->cart_confirmation;
+        }
     }
     
     /**
@@ -80,9 +83,10 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function setConfirmation(Model_Cart $cart) {
         $confirm = new Model_Cart_Confirmation;
         $confirm->cart = $cart;
+        $confirm->timestamp = time();
         $session = new Zend_Session_Namespace;
         $session->cart_confirmation = $confirm;
-        $this->_confirmation = $session->confirmation;
+        $this->_confirmation = $session->cart_confirmation;
     }
     
     /**
@@ -91,8 +95,8 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      */
     public function getConfirmation() {
         $session = new Zend_Session_Namespace;
-        if ($session->checkout) {
-            return $session->checkout;
+        if ($session->cart_confirmation) {
+            return $session->cart_confirmation;
         }
     }
 
@@ -110,9 +114,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function resetCheckout() {
+    public function resetConfirmation() {
         $session = new Zend_Session_Namespace;
-        unset($session->checkout);
+        unset($session->cart_confirmation);
     }
     
     /**
@@ -224,9 +228,12 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
 
     /**
      * @return void 
+     * 
      */
     private function _checkTimestamp() {
-        if (time() - $this->_cart->timestamp > 1800) {
+        $config = Zend_Registry::get('app_config');
+        $timeout = (int) $config['cart_timeout'];
+        if (time() - $this->_cart->timestamp > $timeout) {
             $this->reset();
         } else {
             $this->_cart->timestamp = time();
@@ -235,13 +242,16 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
 
     /**
      * @return void 
+     * 
      */
     private function _checkConfirmationTimestamp() {
         if (!$this->_confirmation) {
             return;
         }
-        if (time() - $this->_confirmation->timestamp > 1800) {
-            $this->resetCheckout();            
+        $config = Zend_Registry::get('app_config');
+        $timeout = (int) $config['confirmation_timeout'];
+        if (time() - $this->_confirmation->timestamp > $timeout) {
+            $this->resetConfirmation(); 
         } else {
             $this->_confirmation->timestamp = time();
         }

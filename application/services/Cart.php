@@ -223,11 +223,4 @@ class Service_Cart {
         return $this->_cart->getConfirmation();
     }
     
-    /**
-     * @return Model_Checkout|void
-     * 
-     */
-    public function getCheckout() {
-        return $this->_cart->getCheckout();
-    }
 }
