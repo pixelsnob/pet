@@ -280,5 +280,6 @@ a.button-grad, a.button-grad-blue {
     display: block;
 }
 
-
-
+pre {
+    font: 12px/12px "Andale Mono";
+}

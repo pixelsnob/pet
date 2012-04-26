@@ -403,6 +403,18 @@
     float: right;
 }
 
+#checkout .form dt.checkbox {
+    width: 250px;
+}
+
+#checkout .form dd.checkbox {
+    clear: both;
+}
+
+#checkout .form dd.checkbox input {
+    margin-right: 7px;
+}
+
 /* User profile */
 
 #profile dt.version {
@@ -483,16 +495,45 @@ fieldset.profile .note {
 }
 
 
-/* Checkout */
+/* Confirmation */
 
-#checkout .form dt.checkbox {
-    width: 250px;
+#confirmation .confirmation-left {
+    width: 800px;
+    border-right: 2px solid #ddd;
 }
 
-#checkout .form dd.checkbox {
-    clear: both;
+#confirmation .confirmation-right {
+    width: 140px;
+    text-align: center;
+    margin-left: 10px;
 }
 
-#checkout .form dd.checkbox input {
-    margin-right: 7px;
+#confirmation .sep {
+    border-top: 2px solid #ddd;
+    padding: 20px 0;
+    width: 780px;
+    overflow: hidden;
+}
+
+#confirmation .billing, #confirmation .shipping {
+    width: 320px;
+    float: left;
+}
+
+#confirmation h4 {
+    margin-bottom: 10px;
+}
+
+#confirmation th {
+    color: #3c466b !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    font-size: 16px !important;
+    width: 320px;
+    text-align: left;
+    padding-bottom: 10px;
+}
+
+#confirmation td {
+    padding-bottom: 10px;
 }

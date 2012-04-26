@@ -214,8 +214,11 @@ class Service_Cart {
      * 
      */
     public function process() {
+        $config = Zend_Registry::get('app_config');
         $this->_cart->setConfirmation($this->_cart->get());
-        $this->_cart->reset();
+        if ($config['reset_cart_after_process']) {
+            $this->_cart->reset();
+        }
         return true;
     }
 

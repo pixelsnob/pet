@@ -1,4 +1,69 @@
 
 <div id="confirmation">
-   yo 
+    <h2>Thank You!</h2>
+    <div class="confirmation-left">
+        <p>We just sent you an email containing the information below. If you have any questions or concerns about this transaction, please contact us here: <a href="mailto:info@photoshopelementsuser.com">info@photoshopelementsuser.com</a>. We offer a no-hassle refund if you are not happy with your purchase.</p>
+        <div class="sep">
+            <section class="billing">
+                <h4>Your billing details:</h4>
+                <?php echo $this->escape($this->cart->user->first_name); ?>
+                <?php echo $this->escape($this->cart->user->last_name); ?><br>
+                <?php echo $this->escape($this->cart->billing->billing_address); ?>
+                <?php echo ($this->cart->billing->billing_address_2 ? $this->escape($this->cart->billing->billing_address_2) . '<br>' : ''); ?>
+                <?php echo ($this->cart->billing->billing_company ? $this->escape($this->cart->billing->billing_company) . '<br>' : ''); ?>
+                <?php echo $this->escape($this->cart->billing->billing_city . ', ' . $this->cart->billing->billing_state . ' ' . $this->cart->billing->billing_postal_code); ?><br>
+                <?php echo $this->escape($this->cart->billing->billing_country); ?>
+            </section>
+            <?php if ($this->cart->isShippingAddressRequired()): ?>
+                <section class="billing">
+                    <h4>Your shipping details:</h4>
+                    <?php if ($this->cart->use_shipping): ?>
+                        <?php echo $this->escape($this->cart->shipping->shipping_first_name); ?>
+                        <?php echo $this->escape($this->cart->shipping->shipping_last_name); ?><br>
+                        <?php echo $this->escape($this->cart->shipping->shipping_address); ?>
+                        <?php echo ($this->cart->shipping->shipping_address_2 ? $this->escape($this->cart->shipping->shipping_address_2) . '<br>' : ''); ?>
+                        <?php echo ($this->cart->shipping->shipping_company ? $this->escape($this->cart->shipping->shipping_company) . '<br>' : ''); ?>
+                        <?php echo $this->escape($this->cart->shipping->shipping_city . ', ' . $this->cart->shipping->shipping_state . ' ' . $this->cart->shipping->shipping_postal_code); ?><br>
+                        <?php echo $this->escape($this->cart->shipping->shipping_country); ?>
+                    <?php else: ?>
+                        <?php echo $this->escape($this->cart->user->first_name); ?>
+                        <?php echo $this->escape($this->cart->user->last_name); ?><br>
+                        <?php echo $this->escape($this->cart->billing->billing_address); ?>
+                        <?php echo ($this->cart->billing->billing_address_2 ? $this->escape($this->cart->billing->billing_address_2) . '<br>' : ''); ?>
+                        <?php echo ($this->cart->billing->billing_company ? $this->escape($this->cart->billing->billing_company) . '<br>' : ''); ?>
+                        <?php echo $this->escape($this->cart->billing->billing_city . ', ' . $this->cart->billing->billing_state . ' ' . $this->cart->billing->billing_postal_code); ?><br>
+                        <?php echo $this->escape($this->cart->billing->billing_country); ?>
+                    <?php endif; ?>
+                </section>
+            <?php endif; ?>
+        </div>
+        <div class="sep">
+            <table class="products">
+                <thead>
+                    <tr>
+                        <th>What you will get:</th>
+                        <th>Details:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->cart->products as $product): ?>
+                        <tr>
+                            <td><?php echo $this->escape($product->name); ?></td>
+                            <td></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="sep">
+
+        </div>
+    </div>
+    <div class="confirmation-right">
+
+    </div>
 </div>
+
+<!--<pre>
+<?php print_r($this->cart); ?>
+</pre>-->
