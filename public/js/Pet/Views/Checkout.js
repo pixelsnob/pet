@@ -10,7 +10,7 @@ Pet.CheckoutView = Pet.View.extend({
         'click #use_shipping': 'toggleShippingFields',
         'click input[name=payment_method]': 'toggleCCFields',
         'change input[name=promo_code]': 'savePromoCode',
-        'change input[name!=promo_code], select': 'saveForm'
+        'change input[name!=promo_code], .billing select, .shipping select, .profile select': 'saveForm'
     },
     
     initialize: function(){
@@ -62,11 +62,29 @@ Pet.CheckoutView = Pet.View.extend({
     },
 
     saveForm: function(el) {
+        el = $(el.target);
+        var obj = this;
         Backbone.emulateJSON = true;
         var checkout = new Pet.CheckoutModel;
         checkout.save($('form[name=checkout]', this.el).serializeArray(), {
             success: function(model, response) {
-                
+                el.parent().find('.errors').remove();
+                var messages = model.get('messages'); 
+                // Step through messages, see if current element's name is in
+                // this structure
+                for (var i in messages) {
+                    for (var j in messages[i]) {
+                        if (el.attr('name') == j) {
+                            var msg = '';
+                            for (var k in messages[i][j]) {
+                                msg = messages[i][j][k];
+                            }
+                            if (msg) {
+                                obj.addFormElementMessage(el, msg, 'errors');
+                            }
+                        }
+                    }
+                }
             }
         });
     }

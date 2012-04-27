@@ -23,7 +23,12 @@ class CheckoutController extends Zend_Controller_Action {
                     $post[$field['name']] = $field['value'];
                 }
                 $this->_cart_svc->saveCheckoutForm($post);
-                $this->_helper->json(array());
+                $checkout_form = $this->_cart_svc->getCheckoutForm();
+                $status = $checkout_form->isValid($post);
+                $this->_helper->json(array(
+                    'messages' => $checkout_form->getMessages(),
+                    'status' => $status
+                ));
             }
             return;
         }

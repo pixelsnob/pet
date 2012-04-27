@@ -316,6 +316,7 @@
     background: url(/images/checkout/form-bg.gif) -8px 0 repeat-y;
 }
 
+/*
 #checkout fieldset.med {
     min-height: 210px;
 }
@@ -323,6 +324,7 @@
 #checkout fieldset.tall {
     min-height: 485px;
 }
+*/
 
 #checkout .checkout-left, #checkout .checkout-middle, #checkout .checkout-right {
     float: left;
@@ -542,7 +544,7 @@ fieldset.profile .note {
 }
 
 #confirmation table {
-    width: 800px;
+    width: 640px;
 }
 
 #confirmation th {
@@ -550,7 +552,7 @@ fieldset.profile .note {
     font-weight: bold !important;
     text-transform: uppercase;
     font-size: 14px !important;
-    width: 300px;
+    width: 320px;
     text-align: left;
     padding-bottom: 10px;
 }
