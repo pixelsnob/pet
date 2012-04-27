@@ -316,6 +316,14 @@
     background: url(/images/checkout/form-bg.gif) -8px 0 repeat-y;
 }
 
+#checkout fieldset.med {
+    min-height: 210px;
+}
+
+#checkout fieldset.tall {
+    min-height: 480px;
+}
+
 #checkout .checkout-left, #checkout .checkout-middle, #checkout .checkout-right {
     float: left;
     padding: 10px 0;

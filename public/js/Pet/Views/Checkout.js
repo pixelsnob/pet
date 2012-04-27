@@ -49,14 +49,12 @@ Pet.CheckoutView = Pet.View.extend({
                     cart.on('change', function(model) {
                         var totals = cart.get('totals');
                         if (typeof totals.total == 'number') {
-                            $('.total-value').text('$' + totals.total.toFixed(2));
+                            var total = '$' + totals.total.toFixed(2);
+                            $('.total-value').text(total);
                         }
                     });
                 }
                 obj.addFormElementMessage(el, model.get('message'), type);
-            },
-            error: function(model, response) {
-                
             }
         });
         return true;

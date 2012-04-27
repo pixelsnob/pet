@@ -5,7 +5,7 @@
         <?php echo $this->flashMessenger('checkout', true); ?>
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
             <div class="checkout-left">
-                <fieldset class="account">
+                <fieldset class="account med">
                     <legend>Account Information</legend>
                     <dl class="form">
                         <?php if (!$this->is_authenticated): ?>
@@ -32,7 +32,7 @@
                         </dd>
                     </dl>
                 </fieldset>
-                <fieldset class="billing">
+                <fieldset class="billing tall">
                     <legend>Enter your Billing Address</legend>
                     <?php if ($this->cart->isShippingAddressRequired()): ?>
                         <p class="use-shipping">
@@ -123,7 +123,7 @@
                 </fieldset>
             </div>
             <div class="checkout-middle">
-                <fieldset class="payment">
+                <fieldset class="payment med">
                     <legend>Payment Information</legend>
                     <dl class="form">
                         <dt class="payment-method"><?php echo $this->checkout_form->payment->payment_method->getLabel(); ?></dt>
@@ -152,7 +152,7 @@
                     </dl>
                 </fieldset>
                 <?php if ($this->cart->isShippingAddressRequired()): ?>
-                    <fieldset class="shipping<?php echo ($this->cart->use_shipping ? '' : ' hide'); ?>">
+                    <fieldset class="shipping tall<?php echo ($this->cart->use_shipping ? '' : ' hide'); ?>">
                         <legend>Enter your Shipping Address</legend>
                         <dl class="form">
                             <dt><?php echo $this->checkout_form->shipping->shipping_first_name->getLabel(); ?></dt>
