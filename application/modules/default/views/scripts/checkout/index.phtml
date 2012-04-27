@@ -5,7 +5,7 @@
         <?php echo $this->flashMessenger('checkout', true); ?>
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
             <div class="checkout-left">
-                <fieldset class="account med">
+                <fieldset class="account<?php echo (!$this->is_authenticated ? ' med' : ''); ?>">
                     <legend>Account Information</legend>
                     <dl class="form">
                         <?php if (!$this->is_authenticated): ?>
