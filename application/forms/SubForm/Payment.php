@@ -108,6 +108,9 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
                 array('StringLength', true, array(
                     'max' => 4,
                     'messages' => 'Security code must be %max% characters or less'
+                )),
+                array('Digits', true, array(
+                    'messages' => 'Security code must contain only numbers'
                 ))
             )
         ))->setElementFilters(array('StringTrim'));
