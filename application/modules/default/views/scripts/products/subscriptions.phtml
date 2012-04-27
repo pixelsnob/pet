@@ -36,7 +36,10 @@
             <?php endif; ?>
         </div>
         <p class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_subscription_renew')); ?>" class="button-grad">Renewing?</a></p>
-        <p class="note">Subscription prices vary due to the increased costs of mailing magazines from the US to destinations outside our borders. Our digital-only subscription avoids postage expenses. Learn more. </p>
+        <p class="note">
+            Subscription prices vary due to the increased costs of mailing magazines from the US to destinations outside our borders. Our digital-only subscription avoids postage expenses.
+            <a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital')); ?>">Learn more</a>.
+        </p>
     </div>
 </div>
 

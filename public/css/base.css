@@ -157,6 +157,10 @@ form .submit {
     font-style: italic;
 }
 
+.note a {
+    color: #888 !important;
+}
+
 .flash-message {
     font-weight: bold;
     padding: 2px 7px;
