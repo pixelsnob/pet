@@ -3,30 +3,40 @@
     <div class="product-select-left subscriptions-large"></div>
     <div class="product-select-right">
         <div class="product-select-right-inner">
-            <h2>Full Subscription</h2>  
-            <p>Biltong salami tri-tip, shankle cow pastrami sausage frankfurter capicola ball tip kielbasa bresaola turkey short loin fatback. Short loin bresaola fatback jerky beef, prosciutto strip steak. Short ribs pig rump, jerky sirloin tri-tip speck pork beef ribs cow. Bacon beef ribs turducken, chicken tail ground round pork belly pork loin short ribs t-bone brisket cow. Beef ribs hamburger shoulder, boudin cow sirloin meatloaf swine.</p>
+            <h2>Premier Subscription</h2>  
+            <p>Get the most out of Photoshop Elements! We’ll send you our beautiful, tutorial-filled magazine every other month, and you’ll have full access to downloadable PDFs of all our back issues, videos, tutorials, and extras that we add to our website each week.</p>
+            <ul>
+                <li>6 issues each year, delivered to your door</li>
+                <li>Anytime access to our website with new videos and articles each week</li>
+                <li>Downloadable PDFs of all our back issues and magazine extras</li>
+            </ul>
+            <p>This package is the best way to energize your digital photography with Photoshop Elements!</p>
             <?php if (!$this->is_authenticated): ?>
-                <h3>Pricing for your subscription to the magazine:</h3>
+                <h3>Subscription Pricing:</h3>
                 <ul class="subscription-options">
                     <li>
                         <h4>USA</h4>
-                        <p>From $59</p>
+                        <p>$59 for 1 year</p>
+                        <p>$99 for 2 years</p>
                         <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_subscription_select_term')); ?>" class="button-grad-blue">Go</a>
                     </li>
                     <li>
                         <h4>Canada</h4>
-                        <p>From $69</p>
+                        <p>$69 for 1 year</p>
+                        <p>$109 for 2 years</p>
                         <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_subscription_select_term')); ?>" class="button-grad-blue">Go</a>
                     </li>
                     <li>
                         <h4>International</h4>
-                        <p>From $95</p>
+                        <p>$95 for 1 year</p>
+                        <p>$145 for 2 years</p>
                         <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3), 'products_subscription_select_term')); ?>" class="button-grad-blue">Go</a>
                     </li>
                 </ul>
             <?php endif; ?>
         </div>
         <p class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_subscription_renew')); ?>" class="button-grad">Renewing?</a></p>
+        <p class="note">Subscription prices vary due to the increased costs of mailing magazines from the US to destinations outside our borders. Our digital-only subscription avoids postage expenses. Learn more. </p>
     </div>
 </div>
 

@@ -147,7 +147,7 @@
 }
 
 .product-select .subscription-options {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     overflow: hidden;
 }
 
@@ -159,11 +159,17 @@
     padding: 0;
     margin-right: 10px;
     overflow: hidden;
-    padding: 0 0 5px 0;
+    padding: 0;
 }
 
 .product-select .subscription-options li a {
     width: 30px;
+    margin-top: 10px;
+}
+
+.product-select .subscription-options li p {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .product-select .renew a {

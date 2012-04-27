@@ -147,8 +147,10 @@ form .submit {
     width: auto;
 }
 
-.form .note {
+.note {
     color: #888;
+    font-size: 12px;
+    font-style: italic;
 }
 
 .flash-message {

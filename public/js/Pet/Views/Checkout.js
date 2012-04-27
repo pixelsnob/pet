@@ -68,6 +68,7 @@ Pet.CheckoutView = Pet.View.extend({
         var checkout = new Pet.CheckoutModel;
         checkout.save($('form[name=checkout]', this.el).serializeArray(), {
             success: function(model, response) {
+                // Remove existing errors
                 el.parent().find('.errors').remove();
                 var messages = model.get('messages'); 
                 // Step through messages, see if current element's name is in
@@ -80,6 +81,7 @@ Pet.CheckoutView = Pet.View.extend({
                                 msg = messages[i][j][k];
                             }
                             if (msg) {
+                                // Display error
                                 obj.addFormElementMessage(el, msg, 'errors');
                             }
                         }
