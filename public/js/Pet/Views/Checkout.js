@@ -9,7 +9,8 @@ Pet.CheckoutView = Pet.View.extend({
     events: {
         'click #use_shipping': 'toggleShippingFields',
         'click input[name=payment_method]': 'toggleCCFields',
-        'change input[name=promo_code]': 'savePromoCode'
+        'change input[name=promo_code]': 'savePromoCode',
+        'change input[name!=promo_code], select': 'saveForm'
     },
     
     initialize: function(){
@@ -38,12 +39,12 @@ Pet.CheckoutView = Pet.View.extend({
         var obj = this;
         Backbone.emulateJSON = true;
         var promo = new Pet.PromoCodeModel;
-        promo.set({ code: el.val() });
-        promo.save(null, {
+        promo.save({ code: el.val() }, {
             success: function(model, response) {
                 var type = 'errors';
                 if (model.get('success') === 1) {
                     type = 'success';
+                    // Get updated total after applying promo
                     var cart = new Pet.CartModel;
                     cart.fetch();
                     cart.on('change', function(model) {
@@ -58,6 +59,16 @@ Pet.CheckoutView = Pet.View.extend({
             }
         });
         return true;
+    },
+
+    saveForm: function(el) {
+        Backbone.emulateJSON = true;
+        var checkout = new Pet.CheckoutModel;
+        checkout.save($('form[name=checkout]', this.el).serializeArray(), {
+            success: function(model, response) {
+                
+            }
+        });
     }
     
 

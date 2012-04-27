@@ -52,8 +52,8 @@
                         <tr>
                             <td><?php echo $this->escape($product->name); ?></td>
                             <td>
-                                <?php if ($this->cart->promo): ?>
-                                    <?php echo $this->escape($this->cart->promo->public_description); ?>
+                                <?php if ($this->cart->promo && !isset($promo_shown)): ?>
+                                    <?php echo $this->escape($this->cart->promo->public_description); $promo_shown = true; ?>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -65,11 +65,8 @@
 
         </div>
     </div>
-    <div class="confirmation-right">
+    <!--<div class="confirmation-right">
 
-    </div>
+    </div>-->
 </div>
 
-<!--<pre>
-<?php print_r($this->cart); ?>
-</pre>-->

@@ -31,7 +31,7 @@
                                 }
                                 ?>
                                 <ul class="links">
-                                    <?php if ($this->nolayout): ?>
+                                    <?php if ($this->nolayout && !$qty->getAttrib('readonly')): ?>
                                     <li>
                                         <a href="<?php echo $this->serverUrl($this->url(array())); ?>" class="update">Update</a>
                                     </li>

@@ -505,9 +505,13 @@ fieldset.profile .note {
 
 /* Confirmation */
 
-#confirmation .confirmation-left {
+#confirmation {
     width: 800px;
-    border-right: 2px solid #ddd;
+}
+
+#confirmation .confirmation-left {
+    /*width: 800px;
+    border-right: 2px solid #ddd;*/
 }
 
 #confirmation .confirmation-right {
@@ -519,7 +523,7 @@ fieldset.profile .note {
 #confirmation .sep {
     border-top: 2px solid #ddd;
     padding: 20px 0;
-    width: 780px;
+    /*width: 780px;*/
     overflow: hidden;
 }
 
@@ -537,12 +541,16 @@ fieldset.profile .note {
     margin-bottom: 10px;
 }
 
+#confirmation table {
+    width: 800px;
+}
+
 #confirmation th {
     color: #3c466b !important;
     font-weight: bold !important;
     text-transform: uppercase;
     font-size: 14px !important;
-    width: 320px;
+    width: 300px;
     text-align: left;
     padding-bottom: 10px;
 }

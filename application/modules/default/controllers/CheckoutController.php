@@ -14,6 +14,19 @@ class CheckoutController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
+        if ($this->_request->isXmlHttpRequest() &&
+                !$this->_request->getParam('nolayout')) {
+            if ($this->_request->isPost()) {
+                $fields = Zend_Json::decode($this->_request->getParam('model'));
+                $post = array();
+                foreach ($fields as $field) {
+                    $post[$field['name']] = $field['value'];
+                }
+                $this->_cart_svc->saveCheckoutForm($post);
+                $this->_helper->json(array());
+            }
+            return;
+        }
         $cart = $this->_cart_svc->get(true);
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         if ($cart->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
