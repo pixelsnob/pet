@@ -63,6 +63,10 @@ Pet.CheckoutView = Pet.View.extend({
 
     saveForm: function(el) {
         el = $(el.target);
+        /*if (!$.trim(el.val()).length) {
+            el.parent().find('.errors').remove();
+            return;
+        }*/
         var obj = this;
         Backbone.emulateJSON = true;
         var checkout = new Pet.CheckoutModel;

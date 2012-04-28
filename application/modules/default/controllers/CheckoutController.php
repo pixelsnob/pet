@@ -47,12 +47,12 @@ class CheckoutController extends Zend_Controller_Action {
             if ($checkout_form->isValid($post)) {
                 if ($this->_cart_svc->process()) {
                     $this->_helper->Redirector->gotoSimple('confirmation');
+                    return;
                 } else {
                     $msg = 'There was a problem with your order. Please check ' . 
                            'your information and try again.';
                     $this->_messenger->addMessage($msg);
                 }
-                return;
             } else {
                 $this->_messenger->addMessage('Submitted information is not valid');
             }
@@ -73,7 +73,7 @@ class CheckoutController extends Zend_Controller_Action {
     public function confirmationAction() {
         $confirmation = $this->_cart_svc->getConfirmation();
         if (!$confirmation) {
-            $this->_helper->Redirector->gotoSimple('index');
+            //$this->_helper->Redirector->gotoSimple('index');
             return;
         }
         $this->view->cart = $confirmation->cart;

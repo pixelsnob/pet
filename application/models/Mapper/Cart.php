@@ -41,7 +41,8 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function get() {
-        return $this->_cart;
+        $session = new Zend_Session_Namespace;
+        return $session->cart;
     }
     
     /**
