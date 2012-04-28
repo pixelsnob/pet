@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://pet.tiny.local/checkout" />
+<title>test1</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">test1</td></tr>
+</thead><tbody>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>null@pixelsnob.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=first_name</td>
+	<td>Luis</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=last_name</td>
+	<td>Echeverria</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=billing_address</td>
+	<td>1501 Silliker AVe</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=billing_address</td>
+	<td>1501 Silliker Ave</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=billing_address_2</td>
+	<td>#2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=billing_company</td>
+	<td>Pixelsnob</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=billing_city</td>
+	<td>La Habra</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=billing_state</td>
+	<td>label=Alabama</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=billing_postal_code</td>
+	<td>00000</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=billing_country</td>
+	<td>label=USA</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=billing_phone</td>
+	<td>1111111111</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=cc_num</td>
+	<td>4111111111111111</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=cc_exp_month</td>
+	<td>label=01 - January</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=cc_exp_year</td>
+	<td>label=2013</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=cc_cvv</td>
+	<td>123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=update-submit</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
