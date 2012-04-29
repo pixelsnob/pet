@@ -73,7 +73,7 @@ class CheckoutController extends Zend_Controller_Action {
     public function confirmationAction() {
         $confirmation = $this->_cart_svc->getConfirmation();
         if (!$confirmation) {
-            //$this->_helper->Redirector->gotoSimple('index');
+            $this->_helper->Redirector->gotoSimple('index');
             return;
         }
         $this->view->cart = $confirmation->cart;
