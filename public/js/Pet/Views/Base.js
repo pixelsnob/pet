@@ -82,7 +82,6 @@ Pet.View = Backbone.View.extend({
         msg = (typeof msg == 'string' ? [ msg ] : msg);
         type = (type ? type : 'success');
         $(el).parent().find('.errors, .success').remove();
-        console.log(el);
         var ul = $('<ul>').addClass(type);
         for (var m in msg) {
             ul.append($('<li>').text(msg[m]));

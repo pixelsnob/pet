@@ -76,10 +76,12 @@ DROP TABLE IF EXISTS `pet`.`products` ;
 CREATE  TABLE IF NOT EXISTS `pet`.`products` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `product_type_id` INT(11) NOT NULL ,
-  `sku` VARCHAR(20) NOT NULL ,
+  `sku` VARCHAR(30) NOT NULL ,
   `cost` DECIMAL(5,2) NOT NULL DEFAULT 0 ,
   `image` VARCHAR(100) NULL DEFAULT NULL ,
   `active` INT(1) NOT NULL DEFAULT 1 ,
+  `max_qty` INT(2) NULL ,
+  `is_gift` INT(1) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
   UNIQUE INDEX `sku` (`sku` ASC) ,
@@ -544,7 +546,6 @@ CREATE  TABLE IF NOT EXISTS `pet`.`products_subscriptions` (
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
-  UNIQUE INDEX `subscription_id_UNIQUE` (`subscription_id` ASC) ,
   INDEX `products_subscriptions_fk_1` (`product_id` ASC) ,
   INDEX `products_subscriptions_fk_2` (`subscription_id` ASC) ,
   CONSTRAINT `products_subscriptions_fk_1`
@@ -612,36 +613,6 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`user_subscriptions`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`user_subscriptions` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`user_subscriptions` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `user_id` INT(11) NOT NULL ,
-  `subscription_id` INT(11) NULL DEFAULT NULL ,
-  `expiration` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  INDEX `user_subscriptions_ibfk_1` (`user_id` ASC) ,
-  INDEX `user_subscriptions_ibfk_2` (`subscription_id` ASC) ,
-  CONSTRAINT `user_subscriptions_ibfk_1`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `pet`.`users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `user_subscriptions_ibfk_2`
-    FOREIGN KEY (`subscription_id` )
-    REFERENCES `pet`.`subscriptions` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-AUTO_INCREMENT = 98303
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `pet`.`order_payments_check`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `pet`.`order_payments_check` ;
@@ -685,9 +656,117 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `pet`.`user_password_tokens`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`user_password_tokens` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`user_password_tokens` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `user_id` INT NOT NULL ,
+  `token` VARCHAR(100) NOT NULL ,
+  `timestamp` DATETIME NOT NULL ,
+  `attempts` TINYINT NOT NULL DEFAULT 1 ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  INDEX `user_password_resets_fk_1` (`user_id` ASC) ,
+  UNIQUE INDEX `token_UNIQUE` (`token` ASC) ,
+  CONSTRAINT `user_password_resets_fk_1`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `pet`.`users` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pet`.`digital_subscriptions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`digital_subscriptions` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`digital_subscriptions` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(100) NOT NULL ,
+  `description` LONGTEXT NULL DEFAULT NULL ,
+  `term` INT(11) NOT NULL DEFAULT '1' ,
+  `is_renewal` INT(1) NOT NULL DEFAULT '0' ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id` (`id` ASC) )
+ENGINE = InnoDB
+AUTO_INCREMENT = 16
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `pet`.`products_digital_subscriptions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`products_digital_subscriptions` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`products_digital_subscriptions` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `product_id` INT(11) NOT NULL ,
+  `digital_subscription_id` INT(11) NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
+  INDEX `products_subscriptions_fk_1` (`product_id` ASC) ,
+  INDEX `products_subscriptions_fk_2` (`digital_subscription_id` ASC) ,
+  CONSTRAINT `products_digital_subscriptions_fk_1`
+    FOREIGN KEY (`product_id` )
+    REFERENCES `pet`.`products` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `products_digital_subscriptions_fk_2`
+    FOREIGN KEY (`digital_subscription_id` )
+    REFERENCES `pet`.`digital_subscriptions` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `pet`.`ordered_product_subscriptions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`ordered_product_subscriptions` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_subscriptions` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `user_id` INT NOT NULL ,
+  `ordered_product_id` INT(11) NULL ,
+  `subscription_id` INT(11) NULL DEFAULT NULL ,
+  `expiration` DATE NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  INDEX `ordered_product_subscriptions_ibfk_1` (`ordered_product_id` ASC) ,
+  INDEX `ordered_product_subscriptions_ibfk_2` (`subscription_id` ASC) ,
+  INDEX `ordered_product_subscriptions_ibfk_3` (`user_id` ASC) ,
+  CONSTRAINT `ordered_product_subscriptions_ibfk_1`
+    FOREIGN KEY (`ordered_product_id` )
+    REFERENCES `pet`.`ordered_products` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `ordered_product_subscriptions_ibfk_2`
+    FOREIGN KEY (`subscription_id` )
+    REFERENCES `pet`.`subscriptions` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `ordered_product_subscriptions_ibfk_3`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `pet`.`users` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 98303
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
 -- Placeholder table for view `pet`.`view_products`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `name` INT, `description` INT);
+CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_gift` INT, `name` INT, `description` INT);
 
 -- -----------------------------------------------------
 -- View `pet`.`view_products`

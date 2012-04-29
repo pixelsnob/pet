@@ -129,8 +129,4 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
         }
         return ((bool) strlen(trim($value)));
     }
-
-    public function isValid($data) {
-        return parent::isValid($data);
-    }
 }

@@ -75,11 +75,15 @@ Pet.CheckoutView = Pet.View.extend({
                 // Special case for cc expiration selects
                 if (el.attr('name') == 'cc_exp_month' || el.attr('name') == 'cc_exp_year') {
                     var msg = [];
-                    for (var i in messages.payment.cc_exp_month) {
-                        msg.push(messages.payment.cc_exp_month[i]);
+                    if (typeof messages.payment.cc_exp_month != 'undefined') {
+                        for (var i in messages.payment.cc_exp_month) {
+                            msg.push(messages.payment.cc_exp_month[i]);
+                        }
                     }
-                    for (var i in messages.payment.cc_exp_year) {
-                        msg.push(messages.payment.cc_exp_year[i]);
+                    if (typeof messages.payment.cc_exp_year != 'undefined') {
+                        for (var i in messages.payment.cc_exp_year) {
+                            msg.push(messages.payment.cc_exp_year[i]);
+                        }
                     }
                     if (msg.length) {
                         obj.addFormElementMessages(el, msg, 'errors');
@@ -95,7 +99,7 @@ Pet.CheckoutView = Pet.View.extend({
                             for (var k in messages[i][j]) {
                                 msg.push(messages[i][j][k]);
                             }
-                            if (msg) {
+                            if (msg.length) {
                                 // Display error
                                 obj.addFormElementMessages(el, msg, 'errors');
                             }
@@ -105,7 +109,6 @@ Pet.CheckoutView = Pet.View.extend({
             }
         });
     }
-    
 
 });
 
