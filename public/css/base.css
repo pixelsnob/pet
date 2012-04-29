@@ -296,6 +296,24 @@ a.button-grad, a.button-grad-blue {
     display: block;
 }
 
+/* Spinner */
+
+#spinner-box {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    background: #777;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border: 1px solid #777;
+}
+
+#spinner-box img {
+    position: absolute;
+    top: 32px;
+    left: 33px;
+}
+
 pre {
     font: 12px/12px "Andale Mono";
 }

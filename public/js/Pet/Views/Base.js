@@ -87,6 +87,37 @@ Pet.View = Backbone.View.extend({
             ul.append($('<li>').text(msg[m]));
         }
         $(el).parent().append(ul);
-    }
+    },
+    
+    
+    /**
+     * Creates an overlay with a spinner image
+     * 
+     */
+    getSpinnerOverlay: function() {
+        var spinner = $('<img>').attr('src',
+            '/images/ajax-loader.gif');
+        var spinner_box = $('<div>')
+            .attr('id', 'spinner-box')
+            .hide()
+            .append(spinner).appendTo('body');
+        spinner_box.overlay({
+            mask: {
+                color: '#000',
+                loadSpeed: 500,
+                opacity: 0.4
+            },
+            load: false,
+            top: '30%',
+            closeOnClick: false,
+            closeOnEsc: false,
+            fixed: true,
+            onClose: function() {
+                $('#spinner-box').hide();
+            }
+        });
+        console.log(spinner_box);
+        return spinner_box.overlay();
+    },
 
 });

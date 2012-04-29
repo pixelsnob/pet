@@ -10,6 +10,7 @@ return array(
         'js/lib/underscore-min.js',
         'js/lib/backbone-min.js',
         'js/lib/jquery.fancybox.pack.js',
+        'js/lib/jquery.tools.min.js',
         'js/Pet/Pet.js',
         'js/Pet/Views/Base.js'
     ),
