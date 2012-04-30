@@ -111,24 +111,6 @@ Pet.CheckoutView = Pet.View.extend({
     },
 
     submitForm: function(el) {
-        /*this.showFancybox({
-            href: '/cart' 
-        });*/
-        //var obj = this;
-        //Backbone.emulateJSON = true;
-        //var checkout = new Pet.CheckoutModel;
-        var overlay = this.getSpinnerOverlay();
-        overlay.load();
-        /*checkout.save($('form[name=checkout]', this.el).serializeArray(), {
-            success: function(model, response) {
-                if (model.get('status')) {
-                    
-                } else {
-                    $('form[name=checkout]').submit();
-                }
-            }
-        });*/
-
         return true;
     }
 
