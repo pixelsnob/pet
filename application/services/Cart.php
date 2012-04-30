@@ -205,10 +205,7 @@ class Service_Cart {
                 $data['use_shipping'] : 0);
             $this->_cart->setUseShipping($use_shipping);
         }
-        $users_svc = new Service_Users;
-        if (!$users_svc->isAuthenticated()) {
-            $this->_cart->setUser($data);
-        }
+        $this->_cart->setUser($data);
         $this->_cart->setUserInfo($data);
         $this->_cart->setPayment($data);
         $promo_code = (isset($data['promo_code']) ? $data['promo_code'] : '');

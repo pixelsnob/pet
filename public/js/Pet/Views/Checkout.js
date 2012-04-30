@@ -10,7 +10,6 @@ Pet.CheckoutView = Pet.View.extend({
         'click #use_shipping': 'toggleShippingFields',
         'click input[name=payment_method]': 'toggleCCFields',
         'change input[name=promo_code]': 'savePromoCode',
-        //'change input[name!=promo_code], .billing select, .shipping select, .profile select': 'saveForm'
         'change input[name!=promo_code], select': 'saveForm',
         'click .update input': 'submitForm'
     },
@@ -112,11 +111,22 @@ Pet.CheckoutView = Pet.View.extend({
     },
 
     submitForm: function(el) {
-        return true;
-
+        //var obj = this;
+        //Backbone.emulateJSON = true;
+        //var checkout = new Pet.CheckoutModel;
         var overlay = this.getSpinnerOverlay();
         overlay.load();
-        return false;
+        /*checkout.save($('form[name=checkout]', this.el).serializeArray(), {
+            success: function(model, response) {
+                if (model.get('status')) {
+                    
+                } else {
+                    $('form[name=checkout]').submit();
+                }
+            }
+        });*/
+
+        return true;
     }
 
 });
