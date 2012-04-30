@@ -15,6 +15,9 @@ Pet.CheckoutView = Pet.View.extend({
     },
     
     initialize: function(){
+        $('#promo_code', this.el).append(
+            $('<a>').attr({ href: '#' }).addClass('button-grad')
+        );
     },
 
     toggleShippingFields: function(el) {

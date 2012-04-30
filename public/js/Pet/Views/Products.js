@@ -53,9 +53,9 @@ Pet.ProductsView = Pet.View.extend({
 
     submitLoginForm: function() {
         var login_form = $('form[name=login]', this.el);
-        if (login_form.attr('action').substr(0, 5) == 'https') {
+        /*if (login_form.attr('action').substr(0, 5) == 'https') {
             window.location.port = 443;
-        }
+        }*/
         var qs = login_form.serialize();
         qs += '&redirect_params[nolayout]=1';
         this.populateFancybox('/profile/login/', qs);
@@ -69,9 +69,9 @@ Pet.ProductsView = Pet.View.extend({
 
     submitResetPasswordRequestForm: function() {
         var rpr_form = $('form[name=reset-password-request]', this.el);
-        if (rpr_form.attr('action').substr(0, 5) == 'https') {
+        /*if (rpr_form.attr('action').substr(0, 5) == 'https') {
             window.location.port = 443;
-        }
+        }*/
         var qs = rpr_form.serialize();
         this.populateFancybox('/profile/reset-password-request', qs);
         return false;
