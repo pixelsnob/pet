@@ -66,13 +66,8 @@ class CheckoutController extends Zend_Controller_Action {
             ->appendScript('new Pet.CheckoutView;');
     }
 
-    public function isValidAction() {
-        if ($this->_request->isXmlHttpRequest()) {
-            
-        } else {
-            throw new Zend_Controller_Action_Exception(
-                'Page does not exist', 404);
-        }
+    public function processingAction() {
+        exit('?????');
     }
 
     /**

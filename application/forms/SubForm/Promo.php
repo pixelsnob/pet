@@ -48,7 +48,7 @@ class Form_SubForm_Promo extends Zend_Form_SubForm {
                     'messages' => 'Promo is not valid'
                 ))
             )
-        ));
+        ))->setElementFilters(array('StringTrim'));
     }
     
     /**

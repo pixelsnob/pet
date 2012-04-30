@@ -116,7 +116,6 @@ Pet.View = Backbone.View.extend({
                 $('#spinner-box').hide();
             }
         });
-        console.log(spinner_box);
         return spinner_box.overlay();
     },
 

@@ -111,6 +111,9 @@ Pet.CheckoutView = Pet.View.extend({
     },
 
     submitForm: function(el) {
+        /*this.showFancybox({
+            href: '/cart' 
+        });*/
         //var obj = this;
         //Backbone.emulateJSON = true;
         //var checkout = new Pet.CheckoutModel;
