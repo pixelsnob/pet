@@ -165,7 +165,7 @@ class Form_Checkout extends Pet_Form {
             $log['payment_valid'] = $this->payment->isValid($data);
         }
         $log['messages'] = $this->getMessages();
-        file_put_contents('/tmp/checkout.log', array('date' => date('Y-m-d H:i:s'), 'data' => print_r($log, true), FILE_APPEND);
+        file_put_contents('/tmp/checkout.log', print_r(array('date' => date('Y-m-d H:i:s'), 'data' => $log), true), FILE_APPEND);
 
         return $valid;
     }
