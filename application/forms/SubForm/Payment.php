@@ -66,7 +66,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             'allowEmpty'   => false,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Expiration month is required'
+                    'messages' => 'Date is invalid'
                 )),
                 array(new Pet_Validate_CCExpDate(array(
                     'month' => 'cc_exp_month',
@@ -88,8 +88,12 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             'allowEmpty'   => false,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Expiration year is required'
-                ))
+                    'messages' => 'Date is invalid'
+                )),
+                array(new Pet_Validate_CCExpDate(array(
+                    'month' => 'cc_exp_month',
+                    'year'  => 'cc_exp_year'
+                )))
             ),
             'registerInArrayValidator' => false
         ))->addElement('text', 'cc_cvv', array(
@@ -99,7 +103,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             'class'        => 'text',
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Expiration year is required'
+                    'messages' => 'Security code is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 4,

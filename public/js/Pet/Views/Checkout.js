@@ -73,7 +73,7 @@ Pet.CheckoutView = Pet.View.extend({
         checkout.save($('form[name=checkout]', this.el).serializeArray(), {
             success: function(model, response) {
                 // Remove existing errors
-                el.parent().find('.errors').remove();
+                el.parent().find('.errors, .messages').remove();
                 var messages = model.get('messages'); 
                 // Special case for cc expiration selects
                 if (el.attr('name') == 'cc_exp_month' || el.attr('name') == 'cc_exp_year') {
@@ -82,8 +82,7 @@ Pet.CheckoutView = Pet.View.extend({
                         for (var i in messages.payment.cc_exp_month) {
                             msg.push(messages.payment.cc_exp_month[i]);
                         }
-                    }
-                    if (typeof messages.payment.cc_exp_year != 'undefined') {
+                    } else if (typeof messages.payment.cc_exp_year != 'undefined') {
                         for (var i in messages.payment.cc_exp_year) {
                             msg.push(messages.payment.cc_exp_year[i]);
                         }
@@ -104,6 +103,7 @@ Pet.CheckoutView = Pet.View.extend({
                             }
                             if (msg.length) {
                                 // Display error
+                                console.log(el.parent().find('.errors, .messages'));
                                 obj.addFormElementMessages(el, msg, 'errors');
                             }
                         }
@@ -114,7 +114,40 @@ Pet.CheckoutView = Pet.View.extend({
     },
 
     submitForm: function(el) {
-        return true;
+        el = $(el.target);
+        var obj = this;
+        Backbone.emulateJSON = true;
+        var checkout = new Pet.CheckoutModel;
+        var form = $('form[name=checkout]', this.el);
+        checkout.save(form.serializeArray(), {
+            success: function(model, response) {
+                // Remove existing errors
+                form.find('.errors, .messages').remove();
+                if (model.get('status')) {
+                    // Form is valid
+                    form.submit();
+                    return;
+                }
+                var messages = model.get('messages'); 
+                for (var i in messages) {
+                    for (var j in messages[i]) {
+                        var this_el = form.find('input name=[' + j + ']');
+                        if ($('#' + j).length) {
+                            var msg = [];
+                            for (var k in messages[i][j]) {
+                                msg.push(messages[i][j][k]);
+                            }
+                            if (msg.length) {
+                                // Display error
+                                obj.addFormElementMessages(
+                                    $('#' + j), msg, 'errors');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return false;
     }
 
 });

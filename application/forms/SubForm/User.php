@@ -42,7 +42,6 @@ class Form_SubForm_User extends Zend_Form_SubForm {
         // Username
         $this->addElement('text', 'username', array(
             'label' => 'Username',
-            'id' => 'login-username',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -62,7 +61,6 @@ class Form_SubForm_User extends Zend_Form_SubForm {
         // Email
         ))->addElement('text', 'email', array(
             'label' => 'Email',
-            'id' => 'email',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -79,7 +77,6 @@ class Form_SubForm_User extends Zend_Form_SubForm {
         // First name
         ))->addElement('text', 'first_name', array(
             'label' => 'First Name',
-            'id' => 'first_name',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -93,7 +90,6 @@ class Form_SubForm_User extends Zend_Form_SubForm {
         // Last name
         ))->addElement('text', 'last_name', array(
             'label' => 'Last Name',
-            'id' => 'last_name',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -115,7 +111,6 @@ class Form_SubForm_User extends Zend_Form_SubForm {
     public function addPasswordFields() {
         $this->addElement('password', 'password', array(
             'label' => 'New Password',
-            'id' => 'password',
             'required' => true,
             'renderPassword' => true,
             'validators'   => array(
@@ -130,7 +125,6 @@ class Form_SubForm_User extends Zend_Form_SubForm {
             )
         ))->addElement('password', 'confirm_password', array(
             'label' => 'Confirm Password',
-            'id' => 'confirm-password',
             'required' => true,
             'renderPassword' => true,
             'validators'   => array(
