@@ -138,9 +138,7 @@ class Form_Checkout extends Pet_Form {
     public function isValid($data) {
         $valid = true;
         $valid = $this->billing->isValid($data) && $valid;
-        if (isset($data['payment_method']) && $data['payment_method'] == 'credit_card') {
-            $valid = $this->payment->isValid($data) && $valid;
-        }
+        $valid = $this->payment->isValid($data) && $valid;
         $valid = $this->promo->isValid($data) && $valid;
         $valid = $this->user->isValid($data) && $valid;
         $valid = $this->info->isValid($data) && $valid;
@@ -149,6 +147,8 @@ class Form_Checkout extends Pet_Form {
         if ($this->_cart->isShippingAddressRequired() && $use_shipping) {
             $valid = $this->shipping->isValid($data) && $valid;
         }       
+
+        ///////////////////////////////////////////////////////////
         // temp logging
         $log = array(
             'billing_valid' => $this->billing->isValid($data),
@@ -165,7 +165,8 @@ class Form_Checkout extends Pet_Form {
             $log['payment_valid'] = $this->payment->isValid($data);
         }
         $log['messages'] = $this->getMessages();
-        file_put_contents('/tmp/checkout.log', print_r($log, true), FILE_APPEND);
+        file_put_contents('/tmp/checkout.log', array('date' => date('Y-m-d H:i:s'), 'data' => print_r($log, true), FILE_APPEND);
+
         return $valid;
     }
 }
