@@ -18,7 +18,8 @@ Pet.ProductsView = Pet.View.extend({
             'submitResetPasswordRequestForm',
         'click .subscription-options a, #gift-subscriptions .digital a':
             'openSubscriptionSelectPopup',
-        'click .renew': 'openRenewPopup'
+        'click .renew': 'openRenewPopup',
+        'click #digital .buy': 'openDigitalSelectPopup'
     },
     
     initialize: function(){
@@ -32,7 +33,7 @@ Pet.ProductsView = Pet.View.extend({
 
     openRenewPopup: function(el) {
         this.showFancybox({
-            href: $(el.target).attr('href') + '?redirect_params[nolayout]=1'
+            href: $(el.target).attr('href') //+ '?redirect_params[nolayout]=1'
         });
         return false;
     },
@@ -53,9 +54,6 @@ Pet.ProductsView = Pet.View.extend({
 
     submitLoginForm: function() {
         var login_form = $('form[name=login]', this.el);
-        /*if (login_form.attr('action').substr(0, 5) == 'https') {
-            window.location.port = 443;
-        }*/
         var qs = login_form.serialize();
         qs += '&redirect_params[nolayout]=1';
         this.populateFancybox('/profile/login/', qs);
@@ -69,11 +67,13 @@ Pet.ProductsView = Pet.View.extend({
 
     submitResetPasswordRequestForm: function() {
         var rpr_form = $('form[name=reset-password-request]', this.el);
-        /*if (rpr_form.attr('action').substr(0, 5) == 'https') {
-            window.location.port = 443;
-        }*/
         var qs = rpr_form.serialize();
         this.populateFancybox('/profile/reset-password-request', qs);
+        return false;
+    },
+
+    openDigitalSelectPopup: function(el) {
+        this.showFancybox({ href: $(el.target).attr('href') });
         return false;
     }
 

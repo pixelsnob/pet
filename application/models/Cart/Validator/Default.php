@@ -62,7 +62,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
             }
         }
         if ($msg && !$valid && $this->_cart->products) {
-            $messenger->addMessage('A qualifying product is not in your cart');
+            $messenger->addMessage('Promo is not valid');
         }
         return $valid;
     }

@@ -18,7 +18,7 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>id=confirm-password</td>
+	<td>id=confirm_password</td>
 	<td>blast1-furnace</td>
 </tr>
 <tr>
@@ -103,7 +103,7 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>id=login-username</td>
+	<td>id=username</td>
 	<td>pixelsnob1</td>
 </tr>
 </tbody></table>

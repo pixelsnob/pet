@@ -200,28 +200,30 @@
 
 
 .product-select h4 {
-    margin-bottom: 5px !important;
+    margin-bottom: 10px !important;
+    padding: 0 !important;
     text-transform: uppercase;
 }
-
-/*
-#subscription-zones h4 {
-    text-transform: uppercase;
-    font-size: 16px !important;
-}
-
-#subscription-zones p {
-    color: #888; 
-}
-
-#subscription-zones a {
-    color: #fff !important;
-    font-size: 14px !important;
-}
-*/
 
 #digital .subscription-options li {
     width: 190px;
+}
+
+#digital .buy a {
+    width: 100px;
+}
+
+#digital .product-select-right-inner {
+    border-bottom: none;
+}
+
+#digital .buttons li {
+    float: left;
+    display: block;
+    width: 170px;
+    background: none;
+    margin: 0;
+    padding: 0;
 }
 
 /* Cart */
