@@ -104,7 +104,7 @@ class Service_Cart {
         if ($promo && $this->_cart->addPromo($promo)) {
             return true;
         } else {
-            $this->_messenger->addMessage("Promo \"$code\" is not valid");
+            $this->_messenger->addMessage("Promo is not valid");
             return false;
         }
     }

@@ -5,6 +5,8 @@
 Pet.CheckoutView = Pet.View.extend({
     
     el: $('body'),
+
+    xhr: [], // An array of Ajax XHR objects
     
     events: {
         'click #use_shipping': 'toggleShippingFields',
@@ -43,14 +45,14 @@ Pet.CheckoutView = Pet.View.extend({
         var obj = this;
         Backbone.emulateJSON = true;
         var promo = new Pet.PromoCodeModel;
-        promo.save({ code: el.val() }, {
+        this.xhr.push(promo.save({ code: el.val() }, {
             success: function(model, response) {
                 var type = 'errors';
                 if (model.get('success') === 1) {
                     type = 'success';
                     // Get updated total after applying promo
                     var cart = new Pet.CartModel;
-                    cart.fetch();
+                    obj.xhr.push(cart.fetch());
                     cart.on('change', function(model) {
                         var totals = cart.get('totals');
                         if (typeof totals.total == 'number') {
@@ -61,7 +63,7 @@ Pet.CheckoutView = Pet.View.extend({
                 }
                 obj.addFormElementMessages(el, model.get('message'), type);
             }
-        });
+        }));
         return true;
     },
 
@@ -70,7 +72,7 @@ Pet.CheckoutView = Pet.View.extend({
         var obj = this;
         Backbone.emulateJSON = true;
         var checkout = new Pet.CheckoutModel;
-        checkout.save($('form[name=checkout]', this.el).serializeArray(), {
+        this.xhr.push(checkout.save($('form[name=checkout]', this.el).serializeArray(), {
             success: function(model, response) {
                 // Remove existing errors
                 el.parent().find('.errors, .messages').remove();
@@ -103,14 +105,13 @@ Pet.CheckoutView = Pet.View.extend({
                             }
                             if (msg.length) {
                                 // Display error
-                                console.log(el.parent().find('.errors, .messages'));
                                 obj.addFormElementMessages(el, msg, 'errors');
                             }
                         }
                     }
                 }
             }
-        });
+        }));
     },
 
     submitForm: function(el) {
@@ -119,6 +120,12 @@ Pet.CheckoutView = Pet.View.extend({
         Backbone.emulateJSON = true;
         var checkout = new Pet.CheckoutModel;
         var form = $('form[name=checkout]', this.el);
+        // Abort pending requests
+        for (var x in this.xhr) {
+            if (typeof this.xhr[x].abort == 'function') {
+                this.xhr[x].abort();
+            }
+        }
         checkout.save(form.serializeArray(), {
             success: function(model, response) {
                 // Remove existing errors
