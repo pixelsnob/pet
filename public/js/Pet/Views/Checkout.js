@@ -128,6 +128,10 @@ Pet.CheckoutView = Pet.View.extend({
         }
         checkout.save(form.serializeArray(), {
             success: function(model, response) {
+                if (model.get('empty')) {
+                    window.location.href = '/checkout';
+                    return false;
+                }
                 // Remove existing errors
                 form.find('.errors, .messages').remove();
                 if (model.get('status')) {
