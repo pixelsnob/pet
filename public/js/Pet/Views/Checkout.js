@@ -74,6 +74,10 @@ Pet.CheckoutView = Pet.View.extend({
         var checkout = new Pet.CheckoutModel;
         this.xhr.push(checkout.save($('form[name=checkout]', this.el).serializeArray(), {
             success: function(model, response) {
+                if (model.get('empty')) {
+                    window.location.href = '/checkout';
+                    return false;
+                }
                 // Remove existing errors
                 el.parent().find('.errors, .messages').remove();
                 var messages = model.get('messages'); 
