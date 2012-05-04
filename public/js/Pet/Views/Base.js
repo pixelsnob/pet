@@ -65,10 +65,11 @@ Pet.View = Backbone.View.extend({
      * 
      */
     scrollTo: function(sel, callback) {
+        sel = $(sel);
         callback = (typeof callback == 'function' ? callback : function() {});
-        var el_top = this._$(sel).position().top;
+        var el_top = sel.position().top;
         var c = 0;
-        this._$('body, html').animate({
+        $('body, html').animate({
             scrollTop: el_top
         }, 450, function() {
             // Make sure this only runs once

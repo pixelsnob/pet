@@ -144,6 +144,9 @@ Pet.CheckoutView = Pet.View.extend({
                     form.submit();
                     return;
                 }
+                // There were errors: show them
+                obj.showFlashMessage('Submitted information is not valid');
+                obj.scrollTo('.flash-message');
                 var messages = model.get('messages'); 
                 for (var i in messages) {
                     for (var j in messages[i]) {
@@ -165,6 +168,15 @@ Pet.CheckoutView = Pet.View.extend({
             }
         });
         return false;
+    },
+
+    showFlashMessage: function(msg) {
+        var p = $('<p>').addClass('flash-message').text(msg);
+        if ($('.flash-message').length) {
+            $('.flash-message').replaceWith(p);
+        } else {
+            p.insertAfter('h2');
+        }
     }
 
 });
