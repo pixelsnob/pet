@@ -226,6 +226,14 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function getTotals() {
         return $this->_cart->getTotals();
     }
+    
+    /**
+     * @return array
+     * 
+     */
+    public function getShippingValues() {
+        return $this->cart->getShippingValues();
+    }
 
     /**
      * @return void 

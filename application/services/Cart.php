@@ -226,8 +226,24 @@ class Service_Cart {
      * 
      */
     public function process() {
-        $config = Zend_Registry::get('app_config');
+        $cart = $this->get();
+        $gateway = new Model_Mapper_PaymentGateway;
+        $form = $this->getCheckoutForm();
+        $data = array();
+        $totals = $cart->getTotals();
+        $data = array_merge(
+            $form->billing->getValues(true),
+            $form->payment->getValues(true),
+            array('total' => $totals['total']),
+            $form->user->getValues(true),
+            $form->getShippingValues()
+        );
+        $gateway->processAuth($data);
+        exit;
+
+
         $this->_cart->setConfirmation($this->_cart->get());
+        $config = Zend_Registry::get('app_config');
         if ($config['reset_cart_after_process']) {
             $this->_cart->reset();
         }

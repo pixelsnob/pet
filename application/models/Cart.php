@@ -263,6 +263,30 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     }
 
     /**
+     * @return array
+     * 
+     */
+    public function getShippingValues() {
+        if ($this->isShippingAddressRequired() && !$this->use_shipping) {
+            $billing = $this->_data['billing'];
+            return array(
+                'shipping_first_name'  => $this->_data['user']['first_name'],
+                'shipping_last_name'   => $this->_data['user']['last_name'],
+                'shipping_address'     => $billing->billing_address,
+                'shipping_address_2'   => $billing->billing_address_2,
+                'shipping_company'     => $billing->billing_company,
+                'shipping_city'        => $billing->billing_city,
+                'shipping_state'       => $billing->billing_state,
+                'shipping_postal_code' => $billing->billing_postal_code,
+                'shipping_country'     => $billing->billing_country,
+                'shipping_phone'       => $billing->billing_phone
+            );
+        } else {
+            return $this->_data['shipping']->toArray();
+        }
+    }
+
+    /**
      * @return bool
      * 
      */

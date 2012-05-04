@@ -109,7 +109,6 @@ class Form_Checkout extends Pet_Form {
         ));
         $this->addSubform($promo_form, 'promo');
         $this->addSubform($user_form, 'user');
-        $this->addSubform(new Form_SubForm_Billing, 'billing');
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $this->_countries,
             'states'    => $this->_states
@@ -168,5 +167,28 @@ class Form_Checkout extends Pet_Form {
         file_put_contents('/tmp/checkout.log', print_r(array('date' => date('Y-m-d H:i:s'), 'data' => $log), true), FILE_APPEND);
 
         return $valid;
+    }
+
+    /**
+     * @return array
+     * 
+     */
+    public function getShippingValues() {
+        if ($this->_cart->isShippingAddressRequired() && !$this->_cart->use_shipping) {
+            return array(
+                'shipping_first_name'  => $this->user->first_name->getValue(),
+                'shipping_last_name'   => $this->user->last_name->getValue(),
+                'shipping_address'     => $this->billing->billing_address->getValue(),
+                'shipping_address_2'   => $this->billing->billing_address_2->getValue(),
+                'shipping_company'     => $this->billing->billing_company->getValue(),
+                'shipping_city'        => $this->billing->billing_city->getValue(),
+                'shipping_state'       => $this->billing->billing_state->getValue(),
+                'shipping_postal_code' => $this->billing->billing_postal_code->getValue(),
+                'shipping_country'     => $this->billing->billing_country->getValue(),
+                'shipping_phone'       => $this->billing->billing_phone->getValue()
+            );
+        } else {
+            return $this->shipping->getValues(true);
+        }
     }
 }
