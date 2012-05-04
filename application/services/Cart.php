@@ -160,9 +160,9 @@ class Service_Cart {
             $form->user->removeElement('password');
             $form->user->removeElement('confirm_password');
         }
-        if (!$cart->isShippingAddressRequired()) {
+        /*if (!$cart->isShippingAddressRequired()) {
             $form->removeSubform('shipping');
-        }
+        }*/
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray(),
@@ -193,11 +193,30 @@ class Service_Cart {
     }
     
     /**
-     * 
+     * @param Form_Checkout $form
+     * @return void
      * 
      */
-    public function saveCheckoutForm($data) {
+    public function saveCheckoutForm(Form_Checkout $form) {
         $cart = $this->_cart->get();
+        $this->_cart->setBilling($form->billing->getValues(true));
+        $this->_cart->setShipping($form->getShippingValues());
+        $this->_cart->setUser($form->user->getValues(true));
+        $this->_cart->setUserInfo($form->info->getValues(true));
+        $this->_cart->setPayment($form->payment->getValues(true));
+        $promo_code = (isset($data['promo_code']) ? $data['promo_code'] : '');
+        $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
+        if ($promo_code && $promo_code != $existing_promo_code) {
+            $promos_mapper = new Model_Mapper_Promos;
+            $promo = $promos_mapper->getUnexpiredPromoByCode($promo_code);
+            if ($promo) {
+                $this->_cart->addPromo($promo);
+            }
+        } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
+            $this->_cart->removePromo();
+        }
+        $this->_cart->setUseShipping($form->use_shipping->getValue());
+        /*$cart = $this->_cart->get();
         $this->_cart->setBilling($data);
         if ($cart->isShippingAddressRequired()) {
             $this->_cart->setShipping($data);
@@ -218,17 +237,17 @@ class Service_Cart {
             }
         } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
             $this->_cart->removePromo();
-        }
+        }*/
     }
     
     /**
+     * @param array $post
      * @return bool
      * 
      */
-    public function process() {
-        /*$cart = $this->get();
+    public function process($form) {
+        $cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
-        $form = $this->getCheckoutForm();
         $data = array();
         $totals = $cart->getTotals();
         $data = array_merge(
@@ -238,9 +257,10 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
-        $gateway->processAuth($data);
-        exit;*/
-
+        //$gateway->processAuth($data);
+        //print_r($data);
+        //print_r($cart);
+        //exit;
 
         $this->_cart->setConfirmation($this->_cart->get());
         $config = Zend_Registry::get('app_config');

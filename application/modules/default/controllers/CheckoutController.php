@@ -29,9 +29,9 @@ class CheckoutController extends Zend_Controller_Action {
                 foreach ($fields as $field) {
                     $post[$field['name']] = $field['value'];
                 }
-                $this->_cart_svc->saveCheckoutForm($post);
                 $checkout_form = $this->_cart_svc->getCheckoutForm();
                 $status = $checkout_form->isValid($post);
+                $this->_cart_svc->saveCheckoutForm($checkout_form);
                 $this->_helper->json(array(
                     'messages' => $checkout_form->getMessages(),
                     'status' => $status
@@ -49,11 +49,12 @@ class CheckoutController extends Zend_Controller_Action {
         }
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
-            $this->_cart_svc->saveCheckoutForm($post);
             $checkout_form = $this->_cart_svc->getCheckoutForm();
-            if ($checkout_form->isValid($post)) {
+            $valid = $checkout_form->isValid($post);
+            $this->_cart_svc->saveCheckoutForm($checkout_form);
+            if ($valid) {
                 //
-                if ($this->_cart_svc->process()) {
+                if ($this->_cart_svc->process($checkout_form)) {
                     $this->_helper->Redirector->gotoSimple('confirmation');
                     return;
                 } else {
