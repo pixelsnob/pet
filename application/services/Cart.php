@@ -226,7 +226,7 @@ class Service_Cart {
      * 
      */
     public function process() {
-        $cart = $this->get();
+        /*$cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
         $form = $this->getCheckoutForm();
         $data = array();
@@ -239,7 +239,7 @@ class Service_Cart {
             $form->getShippingValues()
         );
         $gateway->processAuth($data);
-        exit;
+        exit;*/
 
 
         $this->_cart->setConfirmation($this->_cart->get());
