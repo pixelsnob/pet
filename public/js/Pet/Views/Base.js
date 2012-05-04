@@ -6,6 +6,8 @@ Pet.View = Backbone.View.extend({
     
     error_msg: '<p class="error">An error has ocurred</p>',
     
+    spinner: null,
+
     /**
      * Populates an existing fancybox
      * 
@@ -94,29 +96,35 @@ Pet.View = Backbone.View.extend({
      * Creates an overlay with a spinner image
      * 
      */
-    getSpinnerOverlay: function() {
-        var spinner = $('<img>').attr('src',
-            '/images/ajax-loader.gif');
-        var spinner_box = $('<div>')
-            .attr('id', 'spinner-box')
-            .hide()
-            .append(spinner).appendTo('body');
-        spinner_box.overlay({
-            mask: {
-                color: '#000',
-                loadSpeed: 500,
-                opacity: 0.4
-            },
-            load: false,
-            top: '30%',
-            closeOnClick: false,
-            closeOnEsc: false,
-            fixed: true,
-            onClose: function() {
-                $('#spinner-box').hide();
-            }
+    showSpinnerOverlay: function() {
+        var spinner = $('<img>').attr('src', '/images/ajax-loader.gif'),
+            obj = this;
+        spinner.on('load', function() {
+            obj.spinner = $('<div>')
+                .attr('id', 'spinner-box')
+                .hide()
+                .append(spinner).appendTo('body');
+            obj.spinner.overlay({
+                mask: {
+                    color: '#000',
+                    loadSpeed: 500,
+                    opacity: 0.4
+                },
+                load: false,
+                top: '30%',
+                closeOnClick: false,
+                closeOnEsc: false,
+                fixed: true,
+                onClose: function() {
+                    $('#spinner-box').hide();
+                }
+            });
+            obj.spinner.overlay().load();
         });
-        return spinner_box.overlay();
     },
+
+    hideSpinnerOverlay: function() {
+        this.spinner.overlay().close();
+    }
 
 });

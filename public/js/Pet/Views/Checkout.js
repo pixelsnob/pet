@@ -79,7 +79,7 @@ Pet.CheckoutView = Pet.View.extend({
                     return false;
                 }
                 // Remove existing errors
-                el.parent().find('.errors, .messages').remove();
+                el.parent().find('.errors, .success').remove();
                 var messages = model.get('messages'); 
                 // Special case for cc expiration selects
                 if (el.attr('name') == 'cc_exp_month' || el.attr('name') == 'cc_exp_year') {
@@ -120,6 +120,7 @@ Pet.CheckoutView = Pet.View.extend({
 
     submitForm: function(el) {
         el = $(el.target);
+        this.showSpinnerOverlay();
         var obj = this;
         Backbone.emulateJSON = true;
         var checkout = new Pet.CheckoutModel;
@@ -160,6 +161,7 @@ Pet.CheckoutView = Pet.View.extend({
                         }
                     }
                 }
+                obj.hideSpinnerOverlay();
             }
         });
         return false;
