@@ -188,7 +188,6 @@ class Form_Checkout extends Pet_Form {
                 'shipping_phone'       => $this->billing->billing_phone->getValue()
             );
         } else {
-            print_r($this); exit;
             return $this->shipping->getValues(true);
         }
     }
