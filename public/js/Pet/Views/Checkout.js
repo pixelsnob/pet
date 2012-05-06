@@ -146,7 +146,7 @@ Pet.CheckoutView = Pet.View.extend({
                 }
                 // There were errors: show them
                 obj.showFlashMessage('Submitted information is not valid');
-                obj.scrollTo('.flash-message');
+                obj.scrollTo('h2');
                 var messages = model.get('messages'); 
                 for (var i in messages) {
                     for (var j in messages[i]) {

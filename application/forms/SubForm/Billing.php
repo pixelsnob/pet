@@ -134,11 +134,8 @@ class Form_SubForm_Billing extends Zend_Form_SubForm {
         ))->addElement('text', 'billing_phone', array(
             'label' => 'Phone',
             'id' => 'billing_phone',
-            'required' => true,
+            'required' => false,
             'validators'   => array(
-                array('NotEmpty', true, array(
-                    'messages' => 'Please enter your phone'
-                )),
                 array('StringLength', true, array(
                     'max' => 50,
                     'messages' => 'Phone must be %max% characters or less'
