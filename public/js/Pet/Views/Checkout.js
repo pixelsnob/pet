@@ -11,15 +11,12 @@ Pet.CheckoutView = Pet.View.extend({
     events: {
         'click #use_shipping': 'toggleShippingFields',
         'click input[name=payment_method]': 'toggleCCFields',
-        'change input[name=promo_code]': 'savePromoCode',
         'change input[name!=promo_code], select': 'saveForm',
         'click .update input': 'submitForm'
     },
     
-    initialize: function(){
-        $('#promo_code', this.el).append(
-            $('<a>').attr({ href: '#' }).addClass('button-grad')
-        );
+    initialize: function() {
+        this.addPromoCodeApplyLink();
     },
 
     toggleShippingFields: function(el) {
@@ -40,9 +37,8 @@ Pet.CheckoutView = Pet.View.extend({
         return true;
     },
 
-    savePromoCode: function(el) {
-        el = $(el.target);
-        var obj = this;
+    savePromoCode: function() {
+        var obj = this, el = $('.promo-code input');
         Backbone.emulateJSON = true;
         var promo = new Pet.PromoCodeModel;
         this.xhr.push(promo.save({ code: el.val() }, {
@@ -177,6 +173,19 @@ Pet.CheckoutView = Pet.View.extend({
         } else {
             p.insertAfter('h2');
         }
+    },
+
+    addPromoCodeApplyLink: function() {
+        var obj = this;
+        $('#promo_code', this.el).parent().append(
+            $('<a>').attr({ href: '#' }).addClass('button-grad')
+                .text('Apply').on('click', function() {
+                    if ($.trim($('#promo_code').val()).length) {
+                        obj.savePromoCode();
+                    }
+                    return false;
+                })
+        );
     }
 
 });

@@ -5,8 +5,6 @@
 }
 
 #content {
-    /* Allow for fixed footer */
-    padding-bottom: 100px;
 }
 
 #content a:link, #content a:visited, #nolayout a:link, #nolayout a:visited {
@@ -17,14 +15,14 @@
     color: #6d81c2;
 }
 
-#footer {
+/*#footer {
     position: fixed;
     width: 100%;
     bottom: 0;
     -moz-box-shadow: 0 0 7px 7px rgba(0,0,0,0.1);
     -webkit-box-shadow: 0 0 7px 7px rgba(0,0,0,0.1);
     box-shadow: 0 0 7px 7px rgba(0,0,0,0.1);
-}
+}*/
 
 .error, .errors {
     color: red;
@@ -54,7 +52,7 @@ ul.errors li, ul.success li {
 
 .form dt, .form dd {
     float: left;
-    line-height: 40px;
+    line-height: 30px;
 }
 
 .form dt {
@@ -123,20 +121,6 @@ li {
 
 form .submit {
     margin-top: 35px;
-}
-
-.form .errors {
-    margin: 0 0 5px 0;
-    padding: 0;
-}
-
-.form .errors li {
-    margin: 0;
-    padding: 0;
-    line-height: 16px;
-    font-size: 11px;
-    font-weight: bold;
-
 }
 
 .form dt.checkbox {

@@ -375,7 +375,6 @@
     font-size: 12px;
 }
 
-
 #checkout .payment-method input {
     width: auto;
     margin-right: 10px;
@@ -404,6 +403,30 @@
 
 #checkout .cc-exp .errors li {
     line-height: 10px !important;
+}
+
+.promo-code dd {
+    /*position: relative;*/
+    padding-top: 7px;
+}
+
+.promo-code input {
+    width: 90px;
+    float: left;
+}
+
+.promo-code a {
+    height: 14px;
+    line-height: 14px;
+    float: left;
+    display: block;
+    position: relative;
+    margin-left: 10px;
+}
+
+.promo-code .errors, .promo-code .success {
+    padding-top: 5px;
+    clear: both;
 }
 
 #checkout .update {

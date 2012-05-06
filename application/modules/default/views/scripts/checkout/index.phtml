@@ -222,7 +222,7 @@
                     <strong class="total">Total: <span class="total-value"><?php echo $this->dollarFormat($this->cart_totals['total']); ?></span></strong>
                     <input type="submit" value="Buy Now" class="button-grad-blue">
                 </p>
-                <p>We will email your purchase receipt once your transaction is complete</p>
+                <p>We will email your purchase receipt once your transaction is complete.</p>
             </div>
             <div class="checkout-right">
                 <h3>In your cart:</h3>
@@ -230,7 +230,7 @@
                     <?php foreach ($this->cart->products as $product): ?>
                         <li class="product">
                             <?php echo $this->productThumbnail($product->product); ?>
-                            <p><?php echo '(' . $product->qty . ') ' . $this->escape($product->name) . ' - ' . $this->dollarFormat($product->cost * $product->qty); ?></p>
+                            <p><?php echo $this->escape($product->name); ?></p>
                         </li>
                     <?php endforeach; ?>
                 </ul>
