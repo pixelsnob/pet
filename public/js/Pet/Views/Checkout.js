@@ -43,7 +43,7 @@ Pet.CheckoutView = Pet.View.extend({
         var promo = new Pet.PromoCodeModel;
         this.xhr.push(promo.save({ code: el.val() }, {
             success: function(model, response) {
-                var type = 'errors';
+                var type = 'errors', msg = model.get('message');
                 if (model.get('success') === 1) {
                     type = 'success';
                     // Get updated total after applying promo
@@ -57,7 +57,10 @@ Pet.CheckoutView = Pet.View.extend({
                         }
                     });
                 }
-                obj.addFormElementMessages(el, model.get('message'), type);
+                if ($.trim(msg).length) {
+                    $('.promo-code .errors, .promo-code .success').remove();
+                    obj.addFormElementMessages(el, model.get('message'), type);
+                }
             }
         }));
         return true;
@@ -134,7 +137,7 @@ Pet.CheckoutView = Pet.View.extend({
                     return false;
                 }
                 // Remove existing errors
-                form.find('.errors, .messages').remove();
+                form.find('.errors, .success').remove();
                 if (model.get('status')) {
                     // Form is valid
                     form.submit();
@@ -180,9 +183,9 @@ Pet.CheckoutView = Pet.View.extend({
         $('#promo_code', this.el).parent().append(
             $('<a>').attr({ href: '#' }).addClass('button-grad')
                 .text('Apply').on('click', function() {
-                    if ($.trim($('#promo_code').val()).length) {
-                        obj.savePromoCode();
-                    }
+                    //if ($.trim($('#promo_code').val()).length) {
+                    obj.savePromoCode();
+                    //}
                     return false;
                 })
         );
