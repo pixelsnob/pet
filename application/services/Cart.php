@@ -194,17 +194,18 @@ class Service_Cart {
     
     /**
      * @param Form_Checkout $form
+     * @param array $data
      * @return void
      * 
      */
-    public function saveCheckoutForm(Form_Checkout $form) {
+    public function saveCheckoutForm(Form_Checkout $form, array $data) {
         $cart = $this->_cart->get();
         $this->_cart->setBilling($form->billing->getValues(true));
         $this->_cart->setShipping($form->getShippingValues());
         $this->_cart->setUser($form->user->getValues(true));
         $this->_cart->setUserInfo($form->info->getValues(true));
         $this->_cart->setPayment($form->payment->getValues(true));
-        $promo_code = $form->promo->promo_code;//(isset($data['promo_code']) ? $data['promo_code'] : '');
+        $promo_code = $form->promo->promo_code;
         $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
         if ($promo_code && $promo_code != $existing_promo_code) {
             $promos_mapper = new Model_Mapper_Promos;
@@ -215,29 +216,9 @@ class Service_Cart {
         } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
             $this->_cart->removePromo();
         }
-        $this->_cart->setUseShipping($form->use_shipping->getValue());
-        /*$cart = $this->_cart->get();
-        $this->_cart->setBilling($data);
-        if ($cart->isShippingAddressRequired()) {
-            $this->_cart->setShipping($data);
-            $use_shipping = (isset($data['use_shipping']) ?
-                $data['use_shipping'] : 0);
-            $this->_cart->setUseShipping($use_shipping);
-        }
-        $this->_cart->setUser($data);
-        $this->_cart->setUserInfo($data);
-        $this->_cart->setPayment($data);
-        $promo_code = (isset($data['promo_code']) ? $data['promo_code'] : '');
-        $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
-        if ($promo_code && $promo_code != $existing_promo_code) {
-            $promos_mapper = new Model_Mapper_Promos;
-            $promo = $promos_mapper->getUnexpiredPromoByCode($promo_code);
-            if ($promo) {
-                $this->_cart->addPromo($promo);
-            }
-        } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
-            $this->_cart->removePromo();
-        }*/
+        $use_shipping = (isset($data['use_shipping']) ?
+            (int) $data['use_shipping'] : 0);
+        $this->_cart->setUseShipping($use_shipping);
     }
     
     /**
