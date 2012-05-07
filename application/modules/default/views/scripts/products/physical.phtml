@@ -1,6 +1,8 @@
 
 <div id="physical" class="product-select">
-    <div class="product-select-left digital-large"></div>
+    <div class="product-select-left">
+        <img src="/images/product-types/large/dvds.jpg" width="450" height="630"> 
+    </div>
     <div class="product-select-right">
         <div class="product-select-right-inner">
             <h2>DVDs</h2>  
@@ -9,8 +11,9 @@
             <ul class="subscription-options">
                 <?php foreach ($this->products as $product): ?>
                     <li>
-                        <div class="subscription-option-left">
-                            <h4 style="text-transform: none;"><?php echo $this->escape($product->name); ?></h4>
+                        <img src="/images/products/small/<?php echo $product->product_id; ?>.jpg" height="90" width="68">
+                        <div class="subscription-option-middle">
+                            <h4><?php echo $this->escape($product->name); ?></h4>
                             <p><?php echo $this->dollarFormat($product->cost); ?></p>
                         </div>
                         <div class="subscription-option-right">

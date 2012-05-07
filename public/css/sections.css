@@ -180,14 +180,14 @@
     width: 150px;
 }
 
-/* temp */
-.subscription-option-left {
-    width: 83%;
+.subscription-option-middle {
+    width: 292px;
     float: left;
+    margin-right: 10px;
 }
 
 .subscription-option-right {
-    width: 17%;
+    width: 80px;
     float: left;
     padding-top: 2px;
 }
@@ -195,8 +195,19 @@
 #physical .subscription-options li {
     width: auto;
     float: none;
+    padding-bottom: 10px;
 }
-/* /temp */
+
+#physical .subscription-options li a {
+    margin-top: 0;
+}
+
+#physical .subscription-options img {
+    float: left;
+    width: 68px;
+    margin-right: 20px;
+}
+
 
 
 .product-select h4 {

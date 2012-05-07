@@ -174,51 +174,6 @@ label input {
     width: 1000px !important;
 }
 
-/* Misc */
-
-.subscriptions-large, .digital-large, .dvds-large, .gifts-large {
-    width: 435px;
-    height: 462px;
-}
-
-.subscriptions-large {
-    background: url(/images/product-types/large/subscriptions.jpg);
-}
-
-.digital-large {
-    background: url(/images/product-types/large/digital.jpg);
-}
-
-.dvds-large {
-    background: url(/images/product-types/large/dvds.jpg);
-}
-
-.gifts-large {
-    background: url(/images/product-types/large/gifts.jpg);
-}
-
-.subscriptions-small, .digital-small, .dvds-small, .gifts-small {
-    width: 90px;
-    height: 96px;
-}
-
-.subscriptions-small {
-    background: url(/images/product-types/small/subscriptions.jpg);
-}
-
-.digital-small {
-    background: url(/images/product-types/small/digital.jpg);
-}
-
-.dvds-small {
-    background: url(/images/product-types/small/dvds.jpg);
-}
-
-.gifts-small {
-    background: url(/images/product-types/small/gifts.jpg);
-}
-
-
 /* Butons */
 
 .button-grad, .button-grad-blue {
