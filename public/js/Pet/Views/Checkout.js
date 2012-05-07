@@ -183,9 +183,7 @@ Pet.CheckoutView = Pet.View.extend({
         $('#promo_code', this.el).parent().append(
             $('<a>').attr({ href: '#' }).addClass('button-grad')
                 .text('Apply').on('click', function() {
-                    //if ($.trim($('#promo_code').val()).length) {
                     obj.savePromoCode();
-                    //}
                     return false;
                 })
         );

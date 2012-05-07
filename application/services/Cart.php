@@ -204,7 +204,7 @@ class Service_Cart {
         $this->_cart->setUser($form->user->getValues(true));
         $this->_cart->setUserInfo($form->info->getValues(true));
         $this->_cart->setPayment($form->payment->getValues(true));
-        $promo_code = (isset($data['promo_code']) ? $data['promo_code'] : '');
+        $promo_code = $form->promo->promo_code;//(isset($data['promo_code']) ? $data['promo_code'] : '');
         $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
         if ($promo_code && $promo_code != $existing_promo_code) {
             $promos_mapper = new Model_Mapper_Promos;

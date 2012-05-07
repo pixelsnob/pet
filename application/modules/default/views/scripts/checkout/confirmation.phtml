@@ -42,18 +42,19 @@
                 <thead>
                     <tr>
                         <th>What you will get:</th>
-                        <?php if ($this->cart->promo): ?>
-                            <th>Details:</th>
-                        <?php endif; ?>
+                        <th>Details:</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($this->cart->products as $product): ?>
                         <tr>
-                            <td><?php echo $this->escape($product->name); ?></td>
+                            <td><?php echo $this->escape($product->name) . ($product->is_gift ? ' (gift)' : ''); ?></td>
                             <td>
                                 <?php if ($this->cart->promo && !isset($promo_shown)): ?>
-                                    <?php echo $this->escape($this->cart->promo->public_description); $promo_shown = true; ?>
+                                    <p><?php echo $this->escape($this->cart->promo->public_description); $promo_shown = true; ?></p>
+                                <?php endif; ?>
+                                <?php if ($product->product_type_id == Model_ProductType::SUBSCRIPTION && !$product->is_gift): ?>
+                                    <p>Your first magazine will be sent within 30 days, depending on when you placed your order and where that date falls in relation to our publication schedule.</p>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -61,12 +62,6 @@
                 </tbody>
             </table>
         </div>
-        <div class="sep">
-
-        </div>
     </div>
-    <!--<div class="confirmation-right">
-
-    </div>-->
 </div>
 
