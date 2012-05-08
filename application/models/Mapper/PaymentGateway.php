@@ -155,8 +155,8 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         $ship_address = '';
         $this->resetGateway();
         $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            ->setHeader('X-VPS-Request-ID', $this->_getRequestId($data['cc_num'],
-                       $data['cc_cvv'], $data['total']))
+            //->setHeader('X-VPS-Request-ID', $this->_getRequestId($data['cc_num'],
+            //           $data['cc_cvv'], $data['total']))
             ->setField('TENDER', 'C')
             ->setField('TRXTYPE', 'A')
             ->setField('ACCT', $data['cc_num'])

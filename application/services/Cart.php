@@ -238,7 +238,25 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
-        $gateway->processAuth($data);
+        $transactions = array();
+        foreach ($cart->products as $product) {
+            switch ($product->product_type_id) {
+                //case Model_ProductType::SUBSCRIPTION:
+                    
+                //    break;
+                case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                     
+                    break;
+                default:
+                    
+                    break;
+                //case Model_ProductType::PHYSICAL:
+                    
+                //    break;
+            }
+        }
+
+        //$gateway->processAuth($data);
         //print_r($data);
         //print_r($cart);
         exit;
