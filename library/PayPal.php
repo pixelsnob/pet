@@ -161,9 +161,11 @@ class PayPal {
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 3);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->getRequest());
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
         curl_setopt($ch, CURLOPT_FORBID_REUSE, true); 
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1); 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
         // Make sure there are no curl errors.

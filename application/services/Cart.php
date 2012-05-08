@@ -238,10 +238,10 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
-        //$gateway->processAuth($data);
+        $gateway->processAuth($data);
         //print_r($data);
         //print_r($cart);
-        //exit;
+        exit;
 
         $this->_cart->setConfirmation($this->_cart->get());
         $config = Zend_Registry::get('app_config');
