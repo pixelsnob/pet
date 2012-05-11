@@ -322,6 +322,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`physical_products` (
   `shipping_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
   `description` LONGTEXT NULL DEFAULT NULL ,
+  `sequence` INT(5) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
   UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
@@ -776,69 +777,37 @@ DROP TABLE IF EXISTS `pet`.`view_products`;
 USE `pet`;
 CREATE  OR REPLACE VIEW `pet`.`view_products` AS
 select p.*, d.name, d.description
-
 from products p
-
 left join products_downloads pd
-
 on p.id = pd.product_id
-
 left join downloads d
-
 on pd.download_id = d.id
-
 where p.product_type_id = 1
 
-
-
 union
-
 select p.*, pp.name, pp.description
-
 from products p
-
 left join physical_products pp
-
 on p.id = pp.product_id
-
 where p.product_type_id = 2
 
-
-
 union
-
 select p.*, c.name, c.description
-
 from products p
-
 left join products_courses pc
-
 on p.id = pc.product_id
-
 left join courses c
-
 on pc.course_id = c.id
-
 where p.product_type_id = 3
 
-
-
 union
-
 select p.*, s.name, s.description
-
 from products p
-
 left join products_subscriptions ps
-
 on p.id = ps.product_id
-
 left join subscriptions s
-
 on ps.subscription_id = s.id
-
 where p.product_type_id = 4;
-
 ;
 
 
