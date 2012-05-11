@@ -25,12 +25,11 @@ class Service_Cart {
     }
     
     /**
-     * @param bool $check_if_processed
      * @return Model_Cart
      * 
      */
-    public function get($check_if_processed = false) {
-        return $this->_cart->get($check_if_processed);
+    public function get() {
+        return $this->_cart->get();
     }
     
     /**
@@ -231,7 +230,7 @@ class Service_Cart {
         $gateway = new Model_Mapper_PaymentGateway;
         $data = array();
         $totals = $cart->getTotals();
-        $data = array_merge(
+        /*$data = array_merge(
             $form->billing->getValues(true),
             $form->payment->getValues(true),
             array('total' => $totals['total']),
@@ -259,7 +258,7 @@ class Service_Cart {
         //$gateway->processAuth($data);
         //print_r($data);
         //print_r($cart);
-        exit;
+        exit;*/
 
         $this->_cart->setConfirmation($this->_cart->get());
         $config = Zend_Registry::get('app_config');

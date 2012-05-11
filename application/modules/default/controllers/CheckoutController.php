@@ -72,7 +72,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->view->checkout_form = $checkout_form;
         $this->view->cart_totals = $this->_cart_svc->get()->getTotals();
         $this->view->inlineScriptMin()->loadGroup('checkout')
-            ->appendScript('new Pet.CheckoutView;');
+            ->appendScript("Pet.loadView('Checkout');");
     }
 
     /**
