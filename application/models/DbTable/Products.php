@@ -104,7 +104,8 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('pp' => 'physical_products'),
                 'pp.product_id = p.id')
-            ->where('p.active');
+            ->where('p.active')
+            ->order('pp.sequence');
         return $this->fetchAll($sel);
     }
 

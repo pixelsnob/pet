@@ -49,7 +49,7 @@ update pet.products set active = 1
 where id in (169, 172, 170);
 
 insert into pet.physical_products
-select null, p.id, sp.shipping_id, sp.name, sp.description
+select null, p.id, sp.shipping_id, sp.name, sp.description, 0
 from pet.products p
 left join pet_old.sales_product sp
 on p.sku = sp.code
