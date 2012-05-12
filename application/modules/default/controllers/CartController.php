@@ -4,8 +4,7 @@ class CartController extends Zend_Controller_Action {
 
     public function init() {
         $this->_cart_svc = new Service_Cart;
-        $this->_messenger = Zend_Registry::get('messenger');
-        $this->_messenger->setNamespace('cart');
+        $this->_messenger = $this->_helper->FlashMessenger;
     }
 
     /**
@@ -27,23 +26,25 @@ class CartController extends Zend_Controller_Action {
         $this->view->cart_form = $cart_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
-            $this->_messenger->clearMessages(); 
-            $this->view->use_current_messages = true;
             if ($cart_form->isValid($post)) {
                 $this->_cart_svc->update($post);
+                $msg = 'Cart updated';
             } else {
-                $this->_messenger->addMessage('Submitted information is not valid');
+                $msg = 'Submitted information is not valid';
             }
+            $this->_helper->FlashMessenger->addMessage($msg);
+            $this->view->messages = $this->_messenger->getCurrentMessages();
+            //print_r($this->view->messages);
+        } else {
+            $this->view->messages = $this->_messenger->getMessages();
         }
         $this->view->nolayout = $this->_request->getParam('nolayout');
     }
 
-    /**
-     * 
-     */
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
         $this->_cart_svc->addProduct($product_id);
+        $this->_messenger->addMessage('Product added');
         $this->_helper->Redirector->setGotoSimple('index');
     }
     
@@ -53,15 +54,14 @@ class CartController extends Zend_Controller_Action {
             $model = Zend_Json::decode($json);
             $code = (isset($model['code']) ? $model['code'] : '');
             $success = $this->_cart_svc->addPromo($code);
-            $msgs = $this->_messenger->getCurrentMessages();
             $this->_helper->json(array(
-                'message' => (isset($msgs[0]) ? $msgs[0] : ''),
+                'message' => $this->_cart_svc->getMessage(),
                 'success' => (int) $success
             ));
-        } else {
+        /*} else {
             $code = $this->_request->getParam('code');
             $this->_cart_svc->addPromo($code);
-            $this->_helper->Redirector->setGotoSimple('index');
+            $this->_helper->Redirector->setGotoSimple('index');*/
         }
     }
 
@@ -69,12 +69,14 @@ class CartController extends Zend_Controller_Action {
         $product_id = $this->_request->getParam('product_id');
         $qty = (int) $this->_request->getParam('qty');
         $this->_cart_svc->setProductQty($product_id, $qty);
+        $this->_messenger->addMessage('Quantity updated');
         $this->_helper->Redirector->setGotoSimple('index');
     }
 
     public function removeAction() {
         $product_id = $this->_request->getParam('product_id');
         $this->_cart_svc->removeProduct($product_id);
+        $this->_messenger->addMessage('Product removed');
         $this->_helper->Redirector->setGotoSimple('index');
     }
     

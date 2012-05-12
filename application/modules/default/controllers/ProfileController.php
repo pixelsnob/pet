@@ -5,8 +5,8 @@ class ProfileController extends Zend_Controller_Action {
     public function init() {
         $this->view->getHelper('serverUrl')->setScheme('https');
         $this->_users_svc = new Service_Users;
-        $this->_messenger = Zend_Registry::get('messenger');
-        $this->_messenger->setNamespace('profile');
+        //$this->_messenger = Zend_Registry::get('messenger');
+        //$this->_messenger->setNamespace('profile');
     }
 
     /**
@@ -22,18 +22,15 @@ class ProfileController extends Zend_Controller_Action {
         } else {
             throw new Exception('User not found');
         }
-        /*if ($subscription = $this->_users_svc->getSubscription()) {
-            $this->view->subscription = $subscription;
-        } else {
-            throw new Exception('User subscription not found');
-        }*/
         $post = $this->_request->getPost();
+        $messenger = $this->_helper->FlashMessenger;
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
             $this->_users_svc->updateProfile($post);
-            $this->_messenger->addMessage('Profile updated');
+            $messenger->addMessage('Profile updated');
         } elseif ($this->_request->isPost()) {
-            $this->_messenger->addMessage('Submitted information is not valid');
+            $messenger->addMessage('Submitted information is not valid');
         }
+        $this->view->messages = $messenger->getCurrentMessages();
         $this->view->inlineScriptMin()->loadGroup('profile')
             ->appendScript('new Pet.ProfileFormView;');
     }
@@ -63,9 +60,9 @@ class ProfileController extends Zend_Controller_Action {
                     $this->_helper->Redirector->gotoSimple('index');
                 }
             } else {
-                $messenger = Zend_Registry::get('messenger');
-                $messenger->setNamespace('login');
-                $messenger->addMessage('Login failed');
+                $this->_helper->FlashMessenger->addMessage('Login failed');
+                $this->view->messages = $this->_helper->FlashMessenger
+                    ->getCurrentMessages();
             } 
         }
     }

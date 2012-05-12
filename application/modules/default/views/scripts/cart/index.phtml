@@ -4,7 +4,7 @@
         <fieldset class="account">
             <legend>Shopping Cart</legend>
             <?php if ($this->cart->hasProducts()): ?>
-                <?php echo $this->flashMessenger('cart', $this->use_current_messages); ?>
+                <?php echo $this->flashMessenger($this->messages); ?>
                 <div class="items form">
                     <ul> 
                         <?php $c = 1; foreach ($this->cart->products as $product): ?>
