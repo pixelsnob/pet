@@ -57,6 +57,8 @@ class CheckoutController extends Zend_Controller_Action {
                 //
                 if ($this->_cart_svc->process($checkout_form)) {
                     $this->_helper->Redirector->gotoSimple('confirmation');
+                    exit;
+                    return;
                 } else {
                     $msg = 'There was a problem with your order. Please check ' .
                         'your information and try again.';

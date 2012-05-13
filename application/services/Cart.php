@@ -234,11 +234,12 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
+        $status = false;
         try {
             if ($cart->hasDigitalSubscription()) {
                 exit('not yet');        
             } else {
-                return $gateway->processSale($data);
+                $status = $gateway->processSale($data);
             }
         } catch (Exception $e) {
             // log, email, all that
@@ -246,7 +247,6 @@ class Service_Cart {
             return false;
         }
 
-        return false;
         /*$data = array_merge(
             $form->billing->getValues(true),
             $form->payment->getValues(true),
@@ -282,7 +282,7 @@ class Service_Cart {
         if ($config['reset_cart_after_process']) {
             $this->_cart->reset();
         }
-        return true;
+        return $status;
     }
 
     /**
