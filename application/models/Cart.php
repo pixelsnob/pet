@@ -28,6 +28,12 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     protected $_validator = 'Model_Cart_Validator_Default';
 
     /**
+     * @var string
+     * 
+     */
+    protected $_message = '';
+
+    /**
      * Set defaults
      * 
      * @return void
@@ -76,7 +82,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
-        if (!$this->getValidator()->validateProduct($product)) {
+        $validator = $this->getValidator();
+        if (!$validator->validateProduct($product)) {
+            $this->_message = $validator->getMessage();
             return false;
         }
         if (isset($this->_data['products'][$product->product_id])) {
@@ -84,9 +92,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         } else {
             $this->_data['products'][$product->product_id] = $product;
         }
-        //$messenger = Zend_Registry::get('messenger');
-        //$msg = '"' . $product->name . '" was added to your cart';
-        //$messenger->setNamespace('cart')->addMessage($msg);
         return true;
     }
     
@@ -100,12 +105,10 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             $msg = '"' . $this->_data['products'][$product_id]->name .
                 '" was removed from your cart';
             unset($this->_data['products'][$product_id]);
-            //$messenger = Zend_Registry::get('messenger');
-            //$messenger->setNamespace('cart')->addMessage($msg);
             if ($this->_data['promo']) {
-                $valid = $this->getValidator()
-                    ->validatePromo($this->_data['promo'], false); 
+                $valid = $this->getValidator()->validatePromo($this->_data['promo']); 
                 if (!$valid) {
+                    $this->_message = $this->getValidator()->getMessage();
                     $this->removePromo();
                 }
             }
@@ -141,8 +144,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
                 $this->setProductQty($product->product_id, $qty);
             }
         }
-        //$messenger = Zend_Registry::get('messenger');
-        //$messenger->setNamespace('cart')->addMessage('Cart updated');
     }
     
     /**
@@ -408,12 +409,10 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      */
     public function addPromo(Model_Promo $promo) {
         if (!$this->getValidator()->validatePromo($promo)) {
+            $this->_message = $this->getValidator()->getMessage();
             return false;
         }
         $this->_data['promo'] = $promo;
-        //$messenger = Zend_Registry::get('messenger');
-        //$messenger->setNamespace('cart')
-            //->addMessage('Promo "' . $promo->code . '" added');
         return true;
     }
     
@@ -424,9 +423,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     public function removePromo() {
         $code = $this->_data['promo']->code;
         $this->_data['promo'] = null;
-        //$messenger = Zend_Registry::get('messenger');
-        //$messenger->setNamespace('cart')
-        //    ->addMessage('Promo "' . $code . '" removed');
     }
 
     /**
@@ -456,4 +452,11 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         return $data;
     }
     
+    /**
+     * @return string
+     * 
+     */
+    public function getMessage() {
+        return $this->_message;
+    }
 }

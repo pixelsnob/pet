@@ -34,7 +34,6 @@ class CartController extends Zend_Controller_Action {
             }
             $this->_helper->FlashMessenger->addMessage($msg);
             $this->view->messages = $this->_messenger->getCurrentMessages();
-            //print_r($this->view->messages);
         } else {
             $this->view->messages = $this->_messenger->getMessages();
         }
@@ -43,8 +42,12 @@ class CartController extends Zend_Controller_Action {
 
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
-        $this->_cart_svc->addProduct($product_id);
-        $this->_messenger->addMessage('Product added');
+        if ($this->_cart_svc->addProduct($product_id)) {
+            $msg = 'Product added';
+        } else {
+            $msg = $this->_cart_svc->getMessage();
+        }
+        $this->_messenger->addMessage($msg);
         $this->_helper->Redirector->setGotoSimple('index');
     }
     
@@ -58,10 +61,10 @@ class CartController extends Zend_Controller_Action {
                 'message' => $this->_cart_svc->getMessage(),
                 'success' => (int) $success
             ));
-        /*} else {
+        } else {
             $code = $this->_request->getParam('code');
             $this->_cart_svc->addPromo($code);
-            $this->_helper->Redirector->setGotoSimple('index');*/
+            $this->_helper->Redirector->setGotoSimple('index');
         }
     }
 

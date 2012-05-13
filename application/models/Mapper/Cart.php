@@ -5,9 +5,23 @@
  */
 class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     
+    /**
+     * @var Model_Cart
+     * 
+     */
     protected $_cart;
-
+    
+    /**
+     * @var Model_Cart_Confirmation
+     * 
+     */
     protected $_confirmation;
+    
+    /**
+     * @var string
+     * 
+     */
+    protected $_message = '';
 
     /**
      * @return void
@@ -53,7 +67,9 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
 
     public function addProduct(Model_Product_Abstract $product) {
         $product = new Model_Cart_Product(array('product' => $product));
-        return $this->_cart->addProduct($product); 
+        $status = $this->_cart->addProduct($product); 
+        $this->_message = $this->_cart->getMessage();
+        return $status;
     }
 
     /**
@@ -264,6 +280,14 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         } else {
             $this->_confirmation->timestamp = time();
         }
+    }
+    
+    /**
+     * @return string
+     * 
+     */
+    public function getMessage() {
+        return $this->_message;
     }
 }
 

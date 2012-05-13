@@ -20,8 +20,6 @@ class Service_Cart {
     public function __construct() {
         $this->_cart = new Model_Mapper_Cart;
         $this->_products_svc = new Service_Products;
-        //$this->_messenger = Zend_Registry::get('messenger');
-        //$this->_messenger->setNamespace('cart');
     }
     
     /**
@@ -51,10 +49,11 @@ class Service_Cart {
         $product = $this->_products_svc->getById($product_id);
         if ($product) {
             if (!$this->_cart->addProduct($product)) {
+                $this->_message = $this->_cart->getMessage();
                 return false;
             }
         } else {
-            //$this->_messenger->addMessage('Product not found');
+            $this->_message = 'Product not found';
             return false;
         }
         return true;
@@ -161,9 +160,6 @@ class Service_Cart {
             $form->user->removeElement('password');
             $form->user->removeElement('confirm_password');
         }
-        /*if (!$cart->isShippingAddressRequired()) {
-            $form->removeSubform('shipping');
-        }*/
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray(),
@@ -270,10 +266,18 @@ class Service_Cart {
         return true;
     }
 
+    /**
+     * return Model_Confirmation|void
+     * 
+     */
     public function getConfirmation() {
         return $this->_cart->getConfirmation();
     }
 
+    /**
+     * @return string
+     * 
+     */
     public function getMessage() {
         return $this->_message;
     }
