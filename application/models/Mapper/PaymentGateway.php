@@ -83,6 +83,61 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         $this->_gateway = $gateway;
     }
 
+    public function processSale($data) {
+        //return false;
+        $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
+        $name = $data['first_name'] . ' ' . $data['last_name'];
+        $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
+        $ship_address = $data['shipping_address'] . ' ' .
+            $data['shipping_address_2'];
+        $this->resetGateway();
+        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
+            //->setHeader('X-VPS-Request-ID', $this->_getRequestId($data['cc_num'],
+            //           $data['cc_cvv'], $data['total']))
+            ->setField('TENDER', 'C')
+            ->setField('TRXTYPE', 'A')
+            ->setField('ACCT', $data['cc_num'])
+            ->setField('CVV2', $data['cc_cvv'])
+            ->setField('AMT', $data['total'])
+            ->setField('EXPDATE', $exp_date)
+            ->setField('NAME', $name)
+            ->setField('STREET', $address)
+            ->setField('EMAIL', $data['email'])
+            ->setField('ZIP', $data['billing_postal_code'])
+            ->setField('CITY', $data['billing_city'])
+            ->setField('STATE', $data['billing_state'])
+            ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
+            ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
+            ->setField('SHIPTOSTREET', $ship_address)
+            ->setField('SHIPTOZIP', $data['shipping_postal_code'])
+            ->setField('SHIPTOCITY', $data['shipping_city'])
+            ->setField('SHIPTOSTATE', $data['shipping_state'])
+            ->setField('PHONENUM', $data['shipping_phone'])
+            ->send()
+            ->processResponse();
+        $this->saveCall();
+        // Store PNREF value from the auth call.
+        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
+        // Check to see if response failed.
+        if ($this->_gateway->isSuccess()) {
+            // If this is a CVV mismatch, void the auth.
+            if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
+                $this->_error = self::ERR_CVV;
+                throw new Exception('CVV Mismatch');
+            }
+            return true;
+        } else {
+            $msg = 'CC transaction failed.';
+            if ($this->_gateway->getError()) {
+                $msg .= ' Gateway error: ' . $this->_gateway->getError();
+                $this->_error = self::ERR_GENERIC;
+            } else {
+                $this->_error = self::ERR_DECLINED;
+            }
+            throw new Exception($msg);
+        }
+    }
+
     /**
      * Gets an express checkout URL by making a gateway call to PayPal, and
      * retrieving some data.

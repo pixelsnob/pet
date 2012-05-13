@@ -6,7 +6,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->_cart_svc = new Service_Cart;
         $this->_users_svc = new Service_Users;
         $this->_messenger = $this->_helper->FlashMessenger;
-        $this->_messenger->setNamespace('checkout');
+        //$this->_messenger->setNamespace('checkout');
     }
 
     /**
@@ -42,7 +42,7 @@ class CheckoutController extends Zend_Controller_Action {
         $cart = $this->_cart_svc->get();
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         if ($cart->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
-            exit('fix me');
+            exit('fix me'); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             //$msg = 'You must log in to purchase a renewal';
             //$this->_messenger->setNamespace('login')->addMessage($msg);
             //$this->_forward('login', 'profile', 'default', 
@@ -57,19 +57,20 @@ class CheckoutController extends Zend_Controller_Action {
                 //
                 if ($this->_cart_svc->process($checkout_form)) {
                     $this->_helper->Redirector->gotoSimple('confirmation');
-                    return;
                 } else {
-                    $msg = 'There was a problem with your order. Please check ' . 
-                           'your information and try again.';
+                    $msg = 'There was a problem with your order. Please check ' .
+                        'your information and try again.';
                     $this->_messenger->addMessage($msg);
+                    $this->_helper->Redirector->gotoRoute(array(), 'checkout');
                 }
             } else {
                 $this->_messenger->addMessage('Submitted information is not valid');
             }
+            $this->view->messages = $this->_messenger->getCurrentMessages();
         } else {
             $checkout_form = $this->_cart_svc->getCheckoutForm();
+            $this->view->messages = $this->_messenger->getMessages();
         }
-        $this->view->messages = $this->_messenger->getCurrentMessages();
         $this->view->cart = $this->_cart_svc->get();
         $this->view->checkout_form = $checkout_form;
         $this->view->cart_totals = $this->_cart_svc->get()->getTotals();

@@ -226,8 +226,27 @@ class Service_Cart {
     public function process($form) {
         $cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
-        $data = array();
         $totals = $cart->getTotals();
+        $data = array_merge(
+            $form->billing->getValues(true),
+            $form->payment->getValues(true),
+            array('total' => $totals['total']),
+            $form->user->getValues(true),
+            $form->getShippingValues()
+        );
+        try {
+            if ($cart->hasDigitalSubscription()) {
+                exit('not yet');        
+            } else {
+                return $gateway->processSale($data);
+            }
+        } catch (Exception $e) {
+            // log, email, all that
+            //print_r($e); exit;
+            return false;
+        }
+
+        return false;
         /*$data = array_merge(
             $form->billing->getValues(true),
             $form->payment->getValues(true),
