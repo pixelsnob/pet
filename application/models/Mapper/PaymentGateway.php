@@ -84,7 +84,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     }
 
     public function processSale($data) {
-        //return false;
         $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
         $name = $data['first_name'] . ' ' . $data['last_name'];
         $address = $data['billing_address'] . ' ' . $data['billing_address_2'];

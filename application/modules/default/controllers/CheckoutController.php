@@ -14,39 +14,20 @@ class CheckoutController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
+        // Check if XHR
         if ($this->_request->isXmlHttpRequest() &&
                 !$this->_request->getParam('nolayout')) {
-            if ($this->_request->isPost()) {
-                $cart = $this->_cart_svc->get();
-                if (!$cart->hasProducts()) {
-                    $this->_helper->json(array(
-                        'empty' => true
-                    ));
-                    return;
-                }
-                $fields = Zend_Json::decode($this->_request->getParam('model'));
-                $post = array();
-                foreach ($fields as $field) {
-                    $post[$field['name']] = $field['value'];
-                }
-                $checkout_form = $this->_cart_svc->getCheckoutForm();
-                $status = $checkout_form->isValid($post);
-                $this->_cart_svc->saveCheckoutForm($checkout_form, $post);
-                $this->_helper->json(array(
-                    'messages' => $checkout_form->getMessages(),
-                    'status' => $status
-                ));
-            }
+            $this->_updateCheckoutFormJson();
             return;
         }
         $cart = $this->_cart_svc->get();
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
+        // User is logged out but is trying to purchase a renewal. Clear cart
+        // show them what happened
         if ($cart->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
-            exit('fix me'); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            //$msg = 'You must log in to purchase a renewal';
-            //$this->_messenger->setNamespace('login')->addMessage($msg);
-            //$this->_forward('login', 'profile', 'default', 
-            //    array('redirect_to' => 'checkout'));
+            $this->_cart_svc->reset();
+            $this->_forward('renewal-login-error');
+            return;
         }
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
@@ -57,13 +38,13 @@ class CheckoutController extends Zend_Controller_Action {
                 //
                 if ($this->_cart_svc->process($checkout_form)) {
                     $this->_helper->Redirector->gotoSimple('confirmation');
-                    exit;
                     return;
                 } else {
                     $msg = 'There was a problem with your order. Please check ' .
                         'your information and try again.';
                     $this->_messenger->addMessage($msg);
                     $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+                    return;
                 }
             } else {
                 $this->_messenger->addMessage('Submitted information is not valid');
@@ -80,6 +61,31 @@ class CheckoutController extends Zend_Controller_Action {
             ->appendScript("Pet.loadView('Checkout');");
     }
 
+    private function _updateCheckoutFormJson() {
+        if ($this->_request->isPost()) {
+            $cart = $this->_cart_svc->get();
+            if (!$cart->hasProducts() || $cart->hasRenewal() &&
+                    !$this->_users_svc->isAuthenticated()) {
+                $this->_helper->json(array(
+                    'empty' => true
+                ));
+                return;
+            }
+            $fields = Zend_Json::decode($this->_request->getParam('model'));
+            $post = array();
+            foreach ($fields as $field) {
+                $post[$field['name']] = $field['value'];
+            }
+            $checkout_form = $this->_cart_svc->getCheckoutForm();
+            $status = $checkout_form->isValid($post);
+            $this->_cart_svc->saveCheckoutForm($checkout_form, $post);
+            $this->_helper->json(array(
+                'messages' => $checkout_form->getMessages(),
+                'status' => $status
+            ));
+        }
+    }
+
     /**
      * Confirmation page
      * 
@@ -91,6 +97,15 @@ class CheckoutController extends Zend_Controller_Action {
             return;
         }
         $this->view->cart = $confirmation->cart;
+    }
+
+    /**
+     * Page that tells the user that they were trying to purchase a renewal, 
+     * but they were logged out/timed out
+     * 
+     */
+    public function renewalLoginErrorAction() {
+        $this->view->getHelper('serverUrl')->setScheme('https');
     }
 
 }

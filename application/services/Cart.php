@@ -224,6 +224,7 @@ class Service_Cart {
      * 
      */
     public function process($form) {
+        $config = Zend_Registry::get('app_config');
         $cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
         $totals = $cart->getTotals();
@@ -246,39 +247,7 @@ class Service_Cart {
             //print_r($e); exit;
             return false;
         }
-
-        /*$data = array_merge(
-            $form->billing->getValues(true),
-            $form->payment->getValues(true),
-            array('total' => $totals['total']),
-            $form->user->getValues(true),
-            $form->getShippingValues()
-        );
-        $transactions = array();
-        foreach ($cart->products as $product) {
-            switch ($product->product_type_id) {
-                //case Model_ProductType::SUBSCRIPTION:
-                    
-                //    break;
-                case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                     
-                    break;
-                default:
-                    
-                    break;
-                //case Model_ProductType::PHYSICAL:
-                    
-                //    break;
-            }
-        }
-
-        //$gateway->processAuth($data);
-        //print_r($data);
-        //print_r($cart);
-        exit;*/
-
         $this->_cart->setConfirmation($this->_cart->get());
-        $config = Zend_Registry::get('app_config');
         if ($config['reset_cart_after_process']) {
             $this->_cart->reset();
         }
