@@ -18,7 +18,8 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         'user'                => null,  // Model_Cart_User
         'user_info'           => null,  // Model_Cart_UserInfo
         'timestamp'           => null,  // Unix timestamp of last update
-        'use_shipping'        => false  // Whether to show shipping subform
+        'use_shipping'        => false, // Whether to show shipping subform
+        'ec_token'            => null   // Express Checkout token
     );
     
     /**

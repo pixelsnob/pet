@@ -218,6 +218,24 @@ class Service_Cart {
         $this->_cart->setUseShipping($use_shipping);
     }
     
+    public function isCartValid(Form_Checkout $form) {
+        $data = array_merge(
+            $form->billing->getValues(true),
+            $form->payment->getValues(true),
+            $form->user->getValues(true),
+            $form->getShippingValues(),
+            array('promo_code' => $form->promo->promo_code->getValue())
+        );
+        $cart = $this->get();
+        // Remove pw validators
+        $form->user->password->setValidators(array())->setRequired(false);
+        $form->user->confirm_password->setValidators(array())
+            ->setRequired(false);
+        // validate pw 
+        ///
+        return $form->isValid($data); 
+    }
+
     /**
      * @param array $post
      * @return bool
@@ -266,6 +284,10 @@ class Service_Cart {
         );
         $token = $gateway->getExpressCheckoutToken($data, $return_url,
             $cancel_url);
+        if (!$token) {
+            throw new Exception('getExpressCheckoutUrl() failed');
+        }
+        $cart->ec_token = $token;
         return $config['payment_gateway']['ec_url'] . '&token=' . $token;
     }
 

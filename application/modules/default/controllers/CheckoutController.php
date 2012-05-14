@@ -2,12 +2,15 @@
 
 class CheckoutController extends Zend_Controller_Action {
 
+    private $_generic_error = '';
+
     public function init() {
         $this->_cart_svc = new Service_Cart;
         $this->_users_svc = new Service_Users;
         $this->_messenger = $this->_helper->FlashMessenger;
         $this->view->getHelper('serverUrl')->setScheme('https');
-        //$this->_messenger->setNamespace('checkout');
+        $this->_generic_error = 'There was a problem with your order. Please check ' .
+            'your information and try again.';
     }
 
     /**
@@ -44,9 +47,7 @@ class CheckoutController extends Zend_Controller_Action {
                         $this->_helper->Redirector->gotoSimple('confirmation');
                         exit;
                     } else {
-                        $msg = 'There was a problem with your order. Please check ' .
-                            'your information and try again.';
-                        $this->_messenger->addMessage($msg);
+                        $this->_messenger->addMessage($this->_generic_error);
                         $this->_helper->Redirector->gotoRoute(array(), 'checkout');
                         exit;
                     }
@@ -58,6 +59,11 @@ class CheckoutController extends Zend_Controller_Action {
                         array(), 'checkout'));
                     $url = $this->_cart_svc->getExpressCheckoutUrl(
                         $return_url, $cancel_url);
+                    if (!$url) {
+                        $this->_messenger->addMessage($this->_generic_error);
+                        $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+                        exit;
+                    }
                     $this->_helper->Redirector->gotoUrl($url);
                     exit;
                 }
@@ -106,7 +112,29 @@ class CheckoutController extends Zend_Controller_Action {
     }
     
     public function processPaypalAction() {
-
+        $cart = $this->_cart_svc->get();
+        $token = $this->_request->getParam('token');
+        $payer_id = $this->_request->getParam('PayerID'); // notice capitalization!
+        // Make sure token and payer id exist, and validate token against
+        // token stored in cart
+        if (!$token || !$payer_id || $token != $cart->ec_token) {
+            $this->_messenger->addMessage($this->_generic_error);
+            $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+        }
+        // validate stored values
+        $checkout_form = $this->_cart_svc->getCheckoutForm();
+        if ($this->_cart_svc->isCartValid($checkout_form)) {
+            if ($this->_cart_svc->process($checkout_form)) {
+                $this->_messenger->addMessage($this->_generic_error);
+                $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+            } else {
+                exit('process failed'); 
+            }
+            exit('process'); 
+        } else {
+            $this->_messenger->addMessage('Submitted information is not valid');
+            $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+        }
     }
 
     /**
