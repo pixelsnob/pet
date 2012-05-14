@@ -22,6 +22,7 @@ class ProfileController extends Zend_Controller_Action {
         }
         $post = $this->_request->getPost();
         $messenger = $this->_helper->FlashMessenger;
+        $messenger->setNamespace('login');
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
             $this->_users_svc->updateProfile($post);
             $messenger->addMessage('Profile updated');

@@ -243,15 +243,30 @@ class Service_Cart {
                 $status = $gateway->processSale($data);
             }
         } catch (Exception $e) {
-            // log, email, all that
-            //print_r($e); exit;
             return false;
         }
         $this->_cart->setConfirmation($this->_cart->get());
         if ($config['reset_cart_after_process']) {
             $this->_cart->reset();
         }
+
         return $status;
+    }
+
+    public function getExpressCheckoutUrl($return_url, $cancel_url) {
+        $gateway = new Model_Mapper_PaymentGateway;
+        $config = Zend_Registry::get('app_config');
+        $cart = $this->get();
+        $totals = $cart->getTotals();
+        $data = array(
+            'email' => $cart->user->email,
+            'total' => $totals['total'],
+            'return_url'   => $return_url,
+            'cancel_url' => $cancel_url
+        );
+        $token = $gateway->getExpressCheckoutToken($data, $return_url,
+            $cancel_url);
+        return $config['payment_gateway']['ec_url'] . '&token=' . $token;
     }
 
     /**

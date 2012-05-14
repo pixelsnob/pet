@@ -163,7 +163,7 @@
 }
 
 .product-select .subscription-options li a {
-    width: 30px;
+    width: 60px;
     margin-top: 10px;
 }
 
@@ -173,7 +173,7 @@
 }
 
 .product-select .renew a {
-    width: 100px;
+    width: 120px;
 }
 
 .product-select .digital a {

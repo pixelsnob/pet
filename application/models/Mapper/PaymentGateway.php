@@ -7,6 +7,8 @@ require 'PayPal.php';
 
 class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     
+    private $_gateway;
+
     /**
      * @var string 
      * 
@@ -91,8 +93,8 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             $data['shipping_address_2'];
         $this->resetGateway();
         $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            //->setHeader('X-VPS-Request-ID', $this->_getRequestId($data['cc_num'],
-            //           $data['cc_cvv'], $data['total']))
+            ->setHeader('X-VPS-Request-ID', $this->_getRequestId($data['cc_num'],
+                       $data['cc_cvv'], $data['total']))
             ->setField('TENDER', 'C')
             ->setField('TRXTYPE', 'A')
             ->setField('ACCT', $data['cc_num'])
@@ -143,12 +145,11 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      * 
      */
-    public function getExpressCheckoutToken($return_url, $cancel_url) {
-        $trxtype = ($this->_cart->hasBoxProds() ? 'A' : 'S');
+    public function getExpressCheckoutToken($data, $return_url, $cancel_url) {
         $this->resetGateway();
-        $this->_gateway->setField('AMT', $this->_cart->totals->total)
-            ->setField('EMAIL', $this->_cart->billing->email)
-            ->setField('TRXTYPE', $trxtype)
+        $this->_gateway->setField('AMT', $data['total'])
+            ->setField('EMAIL', $data['email'])
+            ->setField('TRXTYPE', 'S')
             ->setField('ACTION', 'S')
             ->setField('TENDER', 'P')
             ->setField('NOSHIPPING', 1)
@@ -160,7 +161,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         if ($this->_gateway->isSuccess()) {
             return $this->_gateway->getResponseField('TOKEN');
         }  else {
-            return false;
+            throw new Exception('getExpressCheckoutToken() failed');
         }
     }
 

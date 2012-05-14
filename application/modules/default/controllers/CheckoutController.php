@@ -6,6 +6,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->_cart_svc = new Service_Cart;
         $this->_users_svc = new Service_Users;
         $this->_messenger = $this->_helper->FlashMessenger;
+        $this->view->getHelper('serverUrl')->setScheme('https');
         //$this->_messenger->setNamespace('checkout');
     }
 
@@ -20,6 +21,7 @@ class CheckoutController extends Zend_Controller_Action {
             $this->_updateCheckoutFormJson();
             return;
         }
+        ///////////////////////////////////////////////////////////////////////
         $cart = $this->_cart_svc->get();
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         // User is logged out but is trying to purchase a renewal. Clear cart
@@ -35,16 +37,29 @@ class CheckoutController extends Zend_Controller_Action {
             $valid = $checkout_form->isValid($post);
             $this->_cart_svc->saveCheckoutForm($checkout_form, $post);
             if ($valid) {
-                //
-                if ($this->_cart_svc->process($checkout_form)) {
-                    $this->_helper->Redirector->gotoSimple('confirmation');
-                    return;
+                $cart = $this->_cart_svc->get();
+                if ($cart->payment->payment_method == 'credit_card') {
+                    // Credit card transactions
+                    if ($this->_cart_svc->process($checkout_form)) {
+                        $this->_helper->Redirector->gotoSimple('confirmation');
+                        exit;
+                    } else {
+                        $msg = 'There was a problem with your order. Please check ' .
+                            'your information and try again.';
+                        $this->_messenger->addMessage($msg);
+                        $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+                        exit;
+                    }
                 } else {
-                    $msg = 'There was a problem with your order. Please check ' .
-                        'your information and try again.';
-                    $this->_messenger->addMessage($msg);
-                    $this->_helper->Redirector->gotoRoute(array(), 'checkout');
-                    return;
+                    // Paypal Express Checkout -- redirect to paypal site
+                    $return_url = $this->view->serverUrl($this->view->url(
+                        array(), 'checkout_process_paypal'));
+                    $cancel_url = $this->view->serverUrl($this->view->url(
+                        array(), 'checkout'));
+                    $url = $this->_cart_svc->getExpressCheckoutUrl(
+                        $return_url, $cancel_url);
+                    $this->_helper->Redirector->gotoUrl($url);
+                    exit;
                 }
             } else {
                 $this->_messenger->addMessage('Submitted information is not valid');
@@ -60,7 +75,11 @@ class CheckoutController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()->loadGroup('checkout')
             ->appendScript("Pet.loadView('Checkout');");
     }
-
+    
+    /**
+     * Processes form post and returns json
+     * 
+     */
     private function _updateCheckoutFormJson() {
         if ($this->_request->isPost()) {
             $cart = $this->_cart_svc->get();
@@ -84,6 +103,10 @@ class CheckoutController extends Zend_Controller_Action {
                 'status' => $status
             ));
         }
+    }
+    
+    public function processPaypalAction() {
+
     }
 
     /**
