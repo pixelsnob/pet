@@ -218,7 +218,12 @@ class Service_Cart {
         $this->_cart->setUseShipping($use_shipping);
     }
     
-    public function isCartValid(Form_Checkout $form) {
+    /**
+     * @param Form_Checkout $form
+     * @return bool
+     * 
+     */
+    public function validateSavedForm(Form_Checkout $form) {
         $data = array_merge(
             $form->billing->getValues(true),
             $form->payment->getValues(true),
@@ -226,13 +231,11 @@ class Service_Cart {
             $form->getShippingValues(),
             array('promo_code' => $form->promo->promo_code->getValue())
         );
-        $cart = $this->get();
         // Remove pw validators
         $form->user->password->setValidators(array())->setRequired(false);
         $form->user->confirm_password->setValidators(array())
             ->setRequired(false);
-        // validate pw 
-        ///
+        // validate pw ?
         return $form->isValid($data); 
     }
 
@@ -261,13 +264,21 @@ class Service_Cart {
                 $status = $gateway->processSale($data);
             }
         } catch (Exception $e) {
-            return false;
+            $status = false;
         }
+        try {
+            $mongo = Pet_Mongo::getInstance();
+            $mongo->orders->insert(array(
+                'status'           => ($status ? 'success' : 'failed'),
+                'cart'             => $cart->toArray(),
+                'gateway_calls'    => $gateway->getCalls()
+            ), array('fsync' => true));
+        } catch (Exception $e) {}
+
         $this->_cart->setConfirmation($this->_cart->get());
         if ($config['reset_cart_after_process']) {
             $this->_cart->reset();
         }
-
         return $status;
     }
 

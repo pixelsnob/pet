@@ -35,5 +35,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'Pet_Controller_Action_Helper');
     }
 
+    protected function _initMongo() {
+        $config = $this->getOptions();
+        Pet_Mongo::setConnectionUri($config['mongo']['connection_uri']);
+        Pet_Mongo::setDb($config['mongo']['db']);
+    }
 }
 
