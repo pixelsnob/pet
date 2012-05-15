@@ -8,19 +8,17 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
     const LENGTH  = 'length';
     const LETTER  = 'letter';
     const DIGIT   = 'digit';
-    const SPECIAL = 'special';
-    const CHARS = 'chars';
+    //const SPECIAL = 'special';
  
     /**
      * @var array
      * 
      */
     protected $_messageTemplates = array(
-        self::LENGTH  => 'Password must be at least 8 characters in length',
+        self::LENGTH  => 'Password must be at least 86 characters in length',
         self::LETTER  => 'Password must contain at least one letter',
-        self::DIGIT   => 'Password must contain at least one number',
-        self::SPECIAL => 'Password must contain a letter, a number, and at least one of ! @ $ % ^ & * ( ) + ? _ -',
-        self::SPECIAL => 'Password must contain at least one of ! @ $ % ^ & * ( ) + ? _ -'
+        self::DIGIT   => 'Password must contain at least one number'
+        //self::SPECIAL => 'Password must contain at least one of ! @ $ % ^ & * ( ) + ? _ -'
     );
     
     /**
@@ -29,7 +27,7 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
      * 
      */
     public function isValid($value) {
-        if (strlen($value) < 8) {
+        if (strlen($value) < 6) {
             $this->_error(self::LENGTH);
             return false;
         }
@@ -45,10 +43,10 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
             $this->_error(self::DIGIT);
             return false;
         }
-        if (!preg_match('/[!@\$%\^&\*\(\)\+\?_\-]/', $value)) {
+        /*if (!preg_match('/[!@\$%\^&\*\(\)\+\?_\-]/', $value)) {
             $this->_error(self::SPECIAL);
             return false;
-        }
+        }*/
         return true;
     }
 }
