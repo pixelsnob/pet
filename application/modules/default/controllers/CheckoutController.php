@@ -43,7 +43,7 @@ class CheckoutController extends Zend_Controller_Action {
                 $cart = $this->_cart_svc->get();
                 if ($cart->payment->payment_method == 'credit_card') {
                     // Credit card transactions
-                    if ($this->_cart_svc->processSale($checkout_form)) {
+                    if ($this->_cart_svc->process($checkout_form)) {
                         $this->_helper->Redirector->gotoSimple('confirmation');
                         exit;
                     } else {

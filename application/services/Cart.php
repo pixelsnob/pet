@@ -296,9 +296,11 @@ class Service_Cart {
             //print_r($e);
             //exit;
         }
-        $this->_cart->setConfirmation($this->_cart->get());
-        if ($config['reset_cart_after_process']) {
-            $this->_cart->reset();
+        if ($status) {
+            $this->_cart->setConfirmation($this->_cart->get());
+            if ($config['reset_cart_after_process']) {
+                $this->_cart->reset();
+            }
         }
         return $status;
     }

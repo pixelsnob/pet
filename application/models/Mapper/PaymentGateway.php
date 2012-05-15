@@ -66,19 +66,9 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             'VERBOSITY'     => 'medium',
             'CLIENT_IP'     => $_SERVER['REMOTE_ADDR']
         );
-        // Ugly hack due to PayPal's Express Checkout testing url not working
-        // anymore: use the live url for testing (!)
-        /*$config_all = new Zend_Config_Ini(APPLICATION_PATH .
-            '/configs/application.ini');
-        if ($this->_cart->payment->payment_method == 'paypal' && 
-            APPLICATION_ENV != 'production') {
-            $url = $config_all->production->payment_gateway->url; 
-        } else {
-            $url = $this->_config->url;
-        }*/
         $gateway->setFields($fields)
-            ->setUrl($this->_config['url']);
-            //->setHeader('X-VPS-Request-ID', $this->_getRequestId());
+            ->setUrl($this->_config['url'])
+            ->setHeader('X-VPS-Request-ID', uniqid());
         $this->_gateway = $gateway;
     }
     
@@ -89,6 +79,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function processSale(array $data, $payer_id = null) {
+        $this->resetGateway();
         $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
         $name = $data['first_name'] . ' ' . $data['last_name'];
         $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
