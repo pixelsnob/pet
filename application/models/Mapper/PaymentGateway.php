@@ -47,11 +47,8 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * @return void
      */
     public function __construct() {
-        $app_config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini',
-            APPLICATION_ENV);
-        $this->_config = $app_config->payment_gateway;
-        //$cart_mapper = new Model_Mapper_Cart;
-        //$this->_cart = $cart_mapper->get();
+        $app_config = Zend_Registry::get('app_config');
+        $this->_config = $app_config['payment_gateway'];
     }
     
     /**
@@ -62,10 +59,10 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     public function resetGateway() {
         $gateway = new PayPal;
         $fields = array(
-            'USER'          => $this->_config->user,
-            'PWD'           => $this->_config->pwd,
-            'VENDOR'        => $this->_config->vendor,
-            'PARTNER'       => $this->_config->partner,
+            'USER'          => $this->_config['user'],
+            'PWD'           => $this->_config['pwd'],
+            'VENDOR'        => $this->_config['vendor'],
+            'PARTNER'       => $this->_config['partner'],
             'VERBOSITY'     => 'medium',
             'CLIENT_IP'     => $_SERVER['REMOTE_ADDR']
         );
@@ -80,7 +77,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             $url = $this->_config->url;
         }*/
         $gateway->setFields($fields)
-            ->setUrl($this->_config->url);
+            ->setUrl($this->_config['url']);
             //->setHeader('X-VPS-Request-ID', $this->_getRequestId());
         $this->_gateway = $gateway;
     }
