@@ -84,8 +84,13 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             //->setHeader('X-VPS-Request-ID', $this->_getRequestId());
         $this->_gateway = $gateway;
     }
-
-    public function processSale($data) {
+    
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function processSale(array $data) {
         $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
         $name = $data['first_name'] . ' ' . $data['last_name'];
         $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
@@ -126,7 +131,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
                 $this->_error = self::ERR_CVV;
                 throw new Exception('CVV Mismatch');
             }
-            return true;
         } else {
             $msg = 'CC transaction failed.';
             if ($this->_gateway->getError()) {
@@ -145,7 +149,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      * 
      */
-    public function getExpressCheckoutToken($data, $return_url, $cancel_url) {
+    public function getExpressCheckoutToken(array $data, $return_url, $cancel_url) {
         $this->resetGateway();
         $this->_gateway->setField('AMT', $data['total'])
             ->setField('EMAIL', $data['email'])
@@ -166,16 +170,18 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * Processes an Express Checkout transaction.
+     * Processes an Express Checkout sale
      * 
-     * 
+     * @param array $data
+     * @param string $token
+     * @param string $payer_id
+     * @return void
      */
-    public function processExpressCheckout($token, $payer_id) {
-        $trxtype = ($this->_cart->hasBoxProds() ? 'A' : 'S');
+    public function processExpressCheckoutSale(array $data, $token, $payer_id) {
         $this->resetGateway();
-        $this->_gateway->setField('AMT', $this->_cart->totals->total)
-              ->setField('EMAIL', $this->_cart->billing->email)
-              ->setField('TRXTYPE', $trxtype)
+        $this->_gateway->setField('AMT', $data['total'])
+              ->setField('EMAIL', $data['email'])
+              ->setField('TRXTYPE', 'S')
               ->setField('ACTION', 'D')
               ->setField('TENDER', 'P')
               ->setField('TOKEN', $token)
@@ -183,17 +189,11 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
               ->send()
               ->processResponse();
         $this->saveCall();
-        $pnref = $this->_gateway->getResponseField('PNREF');
-        if ($trxtype == 'A') {
-            $this->_auth_pnref = $pnref;
-        } else {
-            $this->_capture_pnref = $pnref;
-        }
+        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
         if (!$this->_gateway->isSuccess()) {
             $this->_error = self::ERR_EXPRESS_CHECKOUT;
             throw new Exception('Express checkout process failed');
         }
-        return true;
     }
 
     /**

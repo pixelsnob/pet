@@ -241,10 +241,11 @@ class Service_Cart {
 
     /**
      * @param array $post
+     * @param string $payer_id
      * @return bool
      * 
      */
-    public function process($form) {
+    public function process($form, $payer_id = '') {
         $config = Zend_Registry::get('app_config');
         $cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
@@ -256,16 +257,26 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
-        $status = false;
+        $status = true;
         try {
-            if ($cart->hasDigitalSubscription()) {
-                exit('not yet');        
+            if ($cart->payment->payment_method == 'credit_card') {
+                if ($cart->hasDigitalSubscription()) {
+                    exit('not yet');        
+                } else {
+                    $gateway->processSale($data);
+                }
             } else {
-                $status = $gateway->processSale($data);
+                if ($cart->hasDigitalSubscription()) {
+                    exit('not yet');        
+                } else {
+                    $gateway->processExpressCheckoutSale($data,
+                        $cart->ec_token, $payer_id);
+                }
             }
         } catch (Exception $e) {
             $status = false;
         }
+        // Log
         try {
             $mongo = Pet_Mongo::getInstance();
             $cart_clone = clone $cart;
@@ -279,13 +290,12 @@ class Service_Cart {
                 'status'           => ($status ? 'success' : 'failed'),
                 'cart'             => $cart_array,
                 'gateway_calls'    => $gateway->getCalls()
-            )/*, array('fsync' => true)*/);
+            ), array('fsync' => true));
         } catch (Exception $e) {
             // Log but don't affect the transaction if this fails
-            print_r($e);
-            exit;
+            //print_r($e);
+            //exit;
         }
-
         $this->_cart->setConfirmation($this->_cart->get());
         if ($config['reset_cart_after_process']) {
             $this->_cart->reset();
@@ -299,7 +309,7 @@ class Service_Cart {
      * @return string 
      * 
      */
-    public function getExpressCheckoutToken($return_url, $cancel_url) {
+    public function getExpressCheckoutUrl($return_url, $cancel_url) {
         $gateway = new Model_Mapper_PaymentGateway;
         $config = Zend_Registry::get('app_config');
         $cart = $this->get();

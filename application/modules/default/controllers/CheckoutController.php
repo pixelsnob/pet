@@ -114,17 +114,18 @@ class CheckoutController extends Zend_Controller_Action {
     public function processPaypalAction() {
         $cart = $this->_cart_svc->get();
         $token = $this->_request->getParam('token');
-        $payer_id = $this->_request->getParam('PayerID'); // notice capitalization!
+        $payer_id = $this->_request->getParam('PayerID'); // Notice capitalization!
         // Make sure token and payer id exist, and validate token against
         // token stored in cart
         if (!$token || !$payer_id || $token != $cart->ec_token) {
             $this->_messenger->addMessage($this->_generic_error);
             $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+            exit;
         }
-        // validate stored values
+        // Validate stored values
         $checkout_form = $this->_cart_svc->getCheckoutForm();
         if ($this->_cart_svc->validateSavedForm($checkout_form)) {
-            if ($this->_cart_svc->process($checkout_form)) {
+            if ($this->_cart_svc->process($checkout_form, $payer_id)) {
                 $this->_helper->Redirector->gotoSimple('confirmation');
                 exit;
             } else {
