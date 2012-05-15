@@ -29,6 +29,17 @@ class Model_Cart_Product extends Pet_Model_Abstract {
             return parent::__get($field);
         }
     }
+
+    /**
+     * @return array
+     * 
+     */
+    public function toArray() {
+        return array_merge(
+            $this->_data['product']->toArray(),
+            array('qty' => $this->_data['qty'])
+        );
+    }
 }
 
 

@@ -445,10 +445,12 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         }
         $data = $this->_data;
         $data = array_merge($this->_data, array(
-            'products'    => $products,
-            'billing'  => $this->_data['billing']->toArray(),
-            'shipping' => $this->_data['shipping']->toArray(),
-            'payment'  => $this->_data['payment']->toArray()
+            'products'  => $products,
+            'billing'   => $this->_data['billing']->toArray(),
+            'shipping'  => $this->_data['shipping']->toArray(),
+            'payment'   => $this->_data['payment']->toArray(),
+            'user'      => $this->_data['user']->toArray(),
+            'user_info' => $this->_data['user_info']->toArray()
         ));
         return $data;
     }

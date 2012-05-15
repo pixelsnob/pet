@@ -269,11 +269,15 @@ class Service_Cart {
         try {
             $mongo = Pet_Mongo::getInstance();
             $mongo->orders->insert(array(
-                'status'           => ($status ? 'success' : 'failed'),
-                'cart'             => $cart->toArray(),
-                'gateway_calls'    => $gateway->getCalls()
-            ), array('fsync' => true));
-        } catch (Exception $e) {}
+               'status'           => ($status ? 'success' : 'failed'),
+               'cart'             => $cart->toArray(),
+               'gateway_calls'    => $gateway->getCalls()
+            ));
+        } catch (Exception $e) {
+            // Log but don't affect the transaction if this fails
+            print_r($e);
+            exit;
+        }
 
         $this->_cart->setConfirmation($this->_cart->get());
         if ($config['reset_cart_after_process']) {
@@ -281,8 +285,14 @@ class Service_Cart {
         }
         return $status;
     }
-
-    public function getExpressCheckoutUrl($return_url, $cancel_url) {
+    
+    /**
+     * @param string $return_url The url the customer is returned to if success
+     * @param string $cancel_url The url the customer is returned to if fail
+     * @return string 
+     * 
+     */
+    public function getExpressCheckoutToken($return_url, $cancel_url) {
         $gateway = new Model_Mapper_PaymentGateway;
         $config = Zend_Registry::get('app_config');
         $cart = $this->get();
