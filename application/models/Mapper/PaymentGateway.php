@@ -87,10 +87,11 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param array $data
+     * @param string $payer_id Optional, for EC transactions only
      * @return void
      * 
      */
-    public function processSale(array $data) {
+    public function processSale(array $data, $payer_id = null) {
         $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
         $name = $data['first_name'] . ' ' . $data['last_name'];
         $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
