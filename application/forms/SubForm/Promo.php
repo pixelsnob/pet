@@ -40,12 +40,12 @@ class Form_SubForm_Promo extends Zend_Form_SubForm {
      */
     public function init() {
         $this->addElement('text', 'promo_code', array(
-            'label'        => 'Promo Code',
+            'label'        => 'Enter it here:',
             'required'     => false,
             'validators'   => array(
                 array('Callback', true, array(
                     'callback' => array($this, 'isPromoValid'),
-                    'messages' => 'Promo is not valid'
+                    'messages' => 'That promo is not valid at this time. Try again?'
                 ))
             )
         ))->setElementFilters(array('StringTrim'));

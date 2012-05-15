@@ -6,7 +6,7 @@
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
             <div class="checkout-left">
                 <fieldset class="account<?php echo (!$this->is_authenticated ? ' med' : ''); ?>">
-                    <legend>Account Information</legend>
+                    <legend>Create your account</legend>
                     <dl class="form">
                         <?php if (!$this->is_authenticated): ?>
                             <dt><?php echo $this->checkout_form->user->username->getLabel(); ?></dt>
@@ -124,7 +124,7 @@
             </div>
             <div class="checkout-middle">
                 <fieldset class="payment med">
-                    <legend>Payment Information</legend>
+                    <legend>Enter your payment info</legend>
                     <dl class="form">
                         <dt class="payment-method"><?php echo $this->checkout_form->payment->payment_method->getLabel(); ?></dt>
                         <dd class="payment-method">
@@ -153,7 +153,7 @@
                 </fieldset>
                 <?php if ($this->cart->isShippingAddressRequired()): ?>
                     <fieldset class="shipping tall<?php echo ($this->cart->use_shipping ? '' : ' hide'); ?>">
-                        <legend>Enter your Shipping Address</legend>
+                        <legend>Ship your magazines to . . .</legend>
                         <dl class="form">
                             <dt><?php echo $this->checkout_form->shipping->shipping_first_name->getLabel(); ?></dt>
                             <dd>
@@ -209,7 +209,7 @@
                     </fieldset>
                 <?php endif; ?>
                 <fieldset class="promo-code">
-                    <legend>Enter Promo Code Here</legend>
+                    <legend>Do you have a promo code?</legend>
                     <dl class="form">
                         <dt><?php echo $this->checkout_form->promo->promo_code->getLabel(); ?></dt>
                         <dd>
@@ -222,7 +222,8 @@
                     <strong class="total">Total: <span class="total-value"><?php echo $this->dollarFormat($this->cart_totals['total']); ?></span></strong>
                     <input type="submit" value="Buy Now" class="button-grad-blue">
                 </p>
-                <p>We will email your purchase receipt once your transaction is complete.</p>
+                <p>We will email a receipt when the transaction processes.
+                <br><i>We will not share your contact info with <b>anyone</b></i>.</p>
             </div>
             <div class="checkout-right">
                 <h3>In your cart:</h3>

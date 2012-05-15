@@ -24,6 +24,7 @@ class Form_SubForm_UserInfo extends Zend_Form_SubForm {
             ),
             'multiOptions' => array(
                 '' => 'Please select...',
+                10  => 'Version 10',
                 9  => 'Version 9',
                 8  => 'Version 8',
                 7  => 'Version 7',

@@ -54,7 +54,8 @@
                                     <p><?php echo $this->escape($this->cart->promo->public_description); $promo_shown = true; ?></p>
                                 <?php endif; ?>
                                 <?php if ($product->product_type_id == Model_ProductType::SUBSCRIPTION && !$product->is_gift): ?>
-                                    <p>Your first magazine will be sent within 30 days, depending on when you placed your order and where that date falls in relation to our publication schedule.</p>
+                                    <p>Your first magazine will be sent within 30 days, depending on when you placed your order and where that date falls in relation to our publication schedule.<br>
+                                    Any promotional materials will be shipped within 7 days of your order via USPS First Class Mail. Please allow 3 weeks for delivery.</p>
                                 <?php endif; ?>
                             </td>
                         </tr>

@@ -41,11 +41,11 @@ class Form_SubForm_User extends Zend_Form_SubForm {
         parent::init();
         // Username
         $this->addElement('text', 'username', array(
-            'label' => 'Username',
+            'label' => 'User Name',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your username'
+                    'messages' => 'Please create a user name for the website'
                 )),
                 array('StringLength', true, array(
                     'max' => 30,
@@ -55,16 +55,16 @@ class Form_SubForm_User extends Zend_Form_SubForm {
                 array(new Pet_Validate_UsernameNotExists(
                     $this->_identity, $this->_mapper), true),
                 array('Alnum', true, array(
-                    'messages' => 'Only letters and numbers allowed'
+                    'messages' => 'Please only use letters and numbers here'
                 ))
             )
         // Email
         ))->addElement('text', 'email', array(
-            'label' => 'Email',
+            'label' => 'Email Address',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your email'
+                    'messages' => 'Please enter your email address'
                 )),
                 array('StringLength', true, array(
                     'max' => 75,
@@ -110,12 +110,12 @@ class Form_SubForm_User extends Zend_Form_SubForm {
      */
     public function addPasswordFields() {
         $this->addElement('password', 'password', array(
-            'label' => 'New Password',
+            'label' => 'Create a Password',
             'required' => true,
             'renderPassword' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your new password'
+                    'messages' => 'Please create a password for website access'
                 )),
                 array(new Pet_Validate_PasswordStrength, true),
                 array('StringLength', true, array(
@@ -137,7 +137,7 @@ class Form_SubForm_User extends Zend_Form_SubForm {
                 )),
                 array('Identical', true, array(
                     'token' => 'password',
-                    'messages' => 'Password and confirm password must be the same'
+                    'messages' => 'Whoops! Those don\'t match'
                 ))
             )
         ))->setElementFilters(array('StringTrim'));
