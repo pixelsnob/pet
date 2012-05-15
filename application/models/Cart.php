@@ -356,7 +356,21 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         }
         return (bool) $c;
     }
-    
+   
+   /**
+    * @return bool
+    * 
+    */
+    public function hasRecurring() {
+        $c = 0;
+        foreach ($this->_data['products'] as $product) {
+            if ($product->is_recurring) {
+                $c++;
+            }
+        }
+        return (bool) $c;
+    }
+
     /**
      * @return bool
      * 

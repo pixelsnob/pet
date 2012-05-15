@@ -265,7 +265,7 @@ class Service_Cart {
         $exceptions = array();
         try {
             if ($cart->payment->payment_method == 'credit_card') {
-                if ($cart->hasDigitalSubscription()) {
+                if ($cart->hasRecurring()) {
                     exit('not yet');        
                 } else {
                     $gateway->processSale($data);

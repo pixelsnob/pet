@@ -13,8 +13,7 @@ class Model_Product extends Pet_Model_Abstract {
         'image' => null,
         'active' => null,
         'max_qty' => null,
-        'is_gift' => null,
-        'product_billing_type_id' => null
+        'is_gift' => null
     );
 
 }

@@ -19,8 +19,7 @@ class Model_Product_Download extends Model_Product_Abstract {
         'path' => null,
         'size' => null,
         'thumb' => null,
-        'subscriber_only' => null,
-        'product_billing_type_id' => null
+        'subscriber_only' => null
     );
 
 }

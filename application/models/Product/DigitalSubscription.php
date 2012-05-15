@@ -14,10 +14,11 @@ class Model_Product_DigitalSubscription extends Model_Product_Abstract {
         'active' => null,
         'name' => null,
         'description' => null,
-        'term' => null,
         'is_renewal' => null,
         'is_gift' => null,
-        'product_billing_type_id' => null
+        'is_recurring' => null,
+        'recurring_term' => null,
+        'recurring_repeat' => null
     );
     
 }
