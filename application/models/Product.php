@@ -11,7 +11,10 @@ class Model_Product extends Pet_Model_Abstract {
         'sku' => null,
         'cost' => null,
         'image' => null,
-        'active' => null
+        'active' => null,
+        'max_qty' => null,
+        'is_gift' => null,
+        'product_billing_type_id' => null
     );
 
 }

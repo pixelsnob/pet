@@ -12,14 +12,18 @@ insert into pet.product_types values (1, 'Download', 'download'), (2, 'Physical'
 (3, 'Course', 'course'), (4, 'Subscription', 'subscription'),
 (5, 'Digital Subscription', 'digital_subscription');
 
+insert into pet.product_billing_types values
+(1, 'One-time payment', 0, null, null),
+(2, 'Recurring, monthly, one year', 1, 1, 12);
+
 /* Digital products */
 
 insert into pet.download_formats
 select * from pet_old.sales_download_format;
 
 insert into pet.products
-(product_type_id, sku, cost, image, active) 
-select 1, code, price, image, 1
+(product_type_id, sku, cost, image, active, product_billing_type_id) 
+select 1, code, price, image, 1, 1
 from pet_old.sales_product
 where category = 'digital';
 
@@ -40,8 +44,8 @@ insert into pet.shipping
 select * from pet_old.sales_shipping;
 
 insert into pet.products
-(product_type_id, sku, cost, image, active) 
-select 2, code, price, image, 0
+(product_type_id, sku, cost, image, active, product_billing_type_id) 
+select 2, code, price, image, 0, 1
 from pet_old.sales_product
 where category = 'physical';
 
@@ -64,8 +68,8 @@ left join pet_old.sales_product sp
 on sc.id = sp.course_id;
 
 insert into pet.products
-(product_type_id, sku, cost, image, active) 
-select 3, code, price, image, 1
+(product_type_id, sku, cost, image, active, product_billing_type_id) 
+select 3, code, price, image, 1, 1
 from pet_old.sales_product
 where category = 'stream';
 
@@ -79,8 +83,8 @@ where sp.category = 'stream';
 /* Subscriptions */
 
 insert into pet.products
-(product_type_id, sku, cost, image, active, max_qty) 
-select 4, code, price, image, 1, 1
+(product_type_id, sku, cost, image, active, max_qty, product_billing_type_id) 
+select 4, code, price, image, 1, 1, 1
 from pet_old.sales_product
 where category = 'subscription';
 
@@ -109,8 +113,8 @@ and p.is_gift = 0;
 /* Gift subscriptions */
 
 insert into pet.products
-(product_type_id, sku, cost, image, active, is_gift)
-select 4, concat(code, '-GIFT'), price, image, 1, 1
+(product_type_id, sku, cost, image, active, is_gift, product_billing_type_id)
+select 4, concat(code, '-GIFT'), price, image, 1, 1, 1
 from pet_old.sales_product
 where category = 'subscription';
 
@@ -127,12 +131,12 @@ and p.is_gift = 1;
 /* Digital Subscriptions */
 
 insert into pet.products values
-(300, 5, 'DIGITAL-MONTHLY', 4.25, '', 1, 1, 0),
-(301, 5, 'DIGITAL-MONTHLY-RENEWAL', 4.25, '', 1, 1, 0),
+(300, 5, 'DIGITAL-MONTHLY', 4.25, '', 1, 1, 0, 2),
+(301, 5, 'DIGITAL-MONTHLY-RENEWAL', 4.25, '', 1, 1, 0, 2),
 /*(302, 5, 'DIGITAL-MONTHLY-GIFT', 4.25, '', 1, 0, 1),*/
-(303, 5, 'DIGITAL-YEARLY', 39, '', 1, 1, 0),
-(304, 5, 'DIGITAL-YEARLY-RENEWAL', 39, '', 1, 1, 0),
-(305, 5, 'DIGITAL-YEARLY-GIFT', 39, '', 1, 0, 1);
+(303, 5, 'DIGITAL-YEARLY', 39, '', 1, 1, 0, 1),
+(304, 5, 'DIGITAL-YEARLY-RENEWAL', 39, '', 1, 1, 0, 1),
+(305, 5, 'DIGITAL-YEARLY-GIFT', 39, '', 1, 0, 1, 1);
 
 insert into digital_subscriptions values
 (1, 'Digital Subscription, Monthly', '', 1, 0),
@@ -150,9 +154,9 @@ insert into pet.products_digital_subscriptions values
 
 /* Add products that were deleted that still exist in the ordered_products table */
 
-insert into pet.products (product_type_id, sku, cost, image, active) values
-(2, 'BODVD1-2', 0, '', 0), (2, 'BODVD1-2-3', 0, '', 0), (2, 'BODVD2-3', 0, '', 0),
-(4, 'E6BK', 0, '', 0), (4, 'E7BK', 0, '', 0), (4, 'V2N9', 0, '', 0), (4, 'V3N9', 0, '', 0);
+insert into pet.products (product_type_id, sku, cost, image, active, product_billing_type_id) values
+(2, 'BODVD1-2', 0, '', 0, 1), (2, 'BODVD1-2-3', 0, '', 0, 1), (2, 'BODVD2-3', 0, '', 0, 1),
+(4, 'E6BK', 0, '', 0, 1), (4, 'E7BK', 0, '', 0, 1), (4, 'V2N9', 0, '', 0, 1), (4, 'V3N9', 0, '', 0, 1);
 
 
 /***************************************************************************************************

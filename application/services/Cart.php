@@ -286,7 +286,9 @@ class Service_Cart {
         // Log
         try {
             $mongo = Pet_Mongo::getInstance();
+            // Clone so we can modify copy
             $cart_clone = clone $cart;
+            // We don't need to save the whole promo array
             unset($cart_clone->promo);
             $cart_array = $cart_clone->toArray();
             unset($cart_array['promo']);
