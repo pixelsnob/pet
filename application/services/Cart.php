@@ -20,17 +20,14 @@ class Service_Cart {
     public function __construct() {
         $this->_cart = new Model_Mapper_Cart;
         $this->_products_svc = new Service_Products;
-        $this->_messenger = Zend_Registry::get('messenger');
-        $this->_messenger->setNamespace('cart');
     }
     
     /**
-     * @param bool $check_if_processed
      * @return Model_Cart
      * 
      */
-    public function get($check_if_processed = false) {
-        return $this->_cart->get($check_if_processed);
+    public function get() {
+        return $this->_cart->get();
     }
     
     /**
@@ -52,10 +49,11 @@ class Service_Cart {
         $product = $this->_products_svc->getById($product_id);
         if ($product) {
             if (!$this->_cart->addProduct($product)) {
+                $this->_message = $this->_cart->getMessage();
                 return false;
             }
         } else {
-            $this->_messenger->addMessage('Product not found');
+            $this->_message = 'Product not found';
             return false;
         }
         return true;
@@ -95,6 +93,7 @@ class Service_Cart {
         $cart = $this->_cart->get();
         if (!strlen(trim($code))) {
             if ($cart->promo) {
+                $this->_message = 'Promo removed';
                 $this->_cart->removePromo();
             }
             return true;
@@ -102,9 +101,10 @@ class Service_Cart {
         $promo_svc = new Service_Promos;
         $promo = $promo_svc->getUnexpiredPromoByCode($code);
         if ($promo && $this->_cart->addPromo($promo)) {
+            $this->_message = "Promo $code added";
             return true;
         } else {
-            $this->_messenger->addMessage("Promo is not valid");
+            $this->_message = 'Promo is not valid';
             return false;
         }
     }
@@ -160,9 +160,6 @@ class Service_Cart {
             $form->user->removeElement('password');
             $form->user->removeElement('confirm_password');
         }
-        /*if (!$cart->isShippingAddressRequired()) {
-            $form->removeSubform('shipping');
-        }*/
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray(),
@@ -222,14 +219,36 @@ class Service_Cart {
     }
     
     /**
-     * @param array $post
+     * @param Form_Checkout $form
      * @return bool
      * 
      */
-    public function process($form) {
+    public function validateSavedForm(Form_Checkout $form) {
+        $data = array_merge(
+            $form->billing->getValues(true),
+            $form->payment->getValues(true),
+            $form->user->getValues(true),
+            $form->getShippingValues(),
+            array('promo_code' => $form->promo->promo_code->getValue())
+        );
+        // Remove pw validators
+        $form->user->password->setValidators(array())->setRequired(false);
+        $form->user->confirm_password->setValidators(array())
+            ->setRequired(false);
+        // validate pw ?
+        return $form->isValid($data); 
+    }
+
+    /**
+     * @param array $post
+     * @param string $payer_id
+     * @return bool
+     * 
+     */
+    public function process($form, $payer_id = '') {
+        $config = Zend_Registry::get('app_config');
         $cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
-        $data = array();
         $totals = $cart->getTotals();
         $data = array_merge(
             $form->billing->getValues(true),
@@ -238,39 +257,94 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
-        $transactions = array();
-        foreach ($cart->products as $product) {
-            switch ($product->product_type_id) {
-                //case Model_ProductType::SUBSCRIPTION:
-                    
-                //    break;
-                case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                     
-                    break;
-                default:
-                    
-                    break;
-                //case Model_ProductType::PHYSICAL:
-                    
-                //    break;
+        $status = true;
+        try {
+            if ($cart->payment->payment_method == 'credit_card') {
+                if ($cart->hasDigitalSubscription()) {
+                    exit('not yet');        
+                } else {
+                    $gateway->processSale($data);
+                }
+            } else {
+                if ($cart->hasDigitalSubscription()) {
+                    exit('not yet');        
+                } else {
+                    $gateway->processExpressCheckoutSale($data,
+                        $cart->ec_token, $payer_id);
+                }
+            }
+        } catch (Exception $e) {
+            $status = false;
+        }
+        // Log
+        try {
+            $mongo = Pet_Mongo::getInstance();
+            $cart_clone = clone $cart;
+            unset($cart_clone->promo);
+            $cart_array = $cart_clone->toArray();
+            unset($cart_array['promo']);
+            $cart_array['promo_code'] = $cart->promo->code;
+            $mongo->orders->insert(array(
+                'timestamp'        => time(),
+                'date_r'           => date('Y-m-d H:i:s'),
+                'status'           => ($status ? 'success' : 'failed'),
+                'cart'             => $cart_array,
+                'gateway_calls'    => $gateway->getCalls()
+            ), array('fsync' => true));
+        } catch (Exception $e) {
+            // Log but don't affect the transaction if this fails
+            //print_r($e);
+            //exit;
+        }
+        if ($status) {
+            $this->_cart->setConfirmation($this->_cart->get());
+            if ($config['reset_cart_after_process']) {
+                $this->_cart->reset();
             }
         }
-
-        //$gateway->processAuth($data);
-        //print_r($data);
-        //print_r($cart);
-        exit;
-
-        $this->_cart->setConfirmation($this->_cart->get());
+        return $status;
+    }
+    
+    /**
+     * @param string $return_url The url the customer is returned to if success
+     * @param string $cancel_url The url the customer is returned to if fail
+     * @return string 
+     * 
+     */
+    public function getExpressCheckoutUrl($return_url, $cancel_url) {
+        $gateway = new Model_Mapper_PaymentGateway;
         $config = Zend_Registry::get('app_config');
-        if ($config['reset_cart_after_process']) {
-            $this->_cart->reset();
+        $cart = $this->get();
+        $totals = $cart->getTotals();
+        $data = array(
+            'email' => $cart->user->email,
+            'total' => $totals['total'],
+            'return_url'   => $return_url,
+            'cancel_url' => $cancel_url
+        );
+        $token = $gateway->getExpressCheckoutToken($data, $return_url,
+            $cancel_url);
+        if (!$token) {
+            throw new Exception('getExpressCheckoutUrl() failed');
         }
-        return true;
+        $cart->ec_token = $token;
+        return $config['payment_gateway']['ec_url'] . '&token=' . $token;
     }
 
+    /**
+     * return Model_Confirmation|void
+     * 
+     */
     public function getConfirmation() {
         return $this->_cart->getConfirmation();
+    }
+
+    /**
+     * @return string
+     * 
+     */
+    public function getMessage() {
+        return $this->_message;
     }
     
 }

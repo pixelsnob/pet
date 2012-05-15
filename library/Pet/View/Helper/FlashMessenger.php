@@ -8,17 +8,12 @@
 class Pet_View_Helper_FlashMessenger extends Zend_View_Helper_Abstract {
     
     /**
-     * @return void
+     * @param array|null $messages
+     * @return string
      * 
      */
-    public function flashMessenger($namespace, $current = false) {
-        $fm = new Pet_FlashMessenger;
-        $fm->setNamespace($namespace);
-        //$messages = $fm->getMessages();
-        //$messages = ($current ? ($messages + $fm->getCurrentMessages()) :
-        //    $messages);
-        $messages = ($current ? $fm->getCurrentMessages() : $fm->getMessages());
-        //$messages = array_unique($messages);
+    public function flashMessenger($messages = null) {
+        $messages = (array) $messages;
         if (count($messages) > 1) {
             $out = '<ul class="flash-message">';
             foreach ($messages as $message) {

@@ -49,7 +49,7 @@ update pet.products set active = 1
 where id in (169, 172, 170);
 
 insert into pet.physical_products
-select null, p.id, sp.shipping_id, sp.name, sp.description
+select null, p.id, sp.shipping_id, sp.name, sp.description, 0
 from pet.products p
 left join pet_old.sales_product sp
 on p.sku = sp.code
@@ -127,12 +127,12 @@ and p.is_gift = 1;
 /* Digital Subscriptions */
 
 insert into pet.products values
-(300, 5, 'DIGITAL-MONTHLY', 50, '', 1, 1, 0),
-(301, 5, 'DIGITAL-MONTHLY-RENEWAL', 30, '', 1, 1, 0),
-(302, 5, 'DIGITAL-MONTHLY-GIFT', 50, '', 1, 0, 1),
-(303, 5, 'DIGITAL-YEARLY', 80, '', 1, 1, 0),
-(304, 5, 'DIGITAL-YEARLY-RENEWAL', 70, '', 1, 1, 0),
-(305, 5, 'DIGITAL-YEARLY-GIFT', 80, '', 1, 0, 1);
+(300, 5, 'DIGITAL-MONTHLY', 4.25, '', 1, 1, 0),
+(301, 5, 'DIGITAL-MONTHLY-RENEWAL', 4.25, '', 1, 1, 0),
+/*(302, 5, 'DIGITAL-MONTHLY-GIFT', 4.25, '', 1, 0, 1),*/
+(303, 5, 'DIGITAL-YEARLY', 39, '', 1, 1, 0),
+(304, 5, 'DIGITAL-YEARLY-RENEWAL', 39, '', 1, 1, 0),
+(305, 5, 'DIGITAL-YEARLY-GIFT', 39, '', 1, 0, 1);
 
 insert into digital_subscriptions values
 (1, 'Digital Subscription, Monthly', '', 1, 0),
@@ -143,7 +143,7 @@ insert into digital_subscriptions values
 insert into pet.products_digital_subscriptions values
 (null, 300, 1),
 (null, 301, 2),
-(null, 302, 1),
+/*(null, 302, 1),*/
 (null, 303, 3),
 (null, 304, 4),
 (null, 305, 3);

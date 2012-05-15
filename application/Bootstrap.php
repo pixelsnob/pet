@@ -7,8 +7,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'namespace' => '',
             'basePath' => APPLICATION_PATH
         ));
-        // Override default mappers resource, which wants to use models/mappers:
-        // using models/Mapper for consistency with others like models/DbTable, etc.
         $autoloader->addResourceType('mappers', 'models/Mapper', 'Model_Mapper')
             ->addResourceType('service', 'services', 'Service')
             ->addResourceType('form', 'forms', 'Form')
@@ -37,8 +35,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'Pet_Controller_Action_Helper');
     }
 
-    protected function _initMessenger() {
-        Zend_Registry::set('messenger', new Pet_FlashMessenger);
+    protected function _initMongo() {
+        $config = $this->getOptions();
+        Pet_Mongo::setConnectionUri($config['mongo']['connection_uri']);
+        Pet_Mongo::setDb($config['mongo']['db']);
     }
 }
 

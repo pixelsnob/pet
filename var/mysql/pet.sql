@@ -322,6 +322,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`physical_products` (
   `shipping_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
   `description` LONGTEXT NULL DEFAULT NULL ,
+  `sequence` INT(5) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
   UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,

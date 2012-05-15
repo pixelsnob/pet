@@ -20,7 +20,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function subscriptionsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView;');
+            ->appendScript("Pet.loadView('Products');");
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
     }
 
@@ -88,7 +88,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function digitalAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView;');
+            ->appendScript("Pet.loadView('Products');");
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
     }
 
@@ -141,7 +141,7 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function giftsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView;');
+            ->appendScript("Pet.loadView('Products');");
     }
     
     /**
@@ -151,6 +151,6 @@ class ProductsController extends Zend_Controller_Action {
     public function physicalAction() {
         $this->view->products = $this->_products_svc->getPhysicalProducts(); 
         $this->view->inlineScriptMin()->loadGroup('products')
-            ->appendScript('new Pet.ProductsView;');
+            ->appendScript("Pet.loadView('Products');");
     }
 }

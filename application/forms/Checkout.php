@@ -149,7 +149,7 @@ class Form_Checkout extends Pet_Form {
 
         ///////////////////////////////////////////////////////////
         // temp logging
-        $log = array(
+        /*$log = array(
             'billing_valid' => $this->billing->isValid($data),
             'promo_valid' => $this->promo->isValid($data),
             'user_valid' => $this->user->isValid($data),
@@ -165,7 +165,7 @@ class Form_Checkout extends Pet_Form {
         }
         $log['messages'] = $this->getMessages();
         file_put_contents('/tmp/checkout.log', print_r(array('date' => date('Y-m-d H:i:s'), 'data' => $log), true), FILE_APPEND);
-
+        */
         return $valid;
     }
 
