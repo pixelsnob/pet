@@ -268,11 +268,18 @@ class Service_Cart {
         }
         try {
             $mongo = Pet_Mongo::getInstance();
+            $cart_clone = clone $cart;
+            unset($cart_clone->promo);
+            $cart_array = $cart_clone->toArray();
+            unset($cart_array['promo']);
+            $cart_array['promo_code'] = $cart->promo->code;
             $mongo->orders->insert(array(
-               'status'           => ($status ? 'success' : 'failed'),
-               'cart'             => $cart->toArray(),
-               'gateway_calls'    => $gateway->getCalls()
-            ));
+                'timestamp'        => time(),
+                'date_r'           => date('Y-m-d H:i:s'),
+                'status'           => ($status ? 'success' : 'failed'),
+                'cart'             => $cart_array,
+                'gateway_calls'    => $gateway->getCalls()
+            )/*, array('fsync' => true)*/);
         } catch (Exception $e) {
             // Log but don't affect the transaction if this fails
             print_r($e);
