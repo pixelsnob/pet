@@ -156,9 +156,13 @@ class Service_Cart {
         $users_svc = new Service_Users;
         // We don't need pw/username fields if user is already logged in
         if ($users_svc->isAuthenticated()) {
-            $form->user->removeElement('username');
+            $form->user->username->setValidators(array())->setRequired(false);
+            $form->user->password->setValidators(array())->setRequired(false);
+            $form->user->confirm_password->setValidators(array())
+                ->setRequired(false);
+            /*$form->user->removeElement('username');
             $form->user->removeElement('password');
-            $form->user->removeElement('confirm_password');
+            $form->user->removeElement('confirm_password');*/
         }
         $form_data = array_merge(
             $cart->billing->toArray(),
@@ -232,10 +236,9 @@ class Service_Cart {
             array('promo_code' => $form->promo->promo_code->getValue())
         );
         // Remove pw validators
-        $form->user->password->setValidators(array())->setRequired(false);
+        /*$form->user->password->setValidators(array())->setRequired(false);
         $form->user->confirm_password->setValidators(array())
-            ->setRequired(false);
-        // validate pw ?
+            ->setRequired(false);*/
         return $form->isValid($data); 
     }
 
@@ -247,6 +250,7 @@ class Service_Cart {
      */
     public function process($form, $payer_id = '') {
         $config = Zend_Registry::get('app_config');
+        $logger = Zend_Registry::get('log');
         $cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
         $totals = $cart->getTotals();
@@ -258,6 +262,7 @@ class Service_Cart {
             $form->getShippingValues()
         );
         $status = true;
+        $exceptions = array();
         try {
             if ($cart->payment->payment_method == 'credit_card') {
                 if ($cart->hasDigitalSubscription()) {
@@ -274,7 +279,9 @@ class Service_Cart {
                 }
             }
         } catch (Exception $e) {
+            // Log
             $status = false;
+            $exceptions[] = $e->getMessage();
         }
         // Log
         try {
@@ -289,12 +296,11 @@ class Service_Cart {
                 'date_r'           => date('Y-m-d H:i:s'),
                 'status'           => ($status ? 'success' : 'failed'),
                 'cart'             => $cart_array,
-                'gateway_calls'    => $gateway->getCalls()
+                'gateway_calls'    => $gateway->getCalls(),
+                'exceptions'       => $exceptions
             ), array('fsync' => true));
         } catch (Exception $e) {
             // Log but don't affect the transaction if this fails
-            //print_r($e);
-            //exit;
         }
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());
