@@ -160,9 +160,6 @@ class Service_Cart {
             $form->user->password->setValidators(array())->setRequired(false);
             $form->user->confirm_password->setValidators(array())
                 ->setRequired(false);
-            /*$form->user->removeElement('username');
-            $form->user->removeElement('password');
-            $form->user->removeElement('confirm_password');*/
         }
         $form_data = array_merge(
             $cart->billing->toArray(),
@@ -236,9 +233,9 @@ class Service_Cart {
             array('promo_code' => $form->promo->promo_code->getValue())
         );
         // Remove pw validators
-        /*$form->user->password->setValidators(array())->setRequired(false);
+        $form->user->password->setValidators(array())->setRequired(false);
         $form->user->confirm_password->setValidators(array())
-            ->setRequired(false);*/
+            ->setRequired(false);
         return $form->isValid($data); 
     }
 
@@ -261,9 +258,26 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
+        //print_r($data); exit;
         $status = true;
         $exceptions = array();
         try {
+            // Recurring payments
+            /*if ($cart->hasRecurring()) {
+                foreach ($cart->products as $product) {
+                    if (!$product->is_recurring) {
+                        continue;
+                    }
+                    // Subtract recurring cost from total
+                    $data['total']      -= $product->cost;
+                    $data['cost']        = $product->cost;
+                    $data['term']        = $product->term;
+                    $data['description'] = $product->name;
+                    $data['profile_id']  = uniqid();
+                    $data['token']       = $cart->ec_token;
+                    $gateway->processRecurringPayment($data);
+                }
+            }*/
             if ($cart->payment->payment_method == 'credit_card') {
                 // Recurring payments
                 if ($cart->hasRecurring()) {
@@ -280,22 +294,41 @@ class Service_Cart {
                         $gateway->processRecurringPayment($data);
                     }
                 }
+                // Regular payment
                 if ($data['total'] > 0) {
                     $data['total'] = round($data['total'], 2);
                     $gateway->processSale($data);
                 }
             } else {
+                // Express checkout
                 if ($cart->hasRecurring()) {
-                    exit('not yet');        
-                } else {
+                    foreach ($cart->products as $product) {
+                        if (!$product->is_recurring) {
+                            continue;
+                        }
+                        // Subtract recurring cost from total
+                        $data['total']      -= $product->cost;
+                        $data['cost']        = $product->cost;
+                        $data['term']        = $product->term;
+                        $data['description'] = $product->name;
+                        $data['profile_id']  = uniqid();
+                        $gateway->processExpressCheckoutRecurringPayment(
+                            $data);
+                    }
+                }
+                // Regular payment
+                if ($data['total'] > 0) {
+                    $data['total'] = round($data['total'], 2);
                     $gateway->processExpressCheckoutSale($data,
                         $cart->ec_token, $payer_id);
                 }
             }
         } catch (Exception $e) {
-            // Log
             $status = false;
             $exceptions[] = $e->getMessage();
+            try {
+                $gateway->voidCalls();
+            } catch (Exception $e2) {}
         }
         //$gateway->voidCalls();
         // Log

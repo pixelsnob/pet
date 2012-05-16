@@ -178,10 +178,149 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param array $data
+     * @param string $token
      * @return void
      * 
      */
     public function processRecurringPayment(array $data) {
+        $this->resetGateway();
+        $data = $this->formatData($data);
+        $start_date = new DateTime;
+        $start_date->add(new DateInterval('P2D'));
+        $tender = ($data['payment']['payment_method'] == 'credit_card'
+            ? 'C' : 'P');
+        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
+            ->setField('TENDER', $tender)
+            ->setField('TRXTYPE', 'R')
+            ->setField('ACTION', 'S')
+            ->setField('ACCT', $data['cc_num'])
+            ->setField('CVV2', $data['cc_cvv'])
+            ->setField('AMT', $data['cost'])
+            // Bill this month immediately
+            ->setField('OPTIONALTRXAMT', $data['cost'])
+            ->setField('EXPDATE', $data['exp_date'])
+            ->setField('PROFILENAME', $data['profile_id'])
+            ->setField('NAME', $data['name'])
+            ->setField('STREET', $data['address'])
+            ->setField('EMAIL', $data['email'])
+            ->setField('ZIP', $data['billing_postal_code'])
+            ->setField('CITY', $data['billing_city'])
+            ->setField('STATE', $data['billing_state'])
+            ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
+            ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
+            ->setField('SHIPTOSTREET', $data['shipping_address'])
+            ->setField('SHIPTOZIP', $data['shipping_postal_code'])
+            ->setField('SHIPTOCITY', $data['shipping_city'])
+            ->setField('SHIPTOSTATE', $data['shipping_state'])
+            ->setField('PHONENUM', $data['shipping_phone'])
+            ->setField('START', $start_date->format('mdY'))
+            // Subtract one from term since we just billed for 1st month
+            ->setField('TERM', $data['term'] - 1)
+            ->setField('PAYPERIOD', 'MONT')
+            ->setField('MAXFAILPAYMENTS', 0)
+            ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description']);
+        if ($tender == 'P') {
+            $this->_gateway->setField('TOKEN', $data['token']);
+        }
+        $this->_gateway->send()->processResponse();
+        $this->saveCall();
+        // Store PNREF value from the auth call.
+        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
+        // Check to see if response failed.
+        if ($this->_gateway->isSuccess()) {
+            // If this is a CVV mismatch, void the auth.
+            if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
+                $this->_error = self::ERR_CVV;
+                throw new Exception('CVV Mismatch');
+            }
+        } else {
+            $msg = 'CC transaction failed.';
+            if ($this->_gateway->getError()) {
+                $msg .= ' Gateway error: ' . $this->_gateway->getError();
+                $this->_error = self::ERR_GENERIC;
+            } else {
+                $this->_error = self::ERR_DECLINED;
+            }
+            throw new Exception($msg);
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param string $token
+     * @return void
+     * 
+     */
+    public function processExpressCheckoutRecurringPayment(array $data) {
+        $this->resetGateway();
+        $data = $this->formatData($data);
+        $start_date = new DateTime;
+        $start_date->add(new DateInterval('P2D'));
+        $tender = ($data['payment']['payment_method'] == 'credit_card'
+            ? 'C' : 'P');
+        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
+            ->setField('TENDER', $tender)
+            ->setField('TRXTYPE', 'R')
+            ->setField('ACTION', 'S')
+            ->setField('ACCT', $data['cc_num'])
+            ->setField('CVV2', $data['cc_cvv'])
+            ->setField('AMT', $data['cost'])
+            // Bill this month immediately
+            ->setField('OPTIONALTRXAMT', $data['cost'])
+            ->setField('EXPDATE', $data['exp_date'])
+            ->setField('PROFILENAME', $data['profile_id'])
+            ->setField('NAME', $data['name'])
+            ->setField('STREET', $data['address'])
+            ->setField('EMAIL', $data['email'])
+            ->setField('ZIP', $data['billing_postal_code'])
+            ->setField('CITY', $data['billing_city'])
+            ->setField('STATE', $data['billing_state'])
+            ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
+            ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
+            ->setField('SHIPTOSTREET', $data['shipping_address'])
+            ->setField('SHIPTOZIP', $data['shipping_postal_code'])
+            ->setField('SHIPTOCITY', $data['shipping_city'])
+            ->setField('SHIPTOSTATE', $data['shipping_state'])
+            ->setField('PHONENUM', $data['shipping_phone'])
+            ->setField('START', $start_date->format('mdY'))
+            // Subtract one from term since we just billed for 1st month
+            ->setField('TERM', $data['term'] - 1)
+            ->setField('PAYPERIOD', 'MONT')
+            ->setField('MAXFAILPAYMENTS', 0)
+            ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description']);
+        if ($tender == 'P') {
+            $this->_gateway->setField('TOKEN', $data['token']);
+        }
+        $this->_gateway->send()->processResponse();
+        $this->saveCall();
+        // Store PNREF value from the auth call.
+        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
+        // Check to see if response failed.
+        if ($this->_gateway->isSuccess()) {
+            // If this is a CVV mismatch, void the auth.
+            if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
+                $this->_error = self::ERR_CVV;
+                throw new Exception('CVV Mismatch');
+            }
+        } else {
+            $msg = 'CC transaction failed.';
+            if ($this->_gateway->getError()) {
+                $msg .= ' Gateway error: ' . $this->_gateway->getError();
+                $this->_error = self::ERR_GENERIC;
+            } else {
+                $this->_error = self::ERR_DECLINED;
+            }
+            throw new Exception($msg);
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function processExpressCheckoutRecurringPayment(array $data) {
+        exit('not yet');
         $this->resetGateway();
         $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
         $name = $data['first_name'] . ' ' . $data['last_name'];
@@ -191,7 +330,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         $start_date = new DateTime;
         $start_date->add(new DateInterval('P2D'));
         $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            ->setField('TENDER', 'C')
+            ->setField('TENDER', 'P')
             ->setField('TRXTYPE', 'R')
             ->setField('ACTION', 'A')
             ->setField('ACCT', $data['cc_num'])
@@ -322,6 +461,20 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      */
     public function getError() {
         return $this->_error;
+    }
+    
+    /**
+     * @param array $data
+     * @return array
+     * 
+     */
+    public function formatData($data) {
+        $data['exp_date'] = $data['cc_exp_month'] . $data['cc_exp_year'];
+        $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
+        $data['address'] = $data['billing_address'] . ' ' . $data['billing_address_2'];
+        $data['shipping_address'] = $data['shipping_address'] . ' ' .
+            $data['shipping_address_2'];
+        return $data;
     }
 
     /**
