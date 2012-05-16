@@ -258,70 +258,40 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues()
         );
-        //print_r($data); exit;
         $status = true;
         $exceptions = array();
         try {
-            // Recurring payments
-            /*if ($cart->hasRecurring()) {
+            if ($cart->hasRecurring()) {
                 foreach ($cart->products as $product) {
                     if (!$product->is_recurring) {
                         continue;
                     }
-                    // Subtract recurring cost from total
-                    $data['total']      -= $product->cost;
                     $data['cost']        = $product->cost;
                     $data['term']        = $product->term;
                     $data['description'] = $product->name;
                     $data['profile_id']  = uniqid();
-                    $data['token']       = $cart->ec_token;
-                    $gateway->processRecurringPayment($data);
+                    if ($product->isRenewal()) {
+                        // get existing paypal profileid
+                        // attempt to update pp profile
+                        exit('not yet');
+                    } else {
+                        if ($cart->payment->payment_method == 'credit_card') {
+                            $gateway->processRecurringPayment($data);
+                        } else {
+                            if ($product->isRenewal()) {
+                                exit('not yet'); 
+                            } else {
+                                $gateway->processECRecurringPayment(
+                                    $data);
+                            }
+                        }
+                    }
                 }
-            }*/
+            }
             if ($cart->payment->payment_method == 'credit_card') {
-                // Recurring payments
-                if ($cart->hasRecurring()) {
-                    foreach ($cart->products as $product) {
-                        if (!$product->is_recurring) {
-                            continue;
-                        }
-                        // Subtract recurring cost from total
-                        $data['total']      -= $product->cost;
-                        $data['cost']        = $product->cost;
-                        $data['term']        = $product->term;
-                        $data['description'] = $product->name;
-                        $data['profile_id']  = uniqid();
-                        $gateway->processRecurringPayment($data);
-                    }
-                }
-                // Regular payment
-                if ($data['total'] > 0) {
-                    $data['total'] = round($data['total'], 2);
-                    $gateway->processSale($data);
-                }
+                $gateway->processSale($data);
             } else {
-                // Express checkout
-                if ($cart->hasRecurring()) {
-                    foreach ($cart->products as $product) {
-                        if (!$product->is_recurring) {
-                            continue;
-                        }
-                        // Subtract recurring cost from total
-                        $data['total']      -= $product->cost;
-                        $data['cost']        = $product->cost;
-                        $data['term']        = $product->term;
-                        $data['description'] = $product->name;
-                        $data['profile_id']  = uniqid();
-                        $gateway->processExpressCheckoutRecurringPayment(
-                            $data);
-                    }
-                }
-                // Regular payment
-                if ($data['total'] > 0) {
-                    $data['total'] = round($data['total'], 2);
-                    $gateway->processExpressCheckoutSale($data,
-                        $cart->ec_token, $payer_id);
-                }
+                $gateway->processECSale($data, $cart->ec_token, $payer_id);
             }
         } catch (Exception $e) {
             $status = false;
@@ -330,7 +300,7 @@ class Service_Cart {
                 $gateway->voidCalls();
             } catch (Exception $e2) {}
         }
-        //$gateway->voidCalls();
+        $gateway->voidCalls();
         // Log
         try {
             $mongo = Pet_Mongo::getInstance();
@@ -367,7 +337,7 @@ class Service_Cart {
      * @return string 
      * 
      */
-    public function getExpressCheckoutUrl($return_url, $cancel_url) {
+    public function getECUrl($return_url, $cancel_url) {
         $gateway = new Model_Mapper_PaymentGateway;
         $config = Zend_Registry::get('app_config');
         $cart = $this->get();
@@ -378,13 +348,49 @@ class Service_Cart {
             'return_url'   => $return_url,
             'cancel_url' => $cancel_url
         );
-        $token = $gateway->getExpressCheckoutToken($data, $return_url,
-            $cancel_url);
-        if (!$token) {
-            throw new Exception('getExpressCheckoutUrl() failed');
+        $status = true;
+        $exceptions = array();
+        try {
+            if ($cart->hasRecurring()) {
+                // maybe move this to model
+                $products = array();
+                foreach ($cart->products as $product) {
+                    $products[] = $product->toArray();
+                }
+                $token = $gateway->getECTokenRecurring($data, $return_url,
+                    $cancel_url, $products);
+            } else {
+                $token = $gateway->getECToken($data, $return_url, $cancel_url);
+            }
+            if (!$token) {
+                throw new Exception(__FUNCTION__ . '() failed');
+            }
+            $cart->ec_token = $token;
+        } catch (Exception $e) {
+            $status = false;
+            $exceptions[] = $e->getMessage();
         }
-        $cart->ec_token = $token;
-        return $config['payment_gateway']['ec_url'] . '&token=' . $token;
+        // Log
+        try {
+            $mongo = Pet_Mongo::getInstance();
+            // Clone so we can modify copy
+            $cart_clone = clone $cart;
+            // We don't need to save the whole promo array
+            unset($cart_clone->promo);
+            $cart_array = $cart_clone->toArray();
+            unset($cart_array['promo']);
+            $cart_array['promo_code'] = $cart->promo->code;
+            $mongo->ec_transactions->insert(array(
+                'timestamp'        => time(),
+                'date_r'           => date('Y-m-d H:i:s'),
+                'status'           => ($status ? 'success' : 'failed'),
+                'cart'             => $cart_array,
+                'gateway_calls'    => $gateway->getCalls(),
+            ), array('fsync' => true));
+        } catch (Exception $e) {}
+        if ($status) {
+            return $config['payment_gateway']['ec_url'] . '&token=' . $token;
+        }
     }
 
     /**

@@ -57,7 +57,7 @@ class CheckoutController extends Zend_Controller_Action {
                         array(), 'checkout_process_paypal'));
                     $cancel_url = $this->view->serverUrl($this->view->url(
                         array(), 'checkout'));
-                    $url = $this->_cart_svc->getExpressCheckoutUrl(
+                    $url = $this->_cart_svc->getECUrl(
                         $return_url, $cancel_url);
                     if (!$url) {
                         $this->_messenger->addMessage($this->_generic_error);

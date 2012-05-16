@@ -76,6 +76,16 @@ class Model_Cart_Product extends Pet_Model_Abstract {
         return $this->_data['product']->product_type_id ==
             Model_ProductType::DOWNLOAD;
     }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isRenewal() {
+        return ($this->_data['product']->product_type_id ==
+            Model_ProductType::DIGITAL_SUBSCRIPTION &&
+            $this->_data['product']->is_renewal);
+    }
 }
 
 

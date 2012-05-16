@@ -10,7 +10,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     protected $_data = array(
-        'products'            => null,  // Model_Cart_Products
+        'products'            => array(),
         'billing'             => null,  // Model_Cart_Billing
         'shipping'            => null,  // Model_Cart_Shipping
         'payment'             => null,  // Model_Cart_Payment
