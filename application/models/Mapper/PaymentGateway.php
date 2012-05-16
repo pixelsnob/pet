@@ -219,6 +219,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('TERM', $data['term'] - 1)
             ->setField('PAYPERIOD', 'MONT')
             ->setField('MAXFAILPAYMENTS', 0)
+            ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description'])
             ->send()
             ->processResponse();
         $this->saveCall();

@@ -272,15 +272,16 @@ class Service_Cart {
                             continue;
                         }
                         // Subtract recurring cost from total
-                        $data['total']     -= $product->cost;
-                        $data['cost']       = $product->cost;
-                        $data['term']       = $product->term;
-                        $data['profile_id'] = uniqid();
+                        $data['total']      -= $product->cost;
+                        $data['cost']        = $product->cost;
+                        $data['term']        = $product->term;
+                        $data['description'] = $product->name;
+                        $data['profile_id']  = uniqid();
                         $gateway->processRecurringPayment($data);
                     }
                 }
                 if ($data['total'] > 0) {
-                    //$data['total'] = round($data['total'], 2);
+                    $data['total'] = round($data['total'], 2);
                     $gateway->processSale($data);
                 }
             } else {
