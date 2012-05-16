@@ -265,13 +265,26 @@ class Service_Cart {
         $exceptions = array();
         try {
             if ($cart->payment->payment_method == 'credit_card') {
+                // Recurring payments
                 if ($cart->hasRecurring()) {
-                    exit('not yet');        
-                } else {
+                    foreach ($cart->products as $product) {
+                        if (!$product->is_recurring) {
+                            continue;
+                        }
+                        // Subtract recurring cost from total
+                        $data['total']     -= $product->cost;
+                        $data['cost']       = $product->cost;
+                        $data['term']       = $product->term;
+                        $data['profile_id'] = uniqid();
+                        $gateway->processRecurringPayment($data);
+                    }
+                }
+                if ($data['total'] > 0) {
+                    //$data['total'] = round($data['total'], 2);
                     $gateway->processSale($data);
                 }
             } else {
-                if ($cart->hasDigitalSubscription()) {
+                if ($cart->hasRecurring()) {
                     exit('not yet');        
                 } else {
                     $gateway->processExpressCheckoutSale($data,
@@ -283,6 +296,7 @@ class Service_Cart {
             $status = false;
             $exceptions[] = $e->getMessage();
         }
+        //$gateway->voidCalls();
         // Log
         try {
             $mongo = Pet_Mongo::getInstance();

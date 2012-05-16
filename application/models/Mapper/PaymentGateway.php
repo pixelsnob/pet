@@ -16,12 +16,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     private $_auth_pnref;
 
     /**
-     * @var string 
-     * 
-     */
-    private $_capture_pnref;
-
-    /**
      * @var array 
      * 
      */
@@ -68,7 +62,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         );
         $gateway->setFields($fields)
             ->setUrl($this->_config['url'])
-            ->setHeader('X-VPS-Request-ID', uniqid());
+            ->setHeader('X-VPS-Request-ID', $this->_getRequestId());
         $this->_gateway = $gateway;
     }
     
@@ -85,12 +79,9 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
         $ship_address = $data['shipping_address'] . ' ' .
             $data['shipping_address_2'];
-        $this->resetGateway();
         $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            ->setHeader('X-VPS-Request-ID', $this->_getRequestId($data['cc_num'],
-                       $data['cc_cvv'], $data['total']))
             ->setField('TENDER', 'C')
-            ->setField('TRXTYPE', 'A')
+            ->setField('TRXTYPE', 'S')
             ->setField('ACCT', $data['cc_num'])
             ->setField('CVV2', $data['cc_cvv'])
             ->setField('AMT', $data['total'])
@@ -186,27 +177,30 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * Performs an auth and a delayed capture credit card transaction.
-     * 
+     * @param array $data
+     * @return void
      * 
      */
-    public function processAuth($data) {
-        // Put together some params.
-        // Gateway auth call.
-        $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
-        $name = '';
-        $address = '';
-        $ship_address = '';
+    public function processRecurringPayment(array $data) {
         $this->resetGateway();
+        $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
+        $name = $data['first_name'] . ' ' . $data['last_name'];
+        $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
+        $ship_address = $data['shipping_address'] . ' ' .
+            $data['shipping_address_2'];
+        $start_date = new DateTime;
+        $start_date->add(new DateInterval('P2D'));
         $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            //->setHeader('X-VPS-Request-ID', $this->_getRequestId($data['cc_num'],
-            //           $data['cc_cvv'], $data['total']))
             ->setField('TENDER', 'C')
-            ->setField('TRXTYPE', 'A')
+            ->setField('TRXTYPE', 'R')
+            ->setField('ACTION', 'A')
             ->setField('ACCT', $data['cc_num'])
             ->setField('CVV2', $data['cc_cvv'])
-            ->setField('AMT', $data['total'])
+            ->setField('AMT', $data['cost'])
+            // Bill this month immediately
+            ->setField('OPTIONALTRXAMT', $data['cost'])
             ->setField('EXPDATE', $exp_date)
+            ->setField('PROFILENAME', $data['profile_id'])
             ->setField('NAME', $name)
             ->setField('STREET', $address)
             ->setField('EMAIL', $data['email'])
@@ -220,15 +214,18 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('SHIPTOCITY', $data['shipping_city'])
             ->setField('SHIPTOSTATE', $data['shipping_state'])
             ->setField('PHONENUM', $data['shipping_phone'])
+            ->setField('START', $start_date->format('mdY'))
+            // Subtract one from term since we just billed for 1st month
+            ->setField('TERM', $data['term'] - 1)
+            ->setField('PAYPERIOD', 'MONT')
+            ->setField('MAXFAILPAYMENTS', 0)
             ->send()
             ->processResponse();
         $this->saveCall();
-        print_r($this);
-        exit;
         // Store PNREF value from the auth call.
         $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
         // Check to see if response failed.
-        /*if ($this->_gateway->isSuccess()) {
+        if ($this->_gateway->isSuccess()) {
             // If this is a CVV mismatch, void the auth.
             if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
                 $this->_error = self::ERR_CVV;
@@ -236,34 +233,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             }
         } else {
             $msg = 'CC transaction failed.';
-            if ($this->_gateway->getError()) {
-                $msg .= ' Gateway error: ' . $this->_gateway->getError();
-                $this->_error = self::ERR_GENERIC;
-            } else {
-                $this->_error = self::ERR_DECLINED;
-            }
-            throw new Exception($msg);
-        }*/
-    }
-    
-    /**
-     * Makes a delayed capture call
-     * 
-     * @return void
-     */
-    public function processDelayedCapture() {
-        $this->resetGateway();
-        $this->_gateway->setField('TENDER', 'C')
-            ->setField('ORIGID', $this->_auth_pnref)
-            ->setField('TRXTYPE', 'D')
-            ->send()
-            ->processResponse();
-        $this->saveCall();
-        // Store pnref from capture.
-        $this->_capture_pnref = $this->_gateway->getResponseField('PNREF');
-        // If for some reason capture failed, void the original auth call.
-        if (!$this->_gateway->isSuccess()) {
-            $msg = 'Delayed capture failed';
             if ($this->_gateway->getError()) {
                 $msg .= ' Gateway error: ' . $this->_gateway->getError();
                 $this->_error = self::ERR_GENERIC;
@@ -279,23 +248,17 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      * @return void 
      */
-    public function processVoid() {
-        // Nothing to void
-        if (!$this->_capture_pnref && !$this->_auth_pnref) {
-            return;
-        }
+    public function processVoid($origid) {
         $this->resetGateway();
-        $pnref = ($this->_capture_pnref ? $this->_capture_pnref :
-            $this->_auth_pnref);
-        $this->_gateway->setField('ORIGID', $pnref)
+        $this->_gateway->setField('ORIGID', $origid)
             ->setField('TRXTYPE', 'V')
             ->send()
             ->processResponse();
         $this->saveCall();
         $result = $this->_gateway->getResponseField('RESULT');
-        if ($this->_capture_pnref && $result == 108) {
+        if ($result == 108) {
             $this->resetGateway();
-            $this->_gateway->setField('ORIGID', $pnref)
+            $this->_gateway->setField('ORIGID', $origid)
                 ->setField('TRXTYPE', 'C')
                 ->send()
                 ->processResponse();
@@ -333,24 +296,25 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         return $this->_calls;
     }
     
-    /**
-     * Public accessor to $_auth_pnref
-     * 
-     * @return string
-     */
-    public function getAuthPnref() {
-        return $this->_auth_pnref;
+    public function voidCalls() {
+        foreach ($this->_calls as $call) {
+            $trxtype = (isset($call['request']['TRXTYPE']) ?
+                $call['request']['TRXTYPE'] : '');
+            switch ($trxtype) {
+                default:
+                    // void 
+                    $pnref = (isset($call['response']['PNREF']) ?
+                        $call['response']['PNREF'] : '');
+                    $this->processVoid($pnref);
+                    break;
+                case 'R':
+                    // deactivate recurring profile
+                    break;
+
+            }
+        }
     }
-    
-    /**
-     * Public accessor to $_capture_pnref
-     * 
-     * @return string
-     */
-    public function getCapturePnref() {
-        return $this->_capture_pnref;
-    }
-    
+
     /**
      * @return string
      * 
@@ -364,12 +328,9 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      * @return string 
      */
-    private function _getRequestId($cc_num, $total, $cc_cvv) {
+    private function _getRequestId() {
         $temp_strings = array(
-            $cc_num,
-            $total,
-            $cc_cvv,
-            microtime(),
+            uniqid(),
             Zend_Session::getId()
         );
         return md5(implode('', $temp_strings));

@@ -40,6 +40,42 @@ class Model_Cart_Product extends Pet_Model_Abstract {
             array('qty' => $this->_data['qty'])
         );
     }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isSubscription() {
+        return $this->_data['product']->product_type_id ==
+            Model_ProductType::SUBSCRIPTION;
+    }
+    
+    /**
+     * @return bool
+     * 
+     */
+    public function isDigital() {
+        return $this->_data['product']->product_type_id ==
+            Model_ProductType::DIGITAL_SUBSCRIPTION;
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isPhysical() {
+        return $this->_data['product']->product_type_id ==
+            Model_ProductType::PHYSICAL;
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isDownload() {
+        return $this->_data['product']->product_type_id ==
+            Model_ProductType::DOWNLOAD;
+    }
 }
 
 

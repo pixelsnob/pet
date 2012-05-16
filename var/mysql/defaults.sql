@@ -135,10 +135,10 @@ insert into pet.products values
 (305, 5, 'DIGITAL-YEARLY-GIFT', 39, '', 1, 0, 1);
 
 insert into digital_subscriptions values
-(1, 'Digital Subscription, Monthly', '', 0, 1, 30, 12),
-(2, 'Digital Subscription, Monthly, Renewal', '', 1, 1, 30, 12),
-(3, 'Digital Subscription, Yearly', '', 0, 0, null, null),
-(4, 'Digital Subscription, Yearly, Renewal', '', 1, 0, null, null);
+(1, 'Digital Subscription, Monthly', '', 0, 1, 12),
+(2, 'Digital Subscription, Monthly, Renewal', '', 1, 1, 12),
+(3, 'Digital Subscription, Yearly', '', 0, 0, null),
+(4, 'Digital Subscription, Yearly, Renewal', '', 1, 0, null);
 
 insert into pet.products_digital_subscriptions values
 (null, 300, 1),

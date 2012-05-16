@@ -688,8 +688,9 @@ CREATE  TABLE IF NOT EXISTS `pet`.`digital_subscriptions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(100) NOT NULL ,
   `description` LONGTEXT NULL DEFAULT NULL ,
-  `term` INT(11) NOT NULL DEFAULT '1' ,
   `is_renewal` INT(1) NOT NULL DEFAULT '0' ,
+  `is_recurring` TINYINT(1) NOT NULL DEFAULT 0 ,
+  `term` INT(4) NULL COMMENT '					' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) )
 ENGINE = InnoDB
