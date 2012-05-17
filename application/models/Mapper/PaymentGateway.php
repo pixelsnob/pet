@@ -13,7 +13,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * @var string 
      * 
      */
-    private $_auth_pnref;
+    //private $_auth_pnref;
 
     /**
      * @var array 
@@ -73,27 +73,23 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      */
     public function processSale(array $data) {
         $this->resetGateway();
-        $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
-        $name = $data['first_name'] . ' ' . $data['last_name'];
-        $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
-        $ship_address = $data['shipping_address'] . ' ' .
-            $data['shipping_address_2'];
-        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
+        $data = $this->formatData($data);
+        $this->_gateway//->setSensitiveFields(array('ACCT', 'CVV2'))
             ->setField('TENDER', 'C')
             ->setField('TRXTYPE', 'S')
             ->setField('ACCT', $data['cc_num'])
             ->setField('CVV2', $data['cc_cvv'])
             ->setField('AMT', $data['total'])
-            ->setField('EXPDATE', $exp_date)
-            ->setField('NAME', $name)
-            ->setField('STREET', $address)
+            ->setField('EXPDATE', $data['exp_date'])
+            ->setField('NAME', $data['name'])
+            ->setField('STREET', $data['address'])
             ->setField('EMAIL', $data['email'])
             ->setField('ZIP', $data['billing_postal_code'])
             ->setField('CITY', $data['billing_city'])
             ->setField('STATE', $data['billing_state'])
             ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
             ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
-            ->setField('SHIPTOSTREET', $ship_address)
+            ->setField('SHIPTOSTREET', $data['shipping_address'])
             ->setField('SHIPTOZIP', $data['shipping_postal_code'])
             ->setField('SHIPTOCITY', $data['shipping_city'])
             ->setField('SHIPTOSTATE', $data['shipping_state'])
@@ -101,9 +97,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->send()
             ->processResponse();
         $this->saveCall();
-        // Store PNREF value from the auth call.
-        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
-        // Check to see if response failed.
         if ($this->_gateway->isSuccess()) {
             // If this is a CVV mismatch, void the auth.
             if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
@@ -111,7 +104,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
                 throw new Exception('CVV Mismatch');
             }
         } else {
-            $msg = 'CC transaction failed.';
+            $msg = __FUNCTION__ . '() failed.';
             if ($this->_gateway->getError()) {
                 $msg .= ' Gateway error: ' . $this->_gateway->getError();
                 $this->_error = self::ERR_GENERIC;
@@ -198,7 +191,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
               ->send()
               ->processResponse();
         $this->saveCall();
-        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
+        //$this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
         if (!$this->_gateway->isSuccess()) {
             $this->_error = self::ERR_EXPRESS_CHECKOUT;
             throw new Exception('Express checkout process failed');
@@ -245,13 +238,10 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('TERM', $data['term'] - 1)
             ->setField('PAYPERIOD', 'MONT')
             ->setField('MAXFAILPAYMENTS', 0)
-            //->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description']);
-            ->setField('BA_DESC', $data['description']);
+            ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description']);
+            //->setField('BA_DESC', $data['description']);
         $this->_gateway->send()->processResponse();
         $this->saveCall();
-        // Store PNREF value from the auth call.
-        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
-        // Check to see if response failed.
         if ($this->_gateway->isSuccess()) {
             // If this is a CVV mismatch, void the auth.
             if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
@@ -313,7 +303,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->send()->processResponse();
         $this->saveCall();
         // Store PNREF value from the auth call.
-        $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
+        //$this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
         // Check to see if response failed.
         if (!$this->_gateway->isSuccess()) {
             $msg = __FUNCTION__ . '() failed';
@@ -413,7 +403,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function formatData($data) {
-        $data['exp_date'] = $data['cc_exp_month'] . $data['cc_exp_year'];
+        $data['exp_date'] = $data['cc_exp_month'] . substr($data['cc_exp_year'], 2, 2);
         $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
         $data['address'] = $data['billing_address'] . ' ' . $data['billing_address_2'];
         $data['shipping_address'] = $data['shipping_address'] . ' ' .

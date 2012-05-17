@@ -300,7 +300,6 @@ class Service_Cart {
                 $gateway->voidCalls();
             } catch (Exception $e2) {}
         }
-        $gateway->voidCalls();
         // Log
         try {
             $mongo = Pet_Mongo::getInstance();
@@ -319,9 +318,7 @@ class Service_Cart {
                 'gateway_calls'    => $gateway->getCalls(),
                 'exceptions'       => $exceptions
             ), array('fsync' => true));
-        } catch (Exception $e) {
-            // Log but don't affect the transaction if this fails
-        }
+        } catch (Exception $e) {}
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());
             if ($config['reset_cart_after_process']) {
