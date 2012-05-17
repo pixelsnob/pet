@@ -55,7 +55,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
     public function validatePromo(Model_Promo $promo) {
         $valid = false;
         foreach ($promo->promo_products as $pp) {
-            if (in_array($pp->product_id, $this->_cart->getProductIds())) {
+            if (in_array($pp->product_id, $this->_cart->products->getIds())) {
                 $valid = true;
             }
         }

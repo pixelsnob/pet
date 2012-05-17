@@ -68,11 +68,10 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param array $data
-     * @param string $payer_id Optional, for EC transactions only
      * @return void
      * 
      */
-    public function processSale(array $data, $payer_id = null) {
+    public function processSale(array $data) {
         $this->resetGateway();
         $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
         $name = $data['first_name'] . ' ' . $data['last_name'];
@@ -273,39 +272,32 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param array $data
+     * @param string $token
+     * @param string $payer_id
      * @return void
      * 
      */
-    public function processECRecurringPayment(array $data) {
-        exit('not yet');
+    public function processECRecurringPayment(array $data, $token, $payer_id) {
         $this->resetGateway();
-        $exp_date = $data['cc_exp_month'] . $data['cc_exp_year'];
-        $name = $data['first_name'] . ' ' . $data['last_name'];
-        $address = $data['billing_address'] . ' ' . $data['billing_address_2'];
-        $ship_address = $data['shipping_address'] . ' ' .
-            $data['shipping_address_2'];
+        $data = $this->formatData($data);
         $start_date = new DateTime;
-        $start_date->add(new DateInterval('P2D'));
-        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            ->setField('TENDER', 'P')
+        $start_date->add(new DateInterval('P1M'));
+        $this->_gateway->setField('TENDER', 'P')
             ->setField('TRXTYPE', 'R')
             ->setField('ACTION', 'A')
-            ->setField('ACCT', $data['cc_num'])
-            ->setField('CVV2', $data['cc_cvv'])
             ->setField('AMT', $data['cost'])
             // Bill this month immediately
-            ->setField('OPTIONALTRXAMT', $data['cost'])
-            ->setField('EXPDATE', $exp_date)
+            //->setField('OPTIONALTRXAMT', $data['cost'])
             ->setField('PROFILENAME', $data['profile_id'])
-            ->setField('NAME', $name)
-            ->setField('STREET', $address)
+            ->setField('NAME', $data['name'])
+            ->setField('STREET', $data['address'])
             ->setField('EMAIL', $data['email'])
             ->setField('ZIP', $data['billing_postal_code'])
             ->setField('CITY', $data['billing_city'])
             ->setField('STATE', $data['billing_state'])
             ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
             ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
-            ->setField('SHIPTOSTREET', $ship_address)
+            ->setField('SHIPTOSTREET', $data['shipping_address'])
             ->setField('SHIPTOZIP', $data['shipping_postal_code'])
             ->setField('SHIPTOCITY', $data['shipping_city'])
             ->setField('SHIPTOSTATE', $data['shipping_state'])
@@ -315,21 +307,16 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('TERM', $data['term'] - 1)
             ->setField('PAYPERIOD', 'MONT')
             ->setField('MAXFAILPAYMENTS', 0)
+            ->setField('TOKEN', $token)
+            ->setField('PAYERID', $payer_id)
             ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description'])
-            ->send()
-            ->processResponse();
+            ->send()->processResponse();
         $this->saveCall();
         // Store PNREF value from the auth call.
         $this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
         // Check to see if response failed.
-        if ($this->_gateway->isSuccess()) {
-            // If this is a CVV mismatch, void the auth.
-            if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
-                $this->_error = self::ERR_CVV;
-                throw new Exception('CVV Mismatch');
-            }
-        } else {
-            $msg = 'CC transaction failed.';
+        if (!$this->_gateway->isSuccess()) {
+            $msg = __FUNCTION__ . '() failed';
             if ($this->_gateway->getError()) {
                 $msg .= ' Gateway error: ' . $this->_gateway->getError();
                 $this->_error = self::ERR_GENERIC;

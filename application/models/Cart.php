@@ -10,7 +10,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     protected $_data = array(
-        'products'            => array(),
+        'products'            => null,  // Model_Cart_Products
         'billing'             => null,  // Model_Cart_Billing
         'shipping'            => null,  // Model_Cart_Shipping
         'payment'             => null,  // Model_Cart_Payment
@@ -41,7 +41,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     public function __construct() {
-        $this->_data['products'] = array();
+        $this->_data['products'] = new Model_Cart_Products;
         $this->_data['billing'] = new Model_Cart_Billing;
         $this->_data['shipping'] = new Model_Cart_Shipping;
         $this->_data['payment'] = new Model_Cart_Payment;
@@ -88,10 +88,10 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             $this->_message = $validator->getMessage();
             return false;
         }
-        if (isset($this->_data['products'][$product->product_id])) {
-            $this->_data['products'][$product->product_id]->qty++;
+        if ($this->_data['products']->getById($product->product_id)) {
+            $this->_data['products']->incrementQty($product->product_id);
         } else {
-            $this->_data['products'][$product->product_id] = $product;
+            $this->_data['products']->add($product);
         }
         return true;
     }
@@ -102,10 +102,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     public function removeProduct($product_id) {
-        if (in_array($product_id, array_keys($this->_data['products']))) {
-            $msg = '"' . $this->_data['products'][$product_id]->name .
-                '" was removed from your cart';
-            unset($this->_data['products'][$product_id]);
+        if ($product = $this->_data['products']->getById($product_id)) {
+            $msg = '"' . $product->name . '" was removed from your cart';
+            $this->_data['products']->remove($product_id);
             if ($this->_data['promo']) {
                 $valid = $this->getValidator()->validatePromo($this->_data['promo']); 
                 if (!$valid) {
@@ -122,15 +121,14 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return bool
      */
     public function setProductQty($product_id, $qty) {
-        if (isset($this->_data['products'][$product_id])) {
+        if ($product = $this->_data['products']->getById($product_id)) {
             if ($qty) {
-                $this->_data['products'][$product_id]->qty = $qty;
+                $this->_data['products']->setQty($product_id, $qty);
             } else {
-                $this->removeProduct($product_id);
+                $this->_data['products']->remove($product_id);
             }
             return true;
         }
-        return false;
     }
 
     /**
@@ -144,6 +142,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
                 $qty = (int) $data['qty'][$product->product_id];
                 $this->setProductQty($product->product_id, $qty);
             }
+            
         }
     }
     
@@ -207,9 +206,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     public function incrementProductQty($product_id) {
-        if (isset($this->_data['products'][$product_id])) {
-            $this->_data['products'][$product_id]->qty++;
-        }
+        $this->_data['products']->incrementQty($product_id);
     }
 
     /**
@@ -218,11 +215,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return int
      */
     public function getQty() {
-        $qty = 0;
-        foreach ($this->products as $product) {
-            $qty += $product->qty;
-        }
-        return $qty;
+        return count($this->_data['products']);
     }
 
     /**
@@ -242,26 +235,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             }
         }
         return $qty;
-    }
-
-    /**
-     * @param string $product_id
-     * @return Model_Cart_Prod|false
-     * 
-     */
-    public function getProduct($product_id) {
-        if (!array_key_exists($product_id, $this->_data['products'])) {
-            return false;
-        }
-        return $this->_data['products'][$product_id];
-    }
-
-    /**
-     * @return array
-     * 
-     */
-    public function getProductIds() {
-        return array_keys($this->_data['products']);
     }
 
     /**
@@ -388,7 +361,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $c = 0;
         foreach ($this->_data['products'] as $product) {
             if ($product->is_renewal) {
-                $this->removeProduct($product->product_id);
+                $this->_data['products']->remove($product->product_id);
             }
         }
     }

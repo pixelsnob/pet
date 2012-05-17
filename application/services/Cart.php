@@ -282,7 +282,7 @@ class Service_Cart {
                                 exit('not yet'); 
                             } else {
                                 $gateway->processECRecurringPayment(
-                                    $data);
+                                    $data, $cart->ec_token, $payer_id);
                             }
                         }
                     }
@@ -355,7 +355,9 @@ class Service_Cart {
                 // maybe move this to model
                 $products = array();
                 foreach ($cart->products as $product) {
-                    $products[] = $product->toArray();
+                    if ($product->is_recurring) {
+                        $products[] = $product->toArray();
+                    }
                 }
                 $token = $gateway->getECTokenRecurring($data, $return_url,
                     $cancel_url, $products);
