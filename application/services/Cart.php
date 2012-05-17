@@ -256,11 +256,17 @@ class Service_Cart {
             $form->payment->getValues(true),
             array('total' => $totals['total']),
             $form->user->getValues(true),
-            $form->getShippingValues()
+            $form->getShippingValues(),
+            $form->info->getValues(true),
+            array('promo_id' => '')
         );
         $status = true;
+        if ($cart->promo) {
+            $data['promo_id'] = $cart->promo->id;
+        }
         $exceptions = array();
         try {
+            // Process payment(s)
             if ($cart->hasRecurring()) {
                 foreach ($cart->products as $product) {
                     if (!$product->is_recurring) {
@@ -278,12 +284,8 @@ class Service_Cart {
                         if ($cart->payment->payment_method == 'credit_card') {
                             $gateway->processRecurringPayment($data);
                         } else {
-                            if ($product->isRenewal()) {
-                                exit('not yet'); 
-                            } else {
-                                $gateway->processECRecurringPayment(
-                                    $data, $cart->ec_token, $payer_id);
-                            }
+                            $gateway->processECRecurringPayment(
+                                $data, $cart->ec_token, $payer_id);
                         }
                     }
                 }
@@ -293,6 +295,17 @@ class Service_Cart {
             } else {
                 $gateway->processECSale($data, $cart->ec_token, $payer_id);
             }
+            // Save to DB
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $db->beginTransaction();
+            $user = new Model_Mapper_Users;
+            $data['user_id'] = $user->insert($data);
+            if (!$data['user_id']) {
+                throw new Exception('user_id not defined');
+            }
+            $order = new Model_Mapper_Orders;
+            $data['order_id'] = $order->insert($data);
+            $db->commit();
         } catch (Exception $e) {
             $status = false;
             $exceptions[] = $e->getMessage();
@@ -300,6 +313,7 @@ class Service_Cart {
                 $gateway->voidCalls();
             } catch (Exception $e2) {}
         }
+
         // Log
         try {
             $mongo = Pet_Mongo::getInstance();
@@ -319,6 +333,7 @@ class Service_Cart {
                 'exceptions'       => $exceptions
             ), array('fsync' => true));
         } catch (Exception $e) {}
+        // Reset cart
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());
             if ($config['reset_cart_after_process']) {

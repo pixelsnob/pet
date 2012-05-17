@@ -168,7 +168,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`users` (
   `is_staff` TINYINT(4) NOT NULL DEFAULT '0' ,
   `is_active` TINYINT(4) NOT NULL DEFAULT '1' ,
   `is_superuser` TINYINT(4) NOT NULL DEFAULT '0' ,
-  `last_login` DATETIME NOT NULL ,
+  `last_login` DATETIME NULL ,
   `date_joined` DATETIME NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
@@ -757,6 +757,37 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_subscriptions` (
   CONSTRAINT `ordered_product_subscriptions_ibfk_3`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 98303
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `pet`.`ordered_product_digital_subscriptions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`ordered_product_digital_subscriptions` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_digital_subscriptions` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `user_id` INT NOT NULL ,
+  `ordered_product_id` INT(11) NULL ,
+  `digital_subscription_id` INT(11) NULL DEFAULT NULL ,
+  `expiration` DATE NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  INDEX `ordered_product_digital_subscriptions_fk_1` (`user_id` ASC) ,
+  INDEX `ordered_product_digital_subscriptions_fk_2` (`digital_subscription_id` ASC) ,
+  CONSTRAINT `ordered_product_digital_subscriptions_fk_1`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `pet`.`users` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `ordered_product_digital_subscriptions_fk_2`
+    FOREIGN KEY (`digital_subscription_id` )
+    REFERENCES `pet`.`digital_subscriptions` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

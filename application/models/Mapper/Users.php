@@ -98,12 +98,25 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param int $id User id
-     * @return int Num rows updated
+     * @return int user_id 
      * 
      */
     public function updateLastLogin($id) {
         return $this->_users->update(array(
-            'last_login' => date('Y-m-d G:i:s', time())), $id);
+            'last_login' => date('Y-m-d H:i:s', time())), $id);
+    }
+
+    /**
+     * @param array $data
+     * @return int user_id
+     * 
+     */
+    public function insert(array $data) {
+        $user = new Model_User($data);
+        $user->date_joined = date('Y-m-d H:i:s');
+        $user_array = $user->toArray();
+        unset($user_array['id']);
+        return $this->_users->insert($user_array);
     }
 }
 

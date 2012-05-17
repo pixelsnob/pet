@@ -20,7 +20,7 @@ class Model_Mapper_UserActions extends Pet_Model_Mapper_Abstract {
         $user_action->user_id = $user_id;
         $user_action->action = $action;
         $user_action->ip = $ip;
-        $user_action->timestamp = date('Y-m-d G:i:s');
+        $user_action->timestamp = date('Y-m-d H:i:s');
         $user_action_array = $user_action->toArray();
         unset($user_action_array['id']);
         $user_actions->insert($user_action_array);

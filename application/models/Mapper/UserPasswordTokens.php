@@ -31,7 +31,7 @@ class Model_Mapper_UserPasswordTokens extends Pet_Model_Mapper_Abstract {
      */
     public function getByMaxAge($token, $max_age) {
         $max_age = time() - $max_age;
-        $max_age = date('Y-m-d G:i:s', $max_age);
+        $max_age = date('Y-m-d H:i:s', $max_age);
         return $this->_pw_tokens->getByMaxAge($token, $max_age);        
     }
 
@@ -54,7 +54,7 @@ class Model_Mapper_UserPasswordTokens extends Pet_Model_Mapper_Abstract {
         return $this->_pw_tokens->insert(array(
             'user_id'   => $user_id,
             'token'     => $token,
-            'timestamp' => date('Y-m-d G:i:s', time())
+            'timestamp' => date('Y-m-d H:i:s', time())
         ));
     }
     
