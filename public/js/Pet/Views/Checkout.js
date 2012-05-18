@@ -17,6 +17,7 @@ Pet.CheckoutView = Pet.View.extend({
     
     initialize: function() {
         this.addPromoCodeApplyLink();
+        $('input[type=text]').attr('autocomplete', 'off');
     },
 
     toggleShippingFields: function(el) {

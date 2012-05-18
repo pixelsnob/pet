@@ -20,7 +20,8 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
      */
     function insert(array $data) {
         $order = new Model_Order($data);
-        $order->promo_id = $data['promo_id'];
+        $order->promo_id = (strlen(trim($data['promo_id'])) ?
+            $data['promo_id'] : null);
         $order->billing_first_name = $data['first_name'];
         $order->billing_last_name = $data['last_name'];
         $order->date_created = $order->date_updated = date('Y-m-d H:i:s');

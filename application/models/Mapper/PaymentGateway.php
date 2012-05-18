@@ -74,7 +74,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     public function processSale(array $data) {
         $this->resetGateway();
         $data = $this->formatData($data);
-        $this->_gateway//->setSensitiveFields(array('ACCT', 'CVV2'))
+        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
             ->setField('TENDER', 'C')
             ->setField('TRXTYPE', 'S')
             ->setField('ACCT', $data['cc_num'])
@@ -330,6 +330,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->processResponse();
         $this->saveCall();
         $result = $this->_gateway->getResponseField('RESULT');
+        // 108 means the funds have already settled, so we need to do a credit
         if ($result == 108) {
             $this->resetGateway();
             $this->_gateway->setField('ORIGID', $origid)

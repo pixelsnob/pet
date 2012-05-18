@@ -257,10 +257,14 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_products` (
   INDEX `product_id` (`product_id` ASC) ,
   CONSTRAINT `ordered_products_ibfk_1`
     FOREIGN KEY (`order_id` )
-    REFERENCES `pet`.`orders` (`id` ),
+    REFERENCES `pet`.`orders` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `ordered_products_ibfk_2`
     FOREIGN KEY (`product_id` )
-    REFERENCES `pet`.`products` (`id` ))
+    REFERENCES `pet`.`products` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
 ENGINE = InnoDB
 AUTO_INCREMENT = 131071
 DEFAULT CHARACTER SET = utf8

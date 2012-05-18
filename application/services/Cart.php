@@ -251,6 +251,7 @@ class Service_Cart {
         $cart = $this->get();
         $gateway = new Model_Mapper_PaymentGateway;
         $totals = $cart->getTotals();
+        // Merge input data into one array
         $data = array_merge(
             $form->billing->getValues(true),
             $form->payment->getValues(true),
@@ -266,7 +267,7 @@ class Service_Cart {
         }
         $exceptions = array();
         try {
-            // Process payment(s)
+            // Recurring billing
             if ($cart->hasRecurring()) {
                 foreach ($cart->products as $product) {
                     if (!$product->is_recurring) {
@@ -290,21 +291,28 @@ class Service_Cart {
                     }
                 }
             }
+
+            // Regular sale
             if ($cart->payment->payment_method == 'credit_card') {
                 $gateway->processSale($data);
             } else {
                 $gateway->processECSale($data, $cart->ec_token, $payer_id);
             }
+            
             // Save to DB
             $db = Zend_Db_Table::getDefaultAdapter();
             $db->beginTransaction();
+            
+            // User data
             $user = new Model_Mapper_Users;
             $data['user_id'] = $user->insert($data);
             if (!$data['user_id']) {
                 throw new Exception('user_id not defined');
             }
+            // Order data
             $order = new Model_Mapper_Orders;
             $data['order_id'] = $order->insert($data);
+            
             $db->commit();
         } catch (Exception $e) {
             $status = false;
@@ -312,6 +320,9 @@ class Service_Cart {
             try {
                 $gateway->voidCalls();
             } catch (Exception $e2) {}
+            /*try {
+                $db->rollback();
+            } catch (Exception $e2) {}*/
         }
 
         // Log
@@ -333,6 +344,7 @@ class Service_Cart {
                 'exceptions'       => $exceptions
             ), array('fsync' => true));
         } catch (Exception $e) {}
+
         // Reset cart
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());
