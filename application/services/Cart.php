@@ -313,6 +313,12 @@ class Service_Cart {
             $order = new Model_Mapper_Orders;
             $data['order_id'] = $order->insert($data);
             
+            // Ordered products
+            $ordered_product = new Model_Mapper_OrderedProducts;
+            foreach ($cart->products as $product) {
+                $ordered_product->insert($product->toArray(), $data['order_id']); // <<<<<<<<<<<<<<< need to figure out discount cost stuff
+            }
+
             $db->commit();
         } catch (Exception $e) {
             $status = false;
@@ -334,7 +340,8 @@ class Service_Cart {
             unset($cart_clone->promo);
             $cart_array = $cart_clone->toArray();
             unset($cart_array['promo']);
-            $cart_array['promo_code'] = $cart->promo->code;
+            $cart_array['promo_code'] = ($cart_clone->promo ?
+                $cart->promo->code : null);
             $mongo->orders->insert(array(
                 'timestamp'        => time(),
                 'date_r'           => date('Y-m-d H:i:s'),

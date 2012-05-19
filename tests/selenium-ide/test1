@@ -39,11 +39,6 @@
 <tr>
 	<td>type</td>
 	<td>id=billing_address</td>
-	<td>1501 Silliker AVe</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=billing_address</td>
 	<td>1501 Silliker Ave</td>
 </tr>
 <tr>
@@ -84,7 +79,7 @@
 <tr>
 	<td>type</td>
 	<td>id=cc_num</td>
-	<td>4111111111111111</td>
+	<td>4411037114367821</td>
 </tr>
 <tr>
 	<td>select</td>

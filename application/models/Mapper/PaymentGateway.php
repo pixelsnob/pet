@@ -302,8 +302,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description'])
             ->send()->processResponse();
         $this->saveCall();
-        // Store PNREF value from the auth call.
-        //$this->_auth_pnref = $this->_gateway->getResponseField('PNREF');
         // Check to see if response failed.
         if (!$this->_gateway->isSuccess()) {
             $msg = __FUNCTION__ . '() failed';

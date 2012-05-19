@@ -412,8 +412,8 @@ CREATE  TABLE IF NOT EXISTS `pet`.`order_payments` (
   CONSTRAINT `order_payments_ibfk_1`
     FOREIGN KEY (`order_id` )
     REFERENCES `pet`.`orders` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `order_payments_ibfk_2`
     FOREIGN KEY (`payment_type_id` )
     REFERENCES `pet`.`payment_types` (`id` )
@@ -751,8 +751,8 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_subscriptions` (
   CONSTRAINT `ordered_product_subscriptions_ibfk_1`
     FOREIGN KEY (`ordered_product_id` )
     REFERENCES `pet`.`ordered_products` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `ordered_product_subscriptions_ibfk_2`
     FOREIGN KEY (`subscription_id` )
     REFERENCES `pet`.`subscriptions` (`id` )
@@ -787,8 +787,8 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_digital_subscriptions` (
   CONSTRAINT `ordered_product_digital_subscriptions_fk_1`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `ordered_product_digital_subscriptions_fk_2`
     FOREIGN KEY (`digital_subscription_id` )
     REFERENCES `pet`.`digital_subscriptions` (`id` )
