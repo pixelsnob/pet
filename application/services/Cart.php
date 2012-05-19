@@ -20,6 +20,7 @@ class Service_Cart {
     public function __construct() {
         $this->_cart = new Model_Mapper_Cart;
         $this->_products_svc = new Service_Products;
+        $this->_gateway = new Model_Mapper_PaymentGateway;
     }
     
     /**
@@ -249,7 +250,7 @@ class Service_Cart {
         $config = Zend_Registry::get('app_config');
         $logger = Zend_Registry::get('log');
         $cart = $this->get();
-        $gateway = new Model_Mapper_PaymentGateway;
+        //$gateway = new Model_Mapper_PaymentGateway;
         $totals = $cart->getTotals();
         // Merge input data into one array
         $data = array_merge(
@@ -283,9 +284,9 @@ class Service_Cart {
                         exit('not yet');
                     } else {
                         if ($cart->payment->payment_method == 'credit_card') {
-                            $gateway->processRecurringPayment($data);
+                            $this->_gateway->processRecurringPayment($data);
                         } else {
-                            $gateway->processECRecurringPayment(
+                            $this->_gateway->processECRecurringPayment(
                                 $data, $cart->ec_token, $payer_id);
                         }
                     }
@@ -294,9 +295,10 @@ class Service_Cart {
 
             // Regular sale
             if ($cart->payment->payment_method == 'credit_card') {
-                $gateway->processSale($data);
+                $this->_gateway->processSale($data);
             } else {
-                $gateway->processECSale($data, $cart->ec_token, $payer_id);
+                $this->_gateway->processECSale($data, $cart->ec_token,
+                    $payer_id);
             }
             
             // Save to DB
@@ -313,43 +315,25 @@ class Service_Cart {
             $order = new Model_Mapper_Orders;
             $data['order_id'] = $order->insert($data);
             
+            throw new Exception('shit');
             // Ordered products
             $ordered_product = new Model_Mapper_OrderedProducts;
             foreach ($cart->products as $product) {
                 $ordered_product->insert($product->toArray(), $data['order_id']); // <<<<<<<<<<<<<<< need to figure out discount cost stuff
             }
-
+            $this->_logTransaction('orders', $status);
             $db->commit();
         } catch (Exception $e) {
             $status = false;
             $exceptions[] = $e->getMessage();
             try {
-                $gateway->voidCalls();
+                $this->_gateway->voidCalls();
+                $this->_logTransaction('orders', $status, $exceptions);
             } catch (Exception $e2) {}
-            /*try {
-                $db->rollback();
-            } catch (Exception $e2) {}*/
         }
 
         // Log
         try {
-            $mongo = Pet_Mongo::getInstance();
-            // Clone so we can modify copy
-            $cart_clone = clone $cart;
-            // We don't need to save the whole promo array
-            unset($cart_clone->promo);
-            $cart_array = $cart_clone->toArray();
-            unset($cart_array['promo']);
-            $cart_array['promo_code'] = ($cart_clone->promo ?
-                $cart->promo->code : null);
-            $mongo->orders->insert(array(
-                'timestamp'        => time(),
-                'date_r'           => date('Y-m-d H:i:s'),
-                'status'           => ($status ? 'success' : 'failed'),
-                'cart'             => $cart_array,
-                'gateway_calls'    => $gateway->getCalls(),
-                'exceptions'       => $exceptions
-            ), array('fsync' => true));
         } catch (Exception $e) {}
 
         // Reset cart
@@ -369,7 +353,6 @@ class Service_Cart {
      * 
      */
     public function getECUrl($return_url, $cancel_url) {
-        $gateway = new Model_Mapper_PaymentGateway;
         $config = Zend_Registry::get('app_config');
         $cart = $this->get();
         $totals = $cart->getTotals();
@@ -390,37 +373,24 @@ class Service_Cart {
                         $products[] = $product->toArray();
                     }
                 }
-                $token = $gateway->getECTokenRecurring($data, $return_url,
+                $token = $this->_gateway->getECTokenRecurring($data, $return_url,
                     $cancel_url, $products);
             } else {
-                $token = $gateway->getECToken($data, $return_url, $cancel_url);
+                $token = $this->_gateway->getECToken($data, $return_url,
+                    $cancel_url);
             }
             if (!$token) {
                 throw new Exception(__FUNCTION__ . '() failed');
             }
             $cart->ec_token = $token;
+            $this->_logTransaction('ec_transactions', $status);
         } catch (Exception $e) {
             $status = false;
             $exceptions[] = $e->getMessage();
+            try {
+                $this->_logTransaction('ec_transactions', $status, $exceptions);
+            } catch (Exception $e2) {}
         }
-        // Log
-        try {
-            $mongo = Pet_Mongo::getInstance();
-            // Clone so we can modify copy
-            $cart_clone = clone $cart;
-            // We don't need to save the whole promo array
-            unset($cart_clone->promo);
-            $cart_array = $cart_clone->toArray();
-            unset($cart_array['promo']);
-            $cart_array['promo_code'] = $cart->promo->code;
-            $mongo->ec_transactions->insert(array(
-                'timestamp'        => time(),
-                'date_r'           => date('Y-m-d H:i:s'),
-                'status'           => ($status ? 'success' : 'failed'),
-                'cart'             => $cart_array,
-                'gateway_calls'    => $gateway->getCalls(),
-            ), array('fsync' => true));
-        } catch (Exception $e) {}
         if ($status) {
             return $config['payment_gateway']['ec_url'] . '&token=' . $token;
         }
@@ -440,6 +410,26 @@ class Service_Cart {
      */
     public function getMessage() {
         return $this->_message;
+    }
+
+    private function _logTransaction($collection, $status, $exceptions = array()) {
+        $mongo = Pet_Mongo::getInstance();
+        // Clone so we can modify copy
+        $cart_clone = clone $this->get();
+        // We don't need to save the whole promo array
+        unset($cart_clone->promo);
+        $cart_array = $cart_clone->toArray();
+        unset($cart_array['promo']);
+        $cart_array['promo_code'] = ($cart->promo ?
+            $cart->promo->code : null);
+        $mongo->{$collection}->insert(array(
+            'timestamp'        => time(),
+            'date_r'           => date('Y-m-d H:i:s'),
+            'status'           => ($status ? 'success' : 'failed'),
+            'cart'             => $cart_array,
+            'gateway_calls'    => $this->_gateway->getCalls(),
+            'exceptions'       => $exceptions
+        ), array('fsync' => true));
     }
     
 }
