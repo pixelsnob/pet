@@ -264,7 +264,9 @@ class Service_Users extends Pet_Service {
             ->getRequest()->getServer();
         $ip = (isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '');
         $user_actions = new Model_Mapper_UserActions;
-        $user_actions->add($action, $ip, $user_id);
+        try {
+            $user_actions->insert($action, $ip, $user_id);
+        } catch (Exception $e) {}
     }
 
 

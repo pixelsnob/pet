@@ -344,10 +344,6 @@ class Service_Cart {
             } catch (Exception $e2) {}
         }
 
-        // Log
-        try {
-        } catch (Exception $e) {}
-
         // Reset cart
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());

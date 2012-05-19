@@ -21,5 +21,12 @@ class Model_Product_Subscription extends Model_Product_Abstract {
         'is_gift' => null
     );
     
+    /**
+     * @return bool
+     * 
+     */
+    public function isGift() {
+        return $this->_data['is_gift'];
+    }
 }
 

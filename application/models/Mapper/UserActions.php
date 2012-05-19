@@ -14,8 +14,8 @@ class Model_Mapper_UserActions extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function add($action, $ip, $user_id) {
-        $user_actions = new Model_DbTable_UserActions;
+    public function insert($action, $ip, $user_id) {
+        $mongo = Pet_Mongo::getInstance(); 
         $user_action = new Model_UserAction;
         $user_action->user_id = $user_id;
         $user_action->action = $action;
@@ -23,7 +23,7 @@ class Model_Mapper_UserActions extends Pet_Model_Mapper_Abstract {
         $user_action->timestamp = date('Y-m-d H:i:s');
         $user_action_array = $user_action->toArray();
         unset($user_action_array['id']);
-        $user_actions->insert($user_action_array);
+        $mongo->user_actions->insert($user_action_array);
     }
 }
 

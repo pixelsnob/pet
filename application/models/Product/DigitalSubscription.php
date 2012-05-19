@@ -19,6 +19,14 @@ class Model_Product_DigitalSubscription extends Model_Product_Abstract {
         'is_recurring' => null,
         'term' => null
     );
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isGift() {
+        return $this->_data['is_gift'];
+    }
     
 }
 
