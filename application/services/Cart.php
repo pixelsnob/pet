@@ -260,12 +260,9 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues(),
             $form->info->getValues(true),
-            array('promo_id' => '')
+            array('promo_id' => ($cart->promo ? $cart->promo->id : null))
         );
         $status = true;
-        if ($cart->promo) {
-            $data['promo_id'] = $cart->promo->id;
-        }
         $exceptions = array();
         try {
             // Recurring billing
@@ -311,16 +308,31 @@ class Service_Cart {
             if (!$data['user_id']) {
                 throw new Exception('user_id not defined');
             }
+            
             // Order data
             $order = new Model_Mapper_Orders;
             $data['order_id'] = $order->insert($data);
             
-            throw new Exception('shit');
-            // Ordered products
+            // Products
             $ordered_product = new Model_Mapper_OrderedProducts;
             foreach ($cart->products as $product) {
-                $ordered_product->insert($product->toArray(), $data['order_id']); // <<<<<<<<<<<<<<< need to figure out discount cost stuff
+                
+                // Insert into ordered_products
+                $opid = $ordered_product->insert($product->toArray(),
+                    $data['order_id']);                                                // <<<<<<<<<<<<<<< need to figure out discount cost stuff
+
+                // Gift processing here
+                if ($product->isGift()) {
+                    
+                }
+                if ($product->isDigital()) {
+                    // add to ordered_product_digital_subscriptions
+                } elseif ($product->isSubscription()) {
+                    // add to product_digital_subscriptions
+                }
+
             }
+
             $this->_logTransaction('orders', $status);
             $db->commit();
         } catch (Exception $e) {

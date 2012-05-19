@@ -10,7 +10,7 @@
                         <?php $c = 1; foreach ($this->cart->products as $product): ?>
                         <li class="item<?php echo ($c == count($this->cart->products) ? ' last' : ''); ?>">
                             <div class="cart-left">
-                                <h4><?php echo $this->escape($product->name) . ($product->is_gift ? ' (gift)' : ''); ?></h4>
+                                <h4><?php echo $this->escape($product->name) . ($product->isGift() ? ' (gift)' : ''); ?></h4>
                                 <?php
                                 switch ($product->product_type_id) {
                                     case Model_ProductType::SUBSCRIPTION:

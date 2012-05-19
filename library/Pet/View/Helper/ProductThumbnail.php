@@ -11,7 +11,7 @@ class Pet_View_Helper_ProductThumbnail extends Zend_View_Helper_Abstract {
      */
     public function productThumbnail(Model_Product_Abstract $product,
                                      $size = 'small') {
-        if ($product->is_gift) {
+        if ($product->isGift()) {
             $img = 'gifts.jpg';
         } else {
             switch ($product->product_type_id) {

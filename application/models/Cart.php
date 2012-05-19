@@ -228,7 +228,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $qty = 0;
         foreach ($this->_data['products'] as $product) {
             if ($product->product_type_id == $product_type_id) {
-                if (!$is_gift && $product->is_gift) {
+                if (!$is_gift && $product->isGift()) {
                     continue; 
                 }
                 $qty += $product->qty;

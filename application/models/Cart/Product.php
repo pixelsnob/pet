@@ -86,6 +86,16 @@ class Model_Cart_Product extends Pet_Model_Abstract {
             Model_ProductType::DIGITAL_SUBSCRIPTION &&
             $this->_data['product']->is_renewal);
     }
+    
+    /**
+     * Proxy to $product->is_gift
+     * 
+     * @return bool
+     * 
+     */
+    public function isGift() {
+        return $this->_data['product']->is_gift;
+    }
 }
 
 

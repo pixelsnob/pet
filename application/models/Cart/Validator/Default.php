@@ -17,7 +17,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      * @return bool
      */
     public function validateProduct(Model_Cart_Product $product) {
-        if ($product->is_gift) {
+        if ($product->isGift()) {
             return true;
         }
         switch ($product->product_type_id) {
