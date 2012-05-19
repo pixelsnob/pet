@@ -1,6 +1,6 @@
 
 <div id="checkout">
-    <?php if ($this->cart->hasProducts()): ?>
+    <?php if (count($this->cart->products)): ?>
         <h2>Checkout</h2>
         <?php echo $this->flashMessenger($this->messages); ?>
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">

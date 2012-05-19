@@ -3,7 +3,7 @@
     <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="cart">
         <fieldset class="account">
             <legend>Shopping Cart</legend>
-            <?php if ($this->cart->hasProducts()): ?>
+            <?php if (count($this->cart->products)): ?>
                 <?php echo $this->flashMessenger($this->messages); ?>
                 <div class="items form">
                     <ul> 
@@ -63,7 +63,7 @@
                     <li class="continue-shopping">
                         <input type="submit" value="Continue Shopping" class="button-grad">
                     </li>
-                    <?php if ($this->cart->hasProducts()): ?>
+                    <?php if (count($this->cart->products)): ?>
                     <li class="checkout">
                         <input type="submit" value="Checkout" class="button-grad">
                     </li>

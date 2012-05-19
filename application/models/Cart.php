@@ -265,9 +265,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return bool
      * 
      */
-    public function hasProducts() {
+    /*public function hasProducts() {
         return (bool) count($this->_data['products']);
-    }
+    }*/
     
     
     /**

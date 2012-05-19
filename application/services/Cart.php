@@ -264,7 +264,14 @@ class Service_Cart {
         );
         $status = true;
         $exceptions = array();
+        $db = Zend_Db_Table::getDefaultAdapter();
+            
         try {
+            $db->beginTransaction();
+            
+            if ($cart->hasRenewal()) {
+
+            }
             // Recurring billing
             if ($cart->hasRecurring()) {
                 foreach ($cart->products as $product) {
@@ -299,9 +306,7 @@ class Service_Cart {
             }
             
             // Save to DB
-            $db = Zend_Db_Table::getDefaultAdapter();
-            $db->beginTransaction();
-            
+
             // User data
             $user = new Model_Mapper_Users;
             $data['user_id'] = $user->insert($data);
@@ -333,14 +338,14 @@ class Service_Cart {
 
             }
 
-            $this->_logTransaction('orders', $status);
+            $this->_logTransaction('orders', $status, $data);
             $db->commit();
         } catch (Exception $e) {
             $status = false;
-            $exceptions[] = $e->getMessage();
+            $exceptions[] = $e->getMessage() . "\n" . $e->getTraceAsString();
             try {
                 $this->_gateway->voidCalls();
-                $this->_logTransaction('orders', $status, $exceptions);
+                $this->_logTransaction('orders', $status, $data, $exceptions);
             } catch (Exception $e2) {}
         }
 
@@ -391,12 +396,13 @@ class Service_Cart {
                 throw new Exception(__FUNCTION__ . '() failed');
             }
             $cart->ec_token = $token;
-            $this->_logTransaction('ec_transactions', $status);
+            $this->_logTransaction('ec_transactions', $status, $cart->toArray());
         } catch (Exception $e) {
             $status = false;
             $exceptions[] = $e->getMessage();
             try {
-                $this->_logTransaction('ec_transactions', $status, $exceptions);
+                $this->_logTransaction('ec_transactions', $status,
+                    $cart->toArray(), $exceptions);
             } catch (Exception $e2) {}
         }
         if ($status) {
@@ -419,22 +425,22 @@ class Service_Cart {
     public function getMessage() {
         return $this->_message;
     }
-
-    private function _logTransaction($collection, $status, $exceptions = array()) {
+    
+    /**
+     * @param string $collection The mongo collection to insert to
+     * @param bool $status
+     * @param array $data
+     * @param array $exceptions 
+     * 
+     */
+    private function _logTransaction($collection, $status, array $data,
+                                     array $exceptions = array()) {
         $mongo = Pet_Mongo::getInstance();
-        // Clone so we can modify copy
-        $cart_clone = clone $this->get();
-        // We don't need to save the whole promo array
-        unset($cart_clone->promo);
-        $cart_array = $cart_clone->toArray();
-        unset($cart_array['promo']);
-        $cart_array['promo_code'] = ($cart->promo ?
-            $cart->promo->code : null);
         $mongo->{$collection}->insert(array(
             'timestamp'        => time(),
             'date_r'           => date('Y-m-d H:i:s'),
             'status'           => ($status ? 'success' : 'failed'),
-            'cart'             => $cart_array,
+            'data'             => $data,
             'gateway_calls'    => $this->_gateway->getCalls(),
             'exceptions'       => $exceptions
         ), array('fsync' => true));

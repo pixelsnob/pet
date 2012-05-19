@@ -89,7 +89,7 @@ class CheckoutController extends Zend_Controller_Action {
     private function _updateCheckoutFormJson() {
         if ($this->_request->isPost()) {
             $cart = $this->_cart_svc->get();
-            if (!$cart->hasProducts() || $cart->hasRenewal() &&
+            if (!count($cart->products) || $cart->hasRenewal() &&
                     !$this->_users_svc->isAuthenticated()) {
                 $this->_helper->json(array(
                     'empty' => true
