@@ -29,7 +29,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         // User is logged out but is trying to purchase a renewal. Clear cart
         // show them what happened
-        if ($cart->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
+        if ($cart->products->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
             $this->_cart_svc->reset();
             $this->_forward('renewal-login-error');
             return;
@@ -89,7 +89,7 @@ class CheckoutController extends Zend_Controller_Action {
     private function _updateCheckoutFormJson() {
         if ($this->_request->isPost()) {
             $cart = $this->_cart_svc->get();
-            if (!count($cart->products) || $cart->hasRenewal() &&
+            if (!count($cart->products) || $cart->products->hasRenewal() &&
                     !$this->_users_svc->isAuthenticated()) {
                 $this->_helper->json(array(
                     'empty' => true

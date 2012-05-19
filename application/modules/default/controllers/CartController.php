@@ -97,8 +97,8 @@ class CartController extends Zend_Controller_Action {
             echo $product->name . ' ' . $product->qty . "\n";
 
         }
-        echo "\nsubscription: " . $cart->hasSubscription() . "\n";
-        echo 'download: ' . $cart->hasDownload();
+        echo "\nsubscription: " . $cart->products->hasSubscription() . "\n";
+        echo 'download: ' . $cart->products->hasDownload();
         echo '</pre>';
         exit;
     }

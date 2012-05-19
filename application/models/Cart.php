@@ -265,91 +265,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return bool
      * 
      */
-    /*public function hasProducts() {
-        return (bool) count($this->_data['products']);
-    }*/
-    
-    
-    /**
-     * @return bool
-     * 
-     */
-    public function hasDownload() {
-        return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::SUBSCRIPTION);
-    }
-    
-    /**
-     * @return bool
-     * 
-     */
-    public function hasPhysical() {
-        return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::PHYSICAL);
-    }
-
-    /**
-     * @return bool
-     * 
-     */
-    public function hasCourse() {
-        return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::COURSE);
-    }
-    
-    /**
-     * @param bool $is_gift
-     * @return bool
-     * 
-     */
-    public function hasSubscription($is_gift = false) {
-        return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::SUBSCRIPTION, $is_gift);
-    }
-
-    /**
-     * @return bool
-     * 
-     */
-    public function hasDigitalSubscription() {
-        return (bool) $this->getQtyByProductTypeId(
-            Model_ProductType::DIGITAL_SUBSCRIPTION);
-    }
-    
-    /**
-     * @return bool
-     * 
-     */
-    public function hasRenewal() {
-        $c = 0;
-        foreach ($this->_data['products'] as $product) {
-            if ($product->is_renewal) {
-                $c++;
-            }
-        }
-        return (bool) $c;
-    }
-   
-   /**
-    * @return bool
-    * 
-    */
-    public function hasRecurring() {
-        $c = 0;
-        foreach ($this->_data['products'] as $product) {
-            if ($product->is_recurring) {
-                $c++;
-            }
-        }
-        return (bool) $c;
-    }
-
-    /**
-     * @return bool
-     * 
-     */
     public function isShippingAddressRequired() {
-        return $this->hasSubscription() || $this->hasPhysical(); 
+        return $this->_data['products']->hasSubscription() ||
+            $this->_data['products']->hasPhysical(); 
     }
 
     /**
@@ -358,12 +276,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return void 
      */
     public function removeRenewals() {
-        $c = 0;
-        foreach ($this->_data['products'] as $product) {
-            if ($product->is_renewal) {
-                $this->_data['products']->remove($product->product_id);
-            }
-        }
+        return $this->_data['products']->removeRenewals();
     }
 
     /**

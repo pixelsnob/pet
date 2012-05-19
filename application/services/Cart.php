@@ -249,8 +249,8 @@ class Service_Cart {
     public function process($form, $payer_id = '') {
         $config = Zend_Registry::get('app_config');
         $logger = Zend_Registry::get('log');
-        $cart = $this->get();
-        //$gateway = new Model_Mapper_PaymentGateway;
+        // Operate on a copy of cart -- we don't want to modify it in here
+        $cart = clone $this->get();
         $totals = $cart->getTotals();
         // Merge input data into one array
         $data = array_merge(
@@ -269,11 +269,11 @@ class Service_Cart {
         try {
             $db->beginTransaction();
             
-            if ($cart->hasRenewal()) {
+            if ($cart->products->hasRenewal()) {
 
             }
             // Recurring billing
-            if ($cart->hasRecurring()) {
+            if ($cart->products->hasRecurring()) {
                 foreach ($cart->products as $product) {
                     if (!$product->is_recurring) {
                         continue;
@@ -308,10 +308,16 @@ class Service_Cart {
             // Save to DB
 
             // User data
-            $user = new Model_Mapper_Users;
-            $data['user_id'] = $user->insert($data);
-            if (!$data['user_id']) {
-                throw new Exception('user_id not defined');
+            $users_svc = new Service_Users;
+            if ($users_svc->isAuthenticated()) {
+                // update email 
+                $data['user_id'] = $users_svc->getId();
+            } else {
+                $user = new Model_Mapper_Users;
+                $data['user_id'] = $user->insert($data);
+                if (!$data['user_id']) {
+                    throw new Exception('user_id not defined');
+                }
             }
             
             // Order data
@@ -321,11 +327,9 @@ class Service_Cart {
             // Products
             $ordered_product = new Model_Mapper_OrderedProducts;
             foreach ($cart->products as $product) {
-                
                 // Insert into ordered_products
                 $opid = $ordered_product->insert($product->toArray(),
                     $data['order_id']);                                                // <<<<<<<<<<<<<<< need to figure out discount cost stuff
-
                 // Gift processing here
                 if ($product->isGift()) {
                     
@@ -335,10 +339,11 @@ class Service_Cart {
                 } elseif ($product->isSubscription()) {
                     // add to product_digital_subscriptions
                 }
-
             }
-
-            $this->_logTransaction('orders', $status, $data);
+            $log_data = $cart->toArray();
+            $log_data['user_id'] = $data['user_id'];
+            $log_data['order_id'] = $data['order_id'];
+            $this->_logTransaction('orders', $status, $log_data);
             $db->commit();
         } catch (Exception $e) {
             $status = false;
@@ -378,7 +383,7 @@ class Service_Cart {
         $status = true;
         $exceptions = array();
         try {
-            if ($cart->hasRecurring()) {
+            if ($cart->products->hasRecurring()) {
                 // maybe move this to model
                 $products = array();
                 foreach ($cart->products as $product) {

@@ -51,6 +51,18 @@ class Model_Cart_Products implements Iterator, Countable {
     }
     
     /**
+     * @return void
+     * 
+     */
+    public function removeRenewals() {
+        foreach ($this->_data as $product) {
+            if ($product->is_renewal) {
+                $this->remove($product->product_id);
+            }
+        }
+    }
+
+    /**
      * @var int $id
      * @var int $qty
      * @var return void
@@ -151,4 +163,99 @@ class Model_Cart_Products implements Iterator, Countable {
         }
         return $ids;
     }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function hasDownload() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::DOWNLOAD);
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function hasPhysical() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::PHYSICAL);
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function hasCourse() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::COURSE);
+    }
+    
+    /**
+     * @param bool $is_gift
+     * @return bool
+     * 
+     */
+    public function hasSubscription($is_gift = false) {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::SUBSCRIPTION, $is_gift);
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function hasDigitalSubscription() {
+        return (bool) $this->getQtyByProductTypeId(
+            Model_ProductType::DIGITAL_SUBSCRIPTION);
+    }
+    
+    /**
+     * @return bool
+     * 
+     */
+    public function hasRenewal() {
+        $c = 0;
+        foreach ($this->_data as $product) {
+            if ($product->is_renewal) {
+                $c++;
+            }
+        }
+        return (bool) $c;
+    }
+   
+   /**
+    * @return bool
+    * 
+    */
+    public function hasRecurring() {
+        $c = 0;
+        foreach ($this->_data as $product) {
+            if ($product->is_recurring) {
+                $c++;
+            }
+        }
+        return (bool) $c;
+    }
+
+
+    /**
+     * @param int $product_type_id
+     * @param bool $is_gift
+     * @return int
+     * 
+     */
+    public function getQtyByProductTypeId($product_type_id, $is_gift = false) {
+        $qty = 0;
+        foreach ($this->_data as $product) {
+            if ($product->product_type_id == $product_type_id) {
+                if (!$is_gift && $product->isGift()) {
+                    continue; 
+                }
+                $qty += $product->qty;
+            }
+        }
+        return $qty;
+    }
+    
 }

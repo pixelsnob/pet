@@ -22,23 +22,23 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
         }
         switch ($product->product_type_id) {
             case Model_ProductType::SUBSCRIPTION:
-                if ($this->_cart->hasSubscription()) {
+                if ($this->_cart->products->hasSubscription()) {
                     $this->_message = 'Multiple subscriptions not allowed'; 
                     return false;
                 }
-                if ($this->_cart->hasDigitalSubscription()) {
+                if ($this->_cart->products->hasDigitalSubscription()) {
                     $this->_message = 'Digital and print subscriptions not ' .
                         'allowed together';
                     return false;
                 }
                 break;
             case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                if ($this->_cart->hasSubscription()) {
+                if ($this->_cart->products->hasSubscription()) {
                     $this->_message = 'Digital and print subscriptions not ' .
                         'allowed together';
                     return false;
                 }
-                if ($this->_cart->hasDigitalSubscription()) {
+                if ($this->_cart->products->hasDigitalSubscription()) {
                     $this->_message = 'Multiple digital subscriptions not allowed'; 
                     return false;
                 }
@@ -70,7 +70,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      */
     public function validateRenewals() {
         $users_svc = new Service_Users;
-        if ($this->_cart->hasRenewal() && !$users_svc->isAuthenticated()) {
+        if ($this->_cart->products->hasRenewal() && !$users_svc->isAuthenticated()) {
             $this->_message = 'You must be logged in to purchase renewals';
             $this->_cart->removeRenewals();
             return false;
