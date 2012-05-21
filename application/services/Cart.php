@@ -247,6 +247,7 @@ class Service_Cart {
      * 
      */
     public function process($form, $payer_id = '') {
+        $users_svc = new Service_Users;
         $config = Zend_Registry::get('app_config');
         $logger = Zend_Registry::get('log');
         // Operate on a copy of cart -- we don't want to modify it in here
@@ -260,7 +261,10 @@ class Service_Cart {
             $form->user->getValues(true),
             $form->getShippingValues(),
             $form->info->getValues(true),
-            array('promo_id' => ($cart->promo ? $cart->promo->id : null))
+            array(
+                'promo_id'       => ($cart->promo ? $cart->promo->id : null),
+                'old_expiration' => null
+            )
         );
         $status = true;
         $exceptions = array();
@@ -268,10 +272,29 @@ class Service_Cart {
             
         try {
             $db->beginTransaction();
-            
+            // Get existing subscriptions, if any
             if ($cart->products->hasRenewal()) {
-
+                if ($cart->products->hasSubscription()) {
+                    // Regular sub
+                    $ops_mapper = new Model_Mapper_OrderedProductSubscriptions; 
+                    $sub = $ops_mapper->getUnexpiredByUserId(
+                        $users_svc->getId(), true);
+                    $data['old_expiration'] = $sub->expiration;
+                } elseif ($cart->products->hasDigitalSubscription()) {
+                    // Digital sub
+                    $opds_mapper = new Model_Mapper_OrderedProductDigitalSubscriptions; 
+                    $sub = $opds_mapper->getUnexpiredByUserId(
+                        $users_svc->getId(), true);
+                    $data['old_expiration'] = $sub->expiration;
+                }
+                if (!$data['old_expiration']) {
+                    $msg = 'Attempted a renewal but existing subscription ' . 
+                            'expiration was not found';
+                    throw new Exception($msg);
+                }
             }
+            print_r($data);
+            exit;
             // Recurring billing
             if ($cart->products->hasRecurring()) {
                 foreach ($cart->products as $product) {
@@ -296,7 +319,6 @@ class Service_Cart {
                     }
                 }
             }
-
             // Regular sale
             if ($cart->payment->payment_method == 'credit_card') {
                 $this->_gateway->processSale($data);
@@ -304,11 +326,7 @@ class Service_Cart {
                 $this->_gateway->processECSale($data, $cart->ec_token,
                     $payer_id);
             }
-            
-            // Save to DB
-
-            // User data
-            $users_svc = new Service_Users;
+            // Save user data
             if ($users_svc->isAuthenticated()) {
                 // update email 
                 $data['user_id'] = $users_svc->getId();
@@ -319,12 +337,10 @@ class Service_Cart {
                     throw new Exception('user_id not defined');
                 }
             }
-            
-            // Order data
+            // Save order data
             $order = new Model_Mapper_Orders;
             $data['order_id'] = $order->insert($data);
-            
-            // Products
+            // Save products
             $ordered_product = new Model_Mapper_OrderedProducts;
             foreach ($cart->products as $product) {
                 // Insert into ordered_products
@@ -340,17 +356,24 @@ class Service_Cart {
                     // add to product_digital_subscriptions
                 }
             }
-            $log_data = $cart->toArray();
-            $log_data['user_id'] = $data['user_id'];
-            $log_data['order_id'] = $data['order_id'];
+            // Log
+            $log_data = array(
+                'cart' => $cart->toArray(),
+                'data' => $data
+            );
             $this->_logTransaction('orders', $status, $log_data);
             $db->commit();
         } catch (Exception $e) {
             $status = false;
-            $exceptions[] = $e->getMessage() . "\n" . $e->getTraceAsString();
+            $exceptions[] = $e->getMessage();
             try {
                 $this->_gateway->voidCalls();
-                $this->_logTransaction('orders', $status, $data, $exceptions);
+                // Log
+                $log_data = array(
+                    'cart' => $cart->toArray(),
+                    'data' => $data
+                );
+                $this->_logTransaction('orders', $status, $log_data, $exceptions);
             } catch (Exception $e2) {}
         }
 
@@ -441,14 +464,15 @@ class Service_Cart {
     private function _logTransaction($collection, $status, array $data,
                                      array $exceptions = array()) {
         $mongo = Pet_Mongo::getInstance();
-        $mongo->{$collection}->insert(array(
+        $data = array_merge(array(
             'timestamp'        => time(),
             'date_r'           => date('Y-m-d H:i:s'),
-            'status'           => ($status ? 'success' : 'failed'),
-            'data'             => $data,
+            'status'           => ($status ? 'success' : 'failed')
+        ), $data, array(
             'gateway_calls'    => $this->_gateway->getCalls(),
             'exceptions'       => $exceptions
-        ), array('fsync' => true));
+        ));
+        $mongo->{$collection}->insert($data, array('fsync' => true));
     }
     
 }

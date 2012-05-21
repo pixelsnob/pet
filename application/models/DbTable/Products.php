@@ -10,7 +10,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
 
     /**
      * @param int $id
-     * @return Zend_Db_Table_Row Object 
+     * @return Zend_Db_Table_Row object 
      * 
      */
     public function getById($id) {
@@ -18,6 +18,11 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
+    /**
+     * @param int $product_id
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
     public function getDownloadByProductId($product_id) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
@@ -28,6 +33,11 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
+    /**
+     * @param int $product_id
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
     public function getPhysicalProductByProductId($product_id) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
@@ -37,7 +47,11 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
-
+    /**
+     * @param int $product_id
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
     public function getSubscriptionByProductId($product_id) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
@@ -49,6 +63,11 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
+    /**
+     * @param int $product_id
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
     public function getCourseByProductId($product_id) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'),
@@ -60,6 +79,11 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
+    /**
+     * @param int $product_id
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
     public function getDigitalSubscriptionByProductId($product_id) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
@@ -72,6 +96,13 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
+    /**
+     * @param int $zone_id
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
     public function getSubscriptionsByZoneId($zone_id, $is_gift = false, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
@@ -86,6 +117,12 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchAll($sel);
     }
 
+    /**
+     * @param bool $is_gift
+     * @param bool $is_renewal
+     * @return Zend_Db_Table_Rowset object 
+     * 
+     */
     public function getDigitalSubscriptions($is_gift = false, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
@@ -99,6 +136,10 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchAll($sel);
     }
 
+    /**
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
     public function getPhysicalProducts() {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))

@@ -9,22 +9,22 @@
             <p>If you prefer to read on your computer or tablet, or just want to help conserve resources
             necessary to produce and mail a printed magazine, our digital-only subscription is for you!</p> 
 
- 			<ul>
+            <ul>
                 <li>All of our content &ndash; new issues, videos, and extras &ndash; at our best prices</li>
                 <li>Complete access to our website, with over 1,000 tutorials and counting</li>
                 <li>Downloadable PDF-versions of our complete catalog &ndash; 6 years of issues</li>
             </ul>
 
-            <p>The digital subscription features <i>all</i> of the great Photoshop Elements tutorials and videos, and best of all you don’t have to wait &ndash; or pay for &ndash; the printed magazine!</p>
+            <p>The digital subscription features <em>all</em> of the great Photoshop Elements tutorials and videos, and best of all you don’t have to wait &ndash; or pay for &ndash; the printed magazine!</p>
 
             <p>Choose between monthly or annual options &ndash; $4.25 per month, or $39 for a year (saves you a buck a month!)</p>
 
             <h3>Subscribe Now:</h3>
             <ul class="buttons">
-                <li class="buy"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_select')); ?>" class="button-grad-blue">Buy</a></li>
                 <?php if (!$this->is_authenticated): ?>
-                    <li class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_renew')); ?>" class="button-grad">Renewing?</a></li>
-                                    <?php endif; ?>
+                    <li class="buy"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_select')); ?>" class="button-grad-blue">Buy</a></li>
+                <?php endif; ?>
+                <li class="renew"><a href="<?php echo $this->serverUrl($this->url(array(), 'products_digital_renew')); ?>" class="button-grad">Renewing?</a></li>
             </ul>
            
         </div>
