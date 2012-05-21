@@ -271,9 +271,12 @@ class Service_Cart {
         $db = Zend_Db_Table::getDefaultAdapter();
             
         try {
+            if (!$cart->validate()) {
+                throw new Exception($cart->getMessage());
+            }
             $db->beginTransaction();
             // Get existing subscriptions, if any
-            if ($cart->products->hasRenewal()) {
+            /*if ($cart->products->hasRenewal()) {
                 if ($cart->products->hasSubscription()) {
                     // Regular sub
                     $ops_mapper = new Model_Mapper_OrderedProductSubscriptions; 
@@ -292,9 +295,7 @@ class Service_Cart {
                             'expiration was not found';
                     throw new Exception($msg);
                 }
-            }
-            print_r($data);
-            exit;
+            }*/
             // Recurring billing
             if ($cart->products->hasRecurring()) {
                 foreach ($cart->products as $product) {

@@ -268,6 +268,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function processECRecurringPayment(array $data, $token, $payer_id) {
+        exit;
         $this->resetGateway();
         $data = $this->formatData($data);
         $start_date = new DateTime;

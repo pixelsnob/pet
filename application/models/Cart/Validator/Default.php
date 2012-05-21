@@ -70,9 +70,28 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      */
     public function validateRenewals() {
         $users_svc = new Service_Users;
-        if ($this->_cart->products->hasRenewal() && !$users_svc->isAuthenticated()) {
+        if (!$this->_cart->products->hasRenewal()) {
+            return true;
+        }
+        if (!$users_svc->isAuthenticated()) {
             $this->_message = 'You must be logged in to purchase renewals';
             $this->_cart->removeRenewals();
+            return false;
+        }
+        $old_expiration = null;
+        if ($this->_cart->products->hasSubscription()) {
+            $ops_mapper = new Model_Mapper_OrderedProductSubscriptions; 
+            $sub = $ops_mapper->getUnexpiredByUserId(
+                $users_svc->getId(), true);
+
+        } elseif ($this->_cart->products->hasDigitalSubscription()) {
+            $opds_mapper = new Model_Mapper_OrderedProductDigitalSubscriptions; 
+            $sub = $opds_mapper->getUnexpiredByUserId(
+                $users_svc->getId(), true);
+        }
+        if (!$sub || !isset($sub->expiration)) {
+            $this->_message = 'There was a problem retrieving your existing ' .
+                'subscription'; 
             return false;
         }
         return true;

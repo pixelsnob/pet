@@ -76,6 +76,19 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $validator->setCart($this);
         return $validator;
     }
+    
+    /**
+     * @return bool
+     * 
+     */
+    public function validate() {
+        $validator = $this->getValidator();
+        if (!$validator->validate()) {
+            $this->_message = $validator->getMessage();
+            return false;
+        }
+        return true;
+    }
 
     /**
      * @param Model_Cart_Product $product
