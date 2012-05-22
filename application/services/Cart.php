@@ -358,11 +358,7 @@ class Service_Cart {
                 }
             }
             // Log
-            $log_data = array(
-                'cart' => $cart->toArray(),
-                'data' => $data
-            );
-            $this->_logTransaction('orders', $status, $log_data);
+            $this->_logTransaction('orders', $status, $cart->toArray());
             $db->commit();
         } catch (Exception $e) {
             $status = false;
@@ -370,16 +366,11 @@ class Service_Cart {
             try {
                 $this->_gateway->voidCalls();
                 // Log
-                $log_data = array(
-                    'cart' => $cart->toArray(),
-                    'data' => $data
-                );
-                $this->_logTransaction('orders', $status, $log_data, $exceptions);
+                $this->_logTransaction('orders', $status, $cart->toArray(), $exceptions);
             } catch (Exception $e2) {
                 //print_r($e2); exit;
             }
         }
-
         // Reset cart
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());
@@ -437,12 +428,7 @@ class Service_Cart {
             } catch (Exception $e2) {}
         }
         if ($status) {
-            if ($cart->products->hasRecurring()) {
-                $url = $config['payment_gateway']['paypal']['ec_url'];
-            } else {
-                $url = $config['payment_gateway']['payflow']['ec_url'];
-            }
-            return $url . '&token=' . $token;
+            return $config['payment_gateway']['ec_url'] . '&token=' . $token;
         }
     }
 
