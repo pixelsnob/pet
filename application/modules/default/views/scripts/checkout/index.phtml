@@ -230,7 +230,7 @@
                 <ul class="cart">
                     <?php foreach ($this->cart->products as $product): ?>
                         <li class="product">
-                            <?php echo $this->productThumbnail($product->product); ?>
+                            <?php echo $this->productThumbnail($product); ?>
                             <p><?php echo $this->escape($product->name); ?></p>
                         </li>
                     <?php endforeach; ?>

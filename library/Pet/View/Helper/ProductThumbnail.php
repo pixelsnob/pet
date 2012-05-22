@@ -9,21 +9,18 @@ class Pet_View_Helper_ProductThumbnail extends Zend_View_Helper_Abstract {
      * @return mixed
      * 
      */
-    public function productThumbnail(Model_Product_Abstract $product,
+    public function productThumbnail(Model_Cart_Product $product,
                                      $size = 'small') {
-        if ($product->isGift()) {
+        if (($product->isSubscription() || $product->isDigital()) &&
+                $product->isGift()) {
             $img = 'gifts.jpg';
         } else {
-            switch ($product->product_type_id) {
-                case Model_ProductType::SUBSCRIPTION:
-                    $img = 'subscriptions.jpg';
-                    break;
-                case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                    $img = 'digital.jpg';
-                    break;
-                case Model_ProductType::PHYSICAL:
-                    $img = 'dvds.jpg';
-                    break;
+            if ($product->isSubscription()) {
+                $img = 'subscriptions.jpg';
+            } elseif ($product->isDigital()) {
+                $img = 'digital.jpg';
+            } elseif ($product->isPhysical()) {
+                $img = 'dvds.jpg';
             }
         }
         switch ($size) {

@@ -7,13 +7,17 @@ require 'PayPal.php';
 
 class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     
-    private $_gateway;
-
     /**
-     * @var string 
+     * @var PayPal
      * 
      */
-    //private $_auth_pnref;
+    private $_gateway;
+    
+    /** 
+     * @var string "payflow" or "paypal"
+     * 
+     */
+    private $_api = 'payflow';
 
     /**
      * @var array 
@@ -41,8 +45,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * @return void
      */
     public function __construct() {
-        $app_config = Zend_Registry::get('app_config');
-        $this->_config = $app_config['payment_gateway'];
     }
     
     /**
@@ -52,17 +54,26 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      */
     public function resetGateway() {
         $gateway = new PayPal;
+        $app_config = Zend_Registry::get('app_config');
+        $gateway_config = ($this->_api == 'payflow' ?
+            $app_config['payment_gateway']['payflow'] :
+            $app_config['payment_gateway']['paypal']);
         $fields = array(
-            'USER'          => $this->_config['user'],
-            'PWD'           => $this->_config['pwd'],
-            'VENDOR'        => $this->_config['vendor'],
-            'PARTNER'       => $this->_config['partner'],
+            'USER'          => $gateway_config['user'],
+            'PWD'           => $gateway_config['pwd'],
+            'VENDOR'        => $gateway_config['vendor'],
+            'PARTNER'       => $gateway_config['partner'],
             'VERBOSITY'     => 'medium',
             'CLIENT_IP'     => $_SERVER['REMOTE_ADDR']
         );
         $gateway->setFields($fields)
-            ->setUrl($this->_config['url'])
+            ->setUrl($gateway_config['url'])
             ->setHeader('X-VPS-Request-ID', $this->_getRequestId());
+        if (isset($gateway_config['signature'])) {
+            $gateway->setField('SIGNATURE', $gateway_config['signature']);
+        }
+        //print_r($gateway);
+        //exit;
         $this->_gateway = $gateway;
     }
     
@@ -149,13 +160,15 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      */
     public function getECTokenRecurring(array $data, $return_url, $cancel_url,
                                         array $products) {
+        $this->setApi('paypal');
         $this->resetGateway();
         $this->_gateway->setField('AMT', $data['total'])
+            ->setField('METHOD', 'SetExpressCheckout')
             ->setField('EMAIL', $data['email'])
-            ->setField('TRXTYPE', 'A')
-            ->setField('ACTION', 'S')
-            ->setField('TENDER', 'P')
-            ->setField('NOSHIPPING', 1)
+            //->setField('TRXTYPE', 'A')
+            //->setField('ACTION', 'S')
+            //->setField('TENDER', 'P')
+            //->setField('NOSHIPPING', 1)
             ->setField('RETURNURL', $return_url)
             ->setField('CANCELURL', $cancel_url);
         foreach ($products as $product) {
@@ -268,7 +281,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function processECRecurringPayment(array $data, $token, $payer_id) {
-        exit;
+        $this->setApi('paypal');
         $this->resetGateway();
         $data = $this->formatData($data);
         $start_date = new DateTime;
@@ -426,5 +439,18 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             Zend_Session::getId()
         );
         return md5(implode('', $temp_strings));
+    }
+    
+    /**
+     * @param string $api "payflow" or "paypal"
+     * @return void
+     * 
+     */
+    public function setApi($api) {
+        if (in_array($api, array('paypal', 'payflow'))) {
+            $this->_api = $api;
+        } else {
+            throw new Exception('API name must be "paypal" or "payflow"');
+        }
     }
 }

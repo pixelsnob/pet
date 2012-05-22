@@ -375,7 +375,9 @@ class Service_Cart {
                     'data' => $data
                 );
                 $this->_logTransaction('orders', $status, $log_data, $exceptions);
-            } catch (Exception $e2) {}
+            } catch (Exception $e2) {
+                //print_r($e2); exit;
+            }
         }
 
         // Reset cart
@@ -435,7 +437,12 @@ class Service_Cart {
             } catch (Exception $e2) {}
         }
         if ($status) {
-            return $config['payment_gateway']['ec_url'] . '&token=' . $token;
+            if ($cart->products->hasRecurring()) {
+                $url = $config['payment_gateway']['paypal']['ec_url'];
+            } else {
+                $url = $config['payment_gateway']['payflow']['ec_url'];
+            }
+            return $url . '&token=' . $token;
         }
     }
 
@@ -469,7 +476,8 @@ class Service_Cart {
             'timestamp'        => time(),
             'date_r'           => date('Y-m-d H:i:s'),
             'status'           => ($status ? 'success' : 'failed')
-        ), $data, array(
+        ), $data);
+        $data = array_merge($data, array(
             'gateway_calls'    => $this->_gateway->getCalls(),
             'exceptions'       => $exceptions
         ));
