@@ -297,7 +297,7 @@ class Service_Cart {
                 }
             }*/
             // Recurring billing
-            if ($cart->products->hasRecurring()) {
+            /*if ($cart->products->hasRecurring()) {
                 foreach ($cart->products as $product) {
                     if (!$product->is_recurring) {
                         continue;
@@ -319,7 +319,7 @@ class Service_Cart {
                         }
                     }
                 }
-            }
+            }*/
             // Regular sale
             if ($cart->payment->payment_method == 'credit_card') {
                 $this->_gateway->processSale($data);
@@ -366,11 +366,13 @@ class Service_Cart {
             try {
                 $this->_gateway->voidCalls();
                 // Log
-                $this->_logTransaction('orders', $status, $cart->toArray(), $exceptions);
+                $this->_logTransaction('orders', $status, $cart->toArray(),
+                    $exceptions);
             } catch (Exception $e2) {
                 //print_r($e2); exit;
             }
         }
+        $this->_gateway->voidCalls();
         // Reset cart
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());
@@ -392,28 +394,16 @@ class Service_Cart {
         $cart = $this->get();
         $totals = $cart->getTotals();
         $data = array(
-            'email' => $cart->user->email,
-            'total' => $totals['total'],
+            'email'        => $cart->user->email,
+            'total'        => $totals['total'],
             'return_url'   => $return_url,
-            'cancel_url' => $cancel_url
+            'cancel_url'   => $cancel_url,
+            'products'     => $cart->products->toArray()
         );
         $status = true;
         $exceptions = array();
         try {
-            if ($cart->products->hasRecurring()) {
-                // maybe move this to model
-                $products = array();
-                foreach ($cart->products as $product) {
-                    if ($product->is_recurring) {
-                        $products[] = $product->toArray();
-                    }
-                }
-                $token = $this->_gateway->getECTokenRecurring($data, $return_url,
-                    $cancel_url, $products);
-            } else {
-                $token = $this->_gateway->getECToken($data, $return_url,
-                    $cancel_url);
-            }
+            $token = $this->_gateway->getECToken($data, $return_url, $cancel_url);
             if (!$token) {
                 throw new Exception(__FUNCTION__ . '() failed');
             }

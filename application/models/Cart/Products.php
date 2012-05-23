@@ -257,5 +257,17 @@ class Model_Cart_Products implements Iterator, Countable {
         }
         return $qty;
     }
+
+    /**
+     * @return array
+     * 
+     */
+    public function toArray() {
+        $products = array();
+        foreach ($this->_data as $product) {
+            $products[] = $product->toArray();
+        }
+        return $products;
+    }
     
 }

@@ -221,7 +221,7 @@ class PayPal {
      * Transforms raw response string into an array or
      * object.
      * 
-     * return void
+     * @return void
      */
     public function processResponse() {
         if (!strlen(trim($this->_raw_response))) {
