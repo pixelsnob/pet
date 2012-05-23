@@ -437,7 +437,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`order_payments_payflow` (
   `cc_expiration_year` INT(2) NULL ,
   `pnref` VARCHAR(12) NOT NULL ,
   `ppref` VARCHAR(17) NOT NULL ,
-  `correlation_id` VARCHAR(13) NOT NULL ,
+  `correlationid` VARCHAR(13) NOT NULL ,
   `cvv2match` VARCHAR(1) NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
@@ -461,8 +461,8 @@ DROP TABLE IF EXISTS `pet`.`order_payments_paypal` ;
 CREATE  TABLE IF NOT EXISTS `pet`.`order_payments_paypal` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `order_payment_id` INT(11) NOT NULL ,
-  `correlation_id` VARCHAR(20) NOT NULL ,
-  `transaction_id` VARCHAR(20) NOT NULL ,
+  `correlationid` VARCHAR(20) NOT NULL ,
+  `transaction_id` VARCHAR(20) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `order_payments_paypal_ibfk_2` (`order_payment_id` ASC) ,
@@ -639,28 +639,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`user_actions`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`user_actions` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`user_actions` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `user_id` INT NOT NULL ,
-  `action` VARCHAR(100) NOT NULL ,
-  `ip` VARCHAR(30) NOT NULL ,
-  `timestamp` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  INDEX `user_actions_fk_1` (`user_id` ASC) ,
-  CONSTRAINT `user_actions_fk_1`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `pet`.`users` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `pet`.`user_password_tokens`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `pet`.`user_password_tokens` ;
@@ -751,8 +729,8 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_subscriptions` (
   CONSTRAINT `ordered_product_subscriptions_ibfk_1`
     FOREIGN KEY (`ordered_product_id` )
     REFERENCES `pet`.`ordered_products` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `ordered_product_subscriptions_ibfk_2`
     FOREIGN KEY (`subscription_id` )
     REFERENCES `pet`.`subscriptions` (`id` )
