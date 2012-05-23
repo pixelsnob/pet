@@ -296,30 +296,6 @@ class Service_Cart {
                     throw new Exception($msg);
                 }
             }*/
-            // Recurring billing
-            /*if ($cart->products->hasRecurring()) {
-                foreach ($cart->products as $product) {
-                    if (!$product->is_recurring) {
-                        continue;
-                    }
-                    $data['cost']        = $product->cost;
-                    $data['term']        = $product->term;
-                    $data['description'] = $product->name;
-                    $data['profile_id']  = uniqid();
-                    if ($product->isRenewal()) {
-                        // get existing paypal profileid
-                        // attempt to update pp profile
-                        exit('not yet');
-                    } else {
-                        if ($cart->payment->payment_method == 'credit_card') {
-                            $this->_gateway->processRecurringPayment($data);
-                        } else {
-                            $this->_gateway->processECRecurringPayment(
-                                $data, $cart->ec_token, $payer_id);
-                        }
-                    }
-                }
-            }*/
             // Regular sale
             if ($cart->payment->payment_method == 'credit_card') {
                 $this->_gateway->processSale($data);
@@ -361,6 +337,43 @@ class Service_Cart {
                     // insert
                 }
             }
+            // Save gateway responses
+            $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
+            $op_mapper = new Model_Mapper_OrderPayments;
+            foreach ($gateway_responses as $response) {
+                if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
+                    $opid = $op_mapper->insert(array(
+                        'order_id' => $data['order_id'],
+                        'payment_type_id' => Model_PaymentType::PAYFLOW,
+                        'amount' => $data['total'],
+                        'date' => date('Y-m-d H:i:s')
+                    ));
+                    $op_payflow_mapper = new Model_Mapper_OrderPayments_Payflow;
+                    $op_payflow_mapper->insert(array(
+                        'order_payment_id'    => $opid,
+                        'cc_number'           => substr($data['cc_num'], -4),
+                        'cc_expiration_month' => $data['cc_exp_month'],
+                        'cc_expiration_year'  => $data['cc_exp_year'],
+                        'pnref'               => $response->pnref,
+                        'ppref'               => $response->ppref,
+                        'correlationid'       => $response->correlationid,
+                        'cvv2match'           => $response->cvv2match
+
+                    ));
+                } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
+                    $opid = $op_mapper->insert(array(
+                        'order_id' => $data['order_id'],
+                        'payment_type_id' => Model_PaymentType::PAYPAL,
+                        'amount' => $data['total'],
+                        'date' => date('Y-m-d H:i:s')
+                    ));
+                    $op_paypal_mapper = new Model_Mapper_OrderPayments_Paypal;
+                    $op_paypal_mapper->insert(array(
+                        'order_payment_id' => $opid,
+                        'correlationid' => $response->correlationid
+                    ));
+                }
+            }
             // Log
             $log_data = array(
                 'type'     => 'process',
@@ -371,7 +384,7 @@ class Service_Cart {
             $ot_mapper->insert(
                 $status,
                 $log_data,
-                $this->_gateway->getCalls()
+                $this->_gateway->getRawCalls()
             );
             $db->commit();
         } catch (Exception $e) {
@@ -392,7 +405,7 @@ class Service_Cart {
                 $ot_mapper->insert(
                     $status,
                     $log_data,
-                    $this->_gateway->getCalls(),
+                    $this->_gateway->getRawCalls(),
                     array($e->getMessage())
                 );
             } catch (Exception $e2) {}
@@ -435,7 +448,7 @@ class Service_Cart {
             $ot_mapper->insert(
                 $status,
                 array('cart' => $cart->toArray()),
-                $this->_gateway->getCalls()
+                $this->_gateway->getRawCalls()
             );
         } catch (Exception $e) {
             $status = false;
@@ -443,7 +456,7 @@ class Service_Cart {
                 $ot_mapper->insert(
                     $status,
                     array('cart' => $cart->toArray()),
-                    $this->_gateway->getCalls(),
+                    $this->_gateway->getRawCalls(),
                     array($e->getMessage())
                 );
             } catch (Exception $e2) {}

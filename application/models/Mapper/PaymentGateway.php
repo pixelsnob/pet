@@ -227,10 +227,67 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      * 
      * @return array
      */
-    public function getCalls() {
+    public function getRawCalls() {
         return $this->_calls;
     }
     
+    /**
+     * @return array
+     * 
+     */
+    private function _getSuccessfulCalls() {
+        $calls = array();
+        foreach ($this->_calls as $call) {
+            $result = (isset($call['response']['RESULT']) ?
+                ((string) $call['response']['RESULT']) : null);
+            $trxtype = (isset($call['request']['TRXTYPE']) ?
+                $call['request']['TRXTYPE'] : '');
+            // Only void successful transactions
+            if ($result !== '0') {
+                continue;
+            }
+            $calls[] = $call;
+        }
+        return $calls;
+    }
+    
+    /** 
+     * Builds an array of successful response objects
+     * 
+     * @return array
+     */
+    public function getSuccessfulResponseObjects() {
+        $calls = $this->_getSuccessfulCalls();
+        $objs = array();
+        foreach ($calls as $call) {
+            $request = $call['request'];
+            $response = $call['response'];
+            $tender = (isset($call['request']['TENDER']) ?
+                $call['request']['TENDER'] : '');
+            switch ($tender) {
+                case 'P':
+                    $ro = new Model_PaymentGateway_Response_Paypal;
+                    foreach ($ro->toArray() as $k => $v) {
+                        $uk = strtoupper($k);
+                        $ro->{$k} = (isset($response[$uk]) ? $response[$uk] :
+                            null);
+                    }
+                    $objs[] = $ro;
+                    break;
+                case 'C':
+                    $ro = new Model_PaymentGateway_Response_Payflow;
+                    foreach ($ro->toArray() as $k => $v) {
+                        $uk = strtoupper($k);
+                        $ro->{$k} = (isset($response[$uk]) ? $response[$uk] :
+                            null);
+                    }
+                    $objs[] = $ro;
+                    break;
+            }
+        }
+        return $objs;
+    }
+
     /**
      * Voids all previous successful calls
      * 
@@ -238,14 +295,12 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      */
     public function voidCalls() {
         $trxtypes = array('S', 'A', 'D');
-
-        foreach ($this->_calls as $call) {
-            $result = (isset($call['response']['RESULT']) ?
-                ((int) $call['response']['RESULT']) : -1);
+        $calls = $this->_getSuccessfulCalls();
+        foreach ($calls as $call) {
             $trxtype = (isset($call['request']['TRXTYPE']) ?
                 $call['request']['TRXTYPE'] : '');
-            // Only void successful transactions
-            if ($result !== 0 || !in_array($trxtype, $trxtypes)) {
+            // Only void charges
+            if (!in_array($trxtype, $trxtypes)) {
                 continue;
             }
             $pnref = (isset($call['response']['PNREF']) ?
