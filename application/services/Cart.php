@@ -248,6 +248,7 @@ class Service_Cart {
      */
     public function process($form, $payer_id = '') {
         $users_svc = new Service_Users;
+        $ot_mapper = new Model_Mapper_OrderTransactions;
         $config = Zend_Registry::get('app_config');
         $logger = Zend_Registry::get('log');
         // Operate on a copy of cart -- we don't want to modify it in here
@@ -267,7 +268,6 @@ class Service_Cart {
             )
         );
         $status = true;
-        $exceptions = array();
         $db = Zend_Db_Table::getDefaultAdapter();
             
         try {
@@ -350,29 +350,53 @@ class Service_Cart {
                 // Gift processing here
                 if ($product->isGift()) {
                     
-                }
-                if ($product->isDigital()) {
-                    // add to ordered_product_digital_subscriptions
+                } elseif ($product->isRenewal() && $product->isDigital()) {
+                    // get existing
+                } elseif ($product->isRenewal() && $product->isSubscription()) {
+                    // get existing
+                     
+                } elseif ($product->isDigital()) {
+                    // insert
                 } elseif ($product->isSubscription()) {
-                    // add to product_digital_subscriptions
+                    // insert
                 }
             }
             // Log
-            $this->_logTransaction('orders', $status, $cart->toArray());
+            $log_data = array(
+                'type'     => 'process',
+                'cart'     => $cart->toArray(),
+                'order_id' => $data['order_id'],
+                'user_id'  => $data['user_id']
+            );
+            $ot_mapper->insert(
+                $status,
+                $log_data,
+                $this->_gateway->getCalls()
+            );
             $db->commit();
         } catch (Exception $e) {
             $status = false;
-            $exceptions[] = $e->getMessage();
+            $log_data = array(
+                'type'     => 'process',
+                'cart'     => $cart->toArray(),
+                // Ids may not exist here
+                'order_id' => (isset($data['order_id']) ? $data['order_id'] :
+                              null),
+                'user_id'  => (isset($data['user_id']) ? $data['user_id'] :
+                              null)
+            );
+            // These should fail silently if they do fail
             try {
                 $this->_gateway->voidCalls();
                 // Log
-                $this->_logTransaction('orders', $status, $cart->toArray(),
-                    $exceptions);
-            } catch (Exception $e2) {
-                //print_r($e2); exit;
-            }
+                $ot_mapper->insert(
+                    $status,
+                    $log_data,
+                    $this->_gateway->getCalls(),
+                    array($e->getMessage())
+                );
+            } catch (Exception $e2) {}
         }
-        $this->_gateway->voidCalls();
         // Reset cart
         if ($status) {
             $this->_cart->setConfirmation($this->_cart->get());
@@ -390,6 +414,7 @@ class Service_Cart {
      * 
      */
     public function getECUrl($return_url, $cancel_url) {
+        $ot_mapper = new Model_Mapper_OrderTransactions;
         $config = Zend_Registry::get('app_config');
         $cart = $this->get();
         $totals = $cart->getTotals();
@@ -401,20 +426,26 @@ class Service_Cart {
             'products'     => $cart->products->toArray()
         );
         $status = true;
-        $exceptions = array();
         try {
             $token = $this->_gateway->getECToken($data, $return_url, $cancel_url);
             if (!$token) {
                 throw new Exception(__FUNCTION__ . '() failed');
             }
             $cart->ec_token = $token;
-            $this->_logTransaction('ec_transactions', $status, $cart->toArray());
+            $ot_mapper->insert(
+                $status,
+                array('cart' => $cart->toArray()),
+                $this->_gateway->getCalls()
+            );
         } catch (Exception $e) {
             $status = false;
-            $exceptions[] = $e->getMessage();
             try {
-                $this->_logTransaction('ec_transactions', $status,
-                    $cart->toArray(), $exceptions);
+                $ot_mapper->insert(
+                    $status,
+                    array('cart' => $cart->toArray()),
+                    $this->_gateway->getCalls(),
+                    array($e->getMessage())
+                );
             } catch (Exception $e2) {}
         }
         if ($status) {
@@ -436,28 +467,6 @@ class Service_Cart {
      */
     public function getMessage() {
         return $this->_message;
-    }
-    
-    /**
-     * @param string $collection The mongo collection to insert to
-     * @param bool $status
-     * @param array $data
-     * @param array $exceptions 
-     * 
-     */
-    private function _logTransaction($collection, $status, array $data,
-                                     array $exceptions = array()) {
-        $mongo = Pet_Mongo::getInstance();
-        $data = array_merge(array(
-            'timestamp'        => time(),
-            'date_r'           => date('Y-m-d H:i:s'),
-            'status'           => ($status ? 'success' : 'failed')
-        ), $data);
-        $data = array_merge($data, array(
-            'gateway_calls'    => $this->_gateway->getCalls(),
-            'exceptions'       => $exceptions
-        ));
-        $mongo->{$collection}->insert($data, array('fsync' => true));
     }
     
 }
