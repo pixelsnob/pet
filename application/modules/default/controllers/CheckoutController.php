@@ -134,8 +134,8 @@ class CheckoutController extends Zend_Controller_Action {
             }
         } else {
             $this->_messenger->addMessage('Submitted information is not valid');
-            print_r($checkout_form->getMessages()); exit;
-            //$this->_helper->Redirector->gotoRoute(array(), 'checkout');
+            //print_r($checkout_form->getMessages()); exit;
+            $this->_helper->Redirector->gotoRoute(array(), 'checkout');
         }
     }
 
