@@ -1,8 +1,8 @@
 <?php
 /**
- * @package Model_DbTable_OrderedProductDigitalSubscriptions
+ * @package Model_DbTable_OrderedProducts
  */
-class Model_DbTable_OrderedProductDigitalSubscriptions extends Zend_Db_Table_Abstract {
+class Model_DbTable_OrderedProducts_DigitalSubscriptions extends Zend_Db_Table_Abstract {
 
     protected $_name = 'ordered_product_digital_subscriptions';
 

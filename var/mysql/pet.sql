@@ -719,21 +719,14 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_subscriptions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
   `ordered_product_id` INT(11) NULL ,
-  `subscription_id` INT(11) NULL DEFAULT NULL ,
   `expiration` DATE NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `ordered_product_subscriptions_ibfk_1` (`ordered_product_id` ASC) ,
-  INDEX `ordered_product_subscriptions_ibfk_2` (`subscription_id` ASC) ,
   INDEX `ordered_product_subscriptions_ibfk_3` (`user_id` ASC) ,
   CONSTRAINT `ordered_product_subscriptions_ibfk_1`
     FOREIGN KEY (`ordered_product_id` )
     REFERENCES `pet`.`ordered_products` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `ordered_product_subscriptions_ibfk_2`
-    FOREIGN KEY (`subscription_id` )
-    REFERENCES `pet`.`subscriptions` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `ordered_product_subscriptions_ibfk_3`
@@ -756,22 +749,15 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_digital_subscriptions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
   `ordered_product_id` INT(11) NULL ,
-  `digital_subscription_id` INT(11) NULL DEFAULT NULL ,
   `expiration` DATE NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `ordered_product_digital_subscriptions_fk_1` (`user_id` ASC) ,
-  INDEX `ordered_product_digital_subscriptions_fk_2` (`digital_subscription_id` ASC) ,
   CONSTRAINT `ordered_product_digital_subscriptions_fk_1`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )
     ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `ordered_product_digital_subscriptions_fk_2`
-    FOREIGN KEY (`digital_subscription_id` )
-    REFERENCES `pet`.`digital_subscriptions` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 98303
 DEFAULT CHARACTER SET = utf8

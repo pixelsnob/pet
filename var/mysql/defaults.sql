@@ -135,10 +135,10 @@ insert into pet.products values
 (305, 5, 'DIGITAL-YEARLY-GIFT', 39, '', 1, 0, 1);
 
 insert into digital_subscriptions values
-(1, 'Digital Subscription, Monthly', '', 0, 1, 12),
-(2, 'Digital Subscription, Monthly, Renewal', '', 1, 1, 12),
-(3, 'Digital Subscription, Yearly', '', 0, 0, null),
-(4, 'Digital Subscription, Yearly, Renewal', '', 1, 0, null);
+(1, 'Digital Subscription, Monthly', '', 0, 1, 1),
+(2, 'Digital Subscription, Monthly, Renewal', '', 1, 1, 1),
+(3, 'Digital Subscription, Yearly', '', 0, 0, 12),
+(4, 'Digital Subscription, Yearly, Renewal', '', 1, 0, 12);
 
 insert into pet.products_digital_subscriptions values
 (null, 300, 1),
@@ -221,7 +221,7 @@ show warnings;
 /* Current expirations */
 
 insert into pet.ordered_product_subscriptions
-select null, u.id, null, null, sp.expiration
+select null, u.id, null, sp.expiration
 from pet.users u
 left join pet_old.subscriber_profile sp
 on u.id = sp.user_id
@@ -230,7 +230,7 @@ where sp.expiration is not null;
 /* Previous expirations */
 
 insert into pet.ordered_product_subscriptions
-select null, u.id, null, null, so.previous_expiration
+select null, u.id, null, so.previous_expiration
 from pet.users u
 left join pet_old.sales_order so
 on u.id = so.user_id

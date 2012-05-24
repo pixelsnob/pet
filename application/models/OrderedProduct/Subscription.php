@@ -1,15 +1,14 @@
 <?php
 /**
- * @package Model_OrderedProductSubscription
+ * @package Model_OrderedProduct
  * 
  */
-class Model_OrderedProductSubscription extends Pet_Model_Abstract {
+class Model_OrderedProduct_Subscription extends Pet_Model_Abstract {
 
     public $_data = array(
         'id' => null,
         'user_id' => null,
         'ordered_product_id' => null,
-        'subscription_id' => null,
         'expiration' => null
     );
 

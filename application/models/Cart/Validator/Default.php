@@ -80,12 +80,12 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
         }
         $old_expiration = null;
         if ($this->_cart->products->hasSubscription()) {
-            $ops_mapper = new Model_Mapper_OrderedProductSubscriptions; 
+            $ops_mapper = new Model_Mapper_OrderedProducts_Subscriptions; 
             $sub = $ops_mapper->getUnexpiredByUserId(
                 $users_svc->getId(), true);
 
         } elseif ($this->_cart->products->hasDigitalSubscription()) {
-            $opds_mapper = new Model_Mapper_OrderedProductDigitalSubscriptions; 
+            $opds_mapper = new Model_Mapper_OrderedProducts_DigitalSubscriptions; 
             $sub = $opds_mapper->getUnexpiredByUserId(
                 $users_svc->getId(), true);
         }
