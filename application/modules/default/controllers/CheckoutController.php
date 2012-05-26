@@ -161,4 +161,15 @@ class CheckoutController extends Zend_Controller_Action {
         $this->view->getHelper('serverUrl')->setScheme('https');
     }
 
+    public function testAction() {
+        $mongo = Pet_Mongo::getInstance();
+        for ($i = 0; $i < 10000; $i++) {
+            $mongo->testing->insert(array(
+                'test' => 'xxxxxxxxxxxxxxxxxxxxx',
+                'i'    => $i
+            ), array('fsync' => false));
+        }
+        exit('?');
+    }
+
 }

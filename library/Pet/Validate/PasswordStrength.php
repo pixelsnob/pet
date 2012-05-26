@@ -14,7 +14,7 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
      * 
      */
     protected $_messageTemplates = array(
-        self::LENGTH  => 'Password must be at least 86 characters in length',
+        self::LENGTH  => 'Password must be at least 6 characters in length',
         self::LETTER  => 'Password must contain at least one letter',
         self::DIGIT   => 'Password must contain at least one number'
     );
