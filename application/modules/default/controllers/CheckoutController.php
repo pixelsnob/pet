@@ -8,6 +8,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->_cart_svc = new Service_Cart;
         $this->_users_svc = new Service_Users;
         $this->_messenger = $this->_helper->FlashMessenger;
+        $this->_messenger->setNamespace('checkout');
         $this->view->getHelper('serverUrl')->setScheme('https');
         $this->_generic_error = 'There was a problem with your order. Please check ' .
             'your information and try again.';

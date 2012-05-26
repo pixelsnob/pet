@@ -5,6 +5,7 @@ class CartController extends Zend_Controller_Action {
     public function init() {
         $this->_cart_svc = new Service_Cart;
         $this->_messenger = $this->_helper->FlashMessenger;
+        $this->_messenger->setNamespace('cart');
     }
 
     /**

@@ -319,20 +319,20 @@ class Service_Cart {
             $data['order_id'] = $order->insert($data);
             $this->_saveOrderedProducts($data);
             $this->_saveOrderPayments($data);
-            // Log, fail silently
+            // Log
             $log_data = array(
                 'type'     => 'process',
                 'cart'     => $cart->toArray(),
                 'order_id' => $data['order_id'],
                 'user_id'  => $data['user_id']
             );
-            try {
+            //try {
                 $ot_mapper->insert(
                     $status,
                     $log_data,
                     $this->_gateway->getRawCalls()
                 );
-            } catch (Exception $e) {}
+            //} catch (Exception $e) {}
             $db->commit();
         } catch (Exception $e) {
             $status = false;
