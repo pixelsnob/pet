@@ -96,7 +96,7 @@ class Model_Cart_Product extends Pet_Model_Abstract {
      * 
      */
     public function isGift() {
-        return $this->_data['product']->is_gift;
+        return $this->_data['is_gift'];
     }
 }
 
