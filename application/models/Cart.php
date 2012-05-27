@@ -101,7 +101,8 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             $this->_message = $validator->getMessage();
             return false;
         }
-        if ($this->_data['products']->getById($product->product_id)) {
+        if ($this->_data['products']->has($product)) {
+            exit('????????');
             $this->_data['products']->incrementQty($product->product_id);
         } else {
             $this->_data['products']->add($product);

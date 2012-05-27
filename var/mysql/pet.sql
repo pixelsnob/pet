@@ -82,6 +82,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`products` (
   `active` INT(1) NOT NULL DEFAULT 1 ,
   `max_qty` INT(2) NULL ,
   `is_gift` INT(1) NOT NULL DEFAULT 0 ,
+  `giftable` INT(1) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
   UNIQUE INDEX `sku` (`sku` ASC) ,
@@ -767,7 +768,7 @@ COLLATE = utf8_general_ci;
 -- -----------------------------------------------------
 -- Placeholder table for view `pet`.`view_products`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_gift` INT, `name` INT, `description` INT);
+CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_gift` INT, `giftable` INT, `name` INT, `description` INT);
 
 -- -----------------------------------------------------
 -- View `pet`.`view_products`

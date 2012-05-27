@@ -11,7 +11,8 @@ class Model_Cart_Product extends Pet_Model_Abstract {
      */
     protected $_data = array(
         'product' => null,
-        'qty' => 1
+        'qty' => 1,
+        'is_gift' => 0
     );
 
     /**

@@ -108,7 +108,7 @@ and p.is_gift = 0;
 
 /* Gift subscriptions */
 
-insert into pet.products
+/*insert into pet.products
 (product_type_id, sku, cost, image, active, is_gift)
 select 4, concat(code, '-GIFT'), price, image, 1, 1
 from pet_old.sales_product
@@ -122,17 +122,20 @@ on replace(p.sku, '-GIFT', '') = sp.code
 left join pet.subscriptions s
 on sp.name = s.name
 where p.product_type_id = 4
-and p.is_gift = 1;
+and p.is_gift = 1;*/
+
+update products set is_giftable = 1
+where id >= 181 and id <= 192;
 
 /* Digital Subscriptions */
 
 insert into pet.products values
-(300, 5, 'DIGITAL-MONTHLY', 4.25, '', 1, 1, 0),
-(301, 5, 'DIGITAL-MONTHLY-RENEWAL', 4.25, '', 1, 1, 0),
+(300, 5, 'DIGITAL-MONTHLY', 4.25, '', 1, 1, 0, 1),
+(301, 5, 'DIGITAL-MONTHLY-RENEWAL', 4.25, '', 1, 1, 0, 0),
 /*(302, 5, 'DIGITAL-MONTHLY-GIFT', 4.25, '', 1, 0, 1),*/
-(303, 5, 'DIGITAL-YEARLY', 39, '', 1, 1, 0),
-(304, 5, 'DIGITAL-YEARLY-RENEWAL', 39, '', 1, 1, 0),
-(305, 5, 'DIGITAL-YEARLY-GIFT', 39, '', 1, 0, 1);
+(303, 5, 'DIGITAL-YEARLY', 39, '', 1, 1, 0, 1),
+(304, 5, 'DIGITAL-YEARLY-RENEWAL', 39, '', 1, 1, 0, 0);
+/*(305, 5, 'DIGITAL-YEARLY-GIFT', 39, '', 1, 0, 1);*/
 
 insert into digital_subscriptions values
 (1, 'Digital Subscription, Monthly', '', 0, 1, 1),
@@ -145,8 +148,8 @@ insert into pet.products_digital_subscriptions values
 (null, 301, 2),
 /*(null, 302, 1),*/
 (null, 303, 3),
-(null, 304, 4),
-(null, 305, 3);
+(null, 304, 4);
+/*(null, 305, 3);*/
 
 /* Add products that were deleted that still exist in the ordered_products table */
 

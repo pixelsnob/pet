@@ -43,7 +43,8 @@ class CartController extends Zend_Controller_Action {
 
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
-        if ($this->_cart_svc->addProduct($product_id)) {
+        $is_gift = $this->_request->getParam('is_gift');
+        if ($this->_cart_svc->addProduct($product_id, $is_gift)) {
             $msg = 'Product added';
         } else {
             $msg = $this->_cart_svc->getMessage();

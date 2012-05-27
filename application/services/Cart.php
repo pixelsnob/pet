@@ -46,10 +46,10 @@ class Service_Cart {
      * @return bool
      * 
      */
-    public function addProduct($product_id) {
+    public function addProduct($product_id, $is_gift = false) {
         $product = $this->_products_svc->getById($product_id);
         if ($product) {
-            if (!$this->_cart->addProduct($product)) {
+            if (!$this->_cart->addProduct($product, $is_gift)) {
                 $this->_message = $this->_cart->getMessage();
                 return false;
             }

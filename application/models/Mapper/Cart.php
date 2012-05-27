@@ -62,12 +62,16 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param Model_Product_Abstract $product
+     * @param bool $is_gift
      * @return bool
      * 
      */
 
-    public function addProduct(Model_Product_Abstract $product) {
-        $product = new Model_Cart_Product(array('product' => $product));
+    public function addProduct(Model_Product_Abstract $product, $is_gift = false) {
+        $product = new Model_Cart_Product(array(
+            'product' => $product,
+            'is_gift' => $is_gift
+        ));
         $status = $this->_cart->addProduct($product); 
         $this->_message = $this->_cart->getMessage();
         return $status;

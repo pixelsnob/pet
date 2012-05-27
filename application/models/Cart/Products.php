@@ -104,6 +104,14 @@ class Model_Cart_Products implements Iterator, Countable {
         }
     }
 
+    public function has(Model_Cart_Product $product) {
+        foreach ($this->_data as $k => $v) {
+            if ($product === $v) {
+                return $this->_data[$k];
+            }
+        }
+    }
+
     /**
      * @return void
      * 
@@ -249,7 +257,7 @@ class Model_Cart_Products implements Iterator, Countable {
         $qty = 0;
         foreach ($this->_data as $product) {
             if ($product->product_type_id == $product_type_id) {
-                if (!$is_gift && $product->isGift()) {
+                if (!$is_gift && $product->is_gift) {
                     continue; 
                 }
                 $qty += $product->qty;
