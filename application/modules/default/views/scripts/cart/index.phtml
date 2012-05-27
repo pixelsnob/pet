@@ -25,7 +25,7 @@
                                 <div class="details"><?php echo $details; ?></div>
                                 <?php
                                 // Qty input
-                                $qty = $this->cart_form->qty->getElement($product->product_id);
+                                $qty = $this->cart_form->qty->getElement($product->key);
                                 if ($qty) {
                                     echo $qty->renderLabel() . $qty->renderViewHelper();
                                 }
@@ -37,7 +37,7 @@
                                     </li>
                                     <?php endif; ?>
                                     <li>
-                                        <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $product->product_id),
+                                        <a href="<?php echo $this->serverUrl($this->url(array('key' => $product->key),
                                                                'cart_remove')); ?>" class="remove">Remove</a>
                                     </li>
                                 </ul>

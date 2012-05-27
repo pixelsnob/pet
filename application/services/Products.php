@@ -23,15 +23,15 @@ class Service_Products extends Pet_Service {
 
     /**
      * @param int $zone_id
-     * @param bool $is_gift
+     * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return array
      * 
      */
-    public function getSubscriptionsByZoneId($zone_id, $is_gift = false,
+    public function getSubscriptionsByZoneId($zone_id, $is_giftable = null,
                                              $is_renewal = false) {
         return $this->_products->getSubscriptionsByZoneId($zone_id,
-            $is_gift, $is_renewal);
+            $is_giftable, $is_renewal);
     }
 
     /**
@@ -59,14 +59,14 @@ class Service_Products extends Pet_Service {
     }
 
     /**
-     * @param bool $is_gift
+     * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return array
      * 
      */
-    public function getDigitalSubscriptions($is_gift = false,
+    public function getDigitalSubscriptions($is_giftable = null,
                                             $is_renewal = false) {
-        return $this->_products->getDigitalSubscriptions($is_gift, $is_renewal);
+        return $this->_products->getDigitalSubscriptions($is_giftable, $is_renewal);
     }
 
     /**

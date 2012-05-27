@@ -98,12 +98,12 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
 
     /**
      * @param int $zone_id
-     * @param bool $is_gift
+     * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return Zend_Db_Table_Row object 
      * 
      */
-    public function getSubscriptionsByZoneId($zone_id, $is_gift = false, $is_renewal = false) {
+    public function getSubscriptionsByZoneId($zone_id, $is_giftable = null, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('ps' => 'products_subscriptions'),
@@ -112,8 +112,10 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->where('s.zone_id = ?', $zone_id)
             ->where('p.active')
             ->order('s.name')
-            ->where('p.is_giftable = ?', (int) $is_gift)
             ->where('s.is_renewal = ?', (int) $is_renewal);
+        if ($is_giftable !== null) {
+            $sel->where('p.is_giftable = ?', (int) $is_giftable);
+        }
         return $this->fetchAll($sel);
     }
 
@@ -123,7 +125,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
      * @return Zend_Db_Table_Rowset object 
      * 
      */
-    public function getDigitalSubscriptions($is_gift = false, $is_renewal = false) {
+    public function getDigitalSubscriptions($is_giftable = null, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('pds' => 'products_digital_subscriptions'),
@@ -131,8 +133,10 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->join(array('ds' => 'digital_subscriptions'),
                 'pds.digital_subscription_id = ds.id')
             ->where('p.active')
-            ->where('p.is_giftable = ?', (int) $is_gift)
             ->where('ds.is_renewal = ?', (int) $is_renewal);
+        if ($is_giftable !== null) {
+            $sel->where('p.is_giftable = ?', (int) $is_giftable);
+        }
         return $this->fetchAll($sel);
     }
 

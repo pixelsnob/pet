@@ -61,21 +61,21 @@ class Service_Cart {
     }
     
     /**
-     * @param int $product_id
+     * @param string $key
      * @param int $qty
      * @return void
      * 
      */
-    public function setProductQty($product_id, $qty) {
-        $this->_cart->setProductQty($product_id, $qty);
+    public function setProductQty($key, $qty) {
+        $this->_cart->setProductQty($key, $qty);
     }
 
     /**
-     * @param int $product_id
+     * @param string $key
      * @return void
      */
-    public function removeProduct($product_id) {
-        $this->_cart->removeProduct($product_id);
+    public function removeProduct($key) {
+        $this->_cart->removeProduct($key);
     }
 
     /**
@@ -129,7 +129,7 @@ class Service_Cart {
         ));
         $form_data = array();
         foreach ($cart->products as $product) {
-            $form_data['qty'][$product->product_id] = $product->qty;
+            $form_data['qty'][$product->key] = $product->qty;
         }
         $form->populate($form_data);
         return $form;

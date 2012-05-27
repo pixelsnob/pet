@@ -33,7 +33,7 @@ class Form_Cart extends Pet_Form {
             Model_ProductType::DIGITAL_SUBSCRIPTION
         );
         foreach ($this->_cart->products as $product) {
-            $qty->addElement('text', $product->product_id, array(
+            $qty->addElement('text', $product->key, array(
                 'label' => 'Quantity:',
                 'belongsTo' => 'qty',
                 'required' => true,
@@ -43,8 +43,12 @@ class Form_Cart extends Pet_Form {
                     )),
                     // Value must be a number and 0 or greater
                     array('Callback', true, array('callback' => function($v) {
-                        return (preg_match('/\D/', $v) == 0 && $v >= 0);
-                    }, 'messages' => 'Quantity is not valid'))
+                        return (preg_match('/\D/', $v) == 0 && $v > 0);
+                    }, 'messages' => 'Quantity is not valid')),
+                    array('StringLength', true, array(
+                        'max' => 1,
+                        'messages' => 'Quantity is not valid'
+                    ))
                 ),
                 'decorators' => array(
                     'ViewHelper',
@@ -53,7 +57,7 @@ class Form_Cart extends Pet_Form {
                 )
             ));
             if (!$product->isGift() && in_array($product->product_type_id, $no_qty_types)) {
-                $qty->getElement($product->product_id)
+                $qty->getElement($product->key)
                     ->setAttrib('readonly', true)
                     ->setOptions(array('class' => 'readonly'))
                     ->addValidator('LessThan', true, array(
@@ -61,7 +65,7 @@ class Form_Cart extends Pet_Form {
                         'messages' => 'Multiple quantities of this item not allowed'
                     ));
             } else {
-                $qty->getElement($product->product_id)
+                $qty->getElement($product->key)
                     ->addValidator('LessThan', true, array(
                         'max' => 10,
                         'messages' => 'Maximum quantity exceeded'

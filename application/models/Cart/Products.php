@@ -35,13 +35,13 @@ class Model_Cart_Products implements Iterator, Countable {
     }
     
     /**
-     * @var int $id
+     * @var string $key
      * @var return void
      * 
      */
-    public function remove($id) {
+    public function remove($key) {
         foreach ($this->_data as $k => $product) {
-            if ($product->product_id == $id) {
+            if ($product->key == $key) {
                 unset($this->_data[$k]);
                 $this->_data = array_values($this->_data);
                 $this->rewind();
@@ -63,14 +63,14 @@ class Model_Cart_Products implements Iterator, Countable {
     }
 
     /**
-     * @var int $id
+     * @var string $key
      * @var int $qty
      * @var return void
      * 
      */
-    public function setQty($id, $qty) {
+    public function setQty($key, $qty) {
         foreach ($this->_data as $k => $product) {
-            if ($product->product_id == $id) {
+            if ($product->key == $key) {
                 $this->_data[$k]->qty = $qty;
                 return;
             }
@@ -78,13 +78,13 @@ class Model_Cart_Products implements Iterator, Countable {
     }
     
     /**
-     * @var int $id
+     * @var string $key
      * @var return void
      * 
      */
-    public function incrementQty($id) {
+    public function incrementQty($key) {
         foreach ($this->_data as $k => $product) {
-            if ($product->product_id == $id) {
+            if ($product->key == $key) {
                 $this->_data[$k]->qty++;
                 return;
             }
@@ -104,12 +104,31 @@ class Model_Cart_Products implements Iterator, Countable {
         }
     }
 
-    public function has(Model_Cart_Product $product) {
-        foreach ($this->_data as $k => $v) {
-            if ($product === $v) {
+    /**
+     * @var string $key
+     * @return Model_Cart_Product
+     * 
+     */
+    public function getByKey($key) {
+        foreach ($this->_data as $k => $product) {
+            if ($product->key == $key) {
                 return $this->_data[$k];
             }
         }
+    }
+    
+    /**
+     * @param Model_Cart_Product $product
+     * @return bool
+     * 
+     */
+    public function has(Model_Cart_Product $product) {
+        foreach ($this->_data as $k => $v) {
+            if ($product == $v) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

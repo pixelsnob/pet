@@ -96,14 +96,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     public function addProduct(Model_Cart_Product $product) {
+        $product->key = $product->product_id . ($product->is_gift ?
+            'GIFT' : '');
         $validator = $this->getValidator();
         if (!$validator->validateProduct($product)) {
             $this->_message = $validator->getMessage();
             return false;
         }
-        if ($this->_data['products']->has($product)) {
-            exit('????????');
-            $this->_data['products']->incrementQty($product->product_id);
+        if ($this->_data['products']->getByKey($product->key)) {
+            $this->_data['products']->incrementQty($product->key);
         } else {
             $this->_data['products']->add($product);
         }
@@ -112,13 +113,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     
     /**
      * @param int $product_id
+     * @param bool $is_gift
      * @return void
      * 
      */
-    public function removeProduct($product_id) {
-        if ($product = $this->_data['products']->getById($product_id)) {
+    public function removeProduct($product_id, $is_gift = false) {
+        $key = $product_id . ($is_gift ? 'GIFT' : ''); 
+        if ($product = $this->_data['products']->getByKey($key)) {
             $msg = '"' . $product->name . '" was removed from your cart';
-            $this->_data['products']->remove($product_id);
+            $this->_data['products']->remove($key);
             if ($this->_data['promo']) {
                 $valid = $this->getValidator()->validatePromo($this->_data['promo']); 
                 if (!$valid) {
@@ -130,14 +133,14 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     }
 
     /** 
-     * @param int $product_id
+     * @param string $key
      * @param int $qty
      * @return bool
      */
-    public function setProductQty($product_id, $qty) {
-        if ($product = $this->_data['products']->getById($product_id)) {
+    public function setProductQty($key, $qty) {
+        if ($product = $this->_data['products']->getByKey($key)) {
             if ($qty) {
-                $this->_data['products']->setQty($product_id, $qty);
+                $this->_data['products']->setQty($key, $qty);
             } else {
                 $this->_data['products']->remove($product_id);
             }
@@ -152,9 +155,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      */
     public function update(array $data) {
         foreach ($this->_data['products'] as $product) {
-            if (isset($data['qty'][$product->product_id])) {
-                $qty = (int) $data['qty'][$product->product_id];
-                $this->setProductQty($product->product_id, $qty);
+            if (isset($data['qty'][$product->key])) {
+                $qty = (int) $data['qty'][$product->key];
+                $this->setProductQty($product->key, $qty);
             }
             
         }
@@ -219,9 +222,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * @return void
      * 
      */
-    public function incrementProductQty($product_id) {
+    /*public function incrementProductQty($product_id) {
         $this->_data['products']->incrementQty($product_id);
-    }
+    }*/
 
     /**
      * Returns number of products in the cart

@@ -71,16 +71,16 @@ class CartController extends Zend_Controller_Action {
     }
 
     public function setQtyAction() {
-        $product_id = $this->_request->getParam('product_id');
+        $product_id = $this->_request->getParam('key');
         $qty = (int) $this->_request->getParam('qty');
-        $this->_cart_svc->setProductQty($product_id, $qty);
+        $this->_cart_svc->setProductQty($key, $qty);
         $this->_messenger->addMessage('Quantity updated');
         $this->_helper->Redirector->setGotoSimple('index');
     }
 
     public function removeAction() {
-        $product_id = $this->_request->getParam('product_id');
-        $this->_cart_svc->removeProduct($product_id);
+        $key = $this->_request->getParam('key');
+        $this->_cart_svc->removeProduct($key);
         $this->_messenger->addMessage('Product removed');
         $this->_helper->Redirector->setGotoSimple('index');
     }

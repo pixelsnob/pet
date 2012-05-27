@@ -48,7 +48,8 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function subscriptionTermSelectAction() {
         $zone_id = $this->_request->getParam('zone_id');
-        $is_gift    = $this->_request->getParam('is_gift');
+        $is_gift = $this->_request->getParam('is_gift');
+        $is_gift = (strlen(trim($is_gift)) ? true : null);
         $is_renewal = $this->_request->getParam('is_renewal');
         // Attempt to get the user's zone from their profile if zone_id is not
         // passed
@@ -72,7 +73,10 @@ class ProductsController extends Zend_Controller_Action {
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
                 $this->_helper->Redirector->setGotoSimple('add', 'cart',
-                    'default',  array('product_id' => $product_id));
+                    'default',  array(
+                        'product_id' => $product_id,
+                        'is_gift' => $is_gift
+                    ));
             } else {
                 $form->populate($post);
             }
@@ -117,15 +121,22 @@ class ProductsController extends Zend_Controller_Action {
      */
     public function digitalSelectAction() {
         $is_gift    = $this->_request->getParam('is_gift');
+        $is_gift = (strlen(trim($is_gift)) ? true : null);
         $is_renewal = $this->_request->getParam('is_renewal');
-        $subs = $this->_products_svc->getDigitalSubscriptions($is_gift, $is_renewal);
+        $subs = $this->_products_svc->getDigitalSubscriptions($is_gift,
+            $is_renewal);
         if ($subs) {
-            $form = $this->_products_svc->getDigitalSubscriptionSelectForm($subs, $is_gift, $is_renewal);
+            $form = $this->_products_svc->getDigitalSubscriptionSelectForm(
+                $subs, $is_gift, $is_renewal);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
                 $this->_helper->Redirector->setGotoSimple('add', 'cart',
-                    'default',  array('product_id' => $product_id));
+                    'default',  array(
+                        'product_id' => $product_id,
+                        'is_gift' => $is_gift
+                    )
+                );
             } else {
                 $form->populate($post);
             }

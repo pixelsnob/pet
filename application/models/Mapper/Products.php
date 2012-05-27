@@ -77,14 +77,14 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * @param bool $is_gift
+     * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return array
      * 
      */
-    public function getDigitalSubscriptions($is_gift = false,
+    public function getDigitalSubscriptions($is_giftable = null,
                                             $is_renewal = false) {
-        $subs = $this->_products->getDigitalSubscriptions($is_gift,
+        $subs = $this->_products->getDigitalSubscriptions($is_giftable,
             $is_renewal);
         $out = array();
         foreach ($subs as $sub) {
@@ -95,15 +95,15 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param int $zone_id
-     * @param bool $is_gift
+     * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return array
      * 
      */
-    public function getSubscriptionsByZoneId($zone_id, $is_gift = false,
+    public function getSubscriptionsByZoneId($zone_id, $is_giftable = null,
                                              $is_renewal = false) {
         $subs = $this->_products->getSubscriptionsByZoneId($zone_id,
-            $is_gift, $is_renewal);
+            $is_giftable, $is_renewal);
         $out = array();
         foreach ($subs as $sub) {
             $sub = new Model_Product_Subscription($sub->toArray());

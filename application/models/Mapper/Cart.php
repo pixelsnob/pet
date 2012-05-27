@@ -78,25 +78,24 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * @param int $product_id
+     * @param string $key
      * @return void
      * 
      */
 
-    public function removeProduct($product_id) {
-        $this->_cart->removeProduct($product_id); 
+    public function removeProduct($key) {
+        $this->_cart->removeProduct($key); 
     }
     
     /**
-     * @param int $product_id
+     * @param string $key
      * @param int $qty
      * @return void
      * 
      */
-
-    public function setProductQty($product_id, $qty) {
-        $this->_cart->setProductQty($product_id, $qty); 
-    }
+    /*public function setProductQty($key) {
+        $this->_cart->setProductQty($key); 
+    }*/
     
     /**
      * @param Model_Cart $cart
