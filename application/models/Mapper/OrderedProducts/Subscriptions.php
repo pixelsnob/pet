@@ -31,5 +31,6 @@ class Model_Mapper_OrderedProducts_Subscriptions extends Pet_Model_Mapper_Abstra
         $op_model = new Model_OrderedProduct_Subscription($data);
         $this->_op_subs->insert($op_model->toArray());
     }
+
 }
 

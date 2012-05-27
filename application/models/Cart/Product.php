@@ -82,8 +82,9 @@ class Model_Cart_Product extends Pet_Model_Abstract {
      * 
      */
     public function isRenewal() {
-        return ($this->_data['product']->product_type_id ==
-            Model_ProductType::DIGITAL_SUBSCRIPTION &&
+        $ptid = $this->_data['product']->product_type_id;
+        return (($ptid == Model_ProductType::DIGITAL_SUBSCRIPTION ||
+            $ptid == Model_ProductType::SUBSCRIPTION) &&
             $this->_data['product']->is_renewal);
     }
     

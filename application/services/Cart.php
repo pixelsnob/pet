@@ -269,39 +269,20 @@ class Service_Cart {
         );
         $status = true;
         $db     = Zend_Db_Table::getDefaultAdapter();
-            
         try {
+            // ????????
             if (!$cart->validate()) {
                 throw new Exception($cart->getMessage());
             }
             $db->beginTransaction();
-            // Get existing subscriptions, if any
-            /*if ($cart->products->hasRenewal()) {
-                if ($cart->products->hasSubscription()) {
-                    // Regular sub
-                    $ops_mapper = new Model_Mapper_OrderedProducts_Subscriptions; 
-                    $sub = $ops_mapper->getUnexpiredByUserId(
-                        $users_svc->getId(), true);
-                    $data['old_expiration'] = $sub->expiration;
-                } elseif ($cart->products->hasDigitalSubscription()) {
-                    // Digital sub
-                    $opds_mapper = new Model_Mapper_OrderedProducts_DigitalSubscriptions; 
-                    $sub = $opds_mapper->getUnexpiredByUserId(
-                        $users_svc->getId(), true);
-                    $data['old_expiration'] = $sub->expiration;
-                }
-                if (!$data['old_expiration']) {
-                    $msg = 'Attempted a renewal but existing subscription ' . 
-                            'expiration was not found';
-                    throw new Exception($msg);
-                }
-            }*/
             // Regular sale
-            if ($cart->payment->payment_method == 'credit_card') {
-                $this->_gateway->processSale($data);
-            } else {
-                $this->_gateway->processECSale($data, $cart->ec_token,
-                    $payer_id);
+            if ($config['use_payment_gateway']) {
+                if ($cart->payment->payment_method == 'credit_card') {
+                    $this->_gateway->processSale($data);
+                } else {
+                    $this->_gateway->processECSale($data, $cart->ec_token,
+                        $payer_id);
+                }
             }
             // Save user data
             if ($users_svc->isAuthenticated()) {
@@ -326,13 +307,11 @@ class Service_Cart {
                 'order_id' => $data['order_id'],
                 'user_id'  => $data['user_id']
             );
-            //try {
-                $ot_mapper->insert(
-                    $status,
-                    $log_data,
-                    $this->_gateway->getRawCalls()
-                );
-            //} catch (Exception $e) {}
+            $ot_mapper->insert(
+                $status,
+                $log_data,
+                $this->_gateway->getRawCalls()
+            );
             $db->commit();
         } catch (Exception $e) {
             $status = false;
@@ -353,8 +332,9 @@ class Service_Cart {
                     $status,
                     $log_data,
                     $this->_gateway->getRawCalls(),
-                    array($e->getMessage())
+                    array($e->getMessage() . ' -- ' . $e->getTraceAsString())
                 );
+                print_r($e); exit;
             } catch (Exception $e1) {}
         }
         // Reset cart
@@ -365,6 +345,112 @@ class Service_Cart {
             }
         }
         return $status;
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    private function _saveOrderedProducts(array $data) {
+        $users_svc  = new Service_Users;
+        $user_id    = $users_svc->getId();
+        $cart       = clone $this->get();
+        $op         = new Model_Mapper_OrderedProducts;
+        $ops        = new Model_Mapper_OrderedProducts_Subscriptions;
+        $opds       = new Model_Mapper_OrderedProducts_DigitalSubscriptions;
+        $fmt        = 'Y-m-d H:i:s'; 
+        foreach ($cart->products as $product) {
+            // Insert into ordered_products
+            $opid = $op->insert($product->toArray(), $data['order_id']);                                                // <<<<<<<<<<<<<<< need to figure out discount cost stuff
+            // Gift processing here
+            if ($product->isGift()) {
+                return;
+            } 
+            if ($product->isSubscription()) {
+                $date = new DateTime;
+                if ($product->isRenewal()) {
+                    $sub = $ops->getUnexpiredByUserId($user_id, true);
+                    // Calculate new expiration
+                    if ($sub) {
+                        $date = new DateTime($sub->expiration);
+                    }
+                }
+                // Calculate expiration, (term) month(s) from today
+                $term = (int) $product->term;
+                $date->add(new DateInterval("P{$term}Y"));
+                $opds->insert(array(
+                    'user_id'            => $data['user_id'],
+                    'ordered_product_id' => $opid,
+                    'expiration'         => $date->format($fmt)
+                ));
+                // also add digital for the same term
+            }
+            if ($product->isDigitalSubscription()) {
+                $date = new DateTime;
+                if ($product->isRenewal()) {
+                    $digital_sub = $opds_mapper->getUnexpiredByUserId(
+                        $user_id, true);
+                    // Calculate new expiration
+                    if ($digital_sub) {
+                        $date = new DateTime(strtotime($sub->expiration));
+                    }
+                }
+                // Calculate expiration, (term) year(s) from today
+                $term = (int) $product->term;
+                $date->add(new DateInterval("P{$term}M"));
+                $opds->insert(array(
+                    'user_id'            => $data['user_id'],
+                    'ordered_product_id' => $opid,
+                    'expiration'         => $date->format($fmt)
+
+                ));
+            }
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    private function _saveOrderPayments($data) {
+        $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
+        $op_mapper = new Model_Mapper_OrderPayments;
+        foreach ($gateway_responses as $response) {
+            if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
+                $opid = $op_mapper->insert(array(
+                    'order_id'            => $data['order_id'],
+                    'payment_type_id'     => Model_PaymentType::PAYFLOW,
+                    'amount'              => $data['total'],
+                    'date'                => date('Y-m-d H:i:s')
+                ));
+                $op_payflow_mapper = new Model_Mapper_OrderPayments_Payflow;
+                $op_payflow_mapper->insert(array(
+                    'order_payment_id'    => $opid,
+                    'cc_number'           => substr($data['cc_num'], -4),
+                    'cc_expiration_month' => $data['cc_exp_month'],
+                    'cc_expiration_year'  => $data['cc_exp_year'],
+                    'pnref'               => $response->pnref,
+                    'ppref'               => $response->ppref,
+                    'correlationid'       => $response->correlationid,
+                    'cvv2match'           => $response->cvv2match
+
+                ));
+            } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
+                $opid = $op_mapper->insert(array(
+                    'order_id'         => $data['order_id'],
+                    'payment_type_id'  => Model_PaymentType::PAYPAL,
+                    'amount'           => $data['total'],
+                    'date'             => date('Y-m-d H:i:s')
+                ));
+                $op_paypal_mapper = new Model_Mapper_OrderPayments_Paypal;
+                $op_paypal_mapper->insert(array(
+                    'order_payment_id' => $opid,
+                    'correlationid'    => $response->correlationid
+                ));
+            }
+        }
     }
     
     /**
@@ -429,96 +515,4 @@ class Service_Cart {
         return $this->_message;
     }
     
-    /**
-     * @param array $data
-     * @return void
-     * 
-     */
-    private function _saveOrderedProducts(array $data) {
-        $cart = clone $this->get();
-        $op = new Model_Mapper_OrderedProducts;
-        $ops = new Model_Mapper_OrderedProducts_Subscriptions;
-        $opds = new Model_Mapper_OrderedProducts_DigitalSubscriptions;
-        foreach ($cart->products as $product) {
-            // Insert into ordered_products
-            $opid = $op->insert($product->toArray(), $data['order_id']);                                                // <<<<<<<<<<<<<<< need to figure out discount cost stuff
-            // Gift processing here
-            if ($product->isGift()) {
-                // generate tokens?
-                // store tokens? 
-            } elseif ($product->isRenewal() && $product->isDigital()) {
-                // get existing
-                // adjust date
-            } elseif ($product->isRenewal() && $product->isSubscription()) {
-                // get existing
-                // adjust date
-                 
-            } elseif ($product->isDigital()) {
-                $date = new DateTime;
-                // Calculate expiration, (term) month(s) from today
-                $term = (int) $product->term;
-                $date->add(new DateInterval("P{$term}M"));
-                $opds->insert(array(
-                    'user_id'            => $data['user_id'],
-                    'ordered_product_id' => $opid,
-                    'expiration'         => $date->format('Y-m-d H:i:s')
-                ));
-            } elseif ($product->isSubscription()) {
-                $date = new DateTime;
-                // Calculate expiration, (term) year(s) from today
-                $term = (int) $product->term;
-                $date->add(new DateInterval("P{$term}Y"));
-                $ops->insert(array(
-                    'user_id'            => $data['user_id'],
-                    'ordered_product_id' => $opid,
-                    'expiration'         => $date->format('Y-m-d H:i:s')
-
-                ));
-            }
-        }
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     * 
-     */
-    private function _saveOrderPayments($data) {
-        $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
-        $op_mapper = new Model_Mapper_OrderPayments;
-        foreach ($gateway_responses as $response) {
-            if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
-                $opid = $op_mapper->insert(array(
-                    'order_id'            => $data['order_id'],
-                    'payment_type_id'     => Model_PaymentType::PAYFLOW,
-                    'amount'              => $data['total'],
-                    'date'                => date('Y-m-d H:i:s')
-                ));
-                $op_payflow_mapper = new Model_Mapper_OrderPayments_Payflow;
-                $op_payflow_mapper->insert(array(
-                    'order_payment_id'    => $opid,
-                    'cc_number'           => substr($data['cc_num'], -4),
-                    'cc_expiration_month' => $data['cc_exp_month'],
-                    'cc_expiration_year'  => $data['cc_exp_year'],
-                    'pnref'               => $response->pnref,
-                    'ppref'               => $response->ppref,
-                    'correlationid'       => $response->correlationid,
-                    'cvv2match'           => $response->cvv2match
-
-                ));
-            } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
-                $opid = $op_mapper->insert(array(
-                    'order_id'         => $data['order_id'],
-                    'payment_type_id'  => Model_PaymentType::PAYPAL,
-                    'amount'           => $data['total'],
-                    'date'             => date('Y-m-d H:i:s')
-                ));
-                $op_paypal_mapper = new Model_Mapper_OrderPayments_Paypal;
-                $op_paypal_mapper->insert(array(
-                    'order_payment_id' => $opid,
-                    'correlationid'    => $response->correlationid
-                ));
-            }
-        }
-    }
 }

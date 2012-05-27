@@ -14,7 +14,8 @@ class Model_DbTable_OrderedProducts_DigitalSubscriptions extends Zend_Db_Table_A
     public function getUnexpiredByUserId($user_id, $for_update = false) {
         $sel = $this->select()
             ->where('expiration >= ?', date('Y-m-d'))
-            ->where('user_id = ?', $user_id);
+            ->where('user_id = ?', $user_id)
+            ->order(array('expiration desc'));
         if ($for_update) {
             $sel->forUpdate();
         }
