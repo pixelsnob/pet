@@ -99,7 +99,7 @@ class Service_Users extends Pet_Service {
      */
     public function getId() {
         $identity = Zend_Auth::getInstance()->getIdentity();
-        return $identity->id;
+        return (isset($identity->id) ? $identity->id : null);
     }
 
     /**
