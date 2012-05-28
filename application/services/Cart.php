@@ -358,8 +358,6 @@ class Service_Cart {
         $cart       = clone $this->get();
         $op         = new Model_Mapper_OrderedProducts;
         $os         = new Model_Mapper_OrderSubscriptions;
-        //$ops        = new Model_Mapper_OrderedProducts_Subscriptions;
-        //$opds       = new Model_Mapper_OrderedProducts_DigitalSubscriptions;
         $fmt        = 'Y-m-d H:i:s'; 
         foreach ($cart->products as $product) {
             // Insert into ordered_products

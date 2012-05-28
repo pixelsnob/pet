@@ -1,10 +1,11 @@
 <?php
 /**
- * @package Model_DbTable_OrderedProducts
+ * @package Model_DbTable_OrderSubscriptions
+ * 
  */
-class Model_DbTable_OrderedProducts_DigitalSubscriptions extends Zend_Db_Table_Abstract {
+class Model_DbTable_OrderSubscriptions extends Zend_Db_Table_Abstract {
 
-    protected $_name = 'ordered_product_digital_subscriptions';
+    protected $_name = 'order_subscriptions';
 
     /**
      * @param int $user_id
@@ -21,5 +22,6 @@ class Model_DbTable_OrderedProducts_DigitalSubscriptions extends Zend_Db_Table_A
         }
         return $this->fetchRow($sel);
     }
+
 }
 
