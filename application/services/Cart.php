@@ -271,7 +271,7 @@ class Service_Cart {
         $db     = Zend_Db_Table::getDefaultAdapter();
         try {
             // ????????
-            /*if (!$cart->validate()) {
+            /*if (!$cart->validate()) { // has renewals??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                 throw new Exception($cart->getMessage());
             }*/
             $db->beginTransaction();
@@ -357,20 +357,21 @@ class Service_Cart {
         $user_id    = $users_svc->getId();
         $cart       = clone $this->get();
         $op         = new Model_Mapper_OrderedProducts;
-        $ops        = new Model_Mapper_OrderedProducts_Subscriptions;
-        $opds       = new Model_Mapper_OrderedProducts_DigitalSubscriptions;
+        $os         = new Model_Mapper_OrderSubscriptions;
+        //$ops        = new Model_Mapper_OrderedProducts_Subscriptions;
+        //$opds       = new Model_Mapper_OrderedProducts_DigitalSubscriptions;
         $fmt        = 'Y-m-d H:i:s'; 
         foreach ($cart->products as $product) {
             // Insert into ordered_products
             $opid = $op->insert($product->toArray(), $data['order_id']);                                                // <<<<<<<<<<<<<<< need to figure out discount cost stuff
             // Gift processing here
             if ($product->isGift()) {
-                return;
+                continue;
             } 
             if ($product->isSubscription()) {
                 $date = new DateTime;
                 if ($product->isRenewal()) {
-                    $sub = $ops->getUnexpiredByUserId($user_id, true);
+                    $sub = $os->getUnexpiredByUserId($user_id, true);
                     // Calculate new expiration
                     if ($sub) {
                         $date = new DateTime($sub->expiration);
@@ -379,19 +380,14 @@ class Service_Cart {
                 // Calculate expiration, (term) month(s) from today
                 $term = (int) $product->term;
                 $date->add(new DateInterval("P{$term}Y"));
-                $ops->insert(array(
+                $os->insert(array(
                     'user_id'            => $data['user_id'],
-                    'ordered_product_id' => $opid,
+                    'order_id'           => $data['order_id'],
                     'expiration'         => $date->format($fmt)
                 ));
-                /*$opds->insert(array(
-                    'user_id'            => $data['user_id'],
-                    'ordered_product_id' => $opid,
-                    'expiration'         => $date->format($fmt)
-                ));*/
             }
             if ($product->isDigital()) {
-                $date = new DateTime;
+                /*$date = new DateTime;
                 if ($product->isRenewal()) {
                     $digital_sub = $opds_mapper->getUnexpiredByUserId(
                         $user_id, true);
@@ -405,10 +401,10 @@ class Service_Cart {
                 $date->add(new DateInterval("P{$term}M"));
                 $opds->insert(array(
                     'user_id'            => $data['user_id'],
-                    'ordered_product_id' => $opid,
-                    'expiration'         => $date->format($fmt)
-
-                ));
+                    'order_id'           => $data['order_id'],
+                    'expiration'         => $date->format($fmt),
+                    'digital_only'       => 1
+                ));*/
             }
         }
     }

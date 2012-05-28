@@ -202,8 +202,8 @@ show warnings;
 
 /* Current expirations */
 
-insert into pet.ordered_product_subscriptions
-select null, u.id, null, sp.expiration
+insert into pet.order_subscriptions
+select null, u.id, null, sp.expiration, 0
 from pet.users u
 left join pet_old.subscriber_profile sp
 on u.id = sp.user_id
@@ -212,7 +212,7 @@ where sp.expiration is not null;
 /* Previous expirations */
 
 insert into pet.ordered_product_subscriptions
-select null, u.id, null, so.previous_expiration
+select null, u.id, null, so.previous_expiration, 0
 from pet.users u
 left join pet_old.sales_order so
 on u.id = so.user_id

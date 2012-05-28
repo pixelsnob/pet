@@ -69,7 +69,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
      * @return bool 
      */
     public function validateRenewals() {
-        $users_svc = new Service_Users;
+        /*$users_svc = new Service_Users;
         if (!$this->_cart->products->hasRenewal()) {
             return true;
         }
@@ -93,7 +93,7 @@ class Model_Cart_Validator_Default extends Model_Cart_Validator_Abstract {
             $this->_message = 'There was a problem retrieving your existing ' .
                 'subscription'; 
             return false;
-        }
+        }*/
         return true;
     }
 
