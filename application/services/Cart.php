@@ -270,10 +270,6 @@ class Service_Cart {
         $status = true;
         $db     = Zend_Db_Table::getDefaultAdapter();
         try {
-            // ????????
-            /*if (!$cart->validate()) { // has renewals??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                throw new Exception($cart->getMessage());
-            }*/
             $db->beginTransaction();
             // Regular sale
             if ($config['use_payment_gateway']) {
@@ -345,8 +341,9 @@ class Service_Cart {
             }
         }
         return $status;
-    }
 
+    }
+    
     /**
      * @param array $data
      * @return void
@@ -362,7 +359,7 @@ class Service_Cart {
         $fmt        = 'Y-m-d H:i:s'; 
         foreach ($cart->products as $product) {
             // Insert into ordered_products
-            $opid = $op->insert($product->toArray(), $data['order_id']);                                                // <<<<<<<<<<<<<<< need to figure out discount cost stuff
+            $opid = $op->insert($product->toArray(), $data['order_id']); // <<<<<<<<<<<<<<< need to figure out discount cost stuff
             // Gift processing here
             if ($product->isGift()) {
                 continue;
