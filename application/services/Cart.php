@@ -271,9 +271,9 @@ class Service_Cart {
         $db     = Zend_Db_Table::getDefaultAdapter();
         try {
             // ????????
-            if (!$cart->validate()) {
+            /*if (!$cart->validate()) {
                 throw new Exception($cart->getMessage());
-            }
+            }*/
             $db->beginTransaction();
             // Regular sale
             if ($config['use_payment_gateway']) {
@@ -379,14 +379,18 @@ class Service_Cart {
                 // Calculate expiration, (term) month(s) from today
                 $term = (int) $product->term;
                 $date->add(new DateInterval("P{$term}Y"));
-                $opds->insert(array(
+                $ops->insert(array(
                     'user_id'            => $data['user_id'],
                     'ordered_product_id' => $opid,
                     'expiration'         => $date->format($fmt)
                 ));
-                // also add digital for the same term
+                /*$opds->insert(array(
+                    'user_id'            => $data['user_id'],
+                    'ordered_product_id' => $opid,
+                    'expiration'         => $date->format($fmt)
+                ));*/
             }
-            if ($product->isDigitalSubscription()) {
+            if ($product->isDigital()) {
                 $date = new DateTime;
                 if ($product->isRenewal()) {
                     $digital_sub = $opds_mapper->getUnexpiredByUserId(

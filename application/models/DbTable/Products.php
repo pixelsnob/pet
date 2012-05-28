@@ -141,7 +141,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     }
 
     /**
-     * @return Zend_Db_Table_Row object 
+     * @return Zend_Db_Table_Rowset object 
      * 
      */
     public function getPhysicalProducts() {

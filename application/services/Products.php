@@ -102,7 +102,7 @@ class Service_Products extends Pet_Service {
     }
     
     /**
-     * 
+     * @return Zend_Db_Table_Rowset object 
      * 
      */
     public function getPhysicalProducts() {

@@ -223,7 +223,7 @@
                     <input type="submit" value="Buy Now" class="button-grad-blue">
                 </p>
                 <p>We will email a receipt when the transaction processes.
-                <br><i>We will not share your contact info with <b>anyone</b></i>.</p>
+                <br><em>We will not share your contact info with <strong>anyone</strong></em>.</p>
             </div>
             <div class="checkout-right">
                 <h3>In your cart:</h3>
@@ -231,7 +231,7 @@
                     <?php foreach ($this->cart->products as $product): ?>
                         <li class="product">
                             <?php echo $this->productThumbnail($product); ?>
-                            <p><?php echo $this->escape($product->name); ?></p>
+                            <p><?php echo $this->escape($product->getFullName()); ?></p>
                         </li>
                     <?php endforeach; ?>
                 </ul>

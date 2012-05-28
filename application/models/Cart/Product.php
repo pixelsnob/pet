@@ -99,6 +99,16 @@ class Model_Cart_Product extends Pet_Model_Abstract {
     public function isGift() {
         return $this->_data['is_gift'];
     }
+    
+    /**
+     * @return string
+     * 
+     */
+    public function getFullName() {
+        $full_name = $this->_data['product']->name .
+            ($this->_data['is_gift'] ? ' (gift)' : '');
+        return $full_name;
+    }
 }
 
 
