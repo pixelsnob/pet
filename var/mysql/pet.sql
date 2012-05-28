@@ -281,7 +281,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`subscriptions` (
   `zone_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
   `description` LONGTEXT NULL DEFAULT NULL ,
-  `term` INT(11) NOT NULL DEFAULT '1' ,
+  `term_months` INT(11) NOT NULL DEFAULT '1' ,
   `is_renewal` INT(1) NOT NULL DEFAULT '0' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
@@ -672,7 +672,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`digital_subscriptions` (
   `description` LONGTEXT NULL DEFAULT NULL ,
   `is_renewal` INT(1) NOT NULL DEFAULT '0' ,
   `is_recurring` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `term` INT(4) NULL COMMENT '					' ,
+  `term_months` INT(4) NULL COMMENT '					' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) )
 ENGINE = InnoDB
@@ -711,53 +711,30 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`ordered_product_subscriptions`
+-- Table `pet`.`order_subscriptions`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`ordered_product_subscriptions` ;
+DROP TABLE IF EXISTS `pet`.`order_subscriptions` ;
 
-CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_subscriptions` (
+CREATE  TABLE IF NOT EXISTS `pet`.`order_subscriptions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
-  `ordered_product_id` INT(11) NULL ,
+  `order_id` INT(11) NULL ,
   `expiration` DATE NOT NULL ,
+  `digital_only` INT(1) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  INDEX `ordered_product_subscriptions_ibfk_1` (`ordered_product_id` ASC) ,
-  INDEX `ordered_product_subscriptions_ibfk_3` (`user_id` ASC) ,
-  CONSTRAINT `ordered_product_subscriptions_ibfk_1`
-    FOREIGN KEY (`ordered_product_id` )
-    REFERENCES `pet`.`ordered_products` (`id` )
+  INDEX `order_subscriptions_ibfk_1` (`user_id` ASC) ,
+  INDEX `order_subscriptions_ibfk_2` (`order_id` ASC) ,
+  CONSTRAINT `order_subscriptions_ibfk_1`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `pet`.`users` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `ordered_product_subscriptions_ibfk_3`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `pet`.`users` (`id` )
+  CONSTRAINT `order_subscriptions_ibfk_2`
+    FOREIGN KEY (`order_id` )
+    REFERENCES `pet`.`orders` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-AUTO_INCREMENT = 98303
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `pet`.`ordered_product_digital_subscriptions`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`ordered_product_digital_subscriptions` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`ordered_product_digital_subscriptions` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `user_id` INT NOT NULL ,
-  `ordered_product_id` INT(11) NULL ,
-  `expiration` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  INDEX `ordered_product_digital_subscriptions_fk_1` (`user_id` ASC) ,
-  CONSTRAINT `ordered_product_digital_subscriptions_fk_1`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `pet`.`users` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 98303
 DEFAULT CHARACTER SET = utf8
