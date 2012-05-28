@@ -354,6 +354,7 @@ class Service_Cart {
      */
     private function _saveOrderedProducts(array $data) {
         $users_svc  = new Service_Users;
+        $is_auth    = $users_svc->isAuthenticated();
         $user_id    = $users_svc->getId();
         $cart       = clone $this->get();
         $op         = new Model_Mapper_OrderedProducts;
@@ -367,42 +368,62 @@ class Service_Cart {
                 continue;
             } 
             if ($product->isSubscription()) {
-                $date = new DateTime;
-                if ($product->isRenewal()) {
-                    $sub = $os->getUnexpiredByUserId($user_id, true);
-                    // Calculate new expiration
+                $expiration = null;
+                if ($product->isRenewal() && $is_auth) {
+                    $sub = $os->getUnexpiredByUserId($user_id, false, true);
                     if ($sub) {
-                        $date = new DateTime($sub->expiration);
+                        $expiration = $sub->expiration;
                     }
                 }
-                // Calculate expiration, (term) month(s) from today
-                $term = (int) $product->term;
-                $date->add(new DateInterval("P{$term}Y"));
+                $term = (int) $product->term_months;
+                // If expiration is null here, DateTime defaults to today
+                $date = new DateTime($expiration);
+                $date->add(new DateInterval("P{$term}M"));
                 $os->insert(array(
                     'user_id'            => $data['user_id'],
                     'order_id'           => $data['order_id'],
                     'expiration'         => $date->format($fmt)
                 ));
-            }
-            if ($product->isDigital()) {
-                /*$date = new DateTime;
-                if ($product->isRenewal()) {
-                    $digital_sub = $opds_mapper->getUnexpiredByUserId(
-                        $user_id, true);
-                    // Calculate new expiration
-                    if ($digital_sub) {
-                        $date = new DateTime(strtotime($sub->expiration));
+            } elseif ($product->isDigital()) {
+                $expiration = null;
+                if ($product->isRenewal() && $is_auth) {
+                    // To calculate new expiration, check to see if they have
+                    // a regular sub, or a digital only sub, and use the
+                    // greater, if any
+                    $regular_sub = $os->getUnexpiredByUserId($user_id,
+                        false, true);
+                    $digital_sub = $os->getUnexpiredByUserId($user_id,
+                        true, true);
+                    // Digital sub, no regular sub
+                    if ($digital_sub && !$regular_sub) {
+                        $expiration = $digital_sub->expiration;
+                    // Regular sub, no digital sub
+                    } elseif (!$digital_sub && $regular_sub) {
+                        $expiration = $regular_sub->expiration;
+                    // Both regular and digital subs: calculate greater
+                    } elseif ($digital_sub && $regular_sub) {
+                        $digital_exp = new DateTime($digital_sub->expiration);
+                        $regular_exp = new DateTime($regular_sub->expiration);
+                        $date_interval = $digital_exp->diff($regular_exp);
+                        if ($date_interval->days == 0 || $date_interval->invert) {
+                            // Digital sub has greater expiration date
+                            $expiration = $digital_sub->expiration;
+                        } else {
+                            // Regular sub has greater expiration date
+                            $expiration = $regular_sub->expiration;
+                        }
                     }
                 }
-                // Calculate expiration, (term) year(s) from today
-                $term = (int) $product->term;
+                $term = (int) $product->term_months;
+                // If expiration is null here, DateTime defaults to today
+                $date = new DateTime($expiration);
                 $date->add(new DateInterval("P{$term}M"));
-                $opds->insert(array(
+                $os->insert(array(
                     'user_id'            => $data['user_id'],
                     'order_id'           => $data['order_id'],
                     'expiration'         => $date->format($fmt),
                     'digital_only'       => 1
-                ));*/
+                ));
             }
         }
     }

@@ -16,7 +16,7 @@ class Model_Product_DigitalSubscription extends Model_Product_Abstract {
         'description' => null,
         'is_renewal' => null,
         'is_recurring' => null,
-        'term' => null
+        'term_months' => null
     );
     
 }

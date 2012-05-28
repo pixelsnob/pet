@@ -15,11 +15,15 @@ class Model_Mapper_OrderSubscriptions extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param int $user_id
+     * @param mixed $digital_only
+     * @param bool $for_update
      * @return Zend_DbTable_Row_Abstract 
      * 
      */
-    public function getUnexpiredByUserId($user_id) {
-        return $this->_os->getUnexpiredByUserId($user_id); 
+    public function getUnexpiredByUserId($user_id, $digital_only = null,
+                                         $for_update = false) {
+        return $this->_os->getUnexpiredByUserId($user_id, $digital_only,
+                   $for_update); 
     }
     
     /**

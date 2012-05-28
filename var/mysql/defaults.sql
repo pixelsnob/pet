@@ -90,7 +90,8 @@ insert into pet.subscription_zones values
 insert into pet.subscriptions
 select null, 
 if (sp.zone = 'usa', 2, if (sp.zone = 'can', 1, if (sp.zone = 'int', 3, null))),
-sp.name, sp.description, term, is_renewal
+sp.name, sp.description, (term * 12)/* Term in old db was in years, convert to months*/,
+is_renewal
 from pet.products p
 left join pet_old.sales_product sp
 on p.sku = sp.code
@@ -211,7 +212,7 @@ where sp.expiration is not null;
 
 /* Previous expirations */
 
-insert into pet.ordered_product_subscriptions
+insert into pet.order_subscriptions
 select null, u.id, null, so.previous_expiration, 0
 from pet.users u
 left join pet_old.sales_order so
@@ -220,7 +221,7 @@ where so.previous_expiration is not null;
 
 /* There are duplicate emails in the users table. Change any references in the user_subscriptions
    table, because we are about to delete the duplicate users. */
-delete from pet.ordered_product_subscriptions where user_id in (884338, 893654, 1078835, 809224, 866185,
+delete from pet.order_subscriptions where user_id in (884338, 893654, 1078835, 809224, 866185,
 887013, 902945, 1079210, 881059, 87670873, 843818);
 
 /***************************************************************************************************

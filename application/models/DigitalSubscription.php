@@ -10,7 +10,7 @@ class Model_DigitalSubscription extends Pet_Model_Abstract {
         'id' => null,
         'name' => null,
         'description' => null,
-        'term' => null,
+        'term_months' => null,
         'is_renewal' => null
     );
 
