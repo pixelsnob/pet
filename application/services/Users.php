@@ -31,6 +31,7 @@ class Service_Users extends Pet_Service {
         $auth_session->timestamp = time();
         $auth_adapter = new Pet_Auth_Adapter($username, $password);
         $auth = Zend_Auth::getInstance();
+        Zend_Session::regenerateId();
         return $auth->authenticate($auth_adapter)->isValid();
     }
     
@@ -41,6 +42,7 @@ class Service_Users extends Pet_Service {
     public function logout() {
         $this->logUserAction('User logged out');
         Zend_Auth::getInstance()->clearIdentity();
+        Zend_Session::regenerateId();
     }
 
     /**
@@ -71,6 +73,9 @@ class Service_Users extends Pet_Service {
     public function getUser($user_id = null) {
         if (!$user_id) {
             $user_id = $this->getId();
+        }
+        if (!$user_id) {
+            return;
         }
         return $this->_users->getById($user_id);
     }
@@ -110,6 +115,9 @@ class Service_Users extends Pet_Service {
     public function getProfile($user_id = null) {
         if (!$user_id) {
             $user_id = $this->getId();
+        }
+        if (!$user_id) {
+            return;
         }
         return $this->_user_profiles->getByUserId($user_id);
     }

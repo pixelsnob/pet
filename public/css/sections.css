@@ -163,7 +163,7 @@
 }
 
 .product-select .subscription-options li a {
-    width: 20px;
+    width: 55px;
     margin-top: 10px;
 }
 
@@ -200,6 +200,7 @@
 
 #physical .subscription-options li a {
     margin-top: 0;
+    width: 25px;
 }
 
 #physical .subscription-options img {
@@ -208,7 +209,9 @@
     margin-right: 20px;
 }
 
-
+#gift-subscriptions.product-select .subscription-options li a {
+    width: 25px;
+}
 
 .product-select h4 {
     margin-bottom: 10px !important;
