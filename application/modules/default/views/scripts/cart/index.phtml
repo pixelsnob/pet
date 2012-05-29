@@ -14,7 +14,9 @@
                                 <?php
                                 switch ($product->product_type_id) {
                                     case Model_ProductType::SUBSCRIPTION:
-                                        $details = $this->escape("{$product->zone} - {$product->term} years - ") .
+                                        $term = ((int) $product->term_months / 12);
+                                        $y = ($term == 1 ? 'year' : 'years');
+                                        $details = $this->escape("{$product->zone} - $term $y - ") .
                                              $this->dollarFormat($product->cost);
                                         break;
                                     default:
