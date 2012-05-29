@@ -234,7 +234,7 @@ so.address, so.address_2, so.company, so.city, so.country, so.state, so.postal_c
 so.first_name_shipping, so.last_name_shipping, so.address_shipping,
 so.address_2_shipping, so.company_shipping, so.city_shipping, so.state_shipping,
 so.postal_code_shipping, so.country_shipping, so.phone_shipping, so.shipping, so.total,
-so.phone_order, so.active
+so.phone_order, so.active, 0
 from pet_old.sales_order so
 left join pet_old.sales_order_promos sop
 on so.id = sop.order_id;
