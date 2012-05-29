@@ -6,6 +6,14 @@
 class Model_Mapper_UserProfiles extends Pet_Model_Mapper_Abstract {
     
     /**
+     * @return void
+     * 
+     */
+    public function __construct() {
+        $this->_profiles = new Model_DbTable_UserProfiles;
+    }
+
+    /**
      * @param int $user_id
      * @return void|Model_UserProfile
      * 
@@ -16,6 +24,18 @@ class Model_Mapper_UserProfiles extends Pet_Model_Mapper_Abstract {
         if ($profile) {
             return new Model_UserProfile($profile->toArray());
         }
+    }
+
+    /**
+     * @param array $data
+     * @return int user_id
+     * 
+     */
+    public function insert(array $data) {
+        $profile = new Model_UserProfile($data);
+        $profile_array = $profile->toArray();
+        unset($profile_array['id']);
+        return $this->_profiles->insert($profile_array);
     }
     
     /**

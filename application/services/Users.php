@@ -194,6 +194,47 @@ class Service_Users extends Pet_Service {
             'user' => $identity)); 
         return $login_form;
     }    
+    
+    /**
+     * @param mixed $user_id
+     * @param mixed $digital_only
+     * @return null|Model_OrderSubscription
+     * 
+     */
+    public function getExpirations($user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
+        $os_mapper = new Model_Mapper_OrderSubscriptions;
+        $regular_sub = $os_mapper->getUnexpiredByUserId($user_id, false);
+        $digital_sub = $os_mapper->getUnexpiredByUserId($user_id, true);
+        $out = new StdClass;
+        $out->regular = null;
+        $out->digital = null;
+        if ($regular_sub) {
+            $out->regular = $regular_sub->expiration;
+        }
+        // Regular sub also includes digital access: if digital expiration 
+        // does not exist, or if it exists and it's an earlier expiration
+        // date than the regular sub, use the regular sub.
+        if ($digital_sub && !$regular_sub) {
+            $out->digital = $digital_sub->expiration;
+        } elseif (!$digital_sub && $regular_sub) {
+            $out->digital = $regular_sub->expiration;
+        } elseif ($digital_sub && $regular_sub) {
+            $date_r = new DateTime($regular_sub->expiration);
+            $date_d = new DateTime($digital_sub->expiration);
+            $date_interval = $date_d->diff($date_r);
+            if ($date_interval->days == 0 || $date_interval->invert) {
+                // Digital sub has greater expiration date
+                $out->digital = $digital_sub->expiration;
+            } else {
+                // Regular sub has greater expiration date
+                $out->digital = $regular_sub->expiration;
+            }
+        }
+        return $out; 
+    }
 
     /**
      * @param array $data

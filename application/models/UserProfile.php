@@ -28,10 +28,10 @@ class Model_UserProfile extends Pet_Model_Abstract {
         'shipping_phone' => null,
         'marketing' => null,
         'occupation' => null,
-        'opt_in' => null,
-        'opt_in_partner' => null,
-        'opt_in_subscriber' => null,
-        'comp' => null,
+        'opt_in' => 0,
+        'opt_in_partner' => 0,
+        'opt_in_subscriber' => 0,
+        'comp' => 0,
         'version' => null,
         'platform' => null
     );

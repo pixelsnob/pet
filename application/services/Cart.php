@@ -281,12 +281,17 @@ class Service_Cart {
                 }
             }
             // Save user data
+            $users_mapper = new Model_Mapper_Users;
+            $profile_mapper = new Model_Mapper_UserProfiles;
             if ($users_svc->isAuthenticated()) {
                 // update email 
                 $data['user_id'] = $users_svc->getId();
+                $users_mapper->updateEmail($data['email'], $data['user_id']);
             } else {
-                $user = new Model_Mapper_Users;
-                $data['user_id'] = $user->insert($data);
+                $data['password'] = $users_svc->generateHash($data['password']);
+                // This inserts into users and user_profiles
+                $data['user_id'] = $users_mapper->insert($data, true);
+                $profile_mapper->insert($data);
                 if (!$data['user_id']) {
                     throw new Exception('user_id not defined');
                 }
@@ -368,9 +373,8 @@ class Service_Cart {
                 $expiration = null;
                 if ($product->isRenewal() && $is_auth) {
                     $sub = $os->getUnexpiredByUserId($user_id, false, true);
-                    if ($sub) {
-                        $expiration = $sub->expiration;
-                    }
+                    $expirations = $users_svc->getExpirations();
+                    $expiration = $expirations->regular;
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
@@ -384,32 +388,8 @@ class Service_Cart {
             } elseif ($product->isDigital()) {
                 $expiration = null;
                 if ($product->isRenewal() && $is_auth) {
-                    // To calculate new expiration, check to see if they have
-                    // a regular sub, or a digital only sub, and use the
-                    // greater, if any
-                    $regular_sub = $os->getUnexpiredByUserId($user_id,
-                        false, true);
-                    $digital_sub = $os->getUnexpiredByUserId($user_id,
-                        true, true);
-                    // Digital sub, no regular sub
-                    if ($digital_sub && !$regular_sub) {
-                        $expiration = $digital_sub->expiration;
-                    // Regular sub, no digital sub
-                    } elseif (!$digital_sub && $regular_sub) {
-                        $expiration = $regular_sub->expiration;
-                    // Both regular and digital subs: calculate greater
-                    } elseif ($digital_sub && $regular_sub) {
-                        $digital_exp = new DateTime($digital_sub->expiration);
-                        $regular_exp = new DateTime($regular_sub->expiration);
-                        $date_interval = $digital_exp->diff($regular_exp);
-                        if ($date_interval->days == 0 || $date_interval->invert) {
-                            // Digital sub has greater expiration date
-                            $expiration = $digital_sub->expiration;
-                        } else {
-                            // Regular sub has greater expiration date
-                            $expiration = $regular_sub->expiration;
-                        }
-                    }
+                    $expirations = $users_svc->getExpirations($data['user_id']);
+                    $expiration = $expirations->digital;
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today

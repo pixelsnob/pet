@@ -87,6 +87,15 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param string $email
+     * @return int Num rows updated
+     * 
+     */
+    public function updateEmail($email, $id) {
+        return $this->_users->update(array('email' => $email), $id);
+    }
+
+    /**
      * @param string $pw
      * @param int $id User id
      * @return int Num rows updated
@@ -108,11 +117,13 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param array $data
+     * @param bool $is_active
      * @return int user_id
      * 
      */
-    public function insert(array $data) {
+    public function insert(array $data, $is_active = true) {
         $user = new Model_User($data);
+        $user->is_active = (int) $is_active;
         $user->date_joined = date('Y-m-d H:i:s');
         $user_array = $user->toArray();
         unset($user_array['id']);

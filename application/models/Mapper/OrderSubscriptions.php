@@ -22,8 +22,12 @@ class Model_Mapper_OrderSubscriptions extends Pet_Model_Mapper_Abstract {
      */
     public function getUnexpiredByUserId($user_id, $digital_only = null,
                                          $for_update = false) {
-        return $this->_os->getUnexpiredByUserId($user_id, $digital_only,
+        $os = $this->_os->getUnexpiredByUserId($user_id, $digital_only,
                    $for_update); 
+        if ($os) {
+            $os_model = new Model_OrderSubscription($os->toArray());
+            return $os_model;
+        }
     }
     
     /**
