@@ -10,8 +10,8 @@ class Model_OrderedProduct extends Pet_Model_Abstract {
         'order_id' => null,
         'product_id' => null,
         'qty' => 0,
-        'total_cost' => 0,
-        'discount_cost' => 0
+        'total' => 0,
+        'discount' => 0
     );
 
 }

@@ -258,7 +258,7 @@ class Service_Cart {
         $data = array_merge(
             $form->billing->getValues(true),
             $form->payment->getValues(true),
-            array('total' => $totals['total']),
+            $totals,
             $form->user->getValues(true),
             $form->getShippingValues(),
             $form->info->getValues(true),
@@ -335,7 +335,6 @@ class Service_Cart {
                     $this->_gateway->getRawCalls(),
                     array($e->getMessage() . ' -- ' . $e->getTraceAsString())
                 );
-                print_r($e); exit;
             } catch (Exception $e1) {}
         }
         // Reset cart
@@ -364,7 +363,7 @@ class Service_Cart {
         $fmt        = 'Y-m-d H:i:s'; 
         foreach ($cart->products as $product) {
             // Insert into ordered_products
-            $opid = $op->insert($product->toArray(), $data['order_id']); // <<<<<<<<<<<<<<< need to figure out discount cost stuff
+            $opid = $op->insert($product->toArray(), $data['order_id']); 
             // Gift processing here
             if ($product->isGift()) {
                 continue;
@@ -410,7 +409,7 @@ class Service_Cart {
      * @return void
      * 
      */
-    private function _saveOrderPayments($data) {
+    private function _saveOrderPayments(array $data) {
         $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
         $op_mapper = new Model_Mapper_OrderPayments;
         foreach ($gateway_responses as $response) {

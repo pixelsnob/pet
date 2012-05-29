@@ -32,8 +32,9 @@ class Model_Order extends Pet_Model_Abstract {
         'shipping_postal_code' => null,
         'shipping_country' => null,
         'shipping_phone' => null,
-        'shipping_cost' => 0,
-        'total_cost' => 0,
+        'shipping' => 0,
+        'discount' => 0,
+        'total' => 0,
         'phone_order' => 0,
         'active' => 1
     );

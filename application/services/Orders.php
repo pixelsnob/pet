@@ -13,11 +13,11 @@ class Service_Orders {
      */
     public function sendOrderEmails() {
         $mail = new Zend_Mail;
-        $mail->setBodyText($text_message)
-            ->setBodyHtml($html_message)
-            ->addTo($cart->billing->email)
-            ->setSubject('Photoshop Elements User Order: ' . $cart->order_id)
-            ->addBcc($this->_config->store->order_email_bcc->toArray());
+        $mail->setBodyText('test')
+            ->setBodyHtml('test')
+            ->addTo('snob@pixelsnob.com')
+            ->setSubject('Photoshop Elements User Order');
+            //->addBcc('');
         $mail->send();
     }
 }
