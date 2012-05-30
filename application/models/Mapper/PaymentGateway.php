@@ -65,33 +65,33 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     }
     
     /**
-     * @param array $data
+     * @param Model_Cart_Order
      * @return void
      * 
      */
-    public function processSale(array $data) {
+    public function processSale(Model_Cart_Order $order) {
         $this->resetGateway();
-        $data = $this->formatData($data);
+        $order = $this->formatData($order);
         $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
             ->setField('TENDER', 'C')
             ->setField('TRXTYPE', 'S')
-            ->setField('ACCT', $data['cc_num'])
-            ->setField('CVV2', $data['cc_cvv'])
-            ->setField('AMT', $data['total'])
-            ->setField('EXPDATE', $data['exp_date'])
-            ->setField('NAME', $data['name'])
-            ->setField('STREET', $data['address'])
-            ->setField('EMAIL', $data['email'])
-            ->setField('ZIP', $data['billing_postal_code'])
-            ->setField('CITY', $data['billing_city'])
-            ->setField('STATE', $data['billing_state'])
-            ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
-            ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
-            ->setField('SHIPTOSTREET', $data['shipping_address'])
-            ->setField('SHIPTOZIP', $data['shipping_postal_code'])
-            ->setField('SHIPTOCITY', $data['shipping_city'])
-            ->setField('SHIPTOSTATE', $data['shipping_state'])
-            ->setField('PHONENUM', $data['shipping_phone'])
+            ->setField('ACCT', $order->cc_num)
+            ->setField('CVV2', $order->cc_cvv)
+            ->setField('AMT', $order->total)
+            ->setField('EXPDATE', $order->cc_exp)
+            ->setField('NAME', $order->name)
+            ->setField('STREET', $order->address)
+            ->setField('EMAIL', $order->email)
+            ->setField('ZIP', $order->billing_postal_code)
+            ->setField('CITY', $order->billing_city)
+            ->setField('STATE', $order->billing_state)
+            ->setField('SHIPTOFIRSTNAME', $order->shipping_first_name)
+            ->setField('SHIPTOLASTNAME', $order->shipping_last_name)
+            ->setField('SHIPTOSTREET', $order->shipping_address)
+            ->setField('SHIPTOZIP', $order->shipping_postal_code)
+            ->setField('SHIPTOCITY', $order->shipping_city)
+            ->setField('SHIPTOSTATE', $order->shipping_state)
+            ->setField('PHONENUM', $order->shipping_phone)
             ->send()
             ->processResponse();
         $this->saveCall();
@@ -113,29 +113,29 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * @param array $data
+     * @param Model_Cart_Order
      * @param string $return_url
      * @param string $cancel_url
      * 
      */
-    public function getECToken(array $data, $return_url, $cancel_url) {
+    public function getECToken(Model_Cart_Order $order, $return_url, $cancel_url) {
         $this->resetGateway();
-        $this->_gateway->setField('AMT', $data['total'])
-            ->setField('EMAIL', $data['email'])
+        $this->_gateway->setField('AMT', $order->total)
+            ->setField('EMAIL', $order->email)
             ->setField('TRXTYPE', 'S')
             ->setField('ACTION', 'S')
             ->setField('TENDER', 'P')
             ->setField('NOSHIPPING', 1)
             ->setField('RETURNURL', $return_url)
             ->setField('CANCELURL', $cancel_url)
-            ->setField('ITEMAMT', $data['total'])
+            ->setField('ITEMAMT', $order->total)
             // Ask about this
             ->setField('BA_DESC', 'Photoshop Elements User Subscription')
             ->setField('BILLING_TYPE', 'MerchantInitiatedBilling')
-            ->setField('ITEMAMT', $data['total']);
+            ->setField('ITEMAMT', $order->total);
         // Add line item info
         $i = 0;
-        foreach ($data['products'] as $product) {
+        foreach ($order->products as $product) {
             $this->_gateway->setField("L_NAME$i", $product['name'])
                 ->setField("L_QTY$i", $product['qty'])
                 ->setField("L_COST$i", $product['cost']);
@@ -153,15 +153,15 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     /**
      * Processes an Express Checkout sale
      * 
-     * @param array $data
+     * @param Model_Cart_Order
      * @param string $token
      * @param string $payer_id
      * @return void
      */
-    public function processECSale(array $data, $token, $payer_id) {
+    public function processECSale(Model_Cart_Order $order, $token, $payer_id) {
         $this->resetGateway();
-        $this->_gateway->setField('AMT', $data['total'])
-              ->setField('EMAIL', $data['email'])
+        $this->_gateway->setField('AMT', $order->total)
+              ->setField('EMAIL', $order->email)
               ->setField('TRXTYPE', 'S')
               ->setField('ACTION', 'D')
               ->setField('TENDER', 'P')
@@ -318,17 +318,17 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     }
     
     /**
-     * @param array $data
+     * @param Model_Cart_Order $order
      * @return array
      * 
      */
-    public function formatData($data) {
-        $data['exp_date'] = $data['cc_exp_month'] . substr($data['cc_exp_year'], 2, 2);
-        $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
-        $data['address'] = $data['billing_address'] . ' ' . $data['billing_address_2'];
-        $data['shipping_address'] = $data['shipping_address'] . ' ' .
-            $data['shipping_address_2'];
-        return $data;
+    public function formatData(Model_Cart_Order $order) {
+        $order->cc_exp  = $order->cc_exp_month  . substr($order->cc_exp_year , 2, 2);
+        $order->name  = $order->first_name  . ' ' . $order->last_name ;
+        $order->address  = $order->billing_address  . ' ' . $order->billing_address_2 ;
+        $order->shipping_address  = $order->shipping_address  . ' ' .
+            $order->shipping_address_2 ;
+        return $order;
     }
 
     /**
@@ -343,150 +343,4 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         );
         return md5(implode('', $temp_strings));
     }
-    /**
-     * @param array $data
-     * @param string $return_url
-     * @param string $cancel_url
-     * 
-     */
-    /*public function getECTokenRecurring(array $data, $return_url, $cancel_url,
-                                        array $products) {
-        $this->resetGateway();
-        $this->_gateway->setField('AMT', $data['total'])
-            ->setField('METHOD', 'SetExpressCheckout')
-            ->setField('EMAIL', $data['email'])
-            ->setField('TRXTYPE', 'A')
-            ->setField('ACTION', 'S')
-            ->setField('TENDER', 'P')
-            //->setField('NOSHIPPING', 1)
-            ->setField('RETURNURL', $return_url)
-            ->setField('CANCELURL', $cancel_url);
-        foreach ($products as $product) {
-            $this->_gateway->setField('L_BILLINGTYPE0', 'RecurringPayments')
-                ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $product['name']);
-        }
-        $this->_gateway->send()->processResponse();
-        $this->saveCall();
-        if ($this->_gateway->isSuccess()) {
-            return $this->_gateway->getResponseField('TOKEN');
-        }  else {
-            throw new Exception(__FUNCTION__ . '() failed');
-        }
-    }*/
-
-    /**
-     * @param array $data
-     * @param string $token
-     * @return void
-     * 
-     */
-    /*public function processRecurringPayment(array $data) {
-        $this->resetGateway();
-        $data = $this->formatData($data);
-        $start_date = new DateTime;
-        $start_date->add(new DateInterval('P1M'));
-        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            ->setField('TENDER', 'C')
-            ->setField('TRXTYPE', 'R')
-            ->setField('ACTION', 'A')
-            ->setField('ACCT', $data['cc_num'])
-            ->setField('CVV2', $data['cc_cvv'])
-            ->setField('AMT', $data['cost'])
-            //->setField('OPTIONALTRXAMT', $data['cost'])
-            ->setField('EXPDATE', $data['exp_date'])
-            ->setField('PROFILENAME', $data['profile_id'])
-            ->setField('NAME', $data['name'])
-            ->setField('STREET', $data['address'])
-            ->setField('EMAIL', $data['email'])
-            ->setField('ZIP', $data['billing_postal_code'])
-            ->setField('CITY', $data['billing_city'])
-            ->setField('STATE', $data['billing_state'])
-            ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
-            ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
-            ->setField('SHIPTOSTREET', $data['shipping_address'])
-            ->setField('SHIPTOZIP', $data['shipping_postal_code'])
-            ->setField('SHIPTOCITY', $data['shipping_city'])
-            ->setField('SHIPTOSTATE', $data['shipping_state'])
-            ->setField('PHONENUM', $data['shipping_phone'])
-            ->setField('START', $start_date->format('mdY'))
-            // Subtract one from term since we will bill for 1st month
-            // immediately
-            ->setField('TERM', $data['term'] - 1)
-            ->setField('PAYPERIOD', 'MONT')
-            ->setField('MAXFAILPAYMENTS', 0)
-            ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description']);
-            //->setField('BA_DESC', $data['description']);
-        $this->_gateway->send()->processResponse();
-        $this->saveCall();
-        if ($this->_gateway->isSuccess()) {
-            if ($this->_gateway->getResponseField('CVV2MATCH') == 'N') {
-                $this->_error = self::ERR_CVV;
-                throw new Exception('CVV Mismatch');
-            }
-        } else {
-            $msg = 'CC transaction failed.';
-            if ($this->_gateway->getError()) {
-                $msg .= ' Gateway error: ' . $this->_gateway->getError();
-                $this->_error = self::ERR_GENERIC;
-            } else {
-                $this->_error = self::ERR_DECLINED;
-            }
-            throw new Exception($msg);
-        }
-    }*/
-
-    /**
-     * @param array $data
-     * @param string $token
-     * @param string $payer_id
-     * @return void
-     * 
-     */
-    /*public function processECRecurringPayment(array $data, $token, $payer_id) {
-        $this->resetGateway();
-        $data = $this->formatData($data);
-        $start_date = new DateTime;
-        $start_date->add(new DateInterval('P1M'));
-        $this->_gateway->setField('TENDER', 'P')
-            ->setField('TRXTYPE', 'R')
-            ->setField('ACTION', 'A')
-            ->setField('AMT', $data['cost'])
-            // Bill this month immediately
-            //->setField('OPTIONALTRXAMT', $data['cost'])
-            ->setField('PROFILENAME', $data['profile_id'])
-            ->setField('NAME', $data['name'])
-            ->setField('STREET', $data['address'])
-            ->setField('EMAIL', $data['email'])
-            ->setField('ZIP', $data['billing_postal_code'])
-            ->setField('CITY', $data['billing_city'])
-            ->setField('STATE', $data['billing_state'])
-            ->setField('SHIPTOFIRSTNAME', $data['shipping_first_name'])
-            ->setField('SHIPTOLASTNAME', $data['shipping_last_name'])
-            ->setField('SHIPTOSTREET', $data['shipping_address'])
-            ->setField('SHIPTOZIP', $data['shipping_postal_code'])
-            ->setField('SHIPTOCITY', $data['shipping_city'])
-            ->setField('SHIPTOSTATE', $data['shipping_state'])
-            ->setField('PHONENUM', $data['shipping_phone'])
-            ->setField('START', $start_date->format('mdY'))
-            // Subtract one from term since we just billed for 1st month
-            ->setField('TERM', $data['term'] - 1)
-            ->setField('PAYPERIOD', 'MONT')
-            ->setField('MAXFAILPAYMENTS', 0)
-            ->setField('TOKEN', $token)
-            ->setField('PAYERID', $payer_id)
-            ->setField('L_BILLINGAGREEMENTDESCRIPTION0', $data['description'])
-            ->send()->processResponse();
-        $this->saveCall();
-        // Check to see if response failed.
-        if (!$this->_gateway->isSuccess()) {
-            $msg = __FUNCTION__ . '() failed';
-            if ($this->_gateway->getError()) {
-                $msg .= ' Gateway error: ' . $this->_gateway->getError();
-                $this->_error = self::ERR_GENERIC;
-            } else {
-                $this->_error = self::ERR_DECLINED;
-            }
-            throw new Exception($msg);
-        }
-    }*/
 }

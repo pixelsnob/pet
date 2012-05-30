@@ -8,10 +8,16 @@
 class Service_Cart {
     
     /**
-     * @param string
+     * @var string
      * 
      */
     protected $_message = '';
+
+    /**
+     * @var null|Model_Cart_Order
+     * 
+     */
+    protected $_order;
 
     /**
      * @return void
@@ -253,20 +259,22 @@ class Service_Cart {
         $logger    = Zend_Registry::get('log');
         // Operate on a copy of cart -- we don't want to modify it in here
         $cart      = clone $this->get();
-        $totals    = $cart->getTotals();
+        //$totals    = $cart->getTotals();
         // Merge input data into one array
         $data = array_merge(
             $form->billing->getValues(true),
             $form->payment->getValues(true),
-            $totals,
+            $cart->getTotals(),
             $form->user->getValues(true),
             $form->getShippingValues(),
             $form->info->getValues(true),
             array(
                 'promo_id'       => ($cart->promo ? $cart->promo->id : null),
                 'old_expiration' => null
-            )
+            ),
+            array('products' => $cart->products->toArray())
         );
+        $order = new Model_Cart_Order($data);
         $status = true;
         $db     = Zend_Db_Table::getDefaultAdapter();
         try {
@@ -274,9 +282,9 @@ class Service_Cart {
             // Regular sale
             if ($config['use_payment_gateway']) {
                 if ($cart->payment->payment_method == 'credit_card') {
-                    $this->_gateway->processSale($data);
+                    $this->_gateway->processSale($order);
                 } else {
-                    $this->_gateway->processECSale($data, $cart->ec_token,
+                    $this->_gateway->processECSale($order, $cart->ec_token,
                         $payer_id);
                 }
             }
@@ -285,28 +293,28 @@ class Service_Cart {
             $profile_mapper = new Model_Mapper_UserProfiles;
             if ($users_svc->isAuthenticated()) {
                 // update email 
-                $data['user_id'] = $users_svc->getId();
-                $users_mapper->updateEmail($data['email'], $data['user_id']);
+                $order->user_id = $users_svc->getId();
+                $users_mapper->updateEmail($order->email, $order->user_id);
             } else {
-                $data['password'] = $users_svc->generateHash($data['password']);
+                $order->password = $users_svc->generateHash($order->password);
                 // This inserts into users and user_profiles
-                $data['user_id'] = $users_mapper->insert($data, true);
-                $profile_mapper->insert($data);
-                if (!$data['user_id']) {
+                $order->user_id = $users_mapper->insert($order->toArray(), true);
+                $profile_mapper->insert($order->toArray());
+                if (!$order->user_id) {
                     throw new Exception('user_id not defined');
                 }
             }
             // Save order data
-            $order = new Model_Mapper_Orders;
-            $data['order_id'] = $order->insert($data);
-            $this->_saveOrderedProducts($data);
-            $this->_saveOrderPayments($data);
+            $orders_mapper = new Model_Mapper_Orders;
+            $order->order_id = $orders_mapper->insert($order->toArray());
+            $this->_saveOrderedProducts($order);
+            $this->_saveOrderPayments($order);
             // Log
             $log_data = array(
                 'type'     => 'process',
                 'cart'     => $cart->toArray(),
-                'order_id' => $data['order_id'],
-                'user_id'  => $data['user_id']
+                'order_id' => $order->order_id,
+                'user_id'  => $order->user_id
             );
             $ot_mapper->insert(
                 $status,
@@ -320,10 +328,8 @@ class Service_Cart {
                 'type'     => 'process',
                 'cart'     => $cart->toArray(),
                 // Ids may not exist here
-                'order_id' => (isset($data['order_id']) ? $data['order_id'] :
-                              null),
-                'user_id'  => (isset($data['user_id']) ? $data['user_id'] :
-                              null)
+                'order_id' => $order->order_id,
+                'user_id'  => $order->user_id
             );
             // These should fail silently if they do fail
             try {
@@ -349,11 +355,11 @@ class Service_Cart {
     }
     
     /**
-     * @param array $data
+     * @param Model_Cart_Order $order
      * @return void
      * 
      */
-    private function _saveOrderedProducts(array $data) {
+    private function _saveOrderedProducts(Model_Cart_Order $order) {
         $users_svc  = new Service_Users;
         $is_auth    = $users_svc->isAuthenticated();
         $user_id    = $users_svc->getId();
@@ -363,7 +369,7 @@ class Service_Cart {
         $fmt        = 'Y-m-d H:i:s'; 
         foreach ($cart->products as $product) {
             // Insert into ordered_products
-            $opid = $op->insert($product->toArray(), $data['order_id']); 
+            $opid = $op->insert($product->toArray(), $order->order_id); 
             // Gift processing here
             if ($product->isGift()) {
                 continue;
@@ -380,14 +386,14 @@ class Service_Cart {
                 $date = new DateTime($expiration);
                 $date->add(new DateInterval("P{$term}M"));
                 $os->insert(array(
-                    'user_id'            => $data['user_id'],
-                    'order_id'           => $data['order_id'],
+                    'user_id'            => $order->user_id,
+                    'order_id'           => $order->order_id,
                     'expiration'         => $date->format($fmt)
                 ));
             } elseif ($product->isDigital()) {
                 $expiration = null;
                 if ($product->isRenewal() && $is_auth) {
-                    $expirations = $users_svc->getExpirations($data['user_id']);
+                    $expirations = $users_svc->getExpirations($order->user_id);
                     $expiration = $expirations->digital;
                 }
                 $term = (int) $product->term_months;
@@ -395,8 +401,8 @@ class Service_Cart {
                 $date = new DateTime($expiration);
                 $date->add(new DateInterval("P{$term}M"));
                 $os->insert(array(
-                    'user_id'            => $data['user_id'],
-                    'order_id'           => $data['order_id'],
+                    'user_id'            => $order->user_id,
+                    'order_id'           => $order->order_id,
                     'expiration'         => $date->format($fmt),
                     'digital_only'       => 1
                 ));
@@ -405,27 +411,27 @@ class Service_Cart {
     }
 
     /**
-     * @param array $data
+     * @param Model_Cart_Order
      * @return void
      * 
      */
-    private function _saveOrderPayments(array $data) {
+    private function _saveOrderPayments(Model_Cart_Order $order) {
         $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
         $op_mapper = new Model_Mapper_OrderPayments;
         foreach ($gateway_responses as $response) {
             if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
                 $opid = $op_mapper->insert(array(
-                    'order_id'            => $data['order_id'],
+                    'order_id'            => $order->order_id,
                     'payment_type_id'     => Model_PaymentType::PAYFLOW,
-                    'amount'              => $data['total'],
+                    'amount'              => $order->total,
                     'date'                => date('Y-m-d H:i:s')
                 ));
                 $op_payflow_mapper = new Model_Mapper_OrderPayments_Payflow;
                 $op_payflow_mapper->insert(array(
                     'order_payment_id'    => $opid,
-                    'cc_number'           => substr($data['cc_num'], -4),
-                    'cc_expiration_month' => $data['cc_exp_month'],
-                    'cc_expiration_year'  => $data['cc_exp_year'],
+                    'cc_number'           => substr($order->cc_num, -4),
+                    'cc_expiration_month' => $order->cc_exp_month,
+                    'cc_expiration_year'  => $order->cc_exp_year,
                     'pnref'               => $response->pnref,
                     'ppref'               => $response->ppref,
                     'correlationid'       => $response->correlationid,
@@ -434,9 +440,9 @@ class Service_Cart {
                 ));
             } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
                 $opid = $op_mapper->insert(array(
-                    'order_id'         => $data['order_id'],
+                    'order_id'         => $order->order_id,
                     'payment_type_id'  => Model_PaymentType::PAYPAL,
-                    'amount'           => $data['total'],
+                    'amount'           => $order->total,
                     'date'             => date('Y-m-d H:i:s')
                 ));
                 $op_paypal_mapper = new Model_Mapper_OrderPayments_Paypal;
@@ -466,16 +472,17 @@ class Service_Cart {
             'cancel_url'   => $cancel_url,
             'products'     => $cart->products->toArray()
         );
+        $order = new Model_Cart_Order($data);
         $status = true;
         try {
-            $token = $this->_gateway->getECToken($data, $return_url, $cancel_url);
+            $token = $this->_gateway->getECToken($order, $return_url, $cancel_url);
             if (!$token) {
                 throw new Exception(__FUNCTION__ . '() failed');
             }
             $cart->ec_token = $token;
             $ot_mapper->insert(
                 $status,
-                array('cart' => $cart->toArray()),
+                array('cart' => $cart->toArray(), 'type' => 'ec_get_token'),
                 $this->_gateway->getRawCalls()
             );
         } catch (Exception $e) {
