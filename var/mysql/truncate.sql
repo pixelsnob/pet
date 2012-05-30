@@ -17,3 +17,4 @@ values
 ('LUIS', '2013-01-01', 25, 15);
 
 insert into promo_products values (null, 1, 182);
+insert into promo_products values (null, 1, 300);

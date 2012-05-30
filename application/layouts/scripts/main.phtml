@@ -7,12 +7,13 @@
 <meta name="copyright" content="1999-<?php echo date('Y'); ?>, Photo One Media" />
 <meta name="google-site-verification" content="yxFgFAShYWbqXMOs28hBBdBqeqiPh0LGs9e2-ocHe_E" />
 
-<link rel="stylesheet" type="text/css" href="http://www.photoshopelementsuser.com/wp-content/themes/pet/style.css" />
-<link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
 
 <?php
-    echo $this->headLink()->prependStylesheet('/css/sections.css')
-                          ->prependStylesheet('/css/base.css');
+    
+     echo $this->headLink()
+        ->prependStylesheet('/css/sections.css')
+        ->prependStylesheet('/css/base.css')
+        ->prependStylesheet($this->fullUrl('/wp-content/themes/pet/style.css', 'www.photoshopelementsuser.com'));
 ?>
 
 <!--[if IE 9]>
@@ -22,19 +23,12 @@
 <![endif]-->
 
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-<link rel="alternate" type="application/rss+xml" href="http://feeds.feedburner.com/ElementsTechniques" />
+<link rel="alternate" type="application/rss+xml" href="<?php echo $this->fullUrl('/ElementsTechniques', 'feeds.feedburner.com'); ?>" />
 
-<link rel="prev" title="Blog" href="http://www.photoshopelementsuser.com/blog/" />
-<link rel="next" title="Contest" href="http://www.photoshopelementsuser.com/contest/" />
+<link rel="prev" title="Blog" href="<?php echo $this->fullUrl('/blog', 'www.photoshopelementsuser.com/blog/'); ?>" />
+<link rel="next" title="Contest" href="<?php echo $this->fullUrl('/contest', 'www.photoshopelementsuser.com/contest/'); ?>" />
 
-<link rel="shortlink" href="http://wp.me/PSCv8-5" />
-
-<!--<link rel="canonical" href="http://www.photoshopelementsuser.com/" />-->
-<!--<script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-includes/js/comment-reply.js?ver=20090102"></script>
-<script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/plugins/wp-favorite-posts/wpfp.js?ver=3.3.1"></script>-->
-<!--<link rel="stylesheet" id="wpfp-css" href="http://www.photoshopelementsuser.com/wp-content/plugins/wp-favorite-posts/wpfp.css" type="text/css" />
-<link rel="stylesheet" id="wp-postratings-css"  href="http://www.photoshopelementsuser.com/wp-content/plugins/wp-postratings/postratings-css.css?ver=1.50" type="text/css" media="all" />
--->
+<link rel="shortlink" href="<?php echo $this->fullUrl('/PSCv8-5', 'wp.me'); ?>" />
 
 <!--[if lt IE 9]>
 <script src="/js/lib/html5.js"></script>
@@ -46,7 +40,7 @@
     <div id="header">
         <div class="container">
             <div id="logo">
-                <a href="/"><img src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_img/pet-logo.png" alt="Photoshop Elements Techniques" /></a>
+                <a href="/"><img src="<?php echo $this->fullUrl('/wp-content/themes/pet/_img/pet-logo.png', 'www.photoshopelementsuser.com'); ?>" alt="Photoshop Elements Techniques" /></a>
             </div>
             <div id="nav-wrap">
                 <ul id="top-nav" class="clearfix">
@@ -150,19 +144,19 @@
     
     <?php echo $this->headScriptMin()->loadGroup('common'); echo $this->inlineScriptMin(); ?>
 
-    <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/jquery.megamenu.js"></script>
+    <script type="text/javascript" src="<?php echo $this->fullUrl('/wp-content/themes/pet/_js/jquery.megamenu.js', 'www.photoshopelementsuser.com'); ?>"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#top-nav").megamenu();
         });
     </script>
-    <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/cufon-yui.js"></script>
+    <!--<script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/cufon-yui.js"></script>
     <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/graublau.font.js"></script>
     <script type="text/javascript" src="http://www.photoshopelementsuser.com/wp-content/themes/pet/_js/museo.font.js"></script>
     <script type="text/javascript">
         //Cufon.replace('#content h2, #bottom h2, #subscribe #content h1', { fontFamily: 'Graublau Web' });
         //Cufon.replace('#top #login h3, #content h3, p', { fontFamily: 'Museo', hover: true });
-    </script>
+    </script>-->
 
     <!--<script type="text/javascript">
         var _gaq = _gaq || [];
