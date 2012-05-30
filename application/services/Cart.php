@@ -367,6 +367,11 @@ class Service_Cart {
         $op         = new Model_Mapper_OrderedProducts;
         $os         = new Model_Mapper_OrderSubscriptions;
         $fmt        = 'Y-m-d H:i:s'; 
+        $extra_days = ($cart->promo && $cart->promo->extra_days ?
+                       $cart->promo->extra_days : 0);
+        if ($is_auth) {
+            $expirations = $users_svc->getExpirations();
+        }
         foreach ($cart->products as $product) {
             // Insert into ordered_products
             $opid = $op->insert($product->toArray(), $order->order_id); 
@@ -376,15 +381,15 @@ class Service_Cart {
             } 
             if ($product->isSubscription()) {
                 $expiration = null;
-                if ($product->isRenewal() && $is_auth) {
-                    $sub = $os->getUnexpiredByUserId($user_id, false, true);
-                    $expirations = $users_svc->getExpirations();
+                // See if we need to renew
+                if ($expirations->regular) {
                     $expiration = $expirations->regular;
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
                 $date = new DateTime($expiration);
-                $date->add(new DateInterval("P{$term}M"));
+                // Adjust from today
+                $date->add(new DateInterval("P{$term}M{$extra_days}D"));
                 $os->insert(array(
                     'user_id'            => $order->user_id,
                     'order_id'           => $order->order_id,
@@ -392,14 +397,15 @@ class Service_Cart {
                 ));
             } elseif ($product->isDigital()) {
                 $expiration = null;
-                if ($product->isRenewal() && $is_auth) {
-                    $expirations = $users_svc->getExpirations($order->user_id);
+                // See if we need to renew
+                if ($expirations->digital) {
                     $expiration = $expirations->digital;
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
                 $date = new DateTime($expiration);
-                $date->add(new DateInterval("P{$term}M"));
+                // Adjust from today
+                $date->add(new DateInterval("P{$term}M{$extra_days}D"));
                 $os->insert(array(
                     'user_id'            => $order->user_id,
                     'order_id'           => $order->order_id,
