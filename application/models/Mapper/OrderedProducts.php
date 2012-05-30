@@ -14,6 +14,24 @@ class Model_Mapper_OrderedProducts extends Pet_Model_Mapper_Abstract {
     }
     
     /**
+     * @param int $order_id
+     * @param bool $for_update
+     * @return array
+     * 
+     */
+    public function getByOrderId($order_id, $for_update = false) {
+        $ordered_products = $this->_ordered_products->getByOrderId($order_id,
+            $for_update);
+        $out = array();
+        if ($ordered_products) {
+            foreach ($ordered_products as $op) {
+                $out[] = new Model_OrderedProduct($op->toArray());
+            }
+        }
+        return $out;
+    }
+
+    /**
      * @param array $data
      * @param int $order_id
      * @return int user_id

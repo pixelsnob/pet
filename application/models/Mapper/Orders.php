@@ -20,7 +20,7 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function getByEmailSent($email_sent, $for_update = false) {
-        $orders = $this->_orders->getByEmailSent($email_sent);
+        $orders = $this->_orders->getByEmailSent($email_sent, $for_update);
         $out = array();
         if ($orders) {
             foreach ($orders as $order) {

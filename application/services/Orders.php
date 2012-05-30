@@ -12,7 +12,6 @@ class Service_Orders {
      * 
      */
     public function __construct() {
-        $this->_orders = new Model_Mapper_Orders;
     }
 
     /**
@@ -21,21 +20,25 @@ class Service_Orders {
      */
     public function sendOrderEmails() {
         $db = Zend_Db_Table::getDefaultAdapter();
+        $orders_mapper = new Model_Mapper_Orders;
+        $op_mapper = new Model_Mapper_OrderedProducts;
         $logger = Zend_Registry::get('log');
         try {
             $db->beginTransaction();
-            $orders = $this->_orders->getByEmailSent(false, true);
+            $orders = $orders_mapper->getByEmailSent(false, true);
             $orders_sent = array();
             $mail_exceptions = array();
             foreach ($orders as $order) {
+                $ordered_products = $op_mapper->getByOrderId($order->id, true);
                 try {
                     $mail = new Zend_Mail;
                     $mail->setBodyText('test')
-                        ->setBodyHtml('test')
-                        ->addTo($order->email)
-                        ->setSubject('Photoshop Elements User Order: ' . $order->id)
-                        ->addBcc('soapscum@pixelsnob.com')
-                        ->send();
+                         ->setBodyHtml('test')
+                         ->addTo($order->email)
+                         ->setSubject('Photoshop Elements User Order: ' .
+                                      $order->id)
+                         ->addBcc('soapscum@pixelsnob.com')
+                         ->send();
                     $orders_sent[] = $order->id;
                 } catch (Exception $e2) {
                     $mail_exceptions[] = $e2;
@@ -43,8 +46,7 @@ class Service_Orders {
             }
             if (!empty($orders_sent)) {
                 foreach ($orders_sent as $order_id) {
-                    $this->_orders->updateEmailSent($order->id, true);
-                    throw new Exception('fuck');
+                    $orders_mapper->updateEmailSent($order->id, true);
                 }
             }
             $db->commit();
