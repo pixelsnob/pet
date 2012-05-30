@@ -57,7 +57,7 @@ class Pet_Mongo {
                 $logger = Zend_Registry::get('log');
                 $logger->log($msg . ' ' . __CLASS__ . '::' .
                     __FUNCTION__ . '()', Zend_Log::EMERG);
-                throw new MongoConnectionException($msg);
+                //throw new MongoConnectionException($msg);
             }
         } else {
             return self::$_instance->{self::$_db};
