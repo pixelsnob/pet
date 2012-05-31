@@ -19,21 +19,21 @@ class Service_Orders {
      * 
      */
     public function sendOrderEmails() {
-        $db = Zend_Db_Table::getDefaultAdapter();
+        $db            = Zend_Db_Table::getDefaultAdapter();
         $orders_mapper = new Model_Mapper_Orders;
-        $op_mapper = new Model_Mapper_OrderedProducts;
-        $logger = Zend_Registry::get('log');
+        $op_mapper     = new Model_Mapper_OrderedProducts;
+        $logger        = Zend_Registry::get('log');
+        $view          = Zend_Registry::get('view');
         try {
             $db->beginTransaction();
-            $orders = $orders_mapper->getByEmailSent(false, true);
-            $orders_sent = array();
+            $orders          = $orders_mapper->getByEmailSent(false, true);
+            $orders_sent     = array();
             $mail_exceptions = array();
             foreach ($orders as $order) {
                 $ordered_products = $op_mapper->getByOrderId($order->id, true);
                 try {
                     $mail = new Zend_Mail;
-                    $mail->setBodyText('test')
-                         ->setBodyHtml('test')
+                    $mail->setBodyText($view->render('emails/order.phtml'))
                          ->addTo($order->email)
                          ->setSubject('Photoshop Elements User Order: ' .
                                       $order->id)
@@ -56,8 +56,9 @@ class Service_Orders {
                 Zend_Log::EMERG);
         }
         if (!empty($mail_exceptions)) {
-            $logger->log('Error(s) sending order emails: ' .
-                count($mail_exceptions) . ' failures', Zend_Log::EMERG);
+            $mail_exceptions_str = implode(' ', $mail_exceptions);
+            $logger->log("Error(s) sending order emails: " .
+                $mail_exceptions_str, Zend_Log::EMERG);
         }
     }
 }
