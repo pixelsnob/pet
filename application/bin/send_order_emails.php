@@ -1,5 +1,6 @@
 <?php
 /**
+ * Sends unsent order emails
  * 
  */
 require_once 'zf_init.php';

@@ -12,6 +12,7 @@ class Service_Orders {
      * 
      */
     public function __construct() {
+        $this->_orders = new Model_Mapper_Orders;
     }
 
     /**
@@ -20,13 +21,12 @@ class Service_Orders {
      */
     public function sendOrderEmails() {
         $db            = Zend_Db_Table::getDefaultAdapter();
-        $orders_mapper = new Model_Mapper_Orders;
         $op_mapper     = new Model_Mapper_OrderedProducts;
         $logger        = Zend_Registry::get('log');
         $view          = Zend_Registry::get('view');
         try {
             $db->beginTransaction();
-            $orders          = $orders_mapper->getByEmailSent(false, true);
+            $orders          = $this->_orders->getByEmailSent(false, true);
             $orders_sent     = array();
             $mail_exceptions = array();
             foreach ($orders as $order) {
@@ -46,7 +46,7 @@ class Service_Orders {
             }
             if (!empty($orders_sent)) {
                 foreach ($orders_sent as $order_id) {
-                    $orders_mapper->updateEmailSent($order->id, true);
+                    $this->_orders->updateEmailSent($order->id, true);
                 }
             }
             $db->commit();
@@ -60,5 +60,15 @@ class Service_Orders {
             $logger->log("Error(s) sending order emails: " .
                 $mail_exceptions_str, Zend_Log::EMERG);
         }
+    }
+
+    public function processRecurringBilling() {
+        $order_subs = new Model_Mapper_OrderSubscriptions;
+        $date = new DateTime;
+        $date->add(new DateInterval('P2D'));
+        //$expiration = $date->format('Y-m-d'));
+        $subs = $order_subs->getRecurringByExpiration($date);
+        print_r($subs); exit;
+        //$orders = $this->_orders->getByExpiration( 
     }
 }
