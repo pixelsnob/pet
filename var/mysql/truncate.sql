@@ -1,7 +1,9 @@
+set foreign_key_checks = 0;
+
 truncate orders;
 truncate users;
 truncate user_profiles;
-truncate ordered_products;
+truncate order_products;
 truncate order_payments;
 truncate order_payments_paypal;
 truncate order_payments_payflow;
@@ -18,3 +20,5 @@ values
 
 insert into promo_products values (null, 1, 182);
 insert into promo_products values (null, 1, 300);
+
+set foreign_key_checks = 1;

@@ -307,7 +307,7 @@ class Service_Cart {
             // Save order data
             $orders_mapper = new Model_Mapper_Orders;
             $order->order_id = $orders_mapper->insert($order->toArray());
-            $this->_saveOrderedProducts($order);
+            $this->_saveOrderProducts($order);
             $this->_saveOrderPayments($order);
             // Log
             $log_data = array(
@@ -359,13 +359,13 @@ class Service_Cart {
      * @return void
      * 
      */
-    private function _saveOrderedProducts(Model_Cart_Order $order) {
+    private function _saveOrderProducts(Model_Cart_Order $order) {
         $users_svc  = new Service_Users;
         $is_auth    = $users_svc->isAuthenticated();
         $user_id    = $users_svc->getId();
         $cart       = clone $this->get();
-        $op         = new Model_Mapper_OrderedProducts;
-        $os         = new Model_Mapper_OrderSubscriptions;
+        $op         = new Model_Mapper_OrderProducts;
+        $ops        = new Model_Mapper_OrderProductSubscriptions;
         $fmt        = 'Y-m-d H:i:s'; 
         $extra_days = ($cart->promo && $cart->promo->extra_days ?
                        $cart->promo->extra_days : 0);
@@ -373,7 +373,7 @@ class Service_Cart {
             $expirations = $users_svc->getExpirations();
         }
         foreach ($cart->products as $product) {
-            // Insert into ordered_products
+            // Insert into order_products
             $opid = $op->insert($product->toArray(), $order->order_id); 
             // Gift processing here
             if ($product->isGift()) {
@@ -390,9 +390,9 @@ class Service_Cart {
                 $date = new DateTime($expiration);
                 // Adjust from today
                 $date->add(new DateInterval("P{$term}M{$extra_days}D"));
-                $os->insert(array(
+                $ops->insert(array(
                     'user_id'            => $order->user_id,
-                    'order_id'           => $order->order_id,
+                    'order_product_id'   => $opid,
                     'expiration'         => $date->format($fmt)
                 ));
             } elseif ($product->isDigital()) {
@@ -406,9 +406,9 @@ class Service_Cart {
                 $date = new DateTime($expiration);
                 // Adjust from today
                 $date->add(new DateInterval("P{$term}M{$extra_days}D"));
-                $os->insert(array(
+                $ops->insert(array(
                     'user_id'            => $order->user_id,
-                    'order_id'           => $order->order_id,
+                    'order_product_id'   => $opid,
                     'expiration'         => $date->format($fmt),
                     'digital_only'       => 1
                 ));

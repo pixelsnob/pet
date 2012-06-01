@@ -21,7 +21,7 @@ class Service_Orders {
      */
     public function sendOrderEmails() {
         $db            = Zend_Db_Table::getDefaultAdapter();
-        $op_mapper     = new Model_Mapper_OrderedProducts;
+        $op_mapper     = new Model_Mapper_OrderProducts;
         $logger        = Zend_Registry::get('log');
         $view          = Zend_Registry::get('view');
         try {
@@ -30,7 +30,7 @@ class Service_Orders {
             $orders_sent     = array();
             $mail_exceptions = array();
             foreach ($orders as $order) {
-                $ordered_products = $op_mapper->getByOrderId($order->id, true);
+                $order_products = $op_mapper->getByOrderId($order->id, true);
                 try {
                     $mail = new Zend_Mail;
                     $mail->setBodyText($view->render('emails/order.phtml'))
@@ -63,7 +63,7 @@ class Service_Orders {
     }
 
     public function processRecurringBilling() {
-        $order_subs = new Model_Mapper_OrderSubscriptions;
+        $order_subs = new Model_Mapper_OrderProductSubscriptions;
         $date = new DateTime;
         $date->add(new DateInterval('P2D'));
         //$expiration = $date->format('Y-m-d'));

@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Model_DbTable_OrderSubscriptions
+ * @package Model_DbTable_OrderProductSubscriptions
  * 
  */
-class Model_DbTable_OrderSubscriptions extends Zend_Db_Table_Abstract {
+class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
 
-    protected $_name = 'order_subscriptions';
+    protected $_name = 'order_product_subscriptions';
 
     /**
      * @param int $user_id

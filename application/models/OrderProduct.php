@@ -1,9 +1,9 @@
 <?php
 /**
- * @package Model_OrderedProduct
+ * @package Model_OrderProduct
  * 
  */
-class Model_OrderedProduct extends Pet_Model_Abstract {
+class Model_OrderProduct extends Pet_Model_Abstract {
 
     public $_data = array(
         'id' => null,

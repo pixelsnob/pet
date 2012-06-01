@@ -1,16 +1,16 @@
 <?php
 /**
- * @package Model_Mapper_OrderSubscriptions
+ * @package Model_Mapper_OrderProductSubscriptions
  * 
  */
-class Model_Mapper_OrderSubscriptions extends Pet_Model_Mapper_Abstract {
+class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
 
     /**
      * @return void
      * 
      */
     public function __construct() {
-        $this->_os = new Model_DbTable_OrderSubscriptions;
+        $this->_ops = new Model_DbTable_OrderProductSubscriptions;
     }
 
     /**
@@ -22,11 +22,11 @@ class Model_Mapper_OrderSubscriptions extends Pet_Model_Mapper_Abstract {
      */
     public function getUnexpiredByUserId($user_id, $digital_only = null,
                                          $for_update = false) {
-        $os = $this->_os->getUnexpiredByUserId($user_id, $digital_only,
+        $ops = $this->_ops->getUnexpiredByUserId($user_id, $digital_only,
                    $for_update); 
-        if ($os) {
-            $os_model = new Model_OrderSubscription($os->toArray());
-            return $os_model;
+        if ($ops) {
+            $ops_model = new Model_OrderProductSubscription($ops->toArray());
+            return $ops_model;
         }
     }
     
@@ -36,8 +36,8 @@ class Model_Mapper_OrderSubscriptions extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function insert(array $data) {
-        $op_model = new Model_OrderSubscription($data);
-        $this->_os->insert($op_model->toArray());
+        $ops_model = new Model_OrderProductSubscription($data);
+        $this->_ops->insert($ops_model->toArray());
     }
 
 }

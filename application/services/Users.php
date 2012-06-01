@@ -206,16 +206,16 @@ class Service_Users extends Pet_Service {
     /**
      * @param mixed $user_id
      * @param mixed $digital_only
-     * @return null|Model_OrderSubscription
+     * @return null|Model_OrderProductSubscription
      * 
      */
     public function getExpirations($user_id = null) {
         if (!$user_id) {
             $user_id = $this->getId();
         }
-        $os_mapper = new Model_Mapper_OrderSubscriptions;
-        $regular_sub = $os_mapper->getUnexpiredByUserId($user_id, false);
-        $digital_sub = $os_mapper->getUnexpiredByUserId($user_id, true);
+        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $regular_sub = $ops_mapper->getUnexpiredByUserId($user_id, false);
+        $digital_sub = $ops_mapper->getUnexpiredByUserId($user_id, true);
         $out = new StdClass;
         $out->regular = null;
         $out->digital = null;
