@@ -47,7 +47,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     protected function _initSession() {
-        $this->bootstrap('db');
+        /*$this->bootstrap('db');
         $app_config = $this->getOptions();
         $config = array(
             'name'           => 'sessions',
@@ -57,7 +57,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             'lifetimeColumn' => 'lifetime'
         );
         Zend_Session::setSaveHandler(new Zend_Session_SaveHandler_DbTable(
-            $config));
+            $config));*/
+        $app_config = $this->getOptions();
         Zend_Session::setOptions(array(
             'cookie_domain' => $app_config['session_cookie_domain'],
             'name'          => 'PETSESSID'
