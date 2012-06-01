@@ -243,11 +243,11 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`ordered_products`
+-- Table `pet`.`order_products`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`ordered_products` ;
+DROP TABLE IF EXISTS `pet`.`order_products` ;
 
-CREATE  TABLE IF NOT EXISTS `pet`.`ordered_products` (
+CREATE  TABLE IF NOT EXISTS `pet`.`order_products` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `order_id` INT(11) NOT NULL ,
   `product_id` INT(11) NOT NULL ,
@@ -258,12 +258,12 @@ CREATE  TABLE IF NOT EXISTS `pet`.`ordered_products` (
   UNIQUE INDEX `id` (`id` ASC) ,
   INDEX `order_id` (`order_id` ASC) ,
   INDEX `product_id` (`product_id` ASC) ,
-  CONSTRAINT `ordered_products_ibfk_1`
+  CONSTRAINT `order_products_ibfk_1`
     FOREIGN KEY (`order_id` )
     REFERENCES `pet`.`orders` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `ordered_products_ibfk_2`
+  CONSTRAINT `order_products_ibfk_2`
     FOREIGN KEY (`product_id` )
     REFERENCES `pet`.`products` (`id` )
     ON DELETE RESTRICT
@@ -714,28 +714,28 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`order_subscriptions`
+-- Table `pet`.`order_product_subscriptions`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`order_subscriptions` ;
+DROP TABLE IF EXISTS `pet`.`order_product_subscriptions` ;
 
-CREATE  TABLE IF NOT EXISTS `pet`.`order_subscriptions` (
+CREATE  TABLE IF NOT EXISTS `pet`.`order_product_subscriptions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
-  `order_id` INT(11) NULL ,
+  `order_product_id` INT(11) NULL ,
   `expiration` DATE NOT NULL ,
   `digital_only` INT(1) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  INDEX `order_subscriptions_ibfk_1` (`user_id` ASC) ,
-  INDEX `order_subscriptions_ibfk_2` (`order_id` ASC) ,
-  CONSTRAINT `order_subscriptions_ibfk_1`
+  INDEX `order_product_subscriptions_ibfk_1` (`user_id` ASC) ,
+  INDEX `order_product_subscriptions_ibfk_2` (`order_product_id` ASC) ,
+  CONSTRAINT `order_product_subscriptions_ibfk_1`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `order_subscriptions_ibfk_2`
-    FOREIGN KEY (`order_id` )
-    REFERENCES `pet`.`orders` (`id` )
+  CONSTRAINT `order_product_subscriptions_ibfk_2`
+    FOREIGN KEY (`order_product_id` )
+    REFERENCES `pet`.`order_products` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
