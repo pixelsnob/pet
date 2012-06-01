@@ -41,15 +41,15 @@ class Pet_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         $messages = array();
         $users_svc = new Service_Users;
         $user = $users_svc->getActiveUserByUsername($this->_username);
-        $expirations = $users_svc->getExpirations($user->id);
-        $session = new Zend_Session_Namespace('pet_expirations');
-        $session->regular = $expirations->regular;
-        $session->digital = $expirations->digital;
         if ($user && $users_svc->validatePassword($user->password,
             $this->_password)) {
             $code = Zend_Auth_Result::SUCCESS;
             unset($user->password);
             $identity = $user;
+            $expirations = $users_svc->getExpirations($user->id);
+            $session = new Zend_Session_Namespace('pet_expirations');
+            $session->regular = $expirations->regular;
+            $session->digital = $expirations->digital;
         }
             
         if (!$identity) {

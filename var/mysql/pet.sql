@@ -745,21 +745,6 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`sessions`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`sessions` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`sessions` (
-  `id` CHAR(32) NOT NULL ,
-  `modified` INT NULL ,
-  `lifetime` INT NULL ,
-  `data` TEXT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Placeholder table for view `pet`.`view_products`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_giftable` INT, `name` INT, `description` INT);
