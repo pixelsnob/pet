@@ -18,7 +18,7 @@ Pet.View = Backbone.View.extend({
         var obj = this,
         ajax_params = {
             'url': url,
-            'type': 'post',
+            'type': (post_data ? 'post' : 'get'),
             'async': false,
             'success': function(data) {
                 $('.fancybox-inner').html(data);

@@ -19,7 +19,9 @@ Pet.ProductsView = Pet.View.extend({
         'click .subscription-options a, #gift-subscriptions .digital a':
             'openSubscriptionSelectPopup',
         'click .renew': 'openRenewPopup',
-        'click #digital .buy': 'openDigitalSelectPopup'
+        'click #digital .buy': 'openDigitalSelectPopup',
+        'click .forgot-password a': 'openForgotPasswordPopup'
+
     },
     
     initialize: function(){
@@ -33,8 +35,13 @@ Pet.ProductsView = Pet.View.extend({
 
     openRenewPopup: function(el) {
         this.showFancybox({
-            href: $(el.target).attr('href') //+ '?redirect_params[nolayout]=1'
+            href: $(el.target).attr('href')
         });
+        return false;
+    },
+
+    openForgotPasswordPopup: function(el) {
+        this.populateFancybox($(el.target).attr('href'));
         return false;
     },
 
