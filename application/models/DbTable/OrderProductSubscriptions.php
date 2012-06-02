@@ -27,6 +27,44 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
         }
         return $this->fetchRow($sel);
     }
+    
+    /**
+     * @param string $expiration
+     * @return Zend_DbTable_Rowset
+     * 
+     */
+    /*public function getByExpiration(DateTime $expiration) {
+        $sel = $this->select()
+            ->where('expiration = ?', $expiration->format('Y-m-d'));
+        return $this->fetchAll($sel);
+    }*/
+
+    /**
+     * @param string $date
+     * @return Zend_DbTable_Rowset
+     * 
+     */
+    public function getByExpiration($date) {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $sql = <<<END
+select *, (
+    select min(expiration)
+    from order_product_subscriptions
+    where user_id = ops1.user_id
+) as min_expiration, (
+    select max(expiration)
+    from order_product_subscriptions
+    where user_id = ops1.user_id
+) as expiration
+from order_product_subscriptions ops1
+left join order_products op
+on op.id = ops1.order_product_id
+group by user_id
+having expiration = ?
+END;
+        $sql = $db->quoteInto($sql, $date);
+        return $db->query($sql)->fetchAll();
+    }
 
 }
 

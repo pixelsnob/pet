@@ -61,14 +61,40 @@ class Service_Orders {
                 $mail_exceptions_str, Zend_Log::EMERG);
         }
     }
-
+    
+    /**
+     * This should be run once per day
+     * 
+     * @return void
+     * 
+     */
     public function processRecurringBilling() {
-        $order_subs = new Model_Mapper_OrderProductSubscriptions;
-        $date = new DateTime;
-        $date->add(new DateInterval('P2D'));
-        //$expiration = $date->format('Y-m-d'));
-        $subs = $order_subs->getRecurringByExpiration($date);
-        print_r($subs); exit;
+        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $products_mapper = new Model_Mapper_Products;
+        $expiration = new DateTime('2012-10-01');
+        //$date->add(new DateInterval('P2D'));
+        $subs = $ops_mapper->getByExpiration($expiration);
+        foreach ($subs as $sub) {
+            if (!$sub->product->is_recurring) {
+                continue;
+            }
+            $min_expiration = new DateTime($sub->min_expiration);
+            // Stop repeating around a year -- reference transactions will only
+            // last that long...
+            if ($expiration->diff($min_expiration)->m > 11) {
+                continue; 
+            }
+            // get order
+            // get first order_payment
+            // find out what type it is
+            // get pnref or correlationid of first payment
+            // charge
+            // ++ if charge fails, send email
+            // store order_payment data
+            // update expiration
+            // log
+            print_r($sub);
+        }
         //$orders = $this->_orders->getByExpiration( 
     }
 }

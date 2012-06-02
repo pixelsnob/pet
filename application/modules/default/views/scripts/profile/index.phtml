@@ -18,11 +18,11 @@
                     </dd>
                     <?php if ($this->expirations->regular): ?>
                         <dt>Print Expiration</dt>
-                        <dd><?php echo $this->escape(date('F d, Y', strtotime($this->expirations->regular))); ?></dd>
+                        <dd><?php echo $this->escape(date('F j, Y', strtotime($this->expirations->regular))); ?></dd>
                     <?php endif; ?>
                     <?php if ($this->expirations->digital): ?>
                         <dt>Digital Expiration</dt>
-                        <dd><?php echo $this->escape(date('F d, Y', strtotime($this->expirations->digital))); ?></dd>
+                        <dd><?php echo $this->escape(date('F j, Y', strtotime($this->expirations->digital))); ?></dd>
                     <?php endif; ?>
                 </dl>
                 <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>

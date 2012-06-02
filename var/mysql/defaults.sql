@@ -8,6 +8,8 @@
   Products
  **************************************************************************************************/
  
+use pet;
+
 insert into pet.product_types values (1, 'Download', 'download'), (2, 'Physical', 'physical'),
 (3, 'Course', 'course'), (4, 'Subscription', 'subscription'),
 (5, 'Digital Subscription', 'digital_subscription');
@@ -203,7 +205,7 @@ show warnings;
 
 /* Current expirations */
 
-insert into pet.order_subscriptions
+insert into pet.order_product_subscriptions
 select null, u.id, null, sp.expiration, 0
 from pet.users u
 left join pet_old.subscriber_profile sp
@@ -212,7 +214,7 @@ where sp.expiration is not null;
 
 /* Previous expirations */
 
-insert into pet.order_subscriptions
+insert into pet.order_product_subscriptions
 select null, u.id, null, so.previous_expiration, 0
 from pet.users u
 left join pet_old.sales_order so
@@ -221,7 +223,7 @@ where so.previous_expiration is not null;
 
 /* There are duplicate emails in the users table. Change any references in the user_subscriptions
    table, because we are about to delete the duplicate users. */
-delete from pet.order_subscriptions where user_id in (884338, 893654, 1078835, 809224, 866185,
+delete from pet.order_product_subscriptions where user_id in (884338, 893654, 1078835, 809224, 866185,
 887013, 902945, 1079210, 881059, 87670873, 843818);
 
 /***************************************************************************************************

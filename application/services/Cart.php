@@ -282,10 +282,10 @@ class Service_Cart {
             // Regular sale
             if ($config['use_payment_gateway']) {
                 if ($cart->payment->payment_method == 'credit_card') {
-                    $this->_gateway->processSale($order);
+                    $pnref = $this->_gateway->processSale($order);
                 } else {
-                    $this->_gateway->processECSale($order, $cart->ec_token,
-                        $payer_id);
+                    $correlation_id = $this->_gateway->processECSale(
+                        $order, $cart->ec_token, $payer_id);
                 }
             }
             // Save user data
@@ -308,7 +308,11 @@ class Service_Cart {
             $orders_mapper = new Model_Mapper_Orders;
             $order->order_id = $orders_mapper->insert($order->toArray());
             $this->_saveOrderProducts($order);
-            $this->_saveOrderPayments($order);
+            $order_payment_id = $this->_saveOrderPayments($order);
+            /*if ($cart->products->hasRecurring()) {
+                $this->_saveRecurringBilling($order_payment_id, $order);
+                exit('?');
+            }*/
             // Log
             $log_data = array(
                 'type'     => 'process',
@@ -382,7 +386,7 @@ class Service_Cart {
             if ($product->isSubscription()) {
                 $expiration = null;
                 // See if we need to renew
-                if ($expirations->regular) {
+                if (isset($expirations->regular) && $expirations->regular) {
                     $expiration = $expirations->regular;
                 }
                 $term = (int) $product->term_months;
@@ -398,7 +402,7 @@ class Service_Cart {
             } elseif ($product->isDigital()) {
                 $expiration = null;
                 // See if we need to renew
-                if ($expirations->digital) {
+                if (isset($expirations->digital) && $expirations->digital) {
                     $expiration = $expirations->digital;
                 }
                 $term = (int) $product->term_months;
@@ -418,7 +422,7 @@ class Service_Cart {
 
     /**
      * @param Model_Cart_Order
-     * @return void
+     * @return null|int The last insert id into OrderPayments
      * 
      */
     private function _saveOrderPayments(Model_Cart_Order $order) {
@@ -444,6 +448,7 @@ class Service_Cart {
                     'cvv2match'           => $response->cvv2match
 
                 ));
+                return $opid;
             } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
                 $opid = $op_mapper->insert(array(
                     'order_id'         => $order->order_id,
@@ -456,6 +461,7 @@ class Service_Cart {
                     'order_payment_id' => $opid,
                     'correlationid'    => $response->correlationid
                 ));
+                return $opid;
             }
         }
     }
@@ -506,7 +512,7 @@ class Service_Cart {
             return $config['payment_gateway']['ec_url'] . '&token=' . $token;
         }
     }
-
+    
     /**
      * return Model_Confirmation|void
      * 

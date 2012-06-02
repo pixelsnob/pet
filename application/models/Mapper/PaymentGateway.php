@@ -240,8 +240,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         foreach ($this->_calls as $call) {
             $result = (isset($call['response']['RESULT']) ?
                 ((string) $call['response']['RESULT']) : null);
-            $trxtype = (isset($call['request']['TRXTYPE']) ?
-                $call['request']['TRXTYPE'] : '');
             // Only void successful transactions
             if ($result !== '0') {
                 continue;
