@@ -8,7 +8,7 @@ truncate order_payments;
 truncate order_payments_paypal;
 truncate order_payments_payflow;
 truncate order_payments_check;
-truncate order_subscriptions;
+truncate order_product_subscriptions;
 
 
 

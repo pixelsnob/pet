@@ -49,16 +49,21 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
         $sql = <<<END
 select *, (
     select min(expiration)
-    from order_product_subscriptions
-    where user_id = ops1.user_id
-) as min_expiration, (
-    select max(expiration)
-    from order_product_subscriptions
-    where user_id = ops1.user_id
-) as expiration
-from order_product_subscriptions ops1
+    from order_product_subscriptions ops1
+    where ops1.user_id = ops2.user_id
+    /* We're only looking for min expirations for this same product id,
+       used to determine how many times this has been renewed via
+       recurring billing */
+    and ops1.order_product_id = ops2.order_product_id
+) as min_expiration
+from order_product_subscriptions ops2
 left join order_products op
-on op.id = ops1.order_product_id
+on ops2.order_product_id = op.id
+where expiration = (
+    select max(expiration)
+    from order_product_subscriptions ops3
+    where ops3.user_id = ops2.user_id
+)
 group by user_id
 having expiration = ?
 END;

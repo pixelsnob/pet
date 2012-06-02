@@ -71,7 +71,7 @@ class Service_Orders {
     public function processRecurringBilling() {
         $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $products_mapper = new Model_Mapper_Products;
-        $expiration = new DateTime('2012-10-01');
+        $expiration = new DateTime('2012-09-02');
         //$date->add(new DateInterval('P2D'));
         $subs = $ops_mapper->getByExpiration($expiration);
         foreach ($subs as $sub) {
@@ -88,7 +88,7 @@ class Service_Orders {
             // get first order_payment
             // find out what type it is
             // get pnref or correlationid of first payment
-            // charge
+            // charge paypal or payflow
             // ++ if charge fails, send email
             // store order_payment data
             // update expiration

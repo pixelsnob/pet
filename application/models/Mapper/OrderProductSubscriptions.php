@@ -42,23 +42,6 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param DateTime $expiration
-     * @return array
-     * 
-     */
-    /*public function getByExpiration(DateTime $expiration) {
-        $subs = $this->_ops->getByExpiration($expiration);
-        $subs_array = array();
-        if ($subs) {
-            foreach ($subs as $sub) {
-                $subs_array[] = new Model_OrderProductSubscription(
-                    $sub->toArray());
-            }
-        }
-        return $subs_array;
-    }*/
-
-    /**
-     * @param DateTime $expiration
      * @return array An array of Model_OrderProductSubscription objects
      * 
      */
@@ -68,7 +51,6 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         $subs_array = array();
         if ($subs) {
             foreach ($subs as $sub) {
-                print_r($sub);
                 $product = $products_mapper->getById($sub['product_id']);
                 if (!$product) {
                     throw new Exception('Product not found');
