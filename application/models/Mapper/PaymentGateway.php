@@ -56,7 +56,8 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             'VENDOR'        => $gateway_config['vendor'],
             'PARTNER'       => $gateway_config['partner'],
             'VERBOSITY'     => 'medium',
-            'CLIENT_IP'     => $_SERVER['REMOTE_ADDR']
+            'CLIENT_IP'     => (isset($_SERVER['REMOTE_ADDR']) ?
+                               $_SERVER['REMOTE_ADDR'] : '')
         );
         $gateway->setFields($fields)
             ->setUrl($gateway_config['url'])
@@ -101,6 +102,34 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
                 throw new Exception('CVV Mismatch');
             }
         } else {
+            $msg = __FUNCTION__ . '() failed.';
+            if ($this->_gateway->getError()) {
+                $msg .= ' Gateway error: ' . $this->_gateway->getError();
+                $this->_error = self::ERR_GENERIC;
+            } else {
+                $this->_error = self::ERR_DECLINED;
+            }
+            throw new Exception($msg);
+        }
+    }
+
+    /**
+     * @param string The original transaction id
+     * @return void
+     * 
+     */
+    public function processReferenceTransaction($origid) {
+        $this->resetGateway();
+        //$order = $this->formatData($order);
+        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
+            ->setField('TENDER', 'C')
+            ->setField('TRXTYPE', 'S')
+            ->setField('ORIGID', $origid)
+            ->send()
+            ->processResponse();
+        $this->saveCall();
+        throw new Exception;
+        if (!$this->_gateway->isSuccess()) {
             $msg = __FUNCTION__ . '() failed.';
             if ($this->_gateway->getError()) {
                 $msg .= ' Gateway error: ' . $this->_gateway->getError();

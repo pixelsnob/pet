@@ -29,22 +29,11 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
     }
     
     /**
-     * @param string $expiration
-     * @return Zend_DbTable_Rowset
-     * 
-     */
-    /*public function getByExpiration(DateTime $expiration) {
-        $sel = $this->select()
-            ->where('expiration = ?', $expiration->format('Y-m-d'));
-        return $this->fetchAll($sel);
-    }*/
-
-    /**
      * @param string $date
      * @return Zend_DbTable_Rowset
      * 
      */
-    public function getByExpiration($date) {
+    public function getByExpiration($date, $for_update) {
         $db = Zend_Db_Table::getDefaultAdapter();
         $sql = <<<END
 select *, (
@@ -66,6 +55,7 @@ where expiration = (
 )
 group by user_id
 having expiration = ?
+for update
 END;
         $sql = $db->quoteInto($sql, $date);
         return $db->query($sql)->fetchAll();

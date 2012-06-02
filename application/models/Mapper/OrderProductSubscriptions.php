@@ -42,12 +42,14 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param DateTime $expiration
+     * @param bool $for_update
      * @return array An array of Model_OrderProductSubscription objects
      * 
      */
-    public function getByExpiration(DateTime $expiration) {
+    public function getByExpiration(DateTime $expiration, $for_update = false) {
         $products_mapper = new Model_Mapper_Products;
-        $subs = $this->_ops->getByExpiration($expiration->format('Y-m-d'));
+        $subs = $this->_ops->getByExpiration($expiration->format('Y-m-d'),
+            $for_update);
         $subs_array = array();
         if ($subs) {
             foreach ($subs as $sub) {

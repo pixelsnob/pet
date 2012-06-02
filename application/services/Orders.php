@@ -70,31 +70,66 @@ class Service_Orders {
      */
     public function processRecurringBilling() {
         $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $payments_mapper = new Model_Mapper_OrderPayments;
         $products_mapper = new Model_Mapper_Products;
-        $expiration = new DateTime('2012-09-02');
+        $gateway_mapper = new Model_Mapper_PaymentGateway;
+        $expiration = new DateTime('2012-11-02');
         //$date->add(new DateInterval('P2D'));
-        $subs = $ops_mapper->getByExpiration($expiration);
-        foreach ($subs as $sub) {
-            if (!$sub->product->is_recurring) {
-                continue;
-            }
-            $min_expiration = new DateTime($sub->min_expiration);
-            // Stop repeating around a year -- reference transactions will only
-            // last that long...
-            if ($expiration->diff($min_expiration)->m > 11) {
-                continue; 
-            }
-            // get order
-            // get first order_payment
-            // find out what type it is
-            // get pnref or correlationid of first payment
-            // charge paypal or payflow
-            // ++ if charge fails, send email
-            // store order_payment data
-            // update expiration
-            // log
-            print_r($sub);
+        $db = Zend_Db_Table::getDefaultAdapter();
+        try {
+            $db->beginTransaction();
+            $subs = $ops_mapper->getByExpiration($expiration, true);
+            foreach ($subs as $sub) {
+                $status = true;
+                $exceptions = array();
+                if (!$sub->product->is_recurring) {
+                    continue;
+                }
+                $min_expiration = new DateTime($sub->min_expiration);
+                // Stop repeating around a year -- reference transactions will only
+                // last that long...
+                if ($expiration->diff($min_expiration)->m > 11) {
+                    continue; 
+                }
+                // Get first payment
+                $payments = $payments_mapper->getByOrderId($sub->order_id); 
+                if (!isset($payments[0])) {
+                    $msg = 'Error retrieving from order_payments';
+                    throw new Exception($msg);
+                }
+                $payment = $payments[0];
+                if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
+                    // Payment type is payflow
+                    $opp_mapper = new Model_Mapper_OrderPayments_Payflow; 
+                    $payment = $opp_mapper->getByOrderPaymentId($payment->id);
+                    if (!$payment) {
+                        $msg = 'Error retrieving from order_payments_payflow';
+                        throw new Exception($msg);
+                    }
+                    // charge payflow
+                    try {
+                        $gateway_mapper->processReferenceTransaction($payment->pnref); 
+                    } catch (Exception $e2) {
+                        // log/email
+                        $status = false;
+                        $exceptions[] = $e2;
+                    }
+                } elseif ($payment->payment_type_id == Model_PaymentType::PAYPAL) {
+                    // Payment type is paypal
+                    // charge paypal
+                }
+                print_r($exceptions);
+                print_r($gateway_mapper->getSuccessfulResponseObjects());
+                // ++ if charge fails, send email
+                // store order_payment data
+                // update expiration
+                // log
+                print_r($sub);
+            } 
+            $db->commit();
+            // send emails
+        } catch (Exception $e) {
+            // log 
         }
-        //$orders = $this->_orders->getByExpiration( 
     }
 }

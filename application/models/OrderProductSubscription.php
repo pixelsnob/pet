@@ -12,6 +12,7 @@ class Model_OrderProductSubscription extends Pet_Model_Abstract {
         'expiration' => null,
         'digital_only' => 0,
         'min_expiration' => null,
+        'order_id' => null,
         'product' => null
     );
     
@@ -23,6 +24,7 @@ class Model_OrderProductSubscription extends Pet_Model_Abstract {
         $data = $this->_data;
         unset($data['min_expiration']);
         unset($data['product']);
+        unset($data['order_id']);
         return $data;
     }
 
