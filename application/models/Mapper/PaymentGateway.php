@@ -128,7 +128,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->send()
             ->processResponse();
         $this->saveCall();
-        throw new Exception;
         if (!$this->_gateway->isSuccess()) {
             $msg = __FUNCTION__ . '() failed.';
             if ($this->_gateway->getError()) {
