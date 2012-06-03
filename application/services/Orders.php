@@ -20,8 +20,12 @@ class Service_Orders {
      * @return null|Model_Order
      * 
      */
-    public function get($id) {
+    public function getById($id) {
         return $this->_orders->get($id); 
+    }
+
+    public function getFullOrderById($id) {
+        // refactor stuff from recurring billing to here
     }
 
     /**
@@ -79,14 +83,16 @@ class Service_Orders {
      * 
      */
     public function processRecurringBilling(DateTime $expiration) {
-        $ops_mapper      = new Model_Mapper_OrderProductSubscriptions;
-        $payflow_mapper  = new Model_Mapper_OrderPayments_Payflow; 
-        $paypal_mapper   = new Model_Mapper_OrderPayments_Paypal; 
-        $payments_mapper = new Model_Mapper_OrderPayments;
-        $products_mapper = new Model_Mapper_Products;
-        $gateway_mapper  = new Model_Mapper_PaymentGateway;
-        $users_mapper    = new Model_Mapper_Users;
-        $view            = Zend_Registry::get('view');
+        $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
+        $payflow_mapper     = new Model_Mapper_OrderPayments_Payflow; 
+        $paypal_mapper      = new Model_Mapper_OrderPayments_Paypal; 
+        $payments_mapper    = new Model_Mapper_OrderPayments;
+        $products_mapper    = new Model_Mapper_Products;
+        $gateway_mapper     = new Model_Mapper_PaymentGateway;
+        $users_mapper       = new Model_Mapper_Users;
+        $view               = Zend_Registry::get('view');
+        $gateway_exceptions = array();
+        $email_exceptions   = array();
         //$expiration      = new DateTime('2012-11-02');
         //$date->add(new DateInterval('P2D'));
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -95,7 +101,6 @@ class Service_Orders {
             $subs = $ops_mapper->getByExpiration($expiration, true);
             foreach ($subs as $sub) {
                 $status = true;
-                $exceptions = array();
                 if (!$sub->product->is_recurring) {
                     continue;
                 }
@@ -106,7 +111,7 @@ class Service_Orders {
                     continue; 
                 }
                 // Get order
-                $order = $this->get($sub->order_id);
+                $order = $this->getById($sub->order_id);
                 if (!$order) {
                     $msg = 'Error retrieving order';
                     throw new Exception($msg);
@@ -148,10 +153,8 @@ class Service_Orders {
                     $gateway_mapper->processReferenceTransaction(
                         $sub->product->cost, $origid, $tender); 
                 } catch (Exception $e2) {
-                    // log/email
-                    //print_r($e2);
                     $status = false;
-                    $exceptions[] = $e2;
+                    $gateway_exceptions[] = $e2;
                 }
                 if ($status) {
                     $message = $view->render('emails/recurring_billing_success.phtml');
@@ -165,8 +168,9 @@ class Service_Orders {
                          ->setSubject('Customer invoice')
                          ->addBcc('soapscum@pixelsnob.com')
                          ->send();
-                } catch (Exception $e) {
+                } catch (Exception $e3) {
                     // log
+                    $email_exceptions = $e3;
                 }
                 //print_r($gateway_mapper->getRawCalls());
                 // store order_payment data
