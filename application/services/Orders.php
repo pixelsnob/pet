@@ -139,9 +139,12 @@ class Service_Orders {
         //$expiration      = new DateTime('2012-11-02');
         //$date->add(new DateInterval('P2D'));
         $db = Zend_Db_Table::getDefaultAdapter();
+        // Prevent other sessions screwing with any of the data while we're
+        // working with this
+        $db->query('set transaction isolation level serializable');
         try {
             $db->beginTransaction();
-            $subs = $ops_mapper->getByExpiration($expiration, true);
+            $subs = $ops_mapper->getByExpiration($expiration);
             foreach ($subs as $sub) {
                 if (!$sub->product->is_recurring) {
                     continue;

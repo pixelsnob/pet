@@ -33,7 +33,7 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
      * @return Zend_DbTable_Rowset
      * 
      */
-    public function getByExpiration($date, $for_update) {
+    public function getByExpiration($date) {
         $db = Zend_Db_Table::getDefaultAdapter();
         $sql = <<<END
 select *, (
@@ -55,7 +55,6 @@ where expiration = (
 )
 group by user_id
 having expiration = ?
-for update
 END;
         $sql = $db->quoteInto($sql, $date);
         return $db->query($sql)->fetchAll();

@@ -274,9 +274,10 @@ class Service_Cart {
             ),
             array('products' => $cart->products->toArray())
         );
-        $order = new Model_Cart_Order($data);
+        $order  = new Model_Cart_Order($data);
         $status = true;
         $db     = Zend_Db_Table::getDefaultAdapter();
+        $db->query('set transaction isolation level serializable');
         try {
             $db->beginTransaction();
             // Regular sale
