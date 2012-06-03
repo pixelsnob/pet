@@ -23,9 +23,52 @@ class Service_Orders {
     public function getById($id) {
         return $this->_orders->get($id); 
     }
-
-    public function getFullOrderById($id) {
-        // refactor stuff from recurring billing to here
+    
+    /**
+     * @param int $id
+     * @return Model_Order
+     * 
+     */
+    public function getFullOrder($id) {
+        $op_mapper          = new Model_Mapper_OrderProducts;
+        $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
+        $payments_mapper    = new Model_Mapper_OrderPayments;
+        //$payflow_mapper     = new Model_Mapper_OrderPayments_Payflow; 
+        //$paypal_mapper      = new Model_Mapper_OrderPayments_Paypal; 
+        $products_mapper    = new Model_Mapper_Products;
+        $gateway_mapper     = new Model_Mapper_PaymentGateway;
+        $users_mapper       = new Model_Mapper_Users;
+        // Get order
+        $order = $this->getById($id);
+        if (!$order) {
+            $msg = 'Error retrieving order';
+            throw new Exception($msg);
+        }
+        $user = $users_mapper->getById($order->user_id);
+        // Get user
+        if (!$user) {
+            $msg = 'Error retrieving user';
+            throw new Exception($msg);
+        }
+        $order->user = $user;
+        // Get order products
+        $products = $op_mapper->getByOrderId($order->id);
+        $temp_products = array();
+        if ($products) {
+            foreach ($products as $product) {
+                $temp_products[] = $products_mapper->getById(
+                    $product->product_id); 
+            }
+            $order->products = $temp_products;
+        }
+        // Get payment(s)
+        $payments = $payments_mapper->getByOrderId($order->id); 
+        if (!$payments) {
+            $msg = 'Error retrieving from order_payments';
+            throw new Exception($msg);
+        }
+        $order->payments = $payments;
+        return $order;
     }
 
     /**
@@ -111,24 +154,18 @@ class Service_Orders {
                     continue; 
                 }
                 // Get order
-                $order = $this->getById($sub->order_id);
+                $order = $this->getFullOrder($sub->order_id);
+                //print_r($order); exit;
                 if (!$order) {
                     $msg = 'Error retrieving order';
                     throw new Exception($msg);
                 }
-                $user = $users_mapper->getById($order->user_id);
-                // Get user
-                if (!$user) {
-                    $msg = 'Error retrieving user';
-                    throw new Exception($msg);
-                }
                 // Get first payment
-                $payments = $payments_mapper->getByOrderId($order->id); 
-                if (!isset($payments[0])) {
+                if (!isset($order->payments[0])) {
                     $msg = 'Error retrieving from order_payments';
                     throw new Exception($msg);
                 }
-                $payment = $payments[0];
+                $payment = $order->payments[0];
                 if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
                     // Payment type was payflow
                     $payment = $payflow_mapper->getByOrderPaymentId($payment->id);
@@ -164,7 +201,7 @@ class Service_Orders {
                 $mail = new Zend_Mail;
                 try {
                     $mail->setBodyText($message)
-                         ->addTo($user->email)
+                         ->addTo($order->user->email)
                          ->setSubject('Customer invoice')
                          ->addBcc('soapscum@pixelsnob.com')
                          ->send();

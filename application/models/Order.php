@@ -36,7 +36,23 @@ class Model_Order extends Pet_Model_Abstract {
         'discount' => 0,
         'total' => 0,
         'phone_order' => 0,
-        'active' => 1
+        'active' => 1,
+
+        'user' => null,
+        'payments' => array(),
+        'products' => array()
     );
+    
+    /** 
+     * @return array
+     * 
+     */
+    public function toArray() {
+        $data = $this->_data;
+        unset($data['user']);
+        unset($data['products']);
+        unset($data['payments']);
+        return $data;
+    }
 }
 
