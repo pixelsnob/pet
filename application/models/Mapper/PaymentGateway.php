@@ -114,33 +114,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * @param string The original transaction id
-     * @return void
-     * 
-     */
-    public function processReferenceTransaction($origid) {
-        $this->resetGateway();
-        //$order = $this->formatData($order);
-        $this->_gateway->setSensitiveFields(array('ACCT', 'CVV2'))
-            ->setField('TENDER', 'C')
-            ->setField('TRXTYPE', 'S')
-            ->setField('ORIGID', $origid)
-            ->send()
-            ->processResponse();
-        $this->saveCall();
-        if (!$this->_gateway->isSuccess()) {
-            $msg = __FUNCTION__ . '() failed.';
-            if ($this->_gateway->getError()) {
-                $msg .= ' Gateway error: ' . $this->_gateway->getError();
-                $this->_error = self::ERR_GENERIC;
-            } else {
-                $this->_error = self::ERR_DECLINED;
-            }
-            throw new Exception($msg);
-        }
-    }
-
-    /**
      * @param Model_Cart_Order
      * @param string $return_url
      * @param string $cancel_url
@@ -159,8 +132,10 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('ITEMAMT', $order->total)
             // Ask about this
             ->setField('BA_DESC', 'Photoshop Elements User Subscription')
-            ->setField('BILLING_TYPE', 'MerchantInitiatedBilling')
-            ->setField('ITEMAMT', $order->total);
+            ->setField('BILLINGTYPE', 'MerchantInitiatedBilling')
+            ->setField('PAYMENTTYPE', 'any');
+            //->setField('L_BILLINGTYPE0', 'MerchantInitiatedBilling');
+            //->setField('ITEMAMT', $order->total);
         // Add line item info
         $i = 0;
         foreach ($order->products as $product) {
@@ -201,6 +176,39 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         if (!$this->_gateway->isSuccess()) {
             $this->_error = self::ERR_EXPRESS_CHECKOUT;
             throw new Exception('Express checkout process failed');
+        }
+    }
+
+    /**
+     * @param float $amount
+     * @param string $id The original transaction id
+     * @param string $tender P or C
+     * @return void
+     * 
+     */
+    public function processReferenceTransaction($amount, $origid, $tender) {
+        $this->resetGateway();
+        $this->_gateway
+            ->setField('TENDER', $tender)
+            ->setField('AMT', $amount)
+            ->setField('TRXTYPE', 'S');
+        if ($tender == 'C') {
+            $this->_gateway->setField('ORIGID', $origid);
+        } elseif ($tender == 'P') {
+            $this->_gateway->setField('ORIGID', $origid);
+            $this->_gateway->setField('ACTION', 'D');
+        }
+        $this->_gateway->send()->processResponse();
+        $this->saveCall();
+        if (!$this->_gateway->isSuccess()) {
+            $msg = __FUNCTION__ . '() failed.';
+            if ($this->_gateway->getError()) {
+                $msg .= ' Gateway error: ' . $this->_gateway->getError();
+                $this->_error = self::ERR_GENERIC;
+            } else {
+                $this->_error = self::ERR_DECLINED;
+            }
+            throw new Exception($msg);
         }
     }
 

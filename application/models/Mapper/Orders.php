@@ -14,6 +14,22 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     }
     
     /**
+     * @param int $id
+     * @return Model_Order
+     * 
+     */
+    public function get($id) {
+        $order = $this->_orders->find($id);
+        if ($order) {
+            $order_array = $order->toArray();
+            if (isset($order_array[0])) {
+                $order_model = new Model_Order($order_array[0]);
+                return $order_model;
+            }
+        }
+    }
+
+    /**
      * @param bool $email_sent
      * @param bool $for_update
      * @return array An array of Model_Order objects

@@ -22,8 +22,8 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
      */
     public function getUnexpiredByUserId($user_id, $digital_only = null,
                                          $for_update = false) {
-        $ops = $this->_ops->getUnexpiredByUserId($user_id, $digital_only,
-                   $for_update); 
+        $ops = $this->_ops->getUnexpiredByUserId(
+            $user_id, $digital_only, $for_update); 
         if ($ops) {
             $ops_model = new Model_OrderProductSubscription($ops->toArray());
             return $ops_model;

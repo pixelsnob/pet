@@ -14,6 +14,15 @@ class Service_Orders {
     public function __construct() {
         $this->_orders = new Model_Mapper_Orders;
     }
+    
+    /**
+     * @param int $id
+     * @return null|Model_Order
+     * 
+     */
+    public function get($id) {
+        return $this->_orders->get($id); 
+    }
 
     /**
      * @return void
@@ -65,15 +74,20 @@ class Service_Orders {
     /**
      * This should be run once per day
      * 
+     * @param DateTime $expiration The expiration date to use for the search
      * @return void
      * 
      */
-    public function processRecurringBilling() {
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+    public function processRecurringBilling(DateTime $expiration) {
+        $ops_mapper      = new Model_Mapper_OrderProductSubscriptions;
+        $payflow_mapper  = new Model_Mapper_OrderPayments_Payflow; 
+        $paypal_mapper   = new Model_Mapper_OrderPayments_Paypal; 
         $payments_mapper = new Model_Mapper_OrderPayments;
         $products_mapper = new Model_Mapper_Products;
-        $gateway_mapper = new Model_Mapper_PaymentGateway;
-        $expiration = new DateTime('2012-11-02');
+        $gateway_mapper  = new Model_Mapper_PaymentGateway;
+        $users_mapper    = new Model_Mapper_Users;
+        $view            = Zend_Registry::get('view');
+        //$expiration      = new DateTime('2012-11-02');
         //$date->add(new DateInterval('P2D'));
         $db = Zend_Db_Table::getDefaultAdapter();
         try {
@@ -91,45 +105,81 @@ class Service_Orders {
                 if ($expiration->diff($min_expiration)->m > 11) {
                     continue; 
                 }
+                // Get order
+                $order = $this->get($sub->order_id);
+                if (!$order) {
+                    $msg = 'Error retrieving order';
+                    throw new Exception($msg);
+                }
+                $user = $users_mapper->getById($order->user_id);
+                // Get user
+                if (!$user) {
+                    $msg = 'Error retrieving user';
+                    throw new Exception($msg);
+                }
                 // Get first payment
-                $payments = $payments_mapper->getByOrderId($sub->order_id); 
+                $payments = $payments_mapper->getByOrderId($order->id); 
                 if (!isset($payments[0])) {
                     $msg = 'Error retrieving from order_payments';
                     throw new Exception($msg);
                 }
                 $payment = $payments[0];
                 if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
-                    // Payment type is payflow
-                    $opp_mapper = new Model_Mapper_OrderPayments_Payflow; 
-                    $payment = $opp_mapper->getByOrderPaymentId($payment->id);
+                    // Payment type was payflow
+                    $payment = $payflow_mapper->getByOrderPaymentId($payment->id);
                     if (!$payment) {
                         $msg = 'Error retrieving from order_payments_payflow';
                         throw new Exception($msg);
                     }
-                    // charge payflow
-                    try {
-                        $gateway_mapper->processReferenceTransaction($payment->pnref); 
-                    } catch (Exception $e2) {
-                        // log/email
-                        $status = false;
-                        $exceptions[] = $e2;
-                    }
+                    $origid = $payment->pnref;
+                    $tender = 'C';
                 } elseif ($payment->payment_type_id == Model_PaymentType::PAYPAL) {
-                    // Payment type is paypal
-                    // charge paypal
+                    // Payment type was paypal
+                    $payment = $paypal_mapper->getByOrderPaymentId($payment->id);
+                    if (!$payment) {
+                        $msg = 'Error retrieving from order_payments_paypal';
+                        throw new Exception($msg);
+                    }
+                    $origid = $payment->pnref;
+                    $tender = 'P';
                 }
-                print_r($exceptions);
-                print_r($gateway_mapper->getSuccessfulResponseObjects());
-                // ++ if charge fails, send email
+                // Make a charge attempt
+                try {
+                    $gateway_mapper->processReferenceTransaction(
+                        $sub->product->cost, $origid, $tender); 
+                } catch (Exception $e2) {
+                    // log/email
+                    //print_r($e2);
+                    $status = false;
+                    $exceptions[] = $e2;
+                }
+                if ($status) {
+                    $message = $view->render('emails/recurring_billing_success.phtml');
+                } else {
+                    $message = $view->render('emails/recurring_billing_fail.phtml');
+                }
+                $mail = new Zend_Mail;
+                try {
+                    $mail->setBodyText($message)
+                         ->addTo($user->email)
+                         ->setSubject('Customer invoice')
+                         ->addBcc('soapscum@pixelsnob.com')
+                         ->send();
+                } catch (Exception $e) {
+                    // log
+                }
+                //print_r($gateway_mapper->getRawCalls());
                 // store order_payment data
                 // update expiration
                 // log
-                print_r($sub);
+                //print_r($sub);
             } 
             $db->commit();
             // send emails
         } catch (Exception $e) {
             // log 
+            // void any transactions
+            $gateway_mapper->voidCalls();
         }
     }
 }
