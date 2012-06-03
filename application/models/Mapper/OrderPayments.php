@@ -29,12 +29,38 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function getByOrderId($order_id) {
-        $order_payments = new Model_DbTable_OrderPayments;
-        $order_payments = $this->_order_payments->getByOrderId($order_id);
+        $order_payments   = new Model_DbTable_OrderPayments;
+        $order_payments   = $this->_order_payments->getByOrderId($order_id);
+        $payflow_mapper   = new Model_Mapper_OrderPayments_Payflow;
+        $paypal_mapper    = new Model_Mapper_OrderPayments_Paypal;
         $op_array = array();
         if ($order_payments) {
             foreach ($order_payments as $op) {
-                $op_array[] = new Model_OrderPayment($op->toArray());
+                $op = new Model_OrderPayment($op->toArray());
+                switch ($op->payment_type_id) {
+                    case Model_PaymentType::PAYFLOW:
+                        $payflow_payment = $payflow_mapper->getByOrderPaymentId(
+                            $op->id);
+                        if (!$payflow_payment) {
+                            $msg = 'order_payment_payflow entry not found';
+                            throw new Exception($msg);
+                        }
+                        $op->pnref = $payflow_payment->pnref;
+                        break;
+                    case Model_PaymentType::PAYPAL:
+                        $paypal_payment = $paypal_mapper->getByOrderPaymentId(
+                            $op->id);
+                        if (!$paypal_payment) {
+                            $msg = 'order_payment_paypal entry not found';
+                            throw new Exception($msg);
+                        }
+                        $op->pnref = $paypal_payment->pnref;
+                        break;
+                    //case Model_PaymentType::CHECK:
+                        
+                    //    break;
+                }
+                $op_array[] = $op;
             }
         }
         return $op_array;

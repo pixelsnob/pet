@@ -10,8 +10,20 @@ class Model_OrderPayment extends Pet_Model_Abstract {
         'order_id' => null,
         'payment_type_id' => null,
         'amount' => null,
-        'date' => null
+        'date' => null,
+
+        'pnref' => null
     );
+
+    /** 
+     * @return array
+     * 
+     */
+    public function toArray() {
+        $data = $this->_data;
+        unset($data['pnref']);
+        return $data;
+    }
 
 }
 

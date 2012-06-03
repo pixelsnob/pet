@@ -33,8 +33,6 @@ class Service_Orders {
         $op_mapper          = new Model_Mapper_OrderProducts;
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
         $payments_mapper    = new Model_Mapper_OrderPayments;
-        //$payflow_mapper     = new Model_Mapper_OrderPayments_Payflow; 
-        //$paypal_mapper      = new Model_Mapper_OrderPayments_Paypal; 
         $products_mapper    = new Model_Mapper_Products;
         $gateway_mapper     = new Model_Mapper_PaymentGateway;
         $users_mapper       = new Model_Mapper_Users;
@@ -68,6 +66,8 @@ class Service_Orders {
             throw new Exception($msg);
         }
         $order->payments = $payments;
+        // Get subscriptions...
+
         return $order;
     }
 
@@ -143,10 +143,11 @@ class Service_Orders {
             $db->beginTransaction();
             $subs = $ops_mapper->getByExpiration($expiration, true);
             foreach ($subs as $sub) {
-                $status = true;
                 if (!$sub->product->is_recurring) {
                     continue;
                 }
+                $status = true;
+                $log_data = array();
                 $min_expiration = new DateTime($sub->min_expiration);
                 // Stop repeating around a year -- reference transactions will only
                 // last that long...
@@ -155,33 +156,18 @@ class Service_Orders {
                 }
                 // Get order
                 $order = $this->getFullOrder($sub->order_id);
-                //print_r($order); exit;
                 if (!$order) {
                     $msg = 'Error retrieving order';
                     throw new Exception($msg);
                 }
-                // Get first payment
-                if (!isset($order->payments[0])) {
-                    $msg = 'Error retrieving from order_payments';
-                    throw new Exception($msg);
-                }
+                $log_data['order'] = $order;
                 $payment = $order->payments[0];
                 if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
                     // Payment type was payflow
-                    $payment = $payflow_mapper->getByOrderPaymentId($payment->id);
-                    if (!$payment) {
-                        $msg = 'Error retrieving from order_payments_payflow';
-                        throw new Exception($msg);
-                    }
                     $origid = $payment->pnref;
                     $tender = 'C';
                 } elseif ($payment->payment_type_id == Model_PaymentType::PAYPAL) {
                     // Payment type was paypal
-                    $payment = $paypal_mapper->getByOrderPaymentId($payment->id);
-                    if (!$payment) {
-                        $msg = 'Error retrieving from order_payments_paypal';
-                        throw new Exception($msg);
-                    }
                     $origid = $payment->pnref;
                     $tender = 'P';
                 }
@@ -191,15 +177,18 @@ class Service_Orders {
                         $sub->product->cost, $origid, $tender); 
                 } catch (Exception $e2) {
                     $status = false;
-                    $gateway_exceptions[] = $e2;
+                    $log_data['gateway_exceptions'][0] = $e2->getMessage() . ' ' .
+                        $e2->getTraceAsString();
                 }
-                if ($status) {
-                    $message = $view->render('emails/recurring_billing_success.phtml');
-                } else {
-                    $message = $view->render('emails/recurring_billing_fail.phtml');
-                }
-                $mail = new Zend_Mail;
+                $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
+                //throw new Exception('shit');
                 try {
+                    if ($status) {
+                        $message = $view->render('emails/recurring_billing_success.phtml');
+                    } else {
+                        $message = $view->render('emails/recurring_billing_fail.phtml');
+                    }
+                    $mail = new Zend_Mail;
                     $mail->setBodyText($message)
                          ->addTo($order->user->email)
                          ->setSubject('Customer invoice')
@@ -207,8 +196,10 @@ class Service_Orders {
                          ->send();
                 } catch (Exception $e3) {
                     // log
-                    $email_exceptions = $e3;
+                    $log_data['email_exceptions'][0] = $e3->getMessage() .
+                        ' ' . $e3->getTraceAsString();
                 }
+                //print_r($log_data); 
                 //print_r($gateway_mapper->getRawCalls());
                 // store order_payment data
                 // update expiration
@@ -216,11 +207,12 @@ class Service_Orders {
                 //print_r($sub);
             } 
             $db->commit();
-            // send emails
         } catch (Exception $e) {
-            // log 
+            // log !!!!
             // void any transactions
             $gateway_mapper->voidCalls();
+
+            print_r($gateway_mapper->getRawCalls());
         }
     }
 }
