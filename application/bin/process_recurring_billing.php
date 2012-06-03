@@ -6,7 +6,7 @@
 require_once 'zf_init.php';
 
 $application->getBootstrap()->bootstrap(
-    array('db', 'config', 'logger', 'autoload', 'registryView'));
+    array('db', 'mongo', 'config', 'logger', 'autoload', 'registryView'));
 
 // Get command line opts
 $opts = getopt('e:');

@@ -13,7 +13,7 @@ class Model_Mapper_OrderTransactions extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function __construct() {
-}
+    }
     
     /**
      * @param bool $status

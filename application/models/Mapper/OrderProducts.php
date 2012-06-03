@@ -15,13 +15,11 @@ class Model_Mapper_OrderProducts extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param int $order_id
-     * @param bool $for_update
      * @return array
      * 
      */
-    public function getByOrderId($order_id, $for_update = false) {
-        $order_products = $this->_order_products->getByOrderId($order_id,
-            $for_update);
+    public function getByOrderId($order_id) {
+        $order_products = $this->_order_products->getByOrderId($order_id);
         $out = array();
         if ($order_products) {
             foreach ($order_products as $op) {

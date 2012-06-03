@@ -176,7 +176,8 @@ class Service_Cart {
         );
         // If user is logged in, use that data to populate form, otherwise
         // show saved data if any
-        if ($users_svc->isAuthenticated()) {
+        if ($users_svc->isAuthenticated() && $users_svc->getUser() &&
+            $users_svc->getProfile()) {
             $form_data = array_merge(
                 $form_data,
                 $users_svc->getUser()->toArray(),
@@ -277,8 +278,8 @@ class Service_Cart {
         $order  = new Model_Cart_Order($data);
         $status = true;
         $db     = Zend_Db_Table::getDefaultAdapter();
-        $db->query('set transaction isolation level serializable');
         try {
+            $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             // Regular sale
             if ($config['use_payment_gateway']) {

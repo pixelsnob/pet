@@ -31,12 +31,11 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param bool $email_sent
-     * @param bool $for_update
      * @return array An array of Model_Order objects
      * 
      */
-    public function getByEmailSent($email_sent, $for_update = false) {
-        $orders = $this->_orders->getByEmailSent($email_sent, $for_update);
+    public function getByEmailSent($email_sent) {
+        $orders = $this->_orders->getByEmailSent($email_sent);
         $out = array();
         if ($orders) {
             foreach ($orders as $order) {

@@ -13,11 +13,8 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
      * @return Zend_Db_Table_Rowset object 
      * 
      */
-    public function getByEmailSent($email_sent, $for_update = false) {
+    public function getByEmailSent($email_sent) {
         $sel = $this->select()->where('email_sent = ?', (int) $email_sent);
-        if ($for_update) {
-            $sel->forUpdate();
-        }
         return $this->fetchAll($sel);
     }
 }

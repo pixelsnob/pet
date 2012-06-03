@@ -16,14 +16,11 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
     /**
      * @param int $user_id
      * @param mixed $digital_only
-     * @param bool $for_update
      * @return Zend_DbTable_Row_Abstract 
      * 
      */
-    public function getUnexpiredByUserId($user_id, $digital_only = null,
-                                         $for_update = false) {
-        $ops = $this->_ops->getUnexpiredByUserId(
-            $user_id, $digital_only, $for_update); 
+    public function getUnexpiredByUserId($user_id, $digital_only = null) {
+        $ops = $this->_ops->getUnexpiredByUserId($user_id, $digital_only); 
         if ($ops) {
             $ops_model = new Model_OrderProductSubscription($ops->toArray());
             return $ops_model;
@@ -51,13 +48,12 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         $subs_array = array();
         if ($subs) {
             foreach ($subs as $sub) {
-                $product = $products_mapper->getById($sub['product_id']);
-                if (!$product) {
-                    throw new Exception('Product not found');
-                }
                 $ops_model = new Model_OrderProductSubscription($sub);
                 $ops_model->min_expiration = $sub['min_expiration'];
-                $ops_model->product = $product;
+                if ($sub['product_id']) {
+                    $product = $products_mapper->getById($sub['product_id']);
+                    $ops_model->product = $product;
+                }
                 $subs_array[] = $ops_model;
             }
         }
