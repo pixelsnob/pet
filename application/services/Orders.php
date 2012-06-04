@@ -276,14 +276,17 @@ class Service_Orders {
         } catch (Exception $e) {
             try {
                 // Void any transactions and log
-                $exception_str = $e->getMessage() . ' ' . $e->getTraceAsString();
+                $exception_str = 'Urgent action necessary, recurring billing: ' .
+                    $e->getMessage() . ' ' . $e->getTraceAsString();
                 $logger->log($exception_str, Zend_Log::EMERG);
                 $gateway_mapper->voidCalls();
                 $rb_logger->insertErrors(false, array(
                     'gateway_calls' => $gateway_mapper->getRawCalls(),
                     'exceptions'    => $exception_str
                 ));
-            } catch (Exception $f) {}
+            } catch (Exception $f) {
+            
+            }
         }
     }
 }
