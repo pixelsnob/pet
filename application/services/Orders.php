@@ -222,7 +222,6 @@ class Service_Orders {
                     'expiration'       => $new_expiration->format('Y-m-d'),
                     'digital_only'     => $digital_only 
                 ));
-                throw new Exception('dammit');
                 $rb_logger->insertTransaction($processed_orders[$sub->id]['status'], $log_data);
             } 
             $db->commit();
@@ -254,7 +253,6 @@ class Service_Orders {
                      ->setSubject('Customer invoice')
                      ->addBcc('soapscum@pixelsnob.com')
                      ->send();
-                //throw new Exception('shit');
             } catch (Exception $e3) {
                 // Log
                 $exception_str = $e3->getMessage() . ' ' .
