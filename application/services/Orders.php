@@ -66,8 +66,8 @@ class Service_Orders {
         }
         $order->payments = $payments;
         // Get subscriptions...
-        $ordered_subs = $ops_mapper->getByOrderId($order->id);
-
+        $order_subs = $ops_mapper->getByOrderId($order->id);
+        $order->subscriptions = $order_subs;
         return $order;
     }
 
@@ -137,11 +137,13 @@ class Service_Orders {
         $gateway_exceptions = array();
         $email_exceptions   = array();
         $db = Zend_Db_Table::getDefaultAdapter();
-        $processed_orders = array();
+        $processed_orders   = array();
+        $run_again          = false;
         try {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             $subs = $ops_mapper->getByExpiration($expiration);
+            $c = 0;
             foreach ($subs as $sub) {
                 if (!$sub->product || !$sub->product->is_recurring) {
                     continue;
@@ -233,6 +235,15 @@ class Service_Orders {
                 }
                 $rb_logger->insertTransaction(
                     $processed_orders[$sub->id]['status'], $log_data);
+                $c++;
+                // Important! Break the loop and cause this method to run again
+                // if number of subscriptions processed is greater than n, to
+                // prevent the database from being locked up for a long time --
+                // breaks up the transactions into smaller chunks.
+                if ($c > 10) {
+                    $run_again = true;
+                    break;
+                }
             } 
             $db->commit();
         } catch (Exception $e) {
@@ -271,6 +282,9 @@ class Service_Orders {
                     $data['order']->user->email . ' ' . 
                     $exception_str, Zend_Log::EMERG);
             }
+        }
+        if ($run_again) {
+            $this->processRecurringBilling($expiration);
         }
     }
 }

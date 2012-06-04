@@ -40,7 +40,8 @@ class Model_Order extends Pet_Model_Abstract {
 
         'user' => null,
         'payments' => array(),
-        'products' => array()
+        'products' => array(),
+        'subscriptions' => array()
     );
     
     /** 
@@ -54,6 +55,7 @@ class Model_Order extends Pet_Model_Abstract {
             unset($data['user']);
             unset($data['products']);
             unset($data['payments']);
+            unset($data['subscriptions']);
         } else {
             $data['user'] = $data['user']->toArray();
             $products = array();
@@ -66,6 +68,11 @@ class Model_Order extends Pet_Model_Abstract {
                 $payments[] = $payment->toArray();
             }
             $data['payments'] = $payments;
+            $subscriptions = array();
+            foreach ($data['subscriptions'] as $subscription) {
+                $subscriptions[] = $subscription->toArray();
+            }
+            $data['subscriptions'] = $subscriptions;
         }
         return $data;
     }
