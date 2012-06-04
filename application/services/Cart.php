@@ -429,12 +429,12 @@ class Service_Cart {
         foreach ($gateway_responses as $response) {
             $payment_data = array(
                 'order_id'        => $order->order_id,
-                'payment_type_id' => Model_PaymentType::PAYFLOW,
                 'amount'          => $order->total,
                 'date'            => date('Y-m-d H:i:s')
             );
             if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
                 $payments_mapper->insert(array_merge($payment_data, array(
+                    'payment_type_id'     => Model_PaymentType::PAYFLOW,
                     'cc_number'           => substr($order->cc_num, -4),
                     'cc_expiration_month' => $order->cc_exp_month,
                     'cc_expiration_year'  => $order->cc_exp_year,
@@ -445,7 +445,8 @@ class Service_Cart {
                 )));
             } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
                 $payments_mapper->insert(array_merge($payment_data, array(
-                    'correlationid'   => $response->correlationid
+                    'correlationid'       => $response->correlationid,
+                    'payment_type_id'     => Model_PaymentType::PAYPAL,
                 )));
             }
         }

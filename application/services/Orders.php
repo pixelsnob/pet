@@ -66,6 +66,7 @@ class Service_Orders {
         }
         $order->payments = $payments;
         // Get subscriptions...
+        $ordered_subs = $ops_mapper->getByOrderId($order->id);
 
         return $order;
     }
@@ -104,6 +105,7 @@ class Service_Orders {
                 foreach ($orders_sent as $order_id) {
                     $this->_orders->updateEmailSent($order->id, true);
                 }
+                // notify?
             }
             $db->commit();
         } catch (Exception $e1) {
@@ -185,44 +187,52 @@ class Service_Orders {
                     $processed_orders[$sub->id]['status'] = false;
                     $log_data['exceptions'] = $e2->getMessage() . ' ' .
                         $e2->getTraceAsString();
-                    // notify????
+                    $logger->log('Recurring payment failed for ' .
+                        $order->user->email . ' ' .
+                        $e2->getMessage() . ' ' . $e2->getTraceAsString(),
+                        Zend_Log::EMERG);
                 }
                 $processed_orders[$sub->id]['order'] = $order;
-                // Save gateway data
-                $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
-                $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
-                foreach ($gateway_responses as $response) {
-                    $payment_data = array(
-                        'order_id'        => $order->id,
-                        'payment_type_id' => Model_PaymentType::PAYFLOW,
-                        'amount'          => $sub->product->cost,
-                        'date'            => date('Y-m-d H:i:s')
-                    );
-                    if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
-                        $payments_mapper->insert(array_merge($payment_data, array(
-                            'pnref'           => $response->pnref,
-                            'ppref'           => $response->ppref,
-                            'correlationid'   => $response->correlationid
-                        )));
-                    } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
-                        $payments_mapper->insert(array_merge($payment_data, array(
-                            'pnref'           => $response->pnref,
-                            'correlationid'   => $response->correlationid
-                        )));
+                // Only save successful payment
+                if ($processed_orders[$sub->id]['status']) {
+                    // Save gateway data
+                    $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
+                    $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
+                    foreach ($gateway_responses as $response) {
+                        $payment_data = array(
+                            'order_id'        => $order->id,
+                            'payment_type_id' => Model_PaymentType::PAYFLOW,
+                            'amount'          => $sub->product->cost,
+                            'date'            => date('Y-m-d H:i:s')
+                        );
+                        if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
+                            $payments_mapper->insert(array_merge($payment_data, array(
+                                'pnref'           => $response->pnref,
+                                'ppref'           => $response->ppref,
+                                'correlationid'   => $response->correlationid
+                            )));
+                        } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
+                            $payments_mapper->insert(array_merge($payment_data, array(
+                                'pnref'           => $response->pnref,
+                                'correlationid'   => $response->correlationid
+                            )));
+                        }
                     }
+                    // Calculate new expiration
+                    $new_expiration = new DateTime($sub->expiration);
+                    $date_int_str = "P{$sub->product->term_months}M";
+                    $new_expiration->add(new DateInterval($date_int_str));
+                    $digital_only = is_a($sub->product,
+                        'Model_Product_DigitalSubscription');
+                    $ops_mapper->insert(array(
+                        'user_id'          => $order->user->id,
+                        'order_product_id' => $sub->order_product_id,
+                        'expiration'       => $new_expiration->format('Y-m-d'),
+                        'digital_only'     => $digital_only 
+                    ));
                 }
-                // Calculate new expiration
-                $new_expiration = new DateTime($sub->expiration);
-                $date_int_str = "P{$sub->product->term_months}M";
-                $new_expiration->add(new DateInterval($date_int_str));
-                $digital_only = is_a($sub->product, 'Model_Product_DigitalSubscription');
-                $ops_mapper->insert(array(
-                    'user_id'          => $order->user->id,
-                    'order_product_id' => $sub->order_product_id,
-                    'expiration'       => $new_expiration->format('Y-m-d'),
-                    'digital_only'     => $digital_only 
-                ));
-                $rb_logger->insertTransaction($processed_orders[$sub->id]['status'], $log_data);
+                $rb_logger->insertTransaction(
+                    $processed_orders[$sub->id]['status'], $log_data);
             } 
             $db->commit();
         } catch (Exception $e) {

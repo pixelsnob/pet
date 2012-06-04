@@ -8,6 +8,20 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
     protected $_name = 'order_product_subscriptions';
 
     /**
+     * @param int $order_id
+     * @return Zend_DbTable_Rowset 
+     * 
+     */
+    public function getByOrderId($order_id) {
+        $sel = $this->select()->setIntegrityCheck(false)
+            ->from(array('ops' => 'order_product_subscriptions'))
+            ->joinLeft(array('op' => 'order_products'),
+                'ops.order_product_id = op.id')
+            ->where('op.order_id = ?', $order_id);
+        return $this->fetchAll($sel);
+    }
+
+    /**
      * @param int $user_id
      * @param mixed $digital_only
      * @return Zend_DbTable_Row  

@@ -12,6 +12,23 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
     public function __construct() {
         $this->_ops = new Model_DbTable_OrderProductSubscriptions;
     }
+    
+    /**
+     * @param int $order_id
+     * @return array
+     * 
+     */
+    public function getByOrderId($order_id) {
+        $subs = $this->_ops->getByOrderId($order_id);
+        $subs_array = array();
+        if ($subs) {
+            foreach ($subs as $sub) {
+                $subs_array[] = new Model_OrderProductSubscription(
+                    $sub->toArray());
+            }
+            return $subs_array;
+        }
+    }
 
     /**
      * @param int $user_id
