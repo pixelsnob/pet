@@ -17,14 +17,19 @@ class Model_OrderProductSubscription extends Pet_Model_Abstract {
     );
     
     /**
+     * @param bool $refs Whether to include references to other objects
      * @return array
      * 
      */
-    public function toArray() {
+    public function toArray($refs = false) {
         $data = $this->_data;
-        unset($data['min_expiration']);
-        unset($data['product']);
-        unset($data['order_id']);
+        if (!$refs) {
+            unset($data['min_expiration']);
+            unset($data['product']);
+            unset($data['order_id']);
+        } else {
+            $data['product'] = $data['product']->toArray();
+        }
         return $data;
     }
 

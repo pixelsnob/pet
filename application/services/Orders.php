@@ -34,7 +34,6 @@ class Service_Orders {
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
-        $gateway_mapper     = new Model_Mapper_PaymentGateway;
         $users_mapper       = new Model_Mapper_Users;
         // Get order
         $order = $this->getById($id);
@@ -128,37 +127,36 @@ class Service_Orders {
      */
     public function processRecurringBilling(DateTime $expiration) {
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
-        $payflow_mapper     = new Model_Mapper_OrderPayments_Payflow; 
-        $paypal_mapper      = new Model_Mapper_OrderPayments_Paypal; 
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
         $gateway_mapper     = new Model_Mapper_PaymentGateway;
-        $users_mapper       = new Model_Mapper_Users;
-        $logger             = new Model_Mapper_RecurringBillingTransactions;
+        $rb_logger          = new Model_Mapper_RecurringBillingTransactions;
         $view               = Zend_Registry::get('view');
+        $logger             = Zend_Registry::get('log');
         $gateway_exceptions = array();
         $email_exceptions   = array();
         //$expiration      = new DateTime('2012-11-02');
         //$date->add(new DateInterval('P2D'));
         $db = Zend_Db_Table::getDefaultAdapter();
+        $processed_orders_status = array();
         try {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             $subs = $ops_mapper->getByExpiration($expiration);
-            foreach ($subs as $sub) {
+            foreach ($subs as $i => $sub) {
                 if (!$sub->product || !$sub->product->is_recurring) {
                     continue;
                 }
-                $status = true;
                 $log_data = array(
-                    'order'              => array(),
-                    'gateway_calls'      => array(),
-                    'exceptions'         => array()
+                    'order'                     => null,
+                    'gateway_calls'             => array(),
+                    'exceptions'                => array()
                 );
                 $min_expiration = new DateTime($sub->min_expiration);
                 // Stop repeating around a year -- reference transactions will only
                 // last that long...
-                if ($expiration->diff($min_expiration)->m > 11) {
+                if ($expiration->diff($min_expiration)->days > 335) {
+                    // notify?
                     continue; 
                 }
                 // Get order
@@ -166,7 +164,7 @@ class Service_Orders {
                 if (!$order) {
                     throw new Exception('Error retrieving order');
                 }
-                $log_data['order'] = $order;
+                $log_data['order'] = $order->toArray(true);
                 if (!isset($order->payments[0])) {
                     throw new Exception('Error retrieving order payment');
                 }
@@ -184,73 +182,88 @@ class Service_Orders {
                 try {
                     $gateway_mapper->processReferenceTransaction(
                         $sub->product->cost, $origid, $tender); 
+                    $processed_orders_status[$i] = true;
                 } catch (Exception $e2) {
-                    $status = false;
+                    //$status = false;
+                    $processed_orders_status[$i] = false;
                     $log_data['exceptions'] = $e2->getMessage() . ' ' .
                         $e2->getTraceAsString();
                 }
                 $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
-                // Mail customer
-                try {
-                    if ($status) {
-                        $message = $view->render(
-                            'emails/recurring_billing_success.phtml');
-                    } else {
-                        $message = $view->render(
-                            'emails/recurring_billing_fail.phtml');
-                    }
-                    $mail = new Zend_Mail;
-                    $mail->setBodyText($message)
-                         ->addTo($order->user->email)
-                         ->setSubject('Customer invoice')
-                         ->addBcc('soapscum@pixelsnob.com')
-                         ->send();
-                    throw new Exception('shit');
-                } catch (Exception $e3) {
-                    // log
-                    $log_data['exceptions'][] = $e3->getMessage() .
-                        ' ' . $e3->getTraceAsString();
-                }
+                // Save gateway data
                 $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
-                // this should probably be moved to payments mapper
                 foreach ($gateway_responses as $response) {
+                    $payment_data = array(
+                        'order_id'        => $order->id,
+                        'payment_type_id' => Model_PaymentType::PAYFLOW,
+                        'amount'          => $sub->product->cost,
+                        'date'            => date('Y-m-d H:i:s')
+                    );
                     if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
-                        $opid = $payments_mapper->insert(array(
-                            'order_id'            => $order->id,
-                            'payment_type_id'     => Model_PaymentType::PAYFLOW,
-                            'amount'              => $order->total,
-                            'date'                => date('Y-m-d H:i:s')
-                        ));
-                        $payflow_mapper->insert(array(
-                            'order_payment_id'    => $opid,
-                            'pnref'               => $response->pnref,
-                            'ppref'               => $response->ppref,
-                            'correlationid'       => $response->correlationid,
-
-                        ));
+                        $payments_mapper->insert(array_merge($payment_data, array(
+                            'pnref'           => $response->pnref,
+                            'ppref'           => $response->ppref,
+                            'correlationid'   => $response->correlationid
+                        )));
                     } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
-                        $opid = $payments_mapper->insert(array(
-                            'order_id'         => $order->id,
-                            'payment_type_id'  => Model_PaymentType::PAYPAL,
-                            'amount'           => $order->total,
-                            'date'             => date('Y-m-d H:i:s')
-                        ));
-                        $paypal_mapper->insert(array(
-                            'order_payment_id' => $opid,
-                            'correlationid'    => $response->correlationid
-                        ));
+                        $payments_mapper->insert(array_merge($payment_data, array(
+                            'pnref'           => $response->pnref,
+                            'correlationid'   => $response->correlationid
+                        )));
                     }
                 }
-                $logger->insert($status, $log_data);
-                // update expiration
-                // log
-                //print_r($sub);
+                $new_expiration = new DateTime($sub->expiration);
+                $date_int_str = "P{$sub->product->term_months}M";
+                $new_expiration->add(new DateInterval($date_int_str));
+                $digital_only = is_a($sub->product, 'Model_Product_DigitalSubscription');
+                $ops_mapper->insert(array(
+                    'user_id'          => $order->user->id,
+                    'order_product_id' => $sub->order_product_id,
+                    'expiration'       => $new_expiration->format('Y-m-d'),
+                    'digital_only'     => $digital_only 
+                ));
+                $rb_logger->insert($processed_orders_status[$i], $log_data);
             } 
             $db->commit();
         } catch (Exception $e) {
-            // log !!!!
-            // void any transactions
-            $gateway_mapper->voidCalls();
+            // Void any transactions and log
+            $exception_str = $e->getMessage() . ' ' . $e->getTraceAsString();
+            $logger->log($exception_str, Zend_Log::EMERG);
+            try {
+                $gateway_mapper->voidCalls();
+                $rb_logger->insert(array(
+                    'gateway_calls' => $gateway_mapper->getRawCalls(),
+                    'exceptions'    => $exception_str
+                ));
+            } catch (Exception $f) {}
         }
+        foreach ($subs as $i => $sub) {
+            if (!isset($processed_orders_status[$i])) {
+                continue;
+            }
+            // Mail customer
+            try {
+                if ($processed_orders_status[$i]) {
+                    $message = $view->render(
+                        'emails/recurring_billing_success.phtml');
+                } else {
+                    $message = $view->render(
+                        'emails/recurring_billing_fail.phtml');
+                }
+                $mail = new Zend_Mail;
+                $mail->setBodyText($message)
+                     ->addTo($order->user->email)
+                     ->setSubject('Customer invoice')
+                     ->addBcc('soapscum@pixelsnob.com')
+                     ->send();
+                throw new Exception('shit');
+            } catch (Exception $e3) {
+                // log
+                $log_data['exceptions'][] = $e3->getMessage() .
+                    ' ' . $e3->getTraceAsString();
+            }
+        }
+        //print_r($successful_orders);
+        // send emails if no errors
     }
 }

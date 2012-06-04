@@ -44,14 +44,29 @@ class Model_Order extends Pet_Model_Abstract {
     );
     
     /** 
+     * @param bool Whether to include references to other objects
      * @return array
      * 
      */
-    public function toArray() {
+    public function toArray($refs = false) {
         $data = $this->_data;
-        unset($data['user']);
-        unset($data['products']);
-        unset($data['payments']);
+        if (!$refs) {
+            unset($data['user']);
+            unset($data['products']);
+            unset($data['payments']);
+        } else {
+            $data['user'] = $data['user']->toArray();
+            $products = array();
+            foreach ($data['products'] as $product) {
+                $products[] = $product->toArray();
+            }
+            $data['products'] = $products;
+            $payments = array();
+            foreach ($data['payments'] as $payment) {
+                $payments[] = $payment->toArray();
+            }
+            $data['payments'] = $payments;
+        }
         return $data;
     }
 }

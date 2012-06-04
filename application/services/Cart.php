@@ -311,10 +311,6 @@ class Service_Cart {
             $order->order_id = $orders_mapper->insert($order->toArray());
             $this->_saveOrderProducts($order);
             $order_payment_id = $this->_saveOrderPayments($order);
-            /*if ($cart->products->hasRecurring()) {
-                $this->_saveRecurringBilling($order_payment_id, $order);
-                exit('?');
-            }*/
             // Log
             $log_data = array(
                 'type'     => 'process',
@@ -429,41 +425,28 @@ class Service_Cart {
      */
     private function _saveOrderPayments(Model_Cart_Order $order) {
         $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
-        $op_mapper = new Model_Mapper_OrderPayments;
+        $payments_mapper = new Model_Mapper_OrderPayments;
         foreach ($gateway_responses as $response) {
+            $payment_data = array(
+                'order_id'        => $order->order_id,
+                'payment_type_id' => Model_PaymentType::PAYFLOW,
+                'amount'          => $order->total,
+                'date'            => date('Y-m-d H:i:s')
+            );
             if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
-                $opid = $op_mapper->insert(array(
-                    'order_id'            => $order->order_id,
-                    'payment_type_id'     => Model_PaymentType::PAYFLOW,
-                    'amount'              => $order->total,
-                    'date'                => date('Y-m-d H:i:s')
-                ));
-                $op_payflow_mapper = new Model_Mapper_OrderPayments_Payflow;
-                $op_payflow_mapper->insert(array(
-                    'order_payment_id'    => $opid,
+                $payments_mapper->insert(array_merge($payment_data, array(
                     'cc_number'           => substr($order->cc_num, -4),
                     'cc_expiration_month' => $order->cc_exp_month,
                     'cc_expiration_year'  => $order->cc_exp_year,
+                    'cvv2match'           => $response->cvv2match,
                     'pnref'               => $response->pnref,
                     'ppref'               => $response->ppref,
-                    'correlationid'       => $response->correlationid,
-                    'cvv2match'           => $response->cvv2match
-
-                ));
-                return $opid;
+                    'correlationid'       => $response->correlationid
+                )));
             } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
-                $opid = $op_mapper->insert(array(
-                    'order_id'         => $order->order_id,
-                    'payment_type_id'  => Model_PaymentType::PAYPAL,
-                    'amount'           => $order->total,
-                    'date'             => date('Y-m-d H:i:s')
-                ));
-                $op_paypal_mapper = new Model_Mapper_OrderPayments_Paypal;
-                $op_paypal_mapper->insert(array(
-                    'order_payment_id' => $opid,
-                    'correlationid'    => $response->correlationid
-                ));
-                return $opid;
+                $payments_mapper->insert(array_merge($payment_data, array(
+                    'correlationid'   => $response->correlationid
+                )));
             }
         }
     }
