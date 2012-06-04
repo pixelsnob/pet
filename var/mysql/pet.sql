@@ -435,13 +435,13 @@ DROP TABLE IF EXISTS `pet`.`order_payments_payflow` ;
 CREATE  TABLE IF NOT EXISTS `pet`.`order_payments_payflow` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `order_payment_id` INT(11) NOT NULL ,
-  `cc_number` VARCHAR(16) NOT NULL ,
+  `cc_number` VARCHAR(16) NULL ,
   `cc_expiration_month` INT(2) NULL ,
   `cc_expiration_year` INT(2) NULL ,
   `pnref` VARCHAR(12) NOT NULL ,
   `ppref` VARCHAR(17) NOT NULL ,
   `correlationid` VARCHAR(13) NOT NULL ,
-  `cvv2match` VARCHAR(1) NOT NULL ,
+  `cvv2match` VARCHAR(1) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `order_payments_payflow_ibfk_1` (`order_payment_id` ASC) ,
@@ -728,6 +728,8 @@ CREATE  TABLE IF NOT EXISTS `pet`.`order_product_subscriptions` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `order_product_subscriptions_ibfk_1` (`user_id` ASC) ,
   INDEX `order_product_subscriptions_ibfk_2` (`order_product_id` ASC) ,
+  INDEX `expiration` (`expiration` ASC) ,
+  INDEX `user_id` (`user_id` ASC) ,
   CONSTRAINT `order_product_subscriptions_ibfk_1`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )
@@ -742,6 +744,66 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 98303
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `pet`.`recurring_billing`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`recurring_billing` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`recurring_billing` (
+  `id` INT NOT NULL ,
+  `order_id` INT NOT NULL ,
+  `payment_type_id` INT NOT NULL ,
+  `start_date` DATE NOT NULL ,
+  `end_date` DATE NOT NULL ,
+  `next_bill_date` DATE NOT NULL ,
+  `next_bill_amount` DOUBLE(5,2) NOT NULL DEFAULT 0 ,
+  `original_pnref` VARCHAR(12) NULL ,
+  `original_correlation_id` VARCHAR(20) NULL ,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1 ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  UNIQUE INDEX `order_id_UNIQUE` (`order_id` ASC) ,
+  INDEX `recurring_billing_fk_1` (`order_id` ASC) ,
+  INDEX `recurring_billing_fk_2` (`payment_type_id` ASC) ,
+  CONSTRAINT `recurring_billing_fk_1`
+    FOREIGN KEY (`order_id` )
+    REFERENCES `pet`.`orders` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `recurring_billing_fk_2`
+    FOREIGN KEY (`payment_type_id` )
+    REFERENCES `pet`.`payment_types` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pet`.`recurring_billing_order_payments`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`recurring_billing_order_payments` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`recurring_billing_order_payments` (
+  `id` INT NOT NULL ,
+  `order_payment_id` INT NOT NULL ,
+  `recurring_billing_profile_id` INT NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  INDEX `recurring_billing_order_payments_fk_1` (`order_payment_id` ASC) ,
+  INDEX `recurring_billing_order_payments_fk_2` (`recurring_billing_profile_id` ASC) ,
+  CONSTRAINT `recurring_billing_order_payments_fk_1`
+    FOREIGN KEY (`order_payment_id` )
+    REFERENCES `pet`.`order_payments` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `recurring_billing_order_payments_fk_2`
+    FOREIGN KEY (`recurring_billing_profile_id` )
+    REFERENCES `pet`.`recurring_billing` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
