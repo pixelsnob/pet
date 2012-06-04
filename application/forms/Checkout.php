@@ -174,7 +174,8 @@ class Form_Checkout extends Pet_Form {
      * 
      */
     public function getShippingValues() {
-        if ($this->_cart->isShippingAddressRequired() && !$this->_cart->use_shipping) {
+        //if ($this->_cart->isShippingAddressRequired() && !$this->_cart->use_shipping) {
+        if (!$this->_cart->use_shipping) {
             return array(
                 'shipping_first_name'  => $this->user->first_name->getValue(),
                 'shipping_last_name'   => $this->user->last_name->getValue(),

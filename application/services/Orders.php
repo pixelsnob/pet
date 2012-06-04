@@ -156,7 +156,7 @@ class Service_Orders {
                 // Stop repeating around a year -- reference transactions will only
                 // last that long...
                 if ($expiration->diff($min_expiration)->days > 335) {
-                    // notify?
+                    // notify???????????????????????????
                     continue; 
                 }
                 // Get order
@@ -184,13 +184,12 @@ class Service_Orders {
                         $sub->product->cost, $origid, $tender); 
                     $processed_orders_status[$i] = true;
                 } catch (Exception $e2) {
-                    //$status = false;
                     $processed_orders_status[$i] = false;
                     $log_data['exceptions'] = $e2->getMessage() . ' ' .
                         $e2->getTraceAsString();
                 }
-                $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
                 // Save gateway data
+                $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
                 $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
                 foreach ($gateway_responses as $response) {
                     $payment_data = array(
@@ -212,6 +211,7 @@ class Service_Orders {
                         )));
                     }
                 }
+                // Calculate new expiration
                 $new_expiration = new DateTime($sub->expiration);
                 $date_int_str = "P{$sub->product->term_months}M";
                 $new_expiration->add(new DateInterval($date_int_str));
@@ -258,9 +258,11 @@ class Service_Orders {
                      ->send();
                 throw new Exception('shit');
             } catch (Exception $e3) {
-                // log
-                $log_data['exceptions'][] = $e3->getMessage() .
-                    ' ' . $e3->getTraceAsString();
+                // Log
+                $exception_str = $e3->getMessage() . ' ' .
+                    $e3->getTraceAsString();
+                $logger->log('Recurring billing failure: ' .
+                    $exception_str, Zend_Log::EMERG);
             }
         }
         //print_r($successful_orders);
