@@ -129,24 +129,22 @@ class Service_Orders {
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
-        $gateway_mapper     = new Model_Mapper_PaymentGateway;
         $rb_logger          = new Model_Mapper_RecurringBillingTransactions;
         $view               = Zend_Registry::get('view');
         $logger             = Zend_Registry::get('log');
         $gateway_exceptions = array();
         $email_exceptions   = array();
-        //$expiration      = new DateTime('2012-11-02');
-        //$date->add(new DateInterval('P2D'));
         $db = Zend_Db_Table::getDefaultAdapter();
-        $processed_orders_status = array();
+        $processed_orders = array();
         try {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             $subs = $ops_mapper->getByExpiration($expiration);
-            foreach ($subs as $i => $sub) {
+            foreach ($subs as $sub) {
                 if (!$sub->product || !$sub->product->is_recurring) {
                     continue;
                 }
+                $gateway_mapper = new Model_Mapper_PaymentGateway;
                 $log_data = array(
                     'order'                     => null,
                     'gateway_calls'             => array(),
@@ -182,12 +180,14 @@ class Service_Orders {
                 try {
                     $gateway_mapper->processReferenceTransaction(
                         $sub->product->cost, $origid, $tender); 
-                    $processed_orders_status[$i] = true;
+                    $processed_orders[$sub->id]['status'] = true;
                 } catch (Exception $e2) {
-                    $processed_orders_status[$i] = false;
+                    $processed_orders[$sub->id]['status'] = false;
                     $log_data['exceptions'] = $e2->getMessage() . ' ' .
                         $e2->getTraceAsString();
+                    // notify????
                 }
+                $processed_orders[$sub->id]['order'] = $order;
                 // Save gateway data
                 $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
                 $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
@@ -222,28 +222,26 @@ class Service_Orders {
                     'expiration'       => $new_expiration->format('Y-m-d'),
                     'digital_only'     => $digital_only 
                 ));
-                $rb_logger->insert($processed_orders_status[$i], $log_data);
+                throw new Exception('dammit');
+                $rb_logger->insertTransaction($processed_orders[$sub->id]['status'], $log_data);
             } 
             $db->commit();
         } catch (Exception $e) {
-            // Void any transactions and log
-            $exception_str = $e->getMessage() . ' ' . $e->getTraceAsString();
-            $logger->log($exception_str, Zend_Log::EMERG);
             try {
+                // Void any transactions and log
+                $exception_str = $e->getMessage() . ' ' . $e->getTraceAsString();
+                $logger->log($exception_str, Zend_Log::EMERG);
                 $gateway_mapper->voidCalls();
-                $rb_logger->insert(array(
+                $rb_logger->insertErrors(false, array(
                     'gateway_calls' => $gateway_mapper->getRawCalls(),
                     'exceptions'    => $exception_str
                 ));
             } catch (Exception $f) {}
         }
-        foreach ($subs as $i => $sub) {
-            if (!isset($processed_orders_status[$i])) {
-                continue;
-            }
+        foreach ($processed_orders as $data) {
             // Mail customer
             try {
-                if ($processed_orders_status[$i]) {
+                if ($data['status']) {
                     $message = $view->render(
                         'emails/recurring_billing_success.phtml');
                 } else {
@@ -252,20 +250,19 @@ class Service_Orders {
                 }
                 $mail = new Zend_Mail;
                 $mail->setBodyText($message)
-                     ->addTo($order->user->email)
+                     ->addTo($data['order']->user->email)
                      ->setSubject('Customer invoice')
                      ->addBcc('soapscum@pixelsnob.com')
                      ->send();
-                throw new Exception('shit');
+                //throw new Exception('shit');
             } catch (Exception $e3) {
                 // Log
                 $exception_str = $e3->getMessage() . ' ' .
                     $e3->getTraceAsString();
-                $logger->log('Recurring billing failure: ' .
+                $logger->log('Recurring billing failure, mail not sent for ' .
+                    $data['order']->user->email . ' ' . 
                     $exception_str, Zend_Log::EMERG);
             }
         }
-        //print_r($successful_orders);
-        // send emails if no errors
     }
 }
