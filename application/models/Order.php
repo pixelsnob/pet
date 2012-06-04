@@ -65,7 +65,7 @@ class Model_Order extends Pet_Model_Abstract {
             $data['products'] = $products;
             $payments = array();
             foreach ($data['payments'] as $payment) {
-                $payments[] = $payment->toArray();
+                $payments[] = $payment->toArray(true);
             }
             $data['payments'] = $payments;
             $subscriptions = array();

@@ -20,11 +20,19 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
      */
     public function getByOrderId($order_id) {
         $subs = $this->_ops->getByOrderId($order_id);
+        $products_mapper = new Model_Mapper_Products;
         $subs_array = array();
         if ($subs) {
             foreach ($subs as $sub) {
-                $subs_array[] = new Model_OrderProductSubscription(
+                $temp_sub = new Model_OrderProductSubscription(
                     $sub->toArray());
+                $temp_product = $products_mapper->getById($sub->product_id);
+                if (!$temp_product) {
+                    $msg = "Product by id {$sub->product_id} not found";
+                    throw new Exception($msg);
+                }
+                $temp_sub->product = $temp_product;
+                $subs_array[] = $temp_sub;
             }
             return $subs_array;
         }

@@ -12,16 +12,21 @@ class Model_OrderPayment extends Pet_Model_Abstract {
         'amount' => null,
         'date' => null,
 
-        'pnref' => null
+        'gateway_data' => null
     );
 
     /** 
+     * @param bool Whether to include references to other objects
      * @return array
      * 
      */
-    public function toArray() {
+    public function toArray($refs = false) {
         $data = $this->_data;
-        unset($data['pnref']);
+        if (!$refs) {
+            unset($data['gateway_data']);
+        } else {
+            $data['gateway_data'] = $data['gateway_data']->toArray();
+        }
         return $data;
     }
 

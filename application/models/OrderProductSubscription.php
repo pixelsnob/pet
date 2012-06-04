@@ -13,6 +13,7 @@ class Model_OrderProductSubscription extends Pet_Model_Abstract {
         'digital_only' => 0,
         'min_expiration' => null,
         'order_id' => null,
+
         'product' => null
     );
     

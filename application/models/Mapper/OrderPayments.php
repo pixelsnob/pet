@@ -53,19 +53,21 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
                         $payflow_payment = $this->_payflow_mapper->getByOrderPaymentId(
                             $op->id);
                         if (!$payflow_payment) {
-                            $msg = 'order_payment_payflow entry not found';
+                            $msg = 'Payflow entry not found for order_payment_id ' .
+                                $op->id;
                             throw new Exception($msg);
                         }
-                        $op->pnref = $payflow_payment->pnref;
+                        $op->gateway_data = $payflow_payment;
                         break;
                     case Model_PaymentType::PAYPAL:
                         $paypal_payment = $this->_paypal_mapper->getByOrderPaymentId(
                             $op->id);
                         if (!$paypal_payment) {
-                            $msg = 'order_payment_paypal entry not found';
+                            $msg = 'Paypal entry not found for order_payment_id ' .
+                                $op->id;
                             throw new Exception($msg);
                         }
-                        $op->pnref = $paypal_payment->pnref;
+                        $op->gateway_data = $paypal_payment;
                         break;
                     //case Model_PaymentType::CHECK:
                         

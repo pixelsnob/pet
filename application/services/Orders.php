@@ -121,7 +121,7 @@ class Service_Orders {
     }
     
     /**
-     * This should be run once per day
+     * This should be run once per day, preferably not too long after midnight...
      * 
      * @param DateTime $expiration The expiration date to use for the search
      * @return void
@@ -173,48 +173,48 @@ class Service_Orders {
                 $payment = $order->payments[0];
                 if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
                     // Payment type was payflow
-                    $origid = $payment->pnref;
+                    $origid = $payment->gateway_data->pnref;
                     $tender = 'C';
                 } elseif ($payment->payment_type_id == Model_PaymentType::PAYPAL) {
                     // Payment type was paypal
-                    $origid = $payment->pnref;
+                    $origid = $payment->gateway_data->pnref;
                     $tender = 'P';
                 }
                 // Make a charge attempt
                 try {
                     $gateway_mapper->processReferenceTransaction(
                         $sub->product->cost, $origid, $tender); 
-                    $processed_orders[$sub->id]['status'] = true;
+                    $status = true;
                 } catch (Exception $e2) {
-                    $processed_orders[$sub->id]['status'] = false;
+                    $status = false;
                     $log_data['exceptions'] = $e2->getMessage() . ' ' .
                         $e2->getTraceAsString();
                     $logger->log('Recurring payment failed for ' .
                         $order->user->email . ' ' .
                         $e2->getMessage() . ' ' . $e2->getTraceAsString(),
-                        Zend_Log::EMERG);
+                        Zend_Log::CRIT);
                 }
-                $processed_orders[$sub->id]['order'] = $order;
+                $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
                 // Only save successful payment
-                if ($processed_orders[$sub->id]['status']) {
+                if ($status) {
                     // Save gateway data
-                    $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
                     $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
                     foreach ($gateway_responses as $response) {
                         $payment_data = array(
                             'order_id'        => $order->id,
-                            'payment_type_id' => Model_PaymentType::PAYFLOW,
                             'amount'          => $sub->product->cost,
                             'date'            => date('Y-m-d H:i:s')
                         );
                         if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
                             $payments_mapper->insert(array_merge($payment_data, array(
+                                'payment_type_id' => Model_PaymentType::PAYFLOW,
                                 'pnref'           => $response->pnref,
                                 'ppref'           => $response->ppref,
                                 'correlationid'   => $response->correlationid
                             )));
                         } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
                             $payments_mapper->insert(array_merge($payment_data, array(
+                                'payment_type_id' => Model_PaymentType::PAYPAL,
                                 'pnref'           => $response->pnref,
                                 'correlationid'   => $response->correlationid
                             )));
@@ -233,8 +233,32 @@ class Service_Orders {
                         'digital_only'     => $digital_only 
                     ));
                 }
-                $rb_logger->insertTransaction(
-                    $processed_orders[$sub->id]['status'], $log_data);
+                // Mail customer
+                try {
+                    if ($status) {
+                        $message = $view->render(
+                            'emails/recurring_billing_success.phtml');
+                    } else {
+                        $message = $view->render(
+                            'emails/recurring_billing_fail.phtml');
+                    }
+                    $mail = new Zend_Mail;
+                    $mail->setBodyText($message)
+                         ->addTo($order->user->email)
+                         ->setSubject('Customer invoice')
+                         ->addBcc('soapscum@pixelsnob.com')
+                         ->send();
+                } catch (Exception $e3) {
+                    // Log
+                    $exception_str = $e3->getMessage() . ' ' .
+                        $e3->getTraceAsString();
+                    $logger->log('Recurring billing failure, mail not sent for ' .
+                        $data['order']->user->email . ' ' . 
+                        $exception_str, Zend_Log::CRIT);
+                }
+                ///$rb_logger->insertTransaction(
+                //    $processed_orders[$sub->id]['status'], $log_data);
+                $rb_logger->insertTransaction($status, $log_data);
                 $c++;
                 // Important! Break the loop and cause this method to run again
                 // if number of subscriptions processed is greater than n, to
@@ -246,6 +270,9 @@ class Service_Orders {
                 }
             } 
             $db->commit();
+            if ($run_again) {
+                $this->processRecurringBilling($expiration);
+            }
         } catch (Exception $e) {
             try {
                 // Void any transactions and log
@@ -257,34 +284,6 @@ class Service_Orders {
                     'exceptions'    => $exception_str
                 ));
             } catch (Exception $f) {}
-        }
-        foreach ($processed_orders as $data) {
-            // Mail customer
-            try {
-                if ($data['status']) {
-                    $message = $view->render(
-                        'emails/recurring_billing_success.phtml');
-                } else {
-                    $message = $view->render(
-                        'emails/recurring_billing_fail.phtml');
-                }
-                $mail = new Zend_Mail;
-                $mail->setBodyText($message)
-                     ->addTo($data['order']->user->email)
-                     ->setSubject('Customer invoice')
-                     ->addBcc('soapscum@pixelsnob.com')
-                     ->send();
-            } catch (Exception $e3) {
-                // Log
-                $exception_str = $e3->getMessage() . ' ' .
-                    $e3->getTraceAsString();
-                $logger->log('Recurring billing failure, mail not sent for ' .
-                    $data['order']->user->email . ' ' . 
-                    $exception_str, Zend_Log::EMERG);
-            }
-        }
-        if ($run_again) {
-            $this->processRecurringBilling($expiration);
         }
     }
 }
