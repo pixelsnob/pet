@@ -14,6 +14,21 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param int $id
+     * @return array
+     * 
+     */
+    public function getById($id) {
+        $promo_products_mapper = new Model_Mapper_PromoProducts;
+        $promo = $this->_promos->getById($id); 
+        if ($promo) {
+            $promo = new Model_Promo($promo->toArray());
+            $promo->promo_products = $promo_products_mapper->getByPromoId($promo->id);
+            return $promo;
+        }
+    }
+
+    /**
      * @param string $code Promo code
      * @return Model_Promo|void
      * 

@@ -42,7 +42,9 @@ class Model_Order extends Pet_Model_Abstract {
         'user_profile' => null,
         'payments' => array(),
         'products' => array(),
-        'subscriptions' => array()
+        'subscriptions' => array(),
+        'gifts' => array(),
+        'promo' => null
     );
     
     /** 
@@ -58,6 +60,8 @@ class Model_Order extends Pet_Model_Abstract {
             unset($data['products']);
             unset($data['payments']);
             unset($data['subscriptions']);
+            unset($data['gifts']);
+            unset($data['promo']);
         } else {
             $data['user'] = $data['user']->toArray();
             $data['user_profile'] = $data['user_profile']->toArray();
@@ -76,6 +80,14 @@ class Model_Order extends Pet_Model_Abstract {
                 $subscriptions[] = $subscription->toArray();
             }
             $data['subscriptions'] = $subscriptions;
+            $gifts = array();
+            foreach ($data['gifts'] as $gift) {
+                $gifts[] = $gift->toArray();
+            }
+            $data['gifts'] = $gifts;
+            if ($data['promo']) {
+                $data['promo'] = $data['promo']->toArray();
+            }
         }
         return $data;
     }

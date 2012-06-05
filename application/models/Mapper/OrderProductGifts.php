@@ -15,6 +15,22 @@ class Model_Mapper_OrderProductGifts extends Pet_Model_Mapper_Abstract {
     }
     
     /**
+     * @param int $order_id
+     * @return array
+     * 
+     */
+    public function getByOrderId($order_id) {
+        $gifts = $this->_opg->getByOrderId($order_id); 
+        $gifts_array = array();
+        if ($gifts) {
+            foreach ($gifts as $gift) {
+                $gifts_array[] = new Model_OrderProductGift($gift->toArray());
+            }
+        }
+        return $gifts_array;
+    }
+
+    /**
      * @param array $data
      * @return int user_id
      * 

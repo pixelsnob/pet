@@ -25,6 +25,8 @@ class Service_Orders {
     }
     
     /**
+     * Convenience method used to pull an entire order
+     * 
      * @param int $id
      * @return Model_Order
      * 
@@ -32,10 +34,12 @@ class Service_Orders {
     public function getFullOrder($id) {
         $op_mapper          = new Model_Mapper_OrderProducts;
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
+        $opg_mapper         = new Model_Mapper_OrderProductGifts;
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
         $users_mapper       = new Model_Mapper_Users;
         $profiles_mapper    = new Model_Mapper_UserProfiles;
+        $promos_mapper      = new Model_Mapper_Promos;
         $msg_suffix         = " for order_id $id";
         // Get order
         $order = $this->getById($id);
@@ -57,15 +61,7 @@ class Service_Orders {
             throw new Exception($msg);
         }
         // Get order product(s)
-        $products = $op_mapper->getByOrderId($order->id);
-        $temp_products = array();
-        if ($products) {
-            foreach ($products as $product) {
-                $temp_products[] = $products_mapper->getById(
-                    $product->product_id); 
-            }
-            $order->products = $temp_products;
-        }
+        $order->products = $op_mapper->getByOrderId($order->id);
         // Get payment(s)
         $order->payments = $payments_mapper->getByOrderId($order->id); 
         if (!$order->payments) {
@@ -74,6 +70,12 @@ class Service_Orders {
         }
         // Get subscription(s)
         $order->subscriptions = $ops_mapper->getByOrderId($order->id);
+        // Get gift tokens
+        $order->gifts = $opg_mapper->getByOrderId($order->id);
+        // Get promo
+        if ($order->promo_id) {
+            $order->promo = $promos_mapper->getById($order->promo_id);
+        }
         return $order;
     }
 
@@ -93,7 +95,16 @@ class Service_Orders {
             $orders_sent     = array();
             $mail_exceptions = array();
             foreach ($orders as $order) {
-                $order_products = $op_mapper->getByOrderId($order->id);
+                $full_order = $this->getFullOrder($order->id);
+                print_r($full_order);
+                if (!$full_order) {
+                    $msg = "Error retrieving order for id {$order->id}";
+                    throw new Exception($msg);
+                }
+                $view->order = $full_order;
+                $message = $view->render('emails/order.phtml');
+                //exit($message);
+                //echo $message;
                 try {
                     $mail = new Zend_Mail;
                     $mail->setBodyText($view->render('emails/order.phtml'))
@@ -109,7 +120,7 @@ class Service_Orders {
             }
             if (!empty($orders_sent)) {
                 foreach ($orders_sent as $order_id) {
-                    $this->_orders->updateEmailSent($order->id, true);
+                    //$this->_orders->updateEmailSent($order->id, true);
                 }
                 // notify?
             }

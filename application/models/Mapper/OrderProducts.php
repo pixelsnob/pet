@@ -20,13 +20,19 @@ class Model_Mapper_OrderProducts extends Pet_Model_Mapper_Abstract {
      */
     public function getByOrderId($order_id) {
         $order_products = $this->_order_products->getByOrderId($order_id);
-        $out = array();
+        $products_mapper = new Model_Mapper_Products;
+        $order_products_array = array();
         if ($order_products) {
             foreach ($order_products as $op) {
-                $out[] = new Model_OrderProduct($op->toArray());
+                $temp_op = new Model_OrderProduct($op->toArray());
+                $product = $products_mapper->getById($op->product_id);
+                if ($product) {
+                    $temp_op->product = $product;
+                }
+                $order_products_array[] = $temp_op;
             }
         }
-        return $out;
+        return $order_products_array;
     }
 
     /**

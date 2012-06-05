@@ -20,5 +20,7 @@ values
 
 insert into promo_products values (null, 1, 182);
 insert into promo_products values (null, 1, 300);
+insert into promo_products values (null, 119, 182);
+insert into promo_products values (null, 119, 185);
 
 set foreign_key_checks = 1;
