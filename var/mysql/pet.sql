@@ -747,60 +747,29 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`recurring_billing`
+-- Table `pet`.`order_products_gifts`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`recurring_billing` ;
+DROP TABLE IF EXISTS `pet`.`order_products_gifts` ;
 
-CREATE  TABLE IF NOT EXISTS `pet`.`recurring_billing` (
-  `id` INT NOT NULL ,
-  `order_id` INT NOT NULL ,
-  `payment_type_id` INT NOT NULL ,
-  `start_date` DATE NOT NULL ,
-  `end_date` DATE NOT NULL ,
-  `next_bill_date` DATE NOT NULL ,
-  `next_bill_amount` DOUBLE(5,2) NOT NULL DEFAULT 0 ,
-  `original_pnref` VARCHAR(12) NULL ,
-  `original_correlation_id` VARCHAR(20) NULL ,
-  `is_active` TINYINT(1) NOT NULL DEFAULT 1 ,
+CREATE  TABLE IF NOT EXISTS `pet`.`order_products_gifts` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `order_product_id` INT NOT NULL ,
+  `token` VARCHAR(100) NOT NULL ,
+  `redeem_date` DATETIME NULL ,
+  `redeemer_order_product_id` INT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  UNIQUE INDEX `order_id_UNIQUE` (`order_id` ASC) ,
-  INDEX `recurring_billing_fk_1` (`order_id` ASC) ,
-  INDEX `recurring_billing_fk_2` (`payment_type_id` ASC) ,
-  CONSTRAINT `recurring_billing_fk_1`
-    FOREIGN KEY (`order_id` )
-    REFERENCES `pet`.`orders` (`id` )
+  INDEX `order_products_gifts_fk_1` (`order_product_id` ASC) ,
+  INDEX `order_products_gifts_fk_2` (`redeemer_order_product_id` ASC) ,
+  INDEX `token` (`token` ASC) ,
+  CONSTRAINT `order_products_gifts_fk_1`
+    FOREIGN KEY (`order_product_id` )
+    REFERENCES `pet`.`order_products` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `recurring_billing_fk_2`
-    FOREIGN KEY (`payment_type_id` )
-    REFERENCES `pet`.`payment_types` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `pet`.`recurring_billing_order_payments`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`recurring_billing_order_payments` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`recurring_billing_order_payments` (
-  `id` INT NOT NULL ,
-  `order_payment_id` INT NOT NULL ,
-  `recurring_billing_profile_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  INDEX `recurring_billing_order_payments_fk_1` (`order_payment_id` ASC) ,
-  INDEX `recurring_billing_order_payments_fk_2` (`recurring_billing_profile_id` ASC) ,
-  CONSTRAINT `recurring_billing_order_payments_fk_1`
-    FOREIGN KEY (`order_payment_id` )
-    REFERENCES `pet`.`order_payments` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `recurring_billing_order_payments_fk_2`
-    FOREIGN KEY (`recurring_billing_profile_id` )
-    REFERENCES `pet`.`recurring_billing` (`id` )
+  CONSTRAINT `order_products_gifts_fk_2`
+    FOREIGN KEY (`redeemer_order_product_id` )
+    REFERENCES `pet`.`order_products` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
