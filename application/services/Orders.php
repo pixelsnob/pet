@@ -96,15 +96,12 @@ class Service_Orders {
             $mail_exceptions = array();
             foreach ($orders as $order) {
                 $full_order = $this->getFullOrder($order->id);
-                print_r($full_order);
                 if (!$full_order) {
                     $msg = "Error retrieving order for id {$order->id}";
                     throw new Exception($msg);
                 }
                 $view->order = $full_order;
                 $message = $view->render('emails/order.phtml');
-                //exit($message);
-                //echo $message;
                 try {
                     $mail = new Zend_Mail;
                     $mail->setBodyText($view->render('emails/order.phtml'))

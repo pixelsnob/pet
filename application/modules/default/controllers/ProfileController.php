@@ -121,6 +121,11 @@ class ProfileController extends Zend_Controller_Action {
                 $this->_users_svc->resetPasswordRequest($user);
                 $this->_helper->Redirector->gotoSimple(
                     'reset-password-request-success');
+            } else {
+                $messenger = $this->_helper->FlashMessenger;
+                $messenger->setNamespace('reset-pw')
+                    ->addMessage('That email address was not found in our system');
+                $this->view->messages = $messenger->getCurrentMessages();
             }
         }
     }
