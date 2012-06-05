@@ -85,6 +85,13 @@ class CartController extends Zend_Controller_Action {
         $this->_helper->Redirector->setGotoSimple('index');
     }
     
+    public function redeemGiftAction() {
+        $token = $this->_request->getParam('token');
+        $this->_cart_svc->redeemGift($token); 
+        
+        
+    }
+
     public function resetAction() {
         $this->_cart_svc->reset();
         $this->_helper->Redirector->setGotoSimple('index');

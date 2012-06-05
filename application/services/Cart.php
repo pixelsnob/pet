@@ -69,6 +69,20 @@ class Service_Cart {
     }
     
     /**
+     * @param string $token
+     * 
+     */
+    public function redeemGift($token) {
+        $opg_mapper = new Model_Mapper_OrderProductGifts; 
+        $gift = $opg_mapper->getByToken($token);
+        print_r($gift);
+        if (!$gift) {
+            $this->_message = 'Gift not found';
+            return false;
+        }
+    }
+
+    /**
      * @param string $key
      * @param int $qty
      * @return void
