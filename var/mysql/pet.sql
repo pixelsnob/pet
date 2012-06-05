@@ -747,11 +747,11 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`order_products_gifts`
+-- Table `pet`.`order_product_gifts`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`order_products_gifts` ;
+DROP TABLE IF EXISTS `pet`.`order_product_gifts` ;
 
-CREATE  TABLE IF NOT EXISTS `pet`.`order_products_gifts` (
+CREATE  TABLE IF NOT EXISTS `pet`.`order_product_gifts` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `order_product_id` INT NOT NULL ,
   `token` VARCHAR(100) NOT NULL ,
@@ -759,15 +759,15 @@ CREATE  TABLE IF NOT EXISTS `pet`.`order_products_gifts` (
   `redeemer_order_product_id` INT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  INDEX `order_products_gifts_fk_1` (`order_product_id` ASC) ,
-  INDEX `order_products_gifts_fk_2` (`redeemer_order_product_id` ASC) ,
+  INDEX `order_product_gifts_fk_1` (`order_product_id` ASC) ,
+  INDEX `order_product_gifts_fk_2` (`redeemer_order_product_id` ASC) ,
   INDEX `token` (`token` ASC) ,
-  CONSTRAINT `order_products_gifts_fk_1`
+  CONSTRAINT `order_product_gifts_fk_1`
     FOREIGN KEY (`order_product_id` )
     REFERENCES `pet`.`order_products` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `order_products_gifts_fk_2`
+  CONSTRAINT `order_product_gifts_fk_2`
     FOREIGN KEY (`redeemer_order_product_id` )
     REFERENCES `pet`.`order_products` (`id` )
     ON DELETE NO ACTION
