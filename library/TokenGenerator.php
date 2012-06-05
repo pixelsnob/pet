@@ -19,7 +19,8 @@ class TokenGenerator {
         for ($i = 0; $i < $length; $i++) { 
             $token .= chr(mt_rand(0, 255));
         }
-        return $token;
+        // ZF's routing doesn't like encoded slashes
+        return str_replace('/', '', base64_encode($token));
     }
 
     /**

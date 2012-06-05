@@ -11,7 +11,7 @@ class Model_Mapper_OrderProductGifts extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function __construct() {
-        $this->_opg = new Model_DbTable_Orders;
+        $this->_opg = new Model_DbTable_OrderProductGifts;
     }
     
     /**
@@ -23,7 +23,7 @@ class Model_Mapper_OrderProductGifts extends Pet_Model_Mapper_Abstract {
         $opg = new Model_OrderProductGift($data);
         $opg_array = $opg->toArray();
         unset($opg_array['id']);
-        return $this->_orders->insert($order_array);
+        return $this->_opg->insert($opg_array);
     }
     
 }

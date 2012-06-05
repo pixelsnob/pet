@@ -5,6 +5,8 @@
  * @package Service_Cart
  * 
  */
+require_once 'TokenGenerator.php';
+
 class Service_Cart {
     
     /**
@@ -379,6 +381,12 @@ class Service_Cart {
             $opid = $op->insert($product->toArray(), $order->order_id); 
             // Gift processing here
             if ($product->isGift()) {
+                $gifts = new Model_Mapper_OrderProductGifts;
+                $token_generator = new TokenGenerator;
+                $gifts->insert(array(
+                    'order_product_id' => $opid,
+                    'token'            => $token_generator->generate()
+                ));
                 continue;
             } 
             if ($product->isSubscription()) {

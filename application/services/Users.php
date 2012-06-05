@@ -349,8 +349,7 @@ class Service_Users extends Pet_Service {
      */
     public function resetPasswordRequest(Model_User $user) {
         $token_gen = new TokenGenerator;
-        // ZF's routing doesn't like encoded slashes
-        $token = str_replace('/', '', base64_encode($token_gen->generate()));
+        $token = $token_gen->generate();
         $pw_tokens = new Model_Mapper_UserPasswordTokens; 
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
