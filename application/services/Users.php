@@ -5,6 +5,9 @@
  * @package Service_Users
  * 
  */
+
+require_once 'TokenGenerator.php';
+
 class Service_Users extends Pet_Service {
     
     /**
@@ -345,13 +348,9 @@ class Service_Users extends Pet_Service {
      * 
      */
     public function resetPasswordRequest(Model_User $user) {
-        // Build token
-        $token = '';
-        for ($i = 0; $i < 32; $i++) { 
-            $token .= chr(mt_rand(0, 255));
-        }
+        $token_gen = new TokenGenerator;
         // ZF's routing doesn't like encoded slashes
-        $token = str_replace('/', '', base64_encode($token));
+        $token = str_replace('/', '', base64_encode($token_gen->generate()));
         $pw_tokens = new Model_Mapper_UserPasswordTokens; 
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
@@ -398,12 +397,7 @@ class Service_Users extends Pet_Service {
      * 
      */
     public function generateHash($new_pw) {
-        $salt = '';
-        for ($i = 0; $i < 5; $i++) { 
-            $salt .= chr(mt_rand(0, 255));
-        }
-        $salt = substr(sha1($salt), 0, 5);
-        $hash = sha1($salt . $new_pw);
-        return ('sha1$' . $salt . '$' . $hash);
+        $token_gen = new TokenGenerator;
+        return $token_gen->generateHash($new_pw); 
     }
 }
