@@ -313,7 +313,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         }
         $totals['total'] = $totals['subtotal'];
         $promo = $this->_data['promo'];
-        if ($promo && isset($promo->discount)) {
+        if ($totals['total'] && $promo && isset($promo->discount)) {
             $totals['discount'] = $promo->discount;
             $totals['total'] = $totals['total'] - $totals['discount'];
         }

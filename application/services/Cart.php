@@ -70,16 +70,22 @@ class Service_Cart {
     
     /**
      * @param string $token
+     * @return bool
      * 
      */
     public function redeemGift($token) {
         $opg_mapper = new Model_Mapper_OrderProductGifts; 
         $gift = $opg_mapper->getByToken($token);
-        print_r($gift);
         if (!$gift) {
             $this->_message = 'Gift not found';
             return false;
         }
+        $gift->product->cost = 0;
+        if (!$this->_cart->addProduct($gift->product)) {
+            $this->_message = 'An error ocurred while processing your gift';
+            return false;
+        }
+        return true;
     }
 
     /**

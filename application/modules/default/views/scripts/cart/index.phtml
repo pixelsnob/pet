@@ -65,13 +65,13 @@
                     <li class="continue-shopping">
                         <input type="submit" value="Continue Shopping" class="button-grad">
                     </li>
-                    <?php if (count($this->cart->products)): ?>
-                    <li class="checkout">
-                        <input type="submit" value="Checkout" class="button-grad">
-                    </li>
-                    <?php endif; ?>
                 <?php else: ?>
                     <li class="submit"><input type="submit" value="Update" class="button-grad"></li>
+                    <?php if (count($this->cart->products)): ?>
+                        <li class="checkout">
+                            <a href="<?php echo $this->serverUrl($this->url(array(), 'checkout')); ?>" class="button-grad">Checkout</a>
+                        </li>
+                    <?php endif; ?>
                 <?php endif; ?>
             </ul>
         </fieldset>
