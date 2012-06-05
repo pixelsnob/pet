@@ -143,13 +143,12 @@ class Service_Orders {
         $gateway_exceptions = array();
         $email_exceptions   = array();
         $db = Zend_Db_Table::getDefaultAdapter();
-        $processed_orders   = array();
         $run_again          = false;
+        $start_time         = time();
         try {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             $subs = $ops_mapper->getByExpiration($expiration);
-            $c = 0;
             foreach ($subs as $sub) {
                 if (!$sub->product || !$sub->product->is_recurring) {
                     continue;
@@ -169,7 +168,6 @@ class Service_Orders {
                 }
                 // Get order
                 $order = $this->getFullOrder($sub->order_id);
-                print_r($order); exit;
                 if (!$order) {
                     throw new Exception('Error retrieving order');
                 }
@@ -263,20 +261,17 @@ class Service_Orders {
                         $data['order']->user->email . ' ' . 
                         $exception_str, Zend_Log::CRIT);
                 }
-                ///$rb_logger->insertTransaction(
-                //    $processed_orders[$sub->id]['status'], $log_data);
                 $rb_logger->insertTransaction($status, $log_data);
-                $c++;
                 // Important! Break the loop and cause this method to run again
-                // if number of subscriptions processed is greater than n, to
-                // prevent the database from being locked up for a long time --
-                // breaks up the transactions into smaller chunks.
-                if ($c > 10) {
+                // if this is taking too damn long, since it blocks inserts
+                // and updates
+                if (time() - $start_time > 20) {
                     $run_again = true;
                     break;
                 }
             } 
             $db->commit();
+            //echo "elapsed time: " . (time() - $start_time) . "\n";
             if ($run_again) {
                 $this->processRecurringBilling($expiration);
             }
@@ -291,9 +286,7 @@ class Service_Orders {
                     'gateway_calls' => $gateway_mapper->getRawCalls(),
                     'exceptions'    => $exception_str
                 ));
-            } catch (Exception $f) {
-            
-            }
+            } catch (Exception $f) {}
         }
     }
 }
