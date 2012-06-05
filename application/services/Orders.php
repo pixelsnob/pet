@@ -35,20 +35,28 @@ class Service_Orders {
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
         $users_mapper       = new Model_Mapper_Users;
+        $profiles_mapper    = new Model_Mapper_UserProfiles;
+        $msg_suffix         = " for order_id $id";
         // Get order
         $order = $this->getById($id);
         if (!$order) {
-            $msg = 'Error retrieving order';
+            $msg = 'Error retrieving order' . $msg_suffix;
             throw new Exception($msg);
         }
-        $user = $users_mapper->getById($order->user_id);
+        $order->user = $users_mapper->getById($order->user_id);
         // Get user
-        if (!$user) {
-            $msg = 'Error retrieving user';
+        if (!$order->user) {
+            $msg = 'Error retrieving user' . $msg_suffix;
             throw new Exception($msg);
         }
-        $order->user = $user;
-        // Get order products
+        // Get user profile
+        $order->user_profile = $profiles_mapper->getByUserId($order->user->id);
+        // Get user
+        if (!$order->user_profile) {
+            $msg = 'Error retrieving user profile' . $msg_suffix;
+            throw new Exception($msg);
+        }
+        // Get order product(s)
         $products = $op_mapper->getByOrderId($order->id);
         $temp_products = array();
         if ($products) {
@@ -59,15 +67,13 @@ class Service_Orders {
             $order->products = $temp_products;
         }
         // Get payment(s)
-        $payments = $payments_mapper->getByOrderId($order->id); 
-        if (!$payments) {
-            $msg = 'Error retrieving from order_payments';
+        $order->payments = $payments_mapper->getByOrderId($order->id); 
+        if (!$order->payments) {
+            $msg = 'Error retrieving order_payments' . $msg_suffix;
             throw new Exception($msg);
         }
-        $order->payments = $payments;
-        // Get subscriptions...
-        $order_subs = $ops_mapper->getByOrderId($order->id);
-        $order->subscriptions = $order_subs;
+        // Get subscription(s)
+        $order->subscriptions = $ops_mapper->getByOrderId($order->id);
         return $order;
     }
 
@@ -163,6 +169,7 @@ class Service_Orders {
                 }
                 // Get order
                 $order = $this->getFullOrder($sub->order_id);
+                print_r($order); exit;
                 if (!$order) {
                     throw new Exception('Error retrieving order');
                 }

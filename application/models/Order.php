@@ -39,6 +39,7 @@ class Model_Order extends Pet_Model_Abstract {
         'active' => 1,
 
         'user' => null,
+        'user_profile' => null,
         'payments' => array(),
         'products' => array(),
         'subscriptions' => array()
@@ -53,11 +54,13 @@ class Model_Order extends Pet_Model_Abstract {
         $data = $this->_data;
         if (!$refs) {
             unset($data['user']);
+            unset($data['user_profile']);
             unset($data['products']);
             unset($data['payments']);
             unset($data['subscriptions']);
         } else {
             $data['user'] = $data['user']->toArray();
+            $data['user_profile'] = $data['user_profile']->toArray();
             $products = array();
             foreach ($data['products'] as $product) {
                 $products[] = $product->toArray();
