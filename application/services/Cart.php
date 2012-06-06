@@ -416,9 +416,14 @@ class Service_Cart {
                     'order_product_id' => $opid,
                     'token'            => $token_generator->generate()
                 ));
+                // Gifts need no further processing
+                continue;
             } elseif ($product->isRedeemedGift()) {
+                // This is a gift that is being redeemed. Continue on to
+                // process subscriptions, if any
                 $gifts->redeem($opid, $product->order_product_gift_id);
-            } elseif ($product->isSubscription()) {
+            }
+            if ($product->isSubscription()) {
                 $expiration = null;
                 // See if we need to renew
                 if (isset($expirations->regular) && $expirations->regular) {
