@@ -1,2 +1,8 @@
 
-<?php print_r($this->order); ?>
+Gifts:
+
+<?php
+foreach ($this->order->gifts as $gift) {
+    echo 'http://dev.photoshopelementsuser.com' . $this->url(array('token' => $gift->token), 'cart_redeem_gift') . "\n";
+}
+?>

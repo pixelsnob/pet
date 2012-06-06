@@ -27,10 +27,10 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
                 $temp_sub = new Model_OrderProductSubscription(
                     $sub->toArray());
                 $temp_product = $products_mapper->getById($sub->product_id);
-                if (!$temp_product) {
+                /*if (!$temp_product) {
                     $msg = "Product by id {$sub->product_id} not found";
                     throw new Exception($msg);
-                }
+                }*/
                 $temp_sub->product = $temp_product;
                 $subs_array[] = $temp_sub;
             }

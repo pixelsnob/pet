@@ -23,7 +23,8 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
         $promo = $this->_promos->getById($id); 
         if ($promo) {
             $promo = new Model_Promo($promo->toArray());
-            $promo->promo_products = $promo_products_mapper->getByPromoId($promo->id);
+            $promo->promo_products = $promo_products_mapper->getByPromoId(
+                $promo->id);
             return $promo;
         }
     }
@@ -38,7 +39,8 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
         $promo = $this->_promos->getUnexpiredPromoByCode($code);
         if ($promo) {
             $promo = new Model_Promo($promo->toArray());
-            $promo->promo_products = $promo_products_mapper->getByPromoId($promo->id);
+            $promo->promo_products = $promo_products_mapper->getByPromoId(
+                $promo->id);
             return $promo;
         }
     }

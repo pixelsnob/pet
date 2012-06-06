@@ -67,11 +67,11 @@
                     </li>
                 <?php else: ?>
                     <li class="submit"><input type="submit" value="Update" class="button-grad"></li>
-                    <?php if (count($this->cart->products)): ?>
-                        <li class="checkout">
-                            <a href="<?php echo $this->serverUrl($this->url(array(), 'checkout')); ?>" class="button-grad">Checkout</a>
-                        </li>
-                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if (count($this->cart->products)): ?>
+                    <li class="checkout">
+                        <a href="<?php echo $this->serverUrl($this->url(array(), 'checkout')); ?>" class="button-grad">Checkout</a>
+                    </li>
                 <?php endif; ?>
             </ul>
         </fieldset>

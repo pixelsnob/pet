@@ -49,25 +49,25 @@ class Service_Orders {
         }
         $order->user = $users_mapper->getById($order->user_id);
         // Get user
-        if (!$order->user) {
+        /*if (!$order->user) {
             $msg = 'Error retrieving user' . $msg_suffix;
             throw new Exception($msg);
-        }
+        }*/
         // Get user profile
         $order->user_profile = $profiles_mapper->getByUserId($order->user->id);
         // Get user
-        if (!$order->user_profile) {
+        /*if (!$order->user_profile) {
             $msg = 'Error retrieving user profile' . $msg_suffix;
             throw new Exception($msg);
-        }
+        }*/
         // Get order product(s)
         $order->products = $op_mapper->getByOrderId($order->id);
         // Get payment(s)
         $order->payments = $payments_mapper->getByOrderId($order->id); 
-        if (!$order->payments) {
+        /*if (!$order->payments) {
             $msg = 'Error retrieving order_payments' . $msg_suffix;
             throw new Exception($msg);
-        }
+        }*/
         // Get subscription(s)
         $order->subscriptions = $ops_mapper->getByOrderId($order->id);
         // Get gift tokens
@@ -102,6 +102,7 @@ class Service_Orders {
                 }
                 $view->order = $full_order;
                 $message = $view->render('emails/order.phtml');
+
                 try {
                     $mail = new Zend_Mail;
                     $mail->setBodyText($view->render('emails/order.phtml'))
@@ -123,6 +124,7 @@ class Service_Orders {
             }
             $db->commit();
         } catch (Exception $e1) {
+            print_r($e1);
             $db->rollback();
             $logger->log('Error updating database while sending order emails',
                 Zend_Log::EMERG);
@@ -266,7 +268,7 @@ class Service_Orders {
                     $exception_str = $e3->getMessage() . ' ' .
                         $e3->getTraceAsString();
                     $logger->log('Recurring billing failure, mail not sent for ' .
-                        $data['order']->user->email . ' ' . 
+                        $order->user->email . ' ' . 
                         $exception_str, Zend_Log::CRIT);
                 }
                 $rb_logger->insertTransaction($status, $log_data);
