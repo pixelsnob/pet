@@ -418,7 +418,7 @@ class Service_Cart {
                 ));
             } elseif ($product->isRedeemedGift()) {
                 $gifts->redeem($opid, $product->order_product_gift_id);
-            } elseif ($pronuct->isSubscription()) {
+            } elseif ($product->isSubscription()) {
                 $expiration = null;
                 // See if we need to renew
                 if (isset($expirations->regular) && $expirations->regular) {

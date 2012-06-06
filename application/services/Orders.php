@@ -99,7 +99,7 @@ class Service_Orders {
             }
             if (!empty($orders_sent)) {
                 foreach ($orders_sent as $order_id) {
-                    //$this->_orders->updateEmailSent($order->id, true);
+                    $this->_orders->updateEmailSent($order->id, true);
                 }
             }
             $db->commit();
