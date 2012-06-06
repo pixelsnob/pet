@@ -16,7 +16,7 @@ class Model_DbTable_OrderProductGifts extends Zend_Db_Table_Abstract {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('opg' => 'order_product_gifts'))
             ->joinLeft(array('op' => 'order_products'),
-                'opg.order_product_id = op.id')
+                'opg.order_product_id = op.id', 'product_id')
             ->where('opg.token = ?', $token)
             ->where('opg.redeemer_order_product_id is null');
         return $this->fetchRow($sel);
