@@ -36,7 +36,7 @@ class Model_Cart_Products implements Iterator, Countable {
     
     /**
      * @var string $key
-     * @var return void
+     * @return void
      * 
      */
     public function remove($key) {
@@ -65,7 +65,7 @@ class Model_Cart_Products implements Iterator, Countable {
     /**
      * @var string $key
      * @var int $qty
-     * @var return void
+     * @return void
      * 
      */
     public function setQty($key, $qty) {
@@ -76,10 +76,22 @@ class Model_Cart_Products implements Iterator, Countable {
             }
         }
     }
+
+    /**
+     * @return int Total of all product quantities
+     * 
+     */
+    public function getTotalQty() {
+        $total_qty = 0;
+        foreach ($this->_data as $k => $product) {
+            $total_qty += $product->qty;
+        }
+        return $total_qty;
+    }
     
     /**
      * @var string $key
-     * @var return void
+     * @return void
      * 
      */
     public function incrementQty($key) {
