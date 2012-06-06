@@ -218,15 +218,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     }
 
     /**
-     * @param int $product_id
-     * @return void
-     * 
-     */
-    /*public function incrementProductQty($product_id) {
-        $this->_data['products']->incrementQty($product_id);
-    }*/
-
-    /**
      * Returns number of products in the cart
      * 
      * @return int
@@ -320,6 +311,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         return $totals;
     }
     
+    /**
+     * @return bool
+     * 
+     */
+    public function isFreeOrder() {
+        $totals = $this->getTotals();
+        return ($totals['total'] === 0);
+    }
+
     /**
      * @param Model_Promo $promo
      * @return bool

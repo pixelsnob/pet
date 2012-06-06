@@ -74,6 +74,7 @@ class Service_Cart {
      * 
      */
     public function redeemGift($token) {
+        $this->_cart->reset();
         $opg_mapper = new Model_Mapper_OrderProductGifts; 
         $gift = $opg_mapper->getByToken($token);
         if (!$gift) {
@@ -193,9 +194,11 @@ class Service_Cart {
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray(),
-            $cart->payment->toArray(),
             array('use_shipping' => $cart->use_shipping)
         );
+        if (!$cart->isFreeOrder()) {
+            $form_data = array_merge($form_data, $cart->payment->toArray());
+        }
         // If user is logged in, use that data to populate form, otherwise
         // show saved data if any
         if ($users_svc->isAuthenticated() && $users_svc->getUser() &&
@@ -232,7 +235,9 @@ class Service_Cart {
         $this->_cart->setShipping($form->getShippingValues());
         $this->_cart->setUser($form->user->getValues(true));
         $this->_cart->setUserInfo($form->info->getValues(true));
-        $this->_cart->setPayment($form->payment->getValues(true));
+        if (!$cart->isFreeOrder()) {
+            $this->_cart->setPayment($form->payment->getValues(true));
+        }
         $promo_code = $form->promo->promo_code->getValue();
         $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
         if ($promo_code && $promo_code != $existing_promo_code) {
@@ -257,11 +262,13 @@ class Service_Cart {
     public function validateSavedForm(Form_Checkout $form) {
         $data = array_merge(
             $form->billing->getValues(true),
-            $form->payment->getValues(true),
             $form->user->getValues(true),
             $form->getShippingValues(),
             array('promo_code' => $form->promo->promo_code->getValue())
         );
+        if (!$this->_cart->get()->isFreeOrder()) {
+            $data = array_merge($data, $form->payment->getValues(true));
+        }
         // Remove pw validators
         $form->user->password->setValidators(array())->setRequired(false);
         $form->user->confirm_password->setValidators(array())
@@ -282,11 +289,9 @@ class Service_Cart {
         $logger    = Zend_Registry::get('log');
         // Operate on a copy of cart -- we don't want to modify it in here
         $cart      = clone $this->get();
-        //$totals    = $cart->getTotals();
         // Merge input data into one array
         $data = array_merge(
             $form->billing->getValues(true),
-            $form->payment->getValues(true),
             $cart->getTotals(),
             $form->user->getValues(true),
             $form->getShippingValues(),
@@ -297,6 +302,9 @@ class Service_Cart {
             ),
             array('products' => $cart->products->toArray())
         );
+        if (!$this->_cart->get()->isFreeOrder()) {
+            $data = array_merge($data, $form->payment->getValues(true));
+        }
         $order  = new Model_Cart_Order($data);
         $status = true;
         $db     = Zend_Db_Table::getDefaultAdapter();
@@ -304,11 +312,11 @@ class Service_Cart {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             // Regular sale
-            if ($config['use_payment_gateway']) {
+            if (!$cart->isFreeOrder() && $config['use_payment_gateway']) {
                 if ($cart->payment->payment_method == 'credit_card') {
-                    $pnref = $this->_gateway->processSale($order);
+                    $this->_gateway->processSale($order);
                 } else {
-                    $correlation_id = $this->_gateway->processECSale(
+                    $this->_gateway->processECSale(
                         $order, $cart->ec_token, $payer_id);
                 }
             }
@@ -332,7 +340,9 @@ class Service_Cart {
             $orders_mapper = new Model_Mapper_Orders;
             $order->order_id = $orders_mapper->insert($order->toArray());
             $this->_saveOrderProducts($order);
-            $order_payment_id = $this->_saveOrderPayments($order);
+            if (!$cart->isFreeOrder()) {
+                $order_payment_id = $this->_saveOrderPayments($order);
+            }
             // Log
             $log_data = array(
                 'type'     => 'process',
@@ -351,7 +361,6 @@ class Service_Cart {
             $log_data = array(
                 'type'     => 'process',
                 'cart'     => $cart->toArray(),
-                // Ids may not exist here
                 'order_id' => $order->order_id,
                 'user_id'  => $order->user_id
             );

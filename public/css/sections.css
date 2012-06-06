@@ -323,14 +323,26 @@
     width: 98%;
 }
 
+#cart .cart-nav {
+
+}
+
 #cart .cart-nav li {
     background: none;
-    display: inline;
     padding: 0;
+    display: block;
+    float: left;
+    height: 100px;
+    margin-top: 0;
+    margin-right: 10px;
 }
 
 #cart .flash-message {
     margin-bottom: 10px;
+}
+
+#cart .checkout a {
+    width: 80px;
 }
 
 /* Checkout */

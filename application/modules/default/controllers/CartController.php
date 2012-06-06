@@ -33,7 +33,7 @@ class CartController extends Zend_Controller_Action {
             } else {
                 $msg = 'Submitted information is not valid';
             }
-            $this->_helper->FlashMessenger->addMessage($msg);
+            $this->_messenger->addMessage($msg);
             $this->view->messages = $this->_messenger->getCurrentMessages();
         } else {
             $this->view->messages = $this->_messenger->getMessages();
@@ -91,7 +91,6 @@ class CartController extends Zend_Controller_Action {
             $this->_messenger->addMessage('Your gift card was redeemed');
             $this->_helper->Redirector->setGotoSimple('index');
         }
-        
     }
 
     public function resetAction() {

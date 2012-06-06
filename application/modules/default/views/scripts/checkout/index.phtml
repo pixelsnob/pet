@@ -123,6 +123,7 @@
                 </fieldset>
             </div>
             <div class="checkout-middle">
+                <?php if (!$this->cart->isFreeOrder()): ?>
                 <fieldset class="payment med">
                     <legend>Enter your payment info</legend>
                     <dl class="form">
@@ -151,6 +152,7 @@
                         </dd>
                     </dl>
                 </fieldset>
+                <?php endif; ?>
                 <?php if ($this->cart->isShippingAddressRequired()): ?>
                     <fieldset class="shipping tall<?php echo ($this->cart->use_shipping ? '' : ' hide'); ?>">
                         <legend>Ship your magazines to . . .</legend>

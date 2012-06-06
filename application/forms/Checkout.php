@@ -120,7 +120,10 @@ class Form_Checkout extends Pet_Form {
         ));
         $this->addSubform($shipping_form, 'shipping');
         $this->addSubform(new Form_SubForm_UserInfo, 'info');
-        $this->addSubform(new Form_SubForm_Payment, 'payment');
+        $totals = $this->_cart->getTotals();
+        if ($totals['total']) {
+            $this->addSubform(new Form_SubForm_Payment, 'payment');
+        }
         $this->addElement('checkbox', 'use_shipping', array(
             'label' => 'Check this box to enter a different delivery address',
             'required' => false,
@@ -137,7 +140,9 @@ class Form_Checkout extends Pet_Form {
     public function isValid($data) {
         $valid = true;
         $valid = $this->billing->isValid($data) && $valid;
-        $valid = $this->payment->isValid($data) && $valid;
+        if (!$this->_cart->isFreeOrder()) {
+            $valid = $this->payment->isValid($data) && $valid;
+        }
         $valid = $this->promo->isValid($data) && $valid;
         $valid = $this->user->isValid($data) && $valid;
         $valid = $this->info->isValid($data) && $valid;
