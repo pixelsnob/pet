@@ -20,8 +20,8 @@ class Model_Mapper_OrderProductGifts extends Pet_Model_Mapper_Abstract {
      * @return Model_OrderProductGift
      *
      */
-    public function getByToken($token) {
-        $gift = $this->_opg->getByToken($token); 
+    public function getUnredeemedByToken($token) {
+        $gift = $this->_opg->getUnredeemedByToken($token); 
         if ($gift) {
             $gift_model = new Model_OrderProductGift($gift->toArray());
             $gift_model->product = $this->_products_mapper->getById(
@@ -58,5 +58,17 @@ class Model_Mapper_OrderProductGifts extends Pet_Model_Mapper_Abstract {
         return $this->_opg->insert($opg_array);
     }
     
+    /**
+     * @param int $redeemer_order_product_id
+     * @param int $id
+     * @return int Num rows updated 
+     * 
+     */
+    function redeem($redeemer_order_product_id, $id) {
+        return $this->_opg->update(array(
+            'redeemer_order_product_id' => $redeemer_order_product_id,
+            'redeem_date'               => date('Y-m-d H:i:s')
+        ), $id);
+    }
 }
 

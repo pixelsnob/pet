@@ -32,7 +32,9 @@
                 </ul>
             <?php endif; ?>
         </div>
-        <p class="digital"><a href="<?php echo $this->serverUrl($this->url(array('product_id' => 302), 'cart_add')); ?>" class="button-grad">Digital Subscription</a></p>
+        <p class="digital">
+            <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 302, 'is_gift' => 1), 'cart_add')); ?>" class="button-grad">Digital Subscription</a>
+        </p>
     </div>
 </div>
 

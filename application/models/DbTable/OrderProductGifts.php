@@ -12,12 +12,13 @@ class Model_DbTable_OrderProductGifts extends Zend_Db_Table_Abstract {
      * @return Zend_DbTable_Row
      * 
      */
-    public function getByToken($token) {
+    public function getUnredeemedByToken($token) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('opg' => 'order_product_gifts'))
             ->joinLeft(array('op' => 'order_products'),
                 'opg.order_product_id = op.id')
-            ->where('opg.token = ?', $token);
+            ->where('opg.token = ?', $token)
+            ->where('opg.redeemer_order_product_id is null');
         return $this->fetchRow($sel);
     }
 
@@ -34,6 +35,16 @@ class Model_DbTable_OrderProductGifts extends Zend_Db_Table_Abstract {
             ->where('op.order_id = ?', $order_id);
         return $this->fetchAll($sel);
     }
-
+    
+    /** 
+     * @param array $data
+     * @param int $id
+     * @return int Num rows updated
+     * 
+     */
+    public function update(array $data, $id) {
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        return parent::update($data, $where);
+    }
 }
 

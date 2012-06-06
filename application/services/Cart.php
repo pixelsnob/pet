@@ -76,13 +76,13 @@ class Service_Cart {
     public function redeemGift($token) {
         $this->_cart->reset();
         $opg_mapper = new Model_Mapper_OrderProductGifts; 
-        $gift = $opg_mapper->getByToken($token);
+        $gift = $opg_mapper->getUnredeemedByToken($token);
         if (!$gift) {
             $this->_message = 'Gift not found';
             return false;
         }
         $gift->product->cost = 0;
-        if (!$this->_cart->addProduct($gift->product)) {
+        if (!$this->_cart->addProduct($gift->product, false, $gift->id)) {
             $this->_message = 'An error ocurred while processing your gift';
             return false;
         }
@@ -399,6 +399,7 @@ class Service_Cart {
         $cart       = clone $this->get();
         $op         = new Model_Mapper_OrderProducts;
         $ops        = new Model_Mapper_OrderProductSubscriptions;
+        $gifts      = new Model_Mapper_OrderProductGifts;
         $fmt        = 'Y-m-d H:i:s'; 
         $extra_days = ($cart->promo && $cart->promo->extra_days ?
                        $cart->promo->extra_days : 0);
@@ -410,15 +411,14 @@ class Service_Cart {
             $opid = $op->insert($product->toArray(), $order->order_id); 
             // Gift processing here
             if ($product->isGift()) {
-                $gifts = new Model_Mapper_OrderProductGifts;
                 $token_generator = new TokenGenerator;
                 $gifts->insert(array(
                     'order_product_id' => $opid,
                     'token'            => $token_generator->generate()
                 ));
-                continue;
-            } 
-            if ($product->isSubscription()) {
+            } elseif ($product->isRedeemedGift()) {
+                $gifts->redeem($opid, $product->order_product_gift_id);
+            } elseif ($pronuct->isSubscription()) {
                 $expiration = null;
                 // See if we need to renew
                 if (isset($expirations->regular) && $expirations->regular) {

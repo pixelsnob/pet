@@ -63,14 +63,19 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     /**
      * @param Model_Product_Abstract $product
      * @param bool $is_gift
+     * @param null|int $order_product_gift_id The order_product_gift id, used
+     *                                        to redeem a gift
      * @return bool
      * 
      */
 
-    public function addProduct(Model_Product_Abstract $product, $is_gift = false) {
+    public function addProduct(Model_Product_Abstract $product,
+                               $is_gift = false,
+                               $order_product_gift_id = null) {
         $product = new Model_Cart_Product(array(
-            'product' => $product,
-            'is_gift' => $is_gift
+            'product'               => $product,
+            'is_gift'               => $is_gift,
+            'order_product_gift_id' => $order_product_gift_id
         ));
         $status = $this->_cart->addProduct($product); 
         $this->_message = $this->_cart->getMessage();

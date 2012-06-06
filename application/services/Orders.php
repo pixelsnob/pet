@@ -32,49 +32,29 @@ class Service_Orders {
      * 
      */
     public function getFullOrder($id) {
-        $op_mapper          = new Model_Mapper_OrderProducts;
-        $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
-        $opg_mapper         = new Model_Mapper_OrderProductGifts;
-        $payments_mapper    = new Model_Mapper_OrderPayments;
-        $products_mapper    = new Model_Mapper_Products;
-        $users_mapper       = new Model_Mapper_Users;
-        $profiles_mapper    = new Model_Mapper_UserProfiles;
-        $promos_mapper      = new Model_Mapper_Promos;
-        $msg_suffix         = " for order_id $id";
-        // Get order
+        $op_mapper            = new Model_Mapper_OrderProducts;
+        $ops_mapper           = new Model_Mapper_OrderProductSubscriptions;
+        $opg_mapper           = new Model_Mapper_OrderProductGifts;
+        $payments_mapper      = new Model_Mapper_OrderPayments;
+        $products_mapper      = new Model_Mapper_Products;
+        $users_mapper         = new Model_Mapper_Users;
+        $profiles_mapper      = new Model_Mapper_UserProfiles;
+        $promos_mapper        = new Model_Mapper_Promos;
+        $msg_suffix           = " for order_id $id";
+
         $order = $this->getById($id);
         if (!$order) {
             $msg = 'Error retrieving order' . $msg_suffix;
             throw new Exception($msg);
         }
-        $order->user = $users_mapper->getById($order->user_id);
-        // Get user
-        /*if (!$order->user) {
-            $msg = 'Error retrieving user' . $msg_suffix;
-            throw new Exception($msg);
-        }*/
-        // Get user profile
-        $order->user_profile = $profiles_mapper->getByUserId($order->user->id);
-        // Get user
-        /*if (!$order->user_profile) {
-            $msg = 'Error retrieving user profile' . $msg_suffix;
-            throw new Exception($msg);
-        }*/
-        // Get order product(s)
-        $order->products = $op_mapper->getByOrderId($order->id);
-        // Get payment(s)
-        $order->payments = $payments_mapper->getByOrderId($order->id); 
-        /*if (!$order->payments) {
-            $msg = 'Error retrieving order_payments' . $msg_suffix;
-            throw new Exception($msg);
-        }*/
-        // Get subscription(s)
+        $order->user          = $users_mapper->getById($order->user_id);
+        $order->user_profile  = $profiles_mapper->getByUserId($order->user->id);
+        $order->products      = $op_mapper->getByOrderId($order->id);
+        $order->payments      = $payments_mapper->getByOrderId($order->id); 
         $order->subscriptions = $ops_mapper->getByOrderId($order->id);
-        // Get gift tokens
-        $order->gifts = $opg_mapper->getByOrderId($order->id);
-        // Get promo
+        $order->gifts         = $opg_mapper->getByOrderId($order->id);
         if ($order->promo_id) {
-            $order->promo = $promos_mapper->getById($order->promo_id);
+            $order->promo     = $promos_mapper->getById($order->promo_id);
         }
         return $order;
     }
@@ -101,6 +81,7 @@ class Service_Orders {
                     throw new Exception($msg);
                 }
                 $view->order = $full_order;
+                print_r($full_order);
                 $message = $view->render('emails/order.phtml');
 
                 try {
@@ -120,7 +101,6 @@ class Service_Orders {
                 foreach ($orders_sent as $order_id) {
                     //$this->_orders->updateEmailSent($order->id, true);
                 }
-                // notify?
             }
             $db->commit();
         } catch (Exception $e1) {
@@ -251,14 +231,12 @@ class Service_Orders {
                 // Mail customer
                 try {
                     if ($status) {
-                        $message = $view->render(
-                            'emails/recurring_billing_success.phtml');
+                        $tpl = 'emails/recurring_billing_success.phtml';
                     } else {
-                        $message = $view->render(
-                            'emails/recurring_billing_fail.phtml');
+                        $tpl = 'emails/recurring_billing_fail.phtml';
                     }
                     $mail = new Zend_Mail;
-                    $mail->setBodyText($message)
+                    $mail->setBodyText($view->render($tpl))
                          ->addTo($order->user->email)
                          ->setSubject('Customer invoice')
                          ->addBcc('soapscum@pixelsnob.com')

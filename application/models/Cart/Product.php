@@ -13,7 +13,8 @@ class Model_Cart_Product extends Pet_Model_Abstract {
         'product' => null,
         'qty' => 1,
         'is_gift' => 0,
-        'key' => null
+        'key' => null,
+        'order_product_gift_id' => null
     );
 
     /**
@@ -98,6 +99,17 @@ class Model_Cart_Product extends Pet_Model_Abstract {
      */
     public function isGift() {
         return $this->_data['is_gift'];
+    }
+
+    /**
+     * Checks to see if the product's order_product_gift_id property
+     * is set
+     * 
+     * @return bool
+     * 
+     */
+    public function isRedeemedGift() {
+        return (bool) $this->_data['order_product_gift_id'];
     }
     
     /**

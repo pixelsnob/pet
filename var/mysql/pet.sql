@@ -142,10 +142,10 @@ CREATE  TABLE IF NOT EXISTS `pet`.`promos` (
   `description` VARCHAR(200) NULL DEFAULT NULL ,
   `public_description` LONGTEXT NULL DEFAULT NULL ,
   `receipt_description` LONGTEXT NULL DEFAULT NULL ,
-  `banner` VARCHAR(100) NOT NULL ,
-  `discount` DECIMAL(5,2) NOT NULL ,
+  `banner` VARCHAR(100) NULL ,
+  `discount` DECIMAL(5,2) NOT NULL DEFAULT 0 ,
   `extra_days` INT(11) NOT NULL ,
-  `uses` INT(11) NOT NULL ,
+  `uses` INT(11) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
 AUTO_INCREMENT = 119
