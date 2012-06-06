@@ -9,7 +9,8 @@ class Model_OrderPayment_Paypal extends Pet_Model_Abstract {
         'id' => null,
         'order_payment_id' => null,
         'correlationid' => null,
-        'transaction_id' => null
+        'pnref' => null,
+        'baid' => null
     );
 
 }

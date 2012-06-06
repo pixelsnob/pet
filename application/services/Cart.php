@@ -472,6 +472,7 @@ class Service_Cart {
             $payment_data = array(
                 'order_id'        => $order->order_id,
                 'amount'          => $order->total,
+                'pnref'           => $response->pnref,
                 'date'            => date('Y-m-d H:i:s')
             );
             if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
@@ -481,7 +482,6 @@ class Service_Cart {
                     'cc_expiration_month' => $order->cc_exp_month,
                     'cc_expiration_year'  => $order->cc_exp_year,
                     'cvv2match'           => $response->cvv2match,
-                    'pnref'               => $response->pnref,
                     'ppref'               => $response->ppref,
                     'correlationid'       => $response->correlationid
                 )));
@@ -489,6 +489,7 @@ class Service_Cart {
                 $payments_mapper->insert(array_merge($payment_data, array(
                     'correlationid'       => $response->correlationid,
                     'payment_type_id'     => Model_PaymentType::PAYPAL,
+                    'baid'                => $response->baid
                 )));
             }
         }

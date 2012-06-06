@@ -300,7 +300,7 @@ pnref, ppref, correlation_id, cvv2match
 from pet_old.sales_payflowpayment;
 
 insert into pet.order_payments_paypal
-select payment_ptr_id, payment_ptr_id, correlation_id, transaction_id
+select payment_ptr_id, payment_ptr_id, null, correlation_id, null
 from pet_old.sales_paypalpayment
 where payment_ptr_id != 87927; /* Order no longer exists */
 
