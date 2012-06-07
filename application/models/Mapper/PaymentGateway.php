@@ -182,22 +182,16 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
     /**
      * @param float $amount
      * @param string $id The original transaction id
-     * @param string $tender P or C
      * @return void
      * 
      */
-    public function processReferenceTransaction($amount, $origid, $tender) {
+    public function processReferenceTransaction($amount, $origid) {
         $this->resetGateway();
         $this->_gateway
-            ->setField('TENDER', $tender)
+            ->setField('TENDER', 'C')
             ->setField('AMT', $amount)
-            ->setField('TRXTYPE', 'S');
-        if ($tender == 'C') {
-            $this->_gateway->setField('ORIGID', $origid);
-        } elseif ($tender == 'P') {
-            $this->_gateway->setField('ORIGID', $origid);
-            $this->_gateway->setField('ACTION', 'D');
-        }
+            ->setField('TRXTYPE', 'S')
+            ->setField('ORIGID', $origid);
         $this->_gateway->send()->processResponse();
         $this->saveCall();
         if (!$this->_gateway->isSuccess()) {
@@ -212,6 +206,33 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         }
     }
 
+    /**
+     * @param float $amount
+     * @param string $baid The original billing agreement id
+     * @return void
+     * 
+     */
+    public function processECReferenceTransaction($amount, $baid) {
+        $this->resetGateway();
+        $this->_gateway
+            ->setField('TENDER', 'P')
+            ->setField('AMT', $amount)
+            ->setField('BAID', $baid)
+            ->setField('TRXTYPE', 'S')
+            ->setField('ACTION', 'D');
+        $this->_gateway->send()->processResponse();
+        $this->saveCall();
+        if (!$this->_gateway->isSuccess()) {
+            $msg = __FUNCTION__ . '() failed.';
+            if ($this->_gateway->getError()) {
+                $msg .= ' Gateway error: ' . $this->_gateway->getError();
+                $this->_error = self::ERR_GENERIC;
+            } else {
+                $this->_error = self::ERR_DECLINED;
+            }
+            throw new Exception($msg);
+        }
+    }
 
     /**
      * Processes a credit card void.

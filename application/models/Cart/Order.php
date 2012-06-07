@@ -10,8 +10,6 @@ class Model_Cart_Order extends Pet_Model_Abstract {
      * 
      */
     protected $_data = array(
-        //'name' => null,
-        //'address' => null,
         'billing_address' => null,
         'billing_address_2' => null,
         'billing_company' => null,

@@ -166,19 +166,19 @@ class Service_Orders {
                     throw new Exception('Error retrieving order payment');
                 }
                 $payment = $order->payments[0];
-                if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
-                    // Payment type was payflow
-                    $origid = $payment->gateway_data->pnref;
-                    $tender = 'C';
-                } elseif ($payment->payment_type_id == Model_PaymentType::PAYPAL) {
-                    // Payment type was paypal
-                    $origid = $payment->gateway_data->pnref;
-                    $tender = 'P';
-                }
                 // Make a charge attempt
                 try {
-                    $gateway_mapper->processReferenceTransaction(
-                        $sub->product->cost, $origid, $tender); 
+                    if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
+                        // Payment type was payflow
+                        $gateway_mapper->processReferenceTransaction(
+                            $sub->product->cost, $payment->gateway_data->pnref); 
+                    } elseif ($payment->payment_type_id == Model_PaymentType::PAYPAL) {
+                        // Payment type was paypal
+                        $gateway_mapper->processECReferenceTransaction(
+                            $sub->product->cost, $payment->gateway_data->baid); 
+                    } else {
+                        throw new Exception('Error determining payment type');
+                    }
                     $status = true;
                 } catch (Exception $e2) {
                     $status = false;

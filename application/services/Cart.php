@@ -330,8 +330,8 @@ class Service_Cart {
                     $order->user_id);
             } else {
                 // This inserts into users and user_profiles
-                $order->user_id = $users_mapper->insert($order->toArray(), true);
                 $order->password = $users_svc->generateHash($order->password);
+                $order->user_id = $users_mapper->insert($order->toArray(), true);
                 $profile_mapper->insert($order->toArray());
                 if (!$order->user_id) {
                     throw new Exception('user_id not defined');
