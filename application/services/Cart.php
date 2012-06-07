@@ -324,13 +324,14 @@ class Service_Cart {
             $users_mapper = new Model_Mapper_Users;
             $profile_mapper = new Model_Mapper_UserProfiles;
             if ($users_svc->isAuthenticated()) {
-                // update email 
                 $order->user_id = $users_svc->getId();
                 $users_mapper->updateEmail($order->email, $order->user_id);
+                $profile_mapper->updateByUserId($order->toArray(),
+                    $order->user_id);
             } else {
-                $order->password = $users_svc->generateHash($order->password);
                 // This inserts into users and user_profiles
                 $order->user_id = $users_mapper->insert($order->toArray(), true);
+                $order->password = $users_svc->generateHash($order->password);
                 $profile_mapper->insert($order->toArray());
                 if (!$order->user_id) {
                     throw new Exception('user_id not defined');
@@ -489,6 +490,7 @@ class Service_Cart {
                 $payments_mapper->insert(array_merge($payment_data, array(
                     'correlationid'       => $response->correlationid,
                     'payment_type_id'     => Model_PaymentType::PAYPAL,
+                    // Billing agreement id, for reference transactions
                     'baid'                => $response->baid
                 )));
             }

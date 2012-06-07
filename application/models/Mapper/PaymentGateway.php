@@ -80,8 +80,8 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('CVV2', $order->cc_cvv)
             ->setField('AMT', $order->total)
             ->setField('EXPDATE', $order->cc_exp)
-            ->setField('NAME', $order->name)
-            ->setField('STREET', $order->address)
+            ->setField('NAME', $order->first_name . ' ' . $order->last_name)
+            ->setField('STREET', $order->billing_address)
             ->setField('EMAIL', $order->email)
             ->setField('ZIP', $order->billing_postal_code)
             ->setField('CITY', $order->billing_city)
@@ -358,10 +358,10 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      */
     public function formatData(Model_Cart_Order $order) {
         $order->cc_exp  = $order->cc_exp_month  . substr($order->cc_exp_year , 2, 2);
-        $order->name  = $order->first_name  . ' ' . $order->last_name ;
-        $order->address  = $order->billing_address  . ' ' . $order->billing_address_2 ;
-        $order->shipping_address  = $order->shipping_address  . ' ' .
-            $order->shipping_address_2 ;
+        //$order->name  = $order->first_name  . ' ' . $order->last_name ;
+        //$order->address  = $order->billing_address  . ' ' . $order->billing_address_2 ;
+        //$order->shipping_address  = $order->shipping_address  . ' ' .
+        //    $order->shipping_address_2 ;
         return $order;
     }
 
