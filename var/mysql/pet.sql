@@ -464,8 +464,9 @@ DROP TABLE IF EXISTS `pet`.`order_payments_paypal` ;
 CREATE  TABLE IF NOT EXISTS `pet`.`order_payments_paypal` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `order_payment_id` INT(11) NOT NULL ,
+  `pnref` VARCHAR(20) NULL ,
   `correlationid` VARCHAR(20) NOT NULL ,
-  `transaction_id` VARCHAR(20) NULL ,
+  `baid` VARCHAR(20) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `order_payments_paypal_ibfk_2` (`order_payment_id` ASC) ,
