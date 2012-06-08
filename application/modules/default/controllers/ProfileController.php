@@ -12,7 +12,7 @@ class ProfileController extends Zend_Controller_Action {
      * 
      */
     public function indexAction() {
-        $auth_session = new Zend_Session_Namespace('Zend_Auth');
+        //$auth_session = new Zend_Session_Namespace('Zend_Auth');
         if (!$this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('login');
         }

@@ -8,9 +8,6 @@ class CartController extends Zend_Controller_Action {
         $this->_messenger->setNamespace('cart');
     }
 
-    /**
-     * 
-     */
     public function indexAction() {
         $cart = $this->_cart_svc->get();
         if ($this->_request->isXmlHttpRequest() &&

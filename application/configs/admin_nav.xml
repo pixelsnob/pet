@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <nav>
+        <orders>
+            <label>Orders</label>
+            <controller>orders</controller>
+            <action>index</action>
+            <module>admin</module>
+        </orders>
+        <logout>
+            <label>Logout</label>
+            <controller>index</controller>
+            <action>logout</action>
+            <module>admin</module>
+        </logout>
+    </nav>
+</config>

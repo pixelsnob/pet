@@ -1,0 +1,21 @@
+
+<div id="login-form">
+    <?php echo $this->flashMessenger($this->messages); ?>
+    <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="login">
+        <dl class="form">
+            <dt><?php echo $this->login_form->username->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->login_form->username->renderViewHelper(); ?>
+                <?php echo $this->login_form->username->renderErrors(); ?>
+            </dd>
+            <dt><?php echo $this->login_form->password->getLabel(); ?></dt>
+            <dd>
+                <?php echo $this->login_form->password->renderViewHelper(); ?>
+                <?php echo $this->login_form->password->renderErrors(); ?>
+            </dd>
+        </dl>
+        <p class="submit">
+            <input type="submit" value="Login" id="login-submit" class="button-grad">
+        </p>
+    </form>
+</div>

@@ -1,0 +1,39 @@
+
+body, html {
+    margin: 0;
+    padding: 0 10px;
+    font: 13px/14px Verdana, sans-serif;
+}
+
+h1 {
+    font-size: 20px !important;
+    text-transform: none;
+}
+
+nav {
+    float: left;
+    width: 150px;
+    padding: 10px 0;
+}
+
+nav ul {
+    margin: 0;
+    padding-left: 25px;
+}
+
+nav li {
+    list-style: none;
+    margin-bottom: 10px !important;
+}
+
+#content {
+    padding: 10px 0;
+    float: left;
+    width: 800px;
+}
+
+/*
+#login-form dt {
+    width: 80px;
+}
+*/

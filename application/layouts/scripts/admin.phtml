@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+<title>PET Admin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<?php
+    
+// In reverse order so that they are always first in the stack
+echo $this->headLink()
+        ->prependStylesheet('/css/admin/base.css')
+        ->prependStylesheet('/css/sections.css')
+        ->prependStylesheet('/css/base.css');
+?>
+
+<!--[if IE 9]>
+<style type="text/css">
+#header #logo { width: 320px; }
+</style>
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="/js/lib/html5.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+    <header>
+        <h1>PET Admin</h1>
+    </header>
+    <?php if ($this->isAuthenticated(true)): ?>
+        <nav>
+            <?php echo $this->navigation()->menu()->renderMenu(); ?>
+        </nav>
+    <?php endif; ?>
+    <div id="content">
+        <?php echo $this->layout()->content; ?>
+    </div>
+    <footer>
+
+    </footer>
+    <?php echo $this->headScriptMin()->loadGroup('common'); echo $this->inlineScriptMin(); ?>
+</body>
+</html>

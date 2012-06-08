@@ -49,11 +49,15 @@ class Service_Users extends Pet_Service {
     }
 
     /**
+     * @param bool $is_superuser
      * @return bool Auth status
      * 
      */
-    public function isAuthenticated() {
-        if (Zend_Auth::getInstance()->hasIdentity()) {
+    public function isAuthenticated($is_superuser = false) {
+        if ($identity = Zend_Auth::getInstance()->getIdentity()) {
+            if ($is_superuser && !$identity->is_superuser) { 
+                false;
+            }
             $config = Zend_Registry::get('app_config');
             $auth_session = new Zend_Session_Namespace('Zend_Auth');
             $ts = (int) $auth_session->timestamp;
@@ -139,7 +143,7 @@ class Service_Users extends Pet_Service {
      * @return Form_Login
      * 
      */ 
-    public function getLoginForm($redirect_to, $redirect_params) {
+    public function getLoginForm($redirect_to = null, $redirect_params = array()) {
         $login_form = new Form_Login(array(
             'redirectTo'     => $redirect_to,
             'redirectParams' => $redirect_params
