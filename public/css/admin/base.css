@@ -32,6 +32,28 @@ nav li {
     width: 800px;
 }
 
+.admin-table {
+    margin: 5px 0;    
+}
+
+.admin-table th, .admin-table td {
+    padding: 5px 6px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.admin-table th {
+    background: #ddd;
+}
+
+.admin-table td {
+    background: #f4f4f4;
+}
+
+.admin-table td.dollar {
+    text-align: right;
+}
+
 /*
 #login-form dt {
     width: 80px;

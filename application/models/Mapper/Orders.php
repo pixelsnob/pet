@@ -44,6 +44,33 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
         }
         return $out;
     }
+    
+    /** 
+     * 
+     * 
+     */
+    public function getPaginatedFilteredList($page = null, $filters = array(),
+                                             $sort = array()) {
+        $allowed_filters = array('email');
+        $sel = $this->_orders->select();
+        foreach ($filters as $k => $v) {
+            if (strlen(trim($v)) && in_array($k, $allowed_filters)) {
+                $sel->where("$k = ?", $v);
+            }
+        }
+        $sel->order('id desc');
+        $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
+        $paginator = new Zend_Paginator($adapter);
+        if ($page) {
+            $paginator->setCurrentPageNumber($page);
+        }
+        $paginator->setItemCountPerPage(50);
+        $orders = array();
+        foreach ($paginator as $row) {
+            $orders[] = new Model_Order($row);
+        }
+        return array('paginator' => $paginator, 'data' => $orders);
+    }
 
     /**
      * @param bool $email_sent

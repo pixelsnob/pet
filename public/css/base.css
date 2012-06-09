@@ -262,3 +262,46 @@ a.button-grad, a.button-grad-blue {
 pre {
     font: 12px/12px "Andale Mono";
 }
+
+/* Generic pagination */
+
+.pagination {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.pagination li {
+    display: block;
+    float: left;
+    min-width: 15px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.pagination li.prev-next {
+    width: auto;
+}
+
+.pagination li a, .pagination li span {
+    text-decoration: none;
+    display: block;
+    padding: 5px 7px;
+    min-width: 25px;
+}
+
+.pagination li a:hover {
+    background: #f6f6f6;
+}
+
+.pagination li a:active {
+    background: #ddd;
+}
+
+.pagination li.current {
+    background-color: #eee;
+}
+
+.pagination li.disabled {
+    color: #ddd;
+}

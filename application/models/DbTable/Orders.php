@@ -17,5 +17,6 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
         $sel = $this->select()->where('email_sent = ?', (int) $email_sent);
         return $this->fetchAll($sel);
     }
+
 }
 

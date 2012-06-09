@@ -1,0 +1,45 @@
+
+<?php /* Generic pagination view */ ?>
+
+<?php if ($this->pageCount): ?>
+<ul class="pagination">
+    <?php if (isset($this->previous)): ?>
+        <li class="text-link">
+            <a href="<?php echo $this->url() . '?' . http_build_query(array_merge(array('page' => $this->first), $this->search)); ?>">First</a> 
+        </li>
+    <?php else: ?>
+        <li class="disabled text-link"><span>First</span></li>
+    <?php endif; ?>
+    <?php if (isset($this->previous)): ?>
+        <?php /* Not passing the parameters into the url() view helper because it and the router don't play nice together */ ?>
+        <li class="prev-next">
+            <a href="<?php echo $this->url() . '?' . http_build_query(array_merge(array('page' => $this->previous), $this->search)); ?>">&lt; Previous</a>
+        </li>
+    <?php else: ?>
+        <li class="disabled prev-next"><span>&lt; Previous</span></li>
+    <?php endif; ?>
+    <?php foreach ($this->pagesInRange as $page): ?>
+        <?php if ($page != $this->current): ?>
+            <li>
+                <a href="<?php echo $this->url() . '?' . http_build_query(array_merge(array('page' => $page), $this->search)); ?>"><?php echo $page; ?></a>
+            </li>
+        <?php else: ?>
+            <li class="current"><span><?php echo $page; ?></span></li>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php if (isset($this->next)): ?>
+        <li class="prev-next">
+            <a href="<?php echo $this->url() . '?' . http_build_query(array_merge(array('page' => $this->next), $this->search)); ?>">Next &gt;</a>
+        </li>
+    <?php else: ?>
+        <li class="disabled prev-next"><span>Next &gt;</span></li>
+    <?php endif; ?>
+    <?php if (isset($this->next)): ?>
+        <li class="text-link">
+            <a href="<?php echo $this->url() . '?' . http_build_query(array_merge(array('page' => $this->last), $this->search)); ?>">Last</a> 
+        </li>
+    <?php else: ?>
+        <li class="disabled text-link"><span>Last</span></li>
+    <?php endif; ?>
+</ul>
+<?php endif; ?>

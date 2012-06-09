@@ -1,0 +1,31 @@
+
+<?php if ($this->orders): ?>
+<?php
+
+echo $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('search' => array()));
+echo $this->adminTable(array(
+    'id'                 => array('title'  => 'Order ID'),
+    'date_created'       => array(
+        'title'  => 'Date',
+        'type'   => 'date'
+    ),
+    'email'              => array('title'  => 'Email'),
+    'billing_first_name' => array('title'  => 'First Name'),
+    'billing_last_name'  => array('title'  => 'Last Name'),
+    'total'              => array(
+        'title' => 'Total',
+        'type'  => 'dollar'
+    ),
+    'view'               => array(
+        'type'  => 'view',
+        'label' => 'View',
+        'url'   => '/orders/detail/%id%'
+    )
+), $this->orders);
+echo $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('search' => array()));
+
+?>
+
+<?php else: ?>
+<p>There are no orders to show</p>
+<?php endif; ?>

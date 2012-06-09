@@ -137,6 +137,11 @@ class Form_Checkout extends Pet_Form {
         ));
     }
 
+    /**
+     * @param array $data
+     * @return bool
+     * 
+     */
     public function isValid($data) {
         $valid = true;
         $valid = $this->billing->isValid($data) && $valid;
@@ -151,26 +156,6 @@ class Form_Checkout extends Pet_Form {
         if ($this->_cart->isShippingAddressRequired() && $use_shipping) {
             $valid = $this->shipping->isValid($data) && $valid;
         }       
-
-        ///////////////////////////////////////////////////////////
-        // temp logging
-        /*$log = array(
-            'billing_valid' => $this->billing->isValid($data),
-            'promo_valid' => $this->promo->isValid($data),
-            'user_valid' => $this->user->isValid($data),
-            'info_valid' => $this->info->isValid($data),
-            'post'       => $_POST
-
-        );
-        if ($this->_cart->isShippingAddressRequired() && $use_shipping) {
-            $log['shipping_valid'] = $this->shipping->isValid($data);
-        }
-        if (isset($data['payment_method']) && $data['payment_method'] == 'credit_card') {
-            $log['payment_valid'] = $this->payment->isValid($data);
-        }
-        $log['messages'] = $this->getMessages();
-        file_put_contents('/tmp/checkout.log', print_r(array('date' => date('Y-m-d H:i:s'), 'data' => $log), true), FILE_APPEND);
-        */
         return $valid;
     }
 
@@ -179,7 +164,6 @@ class Form_Checkout extends Pet_Form {
      * 
      */
     public function getShippingValues() {
-        //if ($this->_cart->isShippingAddressRequired() && !$this->_cart->use_shipping) {
         if (!$this->_cart->use_shipping) {
             return array(
                 'shipping_first_name'  => $this->user->first_name->getValue(),
