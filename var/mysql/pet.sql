@@ -226,6 +226,10 @@ CREATE  TABLE IF NOT EXISTS `pet`.`orders` (
   INDEX `orders_ibfk_2` (`promo_id` ASC) ,
   INDEX `orders_ibfk_3` (`user_id` ASC) ,
   INDEX `email_sent` (`email_sent` ASC) ,
+  INDEX `date_created` (`date_created` ASC) ,
+  INDEX `email` (`email` ASC) ,
+  INDEX `billing_first_name` (`billing_first_name` ASC) ,
+  INDEX `billing_last_name` (`billing_last_name` ASC) ,
   CONSTRAINT `orders_ibfk_2`
     FOREIGN KEY (`promo_id` )
     REFERENCES `pet`.`promos` (`id` )
