@@ -46,19 +46,34 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     }
     
     /** 
-     * 
+     *  
      * 
      */
     public function getPaginatedFilteredList($page = null, $filters = array(),
                                              $sort = array()) {
-        $allowed_filters = array('email');
+        $allowed_filters = array('email', 'date_start', 'date_end');
         $sel = $this->_orders->select();
+        // Add date where clauses, if any
+        if (in_array('date_start', array_keys($filters))) {
+            $date_start = new DateTime($filters['date_start']);
+            $date_start->setTime(12, 0, 0);
+            $sel->where('date_created >= ?', $date_start->format('Y-m-d H:i:s'));
+            unset($filters['date_start']);
+        }
+        if (in_array('date_end', array_keys($filters))) {
+            $date_end = new DateTime($filters['date_end']);
+            $date_end->setTime(23, 59, 59);
+            $sel->where('date_created <= ?', $date_end->format('Y-m-d H:i:s'));
+            unset($filters['date_end']);
+        }
+        // Add remaining filters
         foreach ($filters as $k => $v) {
             if (strlen(trim($v)) && in_array($k, $allowed_filters)) {
                 $sel->where("$k = ?", $v);
             }
         }
         $sel->order('id desc');
+        //echo $sel->__toString(); exit;
         $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
         $paginator = new Zend_Paginator($adapter);
         if ($page) {
