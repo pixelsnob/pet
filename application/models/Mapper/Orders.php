@@ -69,10 +69,15 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
             if (is_numeric($search_data['search'])) {
                 $sel->where('id = ?', $search_data['search']);
             } else {
-                $search = $db->quote('%' . $search_data['search'] . '%');
-                $where = "email like $search or billing_first_name like $search " .
-                    "or billing_last_name like $search";
-                $sel->where($where);
+                // Split search term by whitespace
+                $search_parts = explode(' ', $search_data['search']);
+                foreach ($search_parts as $v) {
+                    $search = $db->quote('%' . $v . '%');
+                    $where = "email like $search or billing_first_name like $search " .
+                        "or billing_last_name like $search";
+                    $sel->where($where);
+
+                }
             }
         }
         $sel->order('id desc');

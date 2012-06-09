@@ -1,8 +1,21 @@
 
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="get" name="login">
+    <dl class="form">
+        <dt><?php echo $this->search_form->search->getLabel(); ?></dt>
+        <dd>
+            <?php echo $this->search_form->search->renderViewHelper(); ?>
+            <?php echo $this->search_form->search->renderErrors(); ?>
+        </dd>
+    </dl>
+    <p class="submit">
+        <input type="submit" value="Search" id="login-submit" class="button-grad">
+    </p>
+</form>
+
 <?php if ($this->orders): ?>
 <?php
 
-echo $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('search' => array()));
+echo $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
 echo $this->adminTable(array(
     'id'                 => array('title'  => 'Order ID'),
     'date_created'       => array(
@@ -22,7 +35,7 @@ echo $this->adminTable(array(
         'url'   => '/orders/detail/%id%'
     )
 ), $this->orders);
-echo $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('search' => array()));
+echo $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
 
 ?>
 

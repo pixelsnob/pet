@@ -13,10 +13,16 @@ class Admin_OrdersController extends Zend_Controller_Action {
     
     public function indexAction() {
         $page = $this->_request->getParam('page');
-        $orders = $this->_orders_svc->getPaginatedFiltered(
-            $this->_request->getParams());
+        $params = $this->_request->getParams();
+        $orders = $this->_orders_svc->getPaginatedFiltered($params);
         $this->view->paginator = $orders['paginator'];
         $this->view->orders = $orders['data'];
+        $search_form = $this->_orders_svc->getSearchForm();
+        if ($search_form->isValid($params)) {
+            
+        }
+        $this->view->params = $this->_request->getQuery();
+        $this->view->search_form = $search_form;
     }
 
 }
