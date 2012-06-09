@@ -46,8 +46,11 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     }
     
     /** 
-     *  
+     * Builds a query out of search params and paginates the results
      * 
+     * @param array $search_data
+     * @return array Returns the paginator object as well as an array of model
+     *               objects
      */
     public function getPaginatedFiltered(array $search_data) {
         $sel = $this->_orders->select();
@@ -87,7 +90,7 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
         if (isset($search_data['page'])) {
             $paginator->setCurrentPageNumber((int) $search_data['page']);
         }
-        $paginator->setItemCountPerPage(50);
+        $paginator->setItemCountPerPage(35);
         $orders = array();
         foreach ($paginator as $row) {
             $orders[] = new Model_Order($row);
