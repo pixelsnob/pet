@@ -15,8 +15,8 @@ class Service_Admin {
         $this->_view = Zend_Controller_Front::getInstance()
             ->getParam('bootstrap')->getResource('view');
     }
-    
-    public function buildTable(array $fields) {
-                
+
+    public function getPaginatedFilteredList($page = null, $filters = array()) {
+        return $this->_orders->getPaginatedFilteredList($page, $filters);
     }
 }

@@ -13,9 +13,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
     
     public function indexAction() {
         $page = $this->_request->getParam('page');
-        //$filters = array('email' => 'mark@allwithin.com');
-        $orders = $this->_orders_svc->getPaginatedFilteredList(
-            $page, $this->_request->getParams());
+        $orders = $this->_orders_svc->getPaginatedFiltered(
+            $this->_request->getParams());
         $this->view->paginator = $orders['paginator'];
         $this->view->orders = $orders['data'];
     }

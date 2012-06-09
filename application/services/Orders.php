@@ -59,8 +59,8 @@ class Service_Orders {
         return $order;
     }
     
-    public function getPaginatedFilteredList($page = null, $filters = array()) {
-        return $this->_orders->getPaginatedFilteredList($page, $filters);
+    public function getPaginatedFiltered(array $data) {
+        return $this->_orders->getPaginatedFiltered($data);
     }
 
     /**
