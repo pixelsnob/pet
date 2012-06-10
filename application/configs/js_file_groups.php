@@ -32,5 +32,16 @@ return array(
         'js/Pet/Models/Checkout.js',
         'js/Pet/Models/PromoCode.js',
         'js/Pet/Views/Checkout.js'
+    ),
+    'admin-common' => array(
+        'js/lib/jquery-1.7.1.min.js',
+        'js/lib/underscore-min.js',
+        'js/lib/backbone-min.js',
+        'js/lib/jquery.fancybox.pack.js',
+        'js/lib/jquery.tools.min.js',
+        'js/lib/jquery-ui.custom.min.js',
+        'js/Pet/Pet.js',
+        'js/Pet/Views/Base.js',
+        'js/Pet/Views/Admin.js'
     )
 );

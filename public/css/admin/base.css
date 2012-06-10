@@ -54,6 +54,39 @@ nav li {
     text-align: right;
 }
 
+
+#search-form {
+    width: 850px;
+    padding-bottom: 15px;
+}
+
+#search-form dl {
+    margin-top: 0;
+}
+
+#search-form dt, #search-form dd {
+    font-size: 12px;
+    margin-right: 20px;
+}
+
+#search-form dt {
+    clear: none;
+    width: 70px;
+}
+
+#search-form dd {
+    margin-left: 0;
+}
+
+#search-form dt.search {
+    clear: left;
+}
+
+#search-form .submit {
+    margin-top: 0;
+    padding-left: 90px;
+}
+
 /*
 #login-form dt {
     width: 80px;

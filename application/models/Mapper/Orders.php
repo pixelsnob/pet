@@ -56,17 +56,17 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
         $sel = $this->_orders->select();
         $db = Zend_Db_Table::getDefaultAdapter();
         // Add date where clauses, if any
-        if (in_array('date_start', array_keys($search_data))) {
-            $date_start = new DateTime($search_data['date_start']);
-            $date_start->setTime(12, 0, 0);
-            $sel->where('date_created >= ?', $date_start->format('Y-m-d H:i:s'));
+        if (isset($search_data['start_date']) && $search_data['start_date']) {
+            $start_date = new DateTime($search_data['start_date']);
+            $start_date->setTime(12, 0, 0);
+            $sel->where('date_created >= ?', $start_date->format('Y-m-d H:i:s'));
         }
-        if (in_array('date_end', array_keys($search_data))) {
-            $date_end = new DateTime($search_data['date_end']);
-            $date_end->setTime(23, 59, 59);
-            $sel->where('date_created <= ?', $date_end->format('Y-m-d H:i:s'));
+        if (isset($search_data['end_date']) && $search_data['end_date']) {
+            $end_date = new DateTime($search_data['end_date']);
+            $end_date->setTime(23, 59, 59);
+            $sel->where('date_created <= ?', $end_date->format('Y-m-d H:i:s'));
         }
-        if (isset($search_data['search'])) {
+        if (isset($search_data['search']) && $search_data['search']) {
             // If it's a number, try the order id, otherwise, try other text
             // fields
             if (is_numeric($search_data['search'])) {
