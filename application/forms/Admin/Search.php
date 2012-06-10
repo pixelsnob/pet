@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin search form for lists
+ * Admin search form for admin lists
  * 
  */
 class Form_Admin_Search extends Pet_Form {
@@ -12,9 +12,6 @@ class Form_Admin_Search extends Pet_Form {
             'id' => 'search',
             'required' => false,
             'validators'   => array(
-                /*array('NotEmpty', true, array(
-                    'messages' => 'Please enter your password'
-                )),*/
                 array('StringLength', true, array(
                     'max' => 100,
                     'messages' => 'Password must be %max% characters or less'

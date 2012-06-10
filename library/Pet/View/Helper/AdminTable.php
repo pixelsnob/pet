@@ -35,10 +35,8 @@ class Pet_View_Helper_AdminTable extends Zend_View_Helper_Abstract {
                     case 'edit':
                     case 'view':
                     case 'delete':
-                        preg_match('/%([^%]*)%/', $field['url'], $m);
-                        if (isset($m[1]) && isset($row->{$m[1]})) {
-                            $id = $row->{$m[1]};
-                            $url = str_replace($m[0], $id, $field['url']);
+                        if (isset($row->id) && $row->id) {
+                            $url = $field['url'] . '/'. $row->id;
                             $url = $this->view->escape($url);
                             $label = (isset($field['label']) ?
                                 $field['label'] : null);

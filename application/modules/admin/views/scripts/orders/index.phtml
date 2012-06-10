@@ -42,7 +42,7 @@ echo $this->adminTable(array(
     'view'               => array(
         'type'  => 'view',
         'label' => 'View',
-        'url'   => '/orders/detail/%id%'
+        'url'   => '/admin/orders/detail/id'
     )
 ), $this->orders);
 echo $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));

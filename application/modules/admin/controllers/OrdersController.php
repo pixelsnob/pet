@@ -28,11 +28,21 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $orders = $this->_orders_svc->getPaginatedFiltered($params);
         $this->view->paginator = $orders['paginator'];
         $this->view->orders = $orders['data'];
-        //$search_form->populate($params);
         $this->view->params = $this->_request->getQuery();
         $this->view->search_form = $search_form;
-        $this->view->inlineScriptMin()//->loadGroup('admin-orders')
+        $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
     }
 
+    public function detailAction() {
+        $id = $this->_request->getParam('id');
+        if (!$id) {
+            throw new Exception('Order id was not supplied');
+        }
+        $order = $this->_orders_svc->getFullOrder($id);
+        if (!$order) {
+            throw new Exception("Order $id not found");
+        }
+        $this->view->order = $order;
+    }
 }
