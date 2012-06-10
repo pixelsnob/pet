@@ -48,32 +48,32 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     /** 
      * Builds a query out of search params and paginates the results
      * 
-     * @param array $search_data
+     * @param array $params
      * @return array Returns the paginator object as well as an array of model
      *               objects
      */
-    public function getPaginatedFiltered(array $search_data) {
+    public function getPaginatedFiltered(array $params) {
         $sel = $this->_orders->select();
         $db = Zend_Db_Table::getDefaultAdapter();
         // Add date where clauses, if any
-        if (isset($search_data['start_date']) && $search_data['start_date']) {
-            $start_date = new DateTime($search_data['start_date']);
+        if (isset($params['start_date']) && $params['start_date']) {
+            $start_date = new DateTime($params['start_date']);
             $start_date->setTime(12, 0, 0);
             $sel->where('date_created >= ?', $start_date->format('Y-m-d H:i:s'));
         }
-        if (isset($search_data['end_date']) && $search_data['end_date']) {
-            $end_date = new DateTime($search_data['end_date']);
+        if (isset($params['end_date']) && $params['end_date']) {
+            $end_date = new DateTime($params['end_date']);
             $end_date->setTime(23, 59, 59);
             $sel->where('date_created <= ?', $end_date->format('Y-m-d H:i:s'));
         }
-        if (isset($search_data['search']) && $search_data['search']) {
+        if (isset($params['search']) && $params['search']) {
             // If it's a number, try the order id, otherwise, try other text
             // fields
-            if (is_numeric($search_data['search'])) {
-                $sel->where('id = ?', $search_data['search']);
+            if (is_numeric($params['search'])) {
+                $sel->where('id = ?', $params['search']);
             } else {
                 // Split search term by whitespace
-                $search_parts = explode(' ', $search_data['search']);
+                $search_parts = explode(' ', $params['search']);
                 foreach ($search_parts as $v) {
                     $search = $db->quote('%' . $v . '%');
                     $where = "email like $search or billing_first_name like $search " .
@@ -83,12 +83,13 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
                 }
             }
         }
-        $sel->order('id desc');
-        //echo $sel->__toString(); exit;
+        $sort = (isset($params['sort']) ? $params['sort'] : 'id');
+        $sort_dir = (isset($params['sort_dir']) ? $params['sort_dir'] : 'desc');
+        $sel->order($sort . ' ' . $sort_dir);
         $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
         $paginator = new Zend_Paginator($adapter);
-        if (isset($search_data['page'])) {
-            $paginator->setCurrentPageNumber((int) $search_data['page']);
+        if (isset($params['page'])) {
+            $paginator->setCurrentPageNumber((int) $params['page']);
         }
         $paginator->setItemCountPerPage(35);
         $orders = array();

@@ -10,6 +10,12 @@ h1 {
     text-transform: none;
 }
 
+h2 {
+    font-size: 20px !important;
+    text-transform: none;
+    margin-top: 0;
+}
+
 nav {
     float: left;
     width: 150px;
@@ -54,6 +60,31 @@ nav li {
     text-align: right;
 }
 
+.admin-list {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.admin-list dt, .admin-list dd {
+    float: left;
+    line-height: 22px;
+    padding: 5px 6px;
+}
+
+.admin-list dt {
+    clear: left;
+    width: 150px;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 5px;
+    background: #eee;
+}
+
+.admin-list dd {
+    width: 270px;
+    margin-left: 5px;
+    background: #f4f4f4;
+}
 
 #search-form {
     width: 850px;
@@ -71,7 +102,7 @@ nav li {
 
 #search-form dt {
     clear: none;
-    width: 70px;
+    width: 90px;
 }
 
 #search-form dd {
@@ -84,7 +115,6 @@ nav li {
 
 #search-form .submit {
     margin-top: 0;
-    padding-left: 90px;
 }
 
 /*

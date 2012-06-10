@@ -1,6 +1,6 @@
 <?php
 
-class Pet_View_Helper_AdminTable extends Zend_View_Helper_Abstract {
+class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
     
     /**
      * Builds an admin table from a config array of fields and an array
@@ -10,12 +10,15 @@ class Pet_View_Helper_AdminTable extends Zend_View_Helper_Abstract {
      * @param array $data
      * 
      */
-    public function adminTable(array $fields, array $data) {
+    public function objectsToAdminTable(array $fields, array $data, array $params) {
         $out = "<table class=\"admin-table\">\n<tr>\n";
-        foreach ($fields as $field) {
+        $sort_params = $params;
+        unset($sort_params['sort']);
+        foreach ($fields as $k => $field) {
             $title = (isset($field['title']) ?
                 $this->view->escape($field['title']) : '');
-            $out .= "<th>$title</th>\n";
+            $out .= '<th><a href="?' . $this->view->escape(http_build_query($sort_params)) .
+                "&sort=$k\">$title</a></th>\n";
         }
         $out .= "</tr>\n";
         foreach ($data as $row) {

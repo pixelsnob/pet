@@ -22,6 +22,9 @@ class Admin_OrdersController extends Zend_Controller_Action {
             $date->sub(new DateInterval('P1Y'));
             $params['start_date'] = $date->format('Y-m-d');
         }
+        if (!isset($params['sort_dir']) || !$params['sort_dir']) {
+            $params['sort_dir'] = 'desc';
+        }
         if (!$search_form->isValid($params)) {
             $params = array();
         }

@@ -14,7 +14,7 @@ class Form_Admin_Search extends Pet_Form {
             'validators'   => array(
                 array('StringLength', true, array(
                     'max' => 100,
-                    'messages' => 'Password must be %max% characters or less'
+                    'messages' => 'Search term must be %max% characters or less'
                 ))
             )
         ))->addElement('text', 'start_date', array(
@@ -28,7 +28,7 @@ class Form_Admin_Search extends Pet_Form {
                 )),
                 array('StringLength', true, array(
                     'max' => 10,
-                    'messages' => 'Password must be %max% characters or less'
+                    'messages' => 'Start date must be %max% characters or less'
                 ))
             )
         ))->addElement('text', 'end_date', array(
@@ -42,9 +42,20 @@ class Form_Admin_Search extends Pet_Form {
                 )),
                 array('StringLength', true, array(
                     'max' => 10,
-                    'messages' => 'Password must be %max% characters or less'
+                    'messages' => 'End date must be %max% characters or less'
                 ))
             )
-        ));
+        ))->addElement('select', 'sort_dir', array(
+            'label' => 'Sort direction',
+            'id' => 'sort_dir',
+            'required' => false,
+            'multiOptions' => array('asc' => 'Ascending', 'desc' => 'Descending'),
+            'validators'   => array(
+                array('StringLength', true, array(
+                    'max' => 4,
+                    'messages' => 'Sort direction must be %max% characters or less'
+                ))
+            )
+        ))->addElement('hidden', 'sort');
     }
 }
