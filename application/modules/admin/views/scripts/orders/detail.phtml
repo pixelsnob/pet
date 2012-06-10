@@ -16,8 +16,8 @@
             'shipping'    => array('format' => 'dollar'),
             'discount'    => array('format' => 'dollar'),
             'total'       => array('format' => 'dollar'),
-            'phone_order' => array('callback' => function($value) {
-                return ($value == 1 ? 'Y' : 'N');
+            'phone_order' => array('callback' => function($data) {
+                return ($data->phone_order == 1 ? 'Y' : 'N');
             })
 
         ), $this->order); ?>
@@ -77,17 +77,25 @@
         </table>
     </section>
 
-    <section class="promo admin-list-left full-width">
+    <section class="promo admin-list-left">
         <h3>Promotion</h3>
         <?php if ($this->order->promo): ?>
         <?php echo $this->objectToAdminList(array(
             'code',
-            'expiration'  => array('format' => 'date'),
-            'description'
+            'expiration'  => array('format' => 'date')
+            //'description'
         ), $this->order->promo); ?>
         <?php else: ?>
             <p class="no-data">No promotion</p>
         <?php endif; ?>
+    </section>
+
+    <section class="expirations admin-list-right">
+        <h3>Subscription Expirations</h3>
+        <?php echo $this->objectToAdminList(array(
+            'regular' => array('title' => 'Regular Expiration'),
+            'digital' => array('title' => 'Digital Expiration')
+        ), $this->order->expirations); ?>
     </section>
 
     <section class="payments clear full-width">
@@ -101,7 +109,8 @@
                     ),
                     'payment_type_id' => array(
                         'title'    => 'Payment Type',
-                        'callback' => function($value) {
+                        'callback' => function($data) {
+                            $value = $data->payment_type_id;
                             if ($value == Model_PaymentType::PAYFLOW) {
                                 return 'Payflow';
                             } elseif (Model_PaymentType::PAYPAL) {
@@ -121,8 +130,9 @@
             <p class="no-data">No promotion</p>
         <?php endif; ?>
     </section>
-
 </div>
+<!--
 <pre style="clear: both; width: 800px;">
 <?php print_r($this->order); ?>
 </pre>
+-->

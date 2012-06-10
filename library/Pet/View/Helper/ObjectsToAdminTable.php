@@ -29,6 +29,9 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
                         $th_class = ' class="sort-by"';
                     }
                 }
+            } else {
+                $qp['sort_dir'] = 'asc';
+                $qp['sort'] = $k;
             }
             $title = (isset($field['title']) ?
                 $this->view->escape($field['title']) : '');

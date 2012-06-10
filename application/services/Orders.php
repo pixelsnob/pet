@@ -37,21 +37,22 @@ class Service_Orders {
         $opg_mapper           = new Model_Mapper_OrderProductGifts;
         $payments_mapper      = new Model_Mapper_OrderPayments;
         $products_mapper      = new Model_Mapper_Products;
-        $users_mapper         = new Model_Mapper_Users;
+        $users_svc            = new Service_Users;
         $profiles_mapper      = new Model_Mapper_UserProfiles;
         $promos_mapper        = new Model_Mapper_Promos;
         $msg_suffix           = " for order_id $id";
-
+    
         $order = $this->getById($id);
         if (!$order) {
             $msg = 'Error retrieving order' . $msg_suffix;
             throw new Exception($msg);
         }
-        $order->user          = $users_mapper->getById($order->user_id);
-        $order->user_profile  = $profiles_mapper->getByUserId($order->user->id);
+        $order->user          = $users_svc->getUser($order->user_id);
+        $order->user_profile  = $users_svc->getProfile($order->user->id);
         $order->products      = $op_mapper->getByOrderId($order->id);
         $order->payments      = $payments_mapper->getByOrderId($order->id); 
         $order->subscriptions = $ops_mapper->getByOrderId($order->id);
+        $order->expirations   = $users_svc->getExpirations($order->user->id);
         $order->gifts         = $opg_mapper->getByOrderId($order->id);
         if ($order->promo_id) {
             $order->promo     = $promos_mapper->getById($order->promo_id);
