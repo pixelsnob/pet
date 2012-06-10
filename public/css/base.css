@@ -305,3 +305,7 @@ pre {
 .pagination li.disabled {
     color: #ddd;
 }
+
+.clear {
+    clear: both;
+}

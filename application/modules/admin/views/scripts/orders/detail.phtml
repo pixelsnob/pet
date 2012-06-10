@@ -1,75 +1,128 @@
 
-<h2>Order #<?php echo $this->escape($this->order->id); ?></h2>
-<section class="basic">
-    <?php echo $this->objectToAdminList(array(
-        'user_id' => array(),
-        'date_created' => array('format' => 'date'),
-        'date_updated' => array('format' => 'date'),
-        'email' => array()
+<div id="order-detail">
+    <h2>Order #<?php echo $this->escape($this->order->id); ?></h2>
 
-    ), $this->order); ?>
-</section>
+    <section class="admin-list-left">
+        <?php echo $this->objectToAdminList(array(
+            'user_id'      => array(),
+            'date_created' => array('format' => 'datetime'),
+            'date_updated' => array('format' => 'datetime'),
+            'email'        => array()
 
-<section class="billing">
-    <?php echo $this->objectToAdminList(array(
-        'billing_first_name',
-        'billing_last_name',
-        'billing_address',
-        'billing_address_2',
-        'billing_company',
-        'billing_city',
-        'billing_state',
-        'billing_country',
-        'billing_postal_code',
-        'billing_phone'
-    ), $this->order); ?>
-</section>
+        ), $this->order); ?>
+    </section>
+    <section class="admin-list-right">
+        <?php echo $this->objectToAdminList(array(
+            'shipping'    => array('format' => 'dollar'),
+            'discount'    => array('format' => 'dollar'),
+            'total'       => array('format' => 'dollar'),
+            'phone_order' => array('callback' => function($value) {
+                return ($value == 1 ? 'Y' : 'N');
+            })
 
-<section class="shipping">
-    <?php echo $this->objectToAdminList(array(
-        'shipping_first_name',
-        'shipping_last_name',
-        'shipping_address',
-        'shipping_address_2',
-        'shipping_company',
-        'shipping_city',
-        'shipping_state',
-        'shipping_country',
-        'shipping_postal_code',
-        'shipping_phone'
-    ), $this->order); ?>
-</section>
+        ), $this->order); ?>
+    </section>
 
-<!--
-<section>
-    <dl>
-        <dt>User ID:</dt>
-        <dd><?php echo $this->escape($this->order->user->id); ?></dd>
+    <section class="billing admin-list-left">
+        <h3>Billing</h3>
+        <?php echo $this->objectToAdminList(array(
+            'billing_first_name'  => array('title' => 'First Name'),
+            'billing_last_name'   => array('title' => 'Last Name'),
+            'billing_address'     => array('title' => 'Address'),
+            'billing_address_2'   => array('title' => 'Address 2'),
+            'billing_company'     => array('title' => 'Company'),
+            'billing_city'        => array('title' => 'City'),
+            'billing_state'       => array('title' => 'State'),
+            'billing_country'     => array('title' => 'Country'),
+            'billing_postal_code' => array('title' => 'Postal Code'),
+            'billing_phone'       => array('title' => 'Phone')
+        ), $this->order); ?>
+    </section>
+
+    <section class="shipping admin-list-right">
+        <h3>Shipping</h3>
+        <?php echo $this->objectToAdminList(array(
+            'shipping_first_name'  => array('title' => 'First Name'),
+            'shipping_last_name'   => array('title' => 'Last Name'),
+            'shipping_address'     => array('title' => 'Address'),
+            'shipping_address_2'   => array('title' => 'Address 2'),
+            'shipping_company'     => array('title' => 'Company'),
+            'shipping_city'        => array('title' => 'City'),
+            'shipping_state'       => array('title' => 'State'),
+            'shipping_country'     => array('title' => 'Country'),
+            'shipping_postal_code' => array('title' => 'Postal Code'),
+            'shipping_phone'       => array('title' => 'Phone')
+        ), $this->order); ?>
+    </section>
+
+    <section class="products clear full-width">
+        <h3>Products</h3>
+        <table class="admin-table">
+            <tr>
+                <th>Name</th>
+                <th>SKU</th>
+                <th>Quantity</th>
+                <th>Unit Cost</th>
+                <th>Total</th>
+            </tr>
+            <?php foreach ($this->order->products as $product): ?>
+                <tr>
+                    <td><?php echo $this->escape($product->name); ?></td>
+                    <td><?php echo $this->escape($product->sku); ?></td>
+                    <td><?php echo $this->escape($product->qty); ?></td>
+                    <td><?php echo $this->dollarFormat($product->cost); ?></td>
+                    <td><?php echo $this->dollarFormat($product->cost * $product->qty); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </section>
+
+    <section class="promo admin-list-left full-width">
+        <h3>Promotion</h3>
         <?php if ($this->order->promo): ?>
-            <dt>Promotion:</dt>
-            <dd><?php echo $this->escape($this->order->promo->code); ?></dd>
+        <?php echo $this->objectToAdminList(array(
+            'code',
+            'expiration'  => array('format' => 'date'),
+            'description'
+        ), $this->order->promo); ?>
+        <?php else: ?>
+            <p class="no-data">No promotion</p>
         <?php endif; ?>
-        <dt>Date Created:</dt>
-        <dd><?php $date_created = new DateTime($this->order->date_created); echo $this->escape($date_created->format('M j, Y h:i:s a')); ?></dd>
-        <dt>Date Updated:</dt>
-        <dd><?php $date_updated = new DateTime($this->order->date_updated); echo $this->escape($date_updated->format('M j, Y h:i:s a')); ?></dd>
-        <dt>Email:</dt>
-        <dd><?php echo $this->escape($this->order->email); ?></dd>
-        <dt>Billing First Name:</dt>
-        <dd><?php echo $this->escape($this->order->billing_first_name); ?></dd>
-        <dt>Billing Last Name:</dt>
-        <dd><?php echo $this->escape($this->order->billing_last_name); ?></dd>
-        <dt>:</dt>
-        <dd><?php echo $this->escape($this->order->user->id); ?></dd>
-        <dt>:</dt>
-        <dd><?php echo $this->escape($this->order->user->id); ?></dd>
-        <dt>:</dt>
-        <dd><?php echo $this->escape($this->order->user->id); ?></dd>
-        <dt>:</dt>
-        <dd><?php echo $this->escape($this->order->user->id); ?></dd>
-    </dl>
-</section>
--->
-<pre>
+    </section>
+
+    <section class="payments clear full-width">
+        <h3>Payments</h3>
+        <?php if ($this->order->payments): ?>
+            <?php foreach ($this->order->payments as $payment): ?>
+                <?php echo $this->objectToAdminList(array(
+                    'date'   => array('format' => 'datetime'),
+                    'amount' => array(
+                        'format' => 'dollar'
+                    ),
+                    'payment_type_id' => array(
+                        'title'    => 'Payment Type',
+                        'callback' => function($value) {
+                            if ($value == Model_PaymentType::PAYFLOW) {
+                                return 'Payflow';
+                            } elseif (Model_PaymentType::PAYPAL) {
+                                return 'Paypal';
+                            } elseif (Model_PaymentType::CHECK) {
+                                return 'Check';
+                            } else {
+                                return 'Unknown';
+                            }
+                        }
+                    ),
+                    'pnref' => array('title' => 'PNREF'),
+                    'baid'  => array('title' => 'BAID')
+                ), $payment); ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="no-data">No promotion</p>
+        <?php endif; ?>
+    </section>
+
+</div>
+<pre style="clear: both; width: 800px;">
 <?php print_r($this->order); ?>
 </pre>

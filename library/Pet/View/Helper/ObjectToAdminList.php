@@ -13,12 +13,12 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
         $out = "<dl class=\"admin-list\">\n";
         foreach ($fields as $k => $field) {
             $i = (!is_array($field) ? $field : $k);
-            if ($data->$i) {
+            if (strlen(trim($data->$i))) {
                 if (!is_array($field) || !isset($field['title'])) {
                     $title = str_replace('_', ' ', $i);
                     $title = ucwords($title);
                 } else {
-                    $title = $field;
+                    $title = $field['title'];
                 }
                 $format = (isset($field['format']) ? $field['format'] : null);
                 switch ($format) {
@@ -26,15 +26,22 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
                         $value = $this->view->escape(
                             $this->view->dollarFormat($data->$i));
                         break;
-                    case 'date':
+                    case 'datetime':
                         $date = new DateTime($data->$i);
                         $value = $date->format('M j, Y h:i:s a');
                         break;
+                    case 'date':
+                        $date = new DateTime($data->$i);
+                        $value = $date->format('M j, Y');
+                        break;
                     default:
                         $value = $data->$i;
+                        if (is_array($field) && isset($field['callback'])) {
+                            $value = $field['callback']($value);
+                        }
                         break;
                 }
-                $out .= '<dt>' . $this->view->escape($title) . "</dt>\n";
+                $out .= '<dt>' . $this->view->escape($title) . ":</dt>\n";
                 $out .= "<dd>$value</dd>\n";
             }
         }

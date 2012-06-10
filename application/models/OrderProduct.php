@@ -16,6 +16,22 @@ class Model_OrderProduct extends Pet_Model_Abstract {
         'product' => null
     );
 
+    /**
+     * Enable direct access to product properties:
+     * $product->name instead of $product->product->name 
+     * 
+     * @param string $field Name of field to get
+     * @return mixed Field value
+     * 
+     */
+    public function __get($field) {
+        if (isset($this->_data['product']->$field)) {
+            return $this->_data['product']->$field;
+        } else {
+            return parent::__get($field);
+        }
+    }
+
     /** 
      * @return array
      * 

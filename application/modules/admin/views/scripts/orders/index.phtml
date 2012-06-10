@@ -36,20 +36,20 @@ if ($this->orders) {
     echo $this->objectsToAdminTable(array(
         'id'                 => array('title'  => 'Order ID'),
         'date_created'       => array(
-            'title'  => 'Date',
-            'type'   => 'date'
+            'title'    => 'Date',
+            'format'   => 'datetime'
         ),
         'email'              => array('title'  => 'Email'),
         'billing_first_name' => array('title'  => 'First Name'),
         'billing_last_name'  => array('title'  => 'Last Name'),
         'total'              => array(
-            'title' => 'Total',
-            'type'  => 'dollar'
+            'title'   => 'Total',
+            'format'  => 'dollar'
         ),
         'view'               => array(
-            'type'  => 'view',
-            'label' => 'View',
-            'url'   => '/admin/orders/detail/id'
+            'format'  => 'view',
+            'label'   => 'View',
+            'url'     => '/admin/orders/detail/id'
         )
     ), $this->orders, $this->params);
     echo $pagination;

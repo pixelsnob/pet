@@ -12,25 +12,40 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
      */
     public function objectsToAdminTable(array $fields, array $data, array $params) {
         $out = "<table class=\"admin-table\">\n<tr>\n";
-        $sort_params = $params;
-        unset($sort_params['sort']);
         foreach ($fields as $k => $field) {
+            $qp = $params;
+            $th_class = '';
+            // Sort header stuff
+            if (isset($params['sort']) && strlen(trim($params['sort']))) {
+                $qp['sort_dir'] = 'asc';
+                $qp['sort'] = $k;
+                if (isset($params['sort_dir'])) {
+                    if ($params['sort'] == $k) {
+                        if ($params['sort_dir'] == 'asc') {
+                            $qp['sort_dir'] = 'desc';
+                        } else {
+                            $qp['sort_dir'] = 'asc';
+                        }
+                        $th_class = ' class="sort-by"';
+                    }
+                }
+            }
             $title = (isset($field['title']) ?
                 $this->view->escape($field['title']) : '');
-            $out .= '<th><a href="?' . $this->view->escape(http_build_query($sort_params)) .
-                "&sort=$k\">$title</a></th>\n";
+            $out .= "<th{$th_class}><a href=\"?" . $this->view->escape(
+                http_build_query($qp)) . "\">$title</a></th>\n";
         }
         $out .= "</tr>\n";
         foreach ($data as $row) {
             $out .= "<tr>\n";
             foreach ($fields as $k => $field) {
-                $type = (isset($field['type']) ? $field['type'] : null);
-                switch ($type) {
+                $format = (isset($field['format']) ? $field['format'] : null);
+                switch ($format) {
                     case 'dollar':
                         $value = $this->view->escape(
                             $this->view->dollarFormat($row->$k));
                         break;
-                    case 'date':
+                    case 'datetime':
                         $date = new DateTime($row->$k);
                         $value = $date->format('M j, Y h:i a');
                         break;
@@ -51,7 +66,7 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
                         $value = $this->view->escape($row->$k);
                         break;
                 }
-                $class = ($type ? " class=\"$type\"" : '');
+                $class = ($format ? " class=\"$format\"" : '');
                 $out .= "<td{$class}>" . $value . "</td>\n";
             }
             $out .= "</tr>\n";

@@ -3,6 +3,7 @@ body, html {
     margin: 0;
     padding: 0 10px;
     font: 13px/14px Verdana, sans-serif;
+    width: 1000px;
 }
 
 h1 {
@@ -35,7 +36,6 @@ nav li {
 #content {
     padding: 10px 0;
     float: left;
-    width: 800px;
 }
 
 .admin-table {
@@ -43,13 +43,19 @@ nav li {
 }
 
 .admin-table th, .admin-table td {
-    padding: 5px 6px;
+    padding: 6px;
     text-align: left;
     white-space: nowrap;
+    border-spacing: 5px 5px;
 }
 
 .admin-table th {
     background: #ddd;
+}
+
+.admin-table th.sort-by {
+    background: #bbb;
+    color: white;
 }
 
 .admin-table td {
@@ -67,8 +73,7 @@ nav li {
 
 .admin-list dt, .admin-list dd {
     float: left;
-    line-height: 22px;
-    padding: 5px 6px;
+    padding: 6px;
 }
 
 .admin-list dt {
@@ -76,14 +81,27 @@ nav li {
     width: 150px;
     font-weight: bold;
     margin: 0;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     background: #eee;
 }
 
 .admin-list dd {
-    width: 270px;
-    margin-left: 5px;
+    width: 210px;
+    margin-left: 2px;
     background: #f4f4f4;
+}
+
+.admin-list-left, .admin-list-right {
+    float: left;
+    width: 400px;
+}
+
+.admin-list-left {
+    clear: left;
+}
+
+.admin-list-group {
+    clear: left;
 }
 
 #search-form {
@@ -117,6 +135,22 @@ nav li {
     margin-top: 0;
 }
 
+.no-data {
+    padding-bottom: 25px;
+}
+
+
+#order-detail .full-width {
+    width: 788px;
+}
+
+#order-detail .full-width .admin-list dd {
+    width: 610px;
+}
+
+#order-detail .full-width .admin-table {
+    width: 788px;
+}
 /*
 #login-form dt {
     width: 80px;
