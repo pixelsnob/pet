@@ -8,26 +8,22 @@ class Admin_IndexController extends Zend_Controller_Action {
     }
     
     public function indexAction() {
+        if ($this->_users_svc->isAuthenticated(true)) {
+            $this->_helper->Redirector->gotoSimple('orders');
+        }
         $login_form = $this->_users_svc->getLoginForm();
         $this->view->login_form = $login_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $login_form->isValid($post)) {
             if ($this->_users_svc->login($post, true)) {
                 $this->_users_svc->updateLastLogin();
-                $this->_helper->Redirector->gotoSimple('home');
+                $this->_helper->Redirector->gotoSimple('index', 'orders');
             } else {
                 $this->_helper->FlashMessenger->addMessage('Login failed');
                 $this->view->messages = $this->_helper->FlashMessenger
                     ->getCurrentMessages();
             } 
         }
-    }
-
-    public function homeAction() {
-        if (!$this->_users_svc->isAuthenticated(true)) {
-            $this->_helper->Redirector->gotoSimple('index');
-        }
-        $this->_helper->ViewRenderer->setNoRender(true);
     }
 
     public function logoutAction() {

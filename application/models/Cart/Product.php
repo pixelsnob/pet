@@ -40,7 +40,10 @@ class Model_Cart_Product extends Pet_Model_Abstract {
     public function toArray() {
         return array_merge(
             $this->_data['product']->toArray(),
-            array('qty' => $this->_data['qty'])
+            array(
+                'qty' => $this->_data['qty'],
+                'is_gift' => $this->_data['is_gift']
+            )
         );
     }
 

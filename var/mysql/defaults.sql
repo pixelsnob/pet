@@ -277,7 +277,7 @@ alter table pet.users add unique key (email);
 /* Ordered products */
 
 insert into pet.order_products
-select null, sop.order_id, p.id, sop.quantity, 0, 0
+select null, sop.order_id, p.id, sop.quantity, 0, 0, 0
 from pet_old.sales_ordered_product sop
 left join pet.products p
 on sop.product_id = p.sku;

@@ -12,6 +12,7 @@ class Model_OrderProduct extends Pet_Model_Abstract {
         'qty' => 0,
         'cost' => 0,
         'discount' => 0,
+        'is_gift' => 0,
 
         'product' => null
     );

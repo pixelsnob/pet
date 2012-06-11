@@ -8,7 +8,7 @@
                 <h4>Your billing details:</h4>
                 <?php echo $this->escape($this->cart->user->first_name); ?>
                 <?php echo $this->escape($this->cart->user->last_name); ?><br>
-                <?php echo $this->escape($this->cart->billing->billing_address); ?>
+                <?php echo $this->escape($this->cart->billing->billing_address); ?><br>
                 <?php echo ($this->cart->billing->billing_address_2 ? $this->escape($this->cart->billing->billing_address_2) . '<br>' : ''); ?>
                 <?php echo ($this->cart->billing->billing_company ? $this->escape($this->cart->billing->billing_company) . '<br>' : ''); ?>
                 <?php echo $this->escape($this->cart->billing->billing_city . ', ' . $this->cart->billing->billing_state . ' ' . $this->cart->billing->billing_postal_code); ?><br>

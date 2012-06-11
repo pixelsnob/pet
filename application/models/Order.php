@@ -86,13 +86,13 @@ class Model_Order extends Pet_Model_Abstract {
             foreach ($data['gifts'] as $gift) {
                 $gifts[] = $gift->toArray();
             }
+            $data['gifts'] = $gifts;
             if ($data['expirations']) {
                 $data['expirations'] = array(
                     'regular' => $data['expirations']->regular,
                     'digital' => $data['digital']->digital
                 );
             }
-            $data['gifts'] = $gifts;
             if ($data['promo']) {
                 $data['promo'] = $data['promo']->toArray();
             }

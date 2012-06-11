@@ -6,37 +6,38 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
      * Builds an admin table from a config array of fields and an array
      * of objects
      * 
-     * @param array $fields
-     * @param array $data
+     * @param array $fields An array of config arrays used for display: format, title, etc. 
+     * @param array $data An array of data objects
+     * @param array $params Request params to pass through in links, etc.
      * 
      */
     public function objectsToAdminTable(array $fields, array $data, array $params) {
         $out = "<table class=\"admin-table\">\n<tr>\n";
         foreach ($fields as $k => $field) {
-            $qp = $params;
+            $qs = $params;
             $th_class = '';
             // Sort header stuff
             if (isset($params['sort']) && strlen(trim($params['sort']))) {
-                $qp['sort_dir'] = 'asc';
-                $qp['sort'] = $k;
+                $qs['sort_dir'] = 'asc';
+                $qs['sort'] = $k;
                 if (isset($params['sort_dir'])) {
                     if ($params['sort'] == $k) {
                         if ($params['sort_dir'] == 'asc') {
-                            $qp['sort_dir'] = 'desc';
+                            $qs['sort_dir'] = 'desc';
                         } else {
-                            $qp['sort_dir'] = 'asc';
+                            $qs['sort_dir'] = 'asc';
                         }
                         $th_class = ' class="sort-by"';
                     }
                 }
             } else {
-                $qp['sort_dir'] = 'asc';
-                $qp['sort'] = $k;
+                $qs['sort_dir'] = 'asc';
+                $qs['sort'] = $k;
             }
             $title = (isset($field['title']) ?
                 $this->view->escape($field['title']) : '');
             $out .= "<th{$th_class}><a href=\"?" . $this->view->escape(
-                http_build_query($qp)) . "\">$title</a></th>\n";
+                http_build_query($qs)) . "\">$title</a></th>\n";
         }
         $out .= "</tr>\n";
         foreach ($data as $row) {
