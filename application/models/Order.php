@@ -90,7 +90,7 @@ class Model_Order extends Pet_Model_Abstract {
             if ($data['expirations']) {
                 $data['expirations'] = array(
                     'regular' => $data['expirations']->regular,
-                    'digital' => $data['digital']->digital
+                    'digital' => $data['expirations']->digital
                 );
             }
             if ($data['promo']) {

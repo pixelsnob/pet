@@ -45,17 +45,7 @@ class Form_Admin_Search extends Pet_Form {
                     'messages' => 'End date must be %max% characters or less'
                 ))
             )
-        ))->addElement('select', 'sort_dir', array(
-            'label' => 'Sort direction',
-            'id' => 'sort_dir',
-            'required' => false,
-            'multiOptions' => array('asc' => 'Ascending', 'desc' => 'Descending'),
-            'validators'   => array(
-                array('StringLength', true, array(
-                    'max' => 4,
-                    'messages' => 'Sort direction must be %max% characters or less'
-                ))
-            )
-        ))->addElement('hidden', 'sort');
+        ))->addElement('hidden', 'sort')
+          ->setElementFilters(array('StringTrim'));
     }
 }

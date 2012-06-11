@@ -4,7 +4,10 @@
 
     <section class="admin-list-left">
         <?php echo $this->objectToAdminList(array(
-            'user_id'      => array(),
+            'user_id'      => array('title' => 'User ID'),
+            'username'     => array('callback' => function($data) {
+                return $data->user->username;
+            }),
             'date_created' => array('format' => 'datetime'),
             'date_updated' => array('format' => 'datetime'),
             'email'        => array()

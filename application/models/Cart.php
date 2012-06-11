@@ -98,6 +98,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     public function addProduct(Model_Cart_Product $product) {
         $product->key = $product->product_id . ($product->is_gift ?
             'GIFT' : '');
+        $product->is_gift = (int) $product->is_gift;
         $validator = $this->getValidator();
         if (!$validator->validateProduct($product)) {
             $this->_message = $validator->getMessage();

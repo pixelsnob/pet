@@ -309,8 +309,6 @@ class Service_Cart {
         $status = true;
         $db     = Zend_Db_Table::getDefaultAdapter();
         try {
-            $db->query('set transaction isolation level serializable');
-            $db->beginTransaction();
             // Regular sale
             if (!$cart->isFreeOrder() && $config['use_payment_gateway']) {
                 if ($cart->payment->payment_method == 'credit_card') {
@@ -320,6 +318,8 @@ class Service_Cart {
                         $order, $cart->ec_token, $payer_id);
                 }
             }
+            $db->query('set transaction isolation level serializable');
+            $db->beginTransaction();
             // Save user data
             $users_mapper = new Model_Mapper_Users;
             $profile_mapper = new Model_Mapper_UserProfiles;
