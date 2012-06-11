@@ -52,22 +52,10 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
                     case Model_PaymentType::PAYFLOW:
                         $op->gateway_data = $this->_payflow_mapper->getByOrderPaymentId(
                             $op->id);
-                        /*if (!$payflow_payment) {
-                            $msg = 'Payflow entry not found for order_payment_id ' .
-                                $op->id;
-                            throw new Exception($msg);
-                        }*/
-                        //$op->gateway_data = $payflow_payment;
                         break;
                     case Model_PaymentType::PAYPAL:
                         $op->gateway_data = $this->_paypal_mapper->getByOrderPaymentId(
                             $op->id);
-                        /*if (!$paypal_payment) {
-                            $msg = 'Paypal entry not found for order_payment_id ' .
-                                $op->id;
-                            throw new Exception($msg);
-                        }*/
-                        //$op->gateway_data = $paypal_payment;
                         break;
                     //case Model_PaymentType::CHECK:
                         
@@ -77,6 +65,53 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
             }
         }
         return $op_array;
+    }
+
+    /** 
+     * Builds a query out of search params and paginates the results
+     * 
+     * @param array $params
+     * @return array Returns the paginator object as well as an array of model
+     *               objects
+     */
+    public function getPaginatedFiltered(array $params) {
+        $sel = $this->_order_payments->select()->setIntegrityCheck(false)
+            ->from(array('op' => 'order_payments'))
+            ->joinLeft(array('o' => 'orders'), 'o.id = op.order_id');
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $this->addDateRangeToSelect($sel, 'op.date', $params);
+        if (isset($params['search']) && $params['search']) {
+            // If it's a number, try the order id, otherwise, try other text
+            // fields
+            if (is_numeric($params['search'])) {
+                $sel->where('o.id = ?', $params['search']);
+            } else {
+                // Split search term by whitespace
+                $search_parts = explode(' ', $params['search']);
+                foreach ($search_parts as $v) {
+                    $search = $db->quote('%' . $v . '%');
+                    $where = "o.email like $search or o.billing_first_name like $search " .
+                        "or o.billing_last_name like $search";
+                    $sel->where($where);
+
+                }
+            }
+        }
+        $this->addSortToSelect($sel, 'order_id', 'desc', $params);
+        $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
+        $paginator = new Zend_Paginator($adapter);
+        if (isset($params['page'])) {
+            $paginator->setCurrentPageNumber((int) $params['page']);
+        }
+        $paginator->setItemCountPerPage(35);
+        $payments = array();
+        //echo $sel->__toString(); exit;
+        foreach ($paginator as $row) {
+            $op = new Model_OrderPayment($row);
+            $op->order = new Model_Order($row);
+            $payments[] = $op;
+        }
+        return array('paginator' => $paginator, 'data' => $payments);
     }
 }
 

@@ -55,17 +55,7 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     public function getPaginatedFiltered(array $params) {
         $sel = $this->_orders->select();
         $db = Zend_Db_Table::getDefaultAdapter();
-        // Add date where clauses, if any
-        if (isset($params['start_date']) && $params['start_date']) {
-            $start_date = new DateTime($params['start_date']);
-            $start_date->setTime(12, 0, 0);
-            $sel->where('date_created >= ?', $start_date->format('Y-m-d H:i:s'));
-        }
-        if (isset($params['end_date']) && $params['end_date']) {
-            $end_date = new DateTime($params['end_date']);
-            $end_date->setTime(23, 59, 59);
-            $sel->where('date_created <= ?', $end_date->format('Y-m-d H:i:s'));
-        }
+        $this->addDateRangeToSelect($sel, 'date_created', $params);
         if (isset($params['search']) && $params['search']) {
             // If it's a number, try the order id, otherwise, try other text
             // fields
@@ -83,9 +73,7 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
                 }
             }
         }
-        $sort = (isset($params['sort']) ? $params['sort'] : 'id');
-        $sort_dir = (isset($params['sort_dir']) ? $params['sort_dir'] : 'desc');
-        $sel->order($sort . ' ' . $sort_dir);
+        $this->addSortToSelect($sel, 'id', 'desc', $params);
         $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
         $paginator = new Zend_Paginator($adapter);
         if (isset($params['page'])) {

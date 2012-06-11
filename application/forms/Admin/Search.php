@@ -46,6 +46,7 @@ class Form_Admin_Search extends Pet_Form {
                 ))
             )
         ))->addElement('hidden', 'sort')
+          ->addElement('hidden', 'sort_dir')
           ->setElementFilters(array('StringTrim'));
     }
 }

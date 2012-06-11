@@ -12,7 +12,8 @@ class Model_OrderPayment extends Pet_Model_Abstract {
         'amount' => null,
         'date' => null,
 
-        'gateway_data' => null
+        'gateway_data' => null,
+        'order' => null
     );
 
     /**
@@ -40,8 +41,10 @@ class Model_OrderPayment extends Pet_Model_Abstract {
         $data = $this->_data;
         if (!$refs) {
             unset($data['gateway_data']);
+            unset($data['order']);
         } else {
             $data['gateway_data'] = $data['gateway_data']->toArray();
+            $data['order'] = $data['order']->toArray();
         }
         return $data;
     }

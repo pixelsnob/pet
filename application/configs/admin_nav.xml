@@ -7,6 +7,12 @@
             <action>index</action>
             <module>admin</module>
         </orders>
+        <payments>
+            <label>Payments</label>
+            <controller>payments</controller>
+            <action>index</action>
+            <module>admin</module>
+        </payments>
         <logout>
             <label>Logout</label>
             <controller>index</controller>

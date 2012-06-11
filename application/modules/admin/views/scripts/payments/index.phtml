@@ -25,31 +25,43 @@
 </form>
 
 <?php
-if ($this->orders) {
+if ($this->payments) {
 
     $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
     echo $pagination;
     echo $this->objectsToAdminTable(array(
-        'id'                 => array('title'  => 'Order ID'),
-        'date_created'       => array(
-            'title'    => 'Date',
-            'format'   => 'datetime'
+        'order_id'     => array('title'  => 'Order ID'),
+        'date'   => array('title' => 'Date', 'format' => 'datetime'),
+        'email' => array(
+            'title'    => 'Email',
+            'callback' => function($row) { return $row->order->email; }
         ),
-        'email'              => array('title'  => 'Email'),
-        'billing_first_name' => array('title'  => 'First Name'),
-        'billing_last_name'  => array('title'  => 'Last Name'),
-        'total'              => array(
+        'billing_first_name' => array(
+            'title'    => 'First Name',
+            'callback' => function($row) { return $row->order->billing_first_name; }
+        ),
+        'billing_last_name' => array(
+            'title'    => 'Last Name',
+            'callback' => function($row) { return $row->order->billing_last_name; }
+        ),
+        'amount'              => array(
             'title'   => 'Total',
             'format'  => 'dollar'
         ),
         'view'               => array(
             'format'  => 'view',
             'label'   => 'View',
-            'url'     => '/admin/orders/detail/id'
+            'url'     => '/admin/payments/detail/id'
         )
-    ), $this->orders, $this->params);
+    ), $this->payments, $this->params);
     echo $pagination;
 } else {
-    echo '<p class="error">There are no orders to show</p>';
+    echo '<p class="error">There are no payments to show</p>';
 }
 ?>
+
+<!--
+<pre>
+<?php print_r($this->payments); ?>
+</pre>
+-->

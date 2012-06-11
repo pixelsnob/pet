@@ -258,6 +258,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`order_products` (
   `qty` INT(3) NOT NULL DEFAULT '0' ,
   `cost` DECIMAL(5,2) NOT NULL DEFAULT '0.00' ,
   `discount` DECIMAL(5,2) NOT NULL DEFAULT '0.00' ,
+  `is_gift` VARCHAR(100) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
   INDEX `order_id` (`order_id` ASC) ,
