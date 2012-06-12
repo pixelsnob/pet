@@ -11,28 +11,20 @@ class Admin_UsersController extends Zend_Controller_Action {
         $this->_helper->Layout->setLayout('admin');
         $this->_orders_svc = new Service_Orders;
         $this->_users_svc = new Service_Users;
+        $this->_admin_svc = new Service_Admin;
+        $this->_users_mapper = new Model_Mapper_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
             $this->_helper->Redirector->gotoSimple('index', 'index');
         }
     }
     
     public function indexAction() {
-        $users_mapper = new Model_Mapper_Users;
-        $request = $this->_request;
-        $params = $request->getParams();
+        $params = $this->_admin_svc->initSearchParams($this->_request);
         $search_form = new Form_Admin_Search;
-        $date = new DateTime;
-        $params['end_date'] = $request->getParam('end_date',
-            $date->format('Y-m-d'));
-        $date->sub(new DateInterval('P1Y'));
-        $params['start_date'] = $request->getParam('start_date',
-            $date->format('Y-m-d'));
-        $params['sort'] = $request->getParam('sort', 'id');
-        $params['sort_dir'] = $request->getParam('sort_dir', 'desc');
         if (!$search_form->isValid($params)) {
             $params = array();
         }
-        $orders = $users_mapper->getPaginatedFiltered($params);
+        $orders = $this->_users_mapper->getPaginatedFiltered($params);
         $this->view->paginator = $orders['paginator'];
         $this->view->orders = $orders['data'];
         $this->view->params = $params;
@@ -61,4 +53,7 @@ class Admin_UsersController extends Zend_Controller_Action {
         $this->view->orders = $orders_mapper->getByUserId($id);
     }
 
+    public function editAction() {
+        $this->view->profile_form = $this->_users_svc->getProfileForm(); 
+    }
 }

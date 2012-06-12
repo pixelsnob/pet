@@ -9,6 +9,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
             $page->setActive();
         }
         $this->_helper->Layout->setLayout('admin');
+        $this->_admin_svc = new Service_Admin;
         $this->_orders_svc = new Service_Orders;
         $this->_users_svc = new Service_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
@@ -19,16 +20,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
     public function indexAction() {
         $orders_mapper = new Model_Mapper_Orders;
         $request = $this->_request;
-        $params = $request->getParams();
+        $params = $this->_admin_svc->initSearchParams($request);
         $search_form = new Form_Admin_Search;
-        $date = new DateTime;
-        $params['end_date'] = $request->getParam('end_date',
-            $date->format('Y-m-d'));
-        $date->sub(new DateInterval('P1Y'));
-        $params['start_date'] = $request->getParam('start_date',
-            $date->format('Y-m-d'));
-        $params['sort'] = $request->getParam('sort', 'id');
-        $params['sort_dir'] = $request->getParam('sort_dir', 'desc');
         if (!$search_form->isValid($params)) {
             $params = array();
         }

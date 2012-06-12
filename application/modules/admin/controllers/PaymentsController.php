@@ -4,6 +4,7 @@ class Admin_PaymentsController extends Zend_Controller_Action {
 
     public function init() {
         $this->_helper->Layout->setLayout('admin');
+        $this->_admin_svc = new Service_Admin;
         $this->_users_svc = new Service_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
             $this->_helper->Redirector->gotoSimple('index', 'index');
@@ -11,17 +12,8 @@ class Admin_PaymentsController extends Zend_Controller_Action {
     }
     
     public function indexAction() {
+        $params = $this->_admin_svc->initSearchParams($this->_request, 'order_id');
         $search_form = new Form_Admin_Search;
-        $request = $this->_request;
-        $params = $request->getParams();
-        $date = new DateTime;
-        $params['end_date'] = $request->getParam('end_date',
-            $date->format('Y-m-d'));
-        $date->sub(new DateInterval('P1Y'));
-        $params['start_date'] = $request->getParam('start_date',
-            $date->format('Y-m-d'));
-        $params['sort'] = $request->getParam('sort', 'order_id');
-        $params['sort_dir'] = $request->getParam('sort_dir', 'desc');
         if (!$search_form->isValid($params)) {
             $params = array();
         }

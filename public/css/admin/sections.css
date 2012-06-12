@@ -2,3 +2,8 @@
 #login-form dt {
     width: 80px;
 }
+
+#users-edit .profile dt {
+    width: 100px;
+}
+

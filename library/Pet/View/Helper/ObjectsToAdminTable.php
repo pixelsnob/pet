@@ -59,6 +59,7 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
             }
         }
         $out .= "</tr>\n";
+        // Table body
         foreach ($data as $row) {
             $out .= "<tr>\n";
             foreach ($fields as $k => $field) {

@@ -16,6 +16,10 @@ h2 {
     margin-top: 0;
 }
 
+fieldset {
+    border: none;
+}
+
 nav {
     float: left;
     width: 180px;
@@ -34,6 +38,10 @@ nav li {
 
 nav li.active a {
     font-weight: bold;
+}
+
+li {
+    padding: 0;
 }
 
 #content-wrap {
@@ -158,8 +166,22 @@ nav li.active a {
 .full-width .admin-table {
     width: 788px;
 }
-/*
-#login-form dt {
-    width: 80px;
+
+.admin-form-left, .admin-form-right {
+    width: 430px;
+    float: left;
 }
-*/
+
+.admin-form dd, .admin-form dt {
+    float: left;
+}
+
+.form dt {
+    width: 140px;
+    clear: both;
+}
+
+.form dd {
+    width: 200px;
+}
+
