@@ -60,15 +60,6 @@ class Service_Orders {
         return $order;
     }
     
-    public function getPaginatedFiltered(array $params) {
-        return $this->_orders->getPaginatedFiltered($params);
-    }
-    
-    public function getSearchForm() {
-        $form = new Form_Admin_Search;
-        return $form;
-    }
-
     /**
      * @return void
      * 

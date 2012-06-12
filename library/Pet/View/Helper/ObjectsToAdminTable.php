@@ -11,38 +11,52 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
      * @param array $params Request params to pass through in links, etc.
      * 
      */
-    public function objectsToAdminTable(array $fields, array $data, array $params) {
+    public function objectsToAdminTable(array $fields, array $data,
+                                        array $params = array(),
+                                        array $options = array()) {
         $view = $this->view;
         $out = "<table class=\"admin-table\">\n<tr>\n";
         foreach ($fields as $k => $field) {
             $qs = $params;
             $th_class = '';
+            $i = (!is_array($field) ? $field : $k);
             // Sort header stuff
-            if (isset($params['sort']) && strlen(trim($params['sort']))) {
-                $qs['sort_dir'] = 'asc';
-                $qs['sort'] = $k;
-                if (isset($params['sort_dir'])) {
-                    if ($params['sort'] == $k) {
-                        if ($params['sort_dir'] == 'asc') {
-                            $qs['sort_dir'] = 'desc';
-                        } else {
-                            $qs['sort_dir'] = 'asc';
+            if (isset($options['sortable']) && $options['sortable']) {
+                if (isset($params['sort']) && strlen(trim($params['sort']))) {
+                    $qs['sort_dir'] = 'asc';
+                    $qs['sort'] = $i;
+                    if (isset($params['sort_dir'])) {
+                        if ($params['sort'] == $i) {
+                            if ($params['sort_dir'] == 'asc') {
+                                $qs['sort_dir'] = 'desc';
+                            } else {
+                                $qs['sort_dir'] = 'asc';
+                            }
+                            $th_class = ' class="sort-by"';
                         }
-                        $th_class = ' class="sort-by"';
                     }
+                } else {
+                    $qs['sort_dir'] = 'asc';
+                    $qs['sort'] = $i;
                 }
-            } else {
-                $qs['sort_dir'] = 'asc';
-                $qs['sort'] = $k;
             }
-            if (!is_array($field) || !isset($field['title'])) {
-                $title = str_replace('_', ' ', $k);
+            // Header titles/links
+            if (is_array($field) && isset($field['format']) &&
+                    $field['format'] == 'link') {
+                $title = '';
+            } elseif (!is_array($field) || !isset($field['title'])) {
+                $title = str_replace('_', ' ', $i);
                 $title = $view->escape(ucwords($title));
             } else {
                 $title = $view->escape($field['title']);
             }
-            $out .= "<th{$th_class}><a href=\"?" . $view->escape(
-                http_build_query($qs)) . "\">$title</a></th>\n";
+            if (isset($options['sortable']) && $options['sortable']) {
+                $out .= "<th{$th_class}><a href=\"?" . $view->escape(
+                    http_build_query($qs)) . "\">$title</a></th>\n";
+            } else {
+                $out .= "<th{$th_class}>" . $view->escape($title) . "</th>\n";
+
+            }
         }
         $out .= "</tr>\n";
         foreach ($data as $row) {
@@ -50,12 +64,15 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
             foreach ($fields as $k => $field) {
                 $value = '';
                 $format = (isset($field['format']) ? $field['format'] : null);
+                // $k can be a string or array
                 $i = (!is_array($field) ? $field : $k);
+                // See if there's a callback to process
                 if (is_array($field) && isset($field['callback'])) {
                     $value = $field['callback']($row);
                 } elseif ($row->$i) {
                     $value = $row->$i;
                 }
+                // Value formatting
                 if (is_array($field) && isset($field['format'])) {
                     switch ($format) {
                         case 'dollar':
@@ -66,10 +83,12 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
                             $date = new DateTime($row->$k);
                             $value = $date->format('M j, Y h:i a');
                             break;
+                        case 'date':
+                            $date = new DateTime($row->$k);
+                            $value = $date->format('M j, Y');
+                            break;
                         // Pass url as /orders/detail/%id%
-                        case 'edit':
-                        case 'view':
-                        case 'delete':
+                        case 'link':
                             if (isset($row->id) && $row->id) {
                                 $url = $field['url'] . '/'. $row->id;
                                 $url = $view->escape($url);

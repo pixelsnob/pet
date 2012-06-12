@@ -70,6 +70,48 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         }
     }
 
+    /** 
+     * Builds a query out of search params and paginates the results
+     * 
+     * @param array $params
+     * @return array Returns the paginator object as well as an array of model
+     *               objects
+     */
+    public function getPaginatedFiltered(array $params) {
+        $sel = $this->_users->select();
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $this->addDateRangeToSelect($sel, 'date_joined', $params);
+        if (isset($params['search']) && $params['search']) {
+            // If it's a number, try the user id, otherwise, try other text
+            // fields
+            if (is_numeric($params['search'])) {
+                $sel->where('id = ?', $params['search']);
+            } else {
+                // Split search term by whitespace
+                $search_parts = explode(' ', $params['search']);
+                foreach ($search_parts as $v) {
+                    $search = $db->quote('%' . $v . '%');
+                    $where = "email like $search or first_name like $search " .
+                        "or last_name like $search or username like $search";
+                    $sel->where($where);
+
+                }
+            }
+        }
+        $this->addSortToSelect($sel, 'id', 'desc', $params);
+        $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
+        $paginator = new Zend_Paginator($adapter);
+        if (isset($params['page'])) {
+            $paginator->setCurrentPageNumber((int) $params['page']);
+        }
+        $paginator->setItemCountPerPage(35);
+        $users = array();
+        foreach ($paginator as $row) {
+            $users[] = new Model_User($row);
+        }
+        return array('paginator' => $paginator, 'data' => $users);
+    }
+
     /**
      * @param array $data
      * @param int $id User id

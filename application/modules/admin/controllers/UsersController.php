@@ -1,10 +1,10 @@
 <?php
 
-class Admin_OrdersController extends Zend_Controller_Action {
+class Admin_UsersController extends Zend_Controller_Action {
 
     public function init() {
         // Highlights nav item for all actions in controller
-        $page = $this->view->navigation()->findOneByLabel('Orders'); 
+        $page = $this->view->navigation()->findOneByLabel('Users'); 
         if ($page) {
             $page->setActive();
         }
@@ -17,7 +17,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
     }
     
     public function indexAction() {
-        $orders_mapper = new Model_Mapper_Orders;
+        $users_mapper = new Model_Mapper_Users;
         $request = $this->_request;
         $params = $request->getParams();
         $search_form = new Form_Admin_Search;
@@ -32,7 +32,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
         if (!$search_form->isValid($params)) {
             $params = array();
         }
-        $orders = $orders_mapper->getPaginatedFiltered($params);
+        $orders = $users_mapper->getPaginatedFiltered($params);
         $this->view->paginator = $orders['paginator'];
         $this->view->orders = $orders['data'];
         $this->view->params = $params;
@@ -42,15 +42,23 @@ class Admin_OrdersController extends Zend_Controller_Action {
     }
 
     public function detailAction() {
+        $orders_mapper = new Model_Mapper_Orders;
         $id = $this->_request->getParam('id');
         if (!$id) {
-            throw new Exception('Order id was not supplied');
+            throw new Exception('User id was not supplied');
         }
-        $order = $this->_orders_svc->getFullOrder($id);
-        if (!$order) {
-            throw new Exception("Order $id not found");
+        $user = $this->_users_svc->getUser($id);
+        if (!$user) {
+            throw new Exception("User $id not found");
         }
-        $this->view->order = $order;
+        $this->view->user = $user;
+        $profile = $this->_users_svc->getProfile($id);
+        if (!$profile) {
+            throw new Exception("User profile for user $id not found");
+        }
+        $this->view->profile = $profile;
+        $this->view->expirations = $this->_users_svc->getExpirations();
+        $this->view->orders = $orders_mapper->getByUserId($id);
     }
 
 }

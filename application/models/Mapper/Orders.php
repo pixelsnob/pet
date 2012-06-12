@@ -44,6 +44,22 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
         }
         return $out;
     }
+
+    /**
+     * @param bool $user_id
+     * @return array An array of Model_Order objects
+     * 
+     */
+    public function getByUserId($user_id) {
+        $orders = $this->_orders->getByUserId($user_id);
+        $out = array();
+        if ($orders) {
+            foreach ($orders as $order) {
+                $out[] = new Model_Order($order->toArray());
+            }
+        }
+        return $out;
+    }
     
     /** 
      * Builds a query out of search params and paginates the results

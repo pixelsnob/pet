@@ -9,7 +9,6 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
     
     /**
      * @param bool $email_sent
-     * @param bool $for_update
      * @return Zend_Db_Table_Rowset object 
      * 
      */
@@ -17,6 +16,17 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
         $sel = $this->select()->where('email_sent = ?', (int) $email_sent);
         return $this->fetchAll($sel);
     }
+
+    /**
+     * @param bool $user_id
+     * @return Zend_Db_Table_Rowset object 
+     * 
+     */
+    public function getByUserId($user_id) {
+        $sel = $this->select()->where('user_id = ?', $user_id);
+        return $this->fetchAll($sel);
+    }
+
 
 }
 

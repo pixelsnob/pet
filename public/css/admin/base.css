@@ -1,9 +1,8 @@
 
 body, html {
     margin: 0;
-    padding: 0 10px;
+    padding: 5px 10px 20px 10px;
     font: 13px/14px Verdana, sans-serif;
-    width: 1000px;
 }
 
 h1 {
@@ -19,7 +18,7 @@ h2 {
 
 nav {
     float: left;
-    width: 150px;
+    width: 180px;
     padding: 10px 0;
 }
 
@@ -33,19 +32,27 @@ nav li {
     margin-bottom: 10px !important;
 }
 
+nav li.active a {
+    font-weight: bold;
+}
+
+#content-wrap {
+    min-width: 1100px;
+}
+
 #content {
     padding: 10px 0;
     float: left;
 }
 
 .admin-table {
-    margin: 5px 0;    
+    margin: 5px 0 15px 0;    
 }
 
 .admin-table th, .admin-table td {
     padding: 6px;
     text-align: left;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     border-spacing: 5px 5px;
 }
 
@@ -140,15 +147,15 @@ nav li {
 }
 
 
-#order-detail .full-width {
+.full-width {
     width: 788px;
 }
 
-#order-detail .full-width .admin-list dd {
+.full-width .admin-list dd {
     width: 610px;
 }
 
-#order-detail .full-width .admin-table {
+.full-width .admin-table {
     width: 788px;
 }
 /*

@@ -1,0 +1,105 @@
+
+<div id="user-detail">
+    <h2>User #<?php echo $this->escape($this->user->id); ?></h2>
+
+    <section class="admin-list-left">
+        <?php echo $this->objectToAdminList(array(
+            'username',
+            'email',
+            'date_joined' => array('format' => 'datetime'),
+            'last_login'  => array('format' => 'datetime'),
+        ), $this->user); ?>
+    </section>
+
+    <section class="expirations admin-list-right">
+        <?php echo $this->objectToAdminList(array(
+            'regular' => array('title' => 'Regular Expiration'),
+            'digital' => array('title' => 'Digital Expiration')
+        ), $this->expirations); ?>
+    </section>
+
+    <section class="billing admin-list-left">
+        <h3>Billing</h3>
+        <?php
+        $user = $this->user;
+        echo $this->objectToAdminList(array(
+            'first_name'  => array(
+                'title' => 'First Name',
+                'callback' => function($data) use ($user) {
+                    return $user->first_name;
+                }
+            ),
+            'last_name'  => array(
+                'title' => 'Last Name',
+                'callback' => function($data) use ($user) {
+                    return $user->last_name;
+                }
+            ),
+            'billing_address'     => array('title' => 'Address'),
+            'billing_address_2'   => array('title' => 'Address 2'),
+            'billing_company'     => array('title' => 'Company'),
+            'billing_city'        => array('title' => 'City'),
+            'billing_state'       => array('title' => 'State'),
+            'billing_country'     => array('title' => 'Country'),
+            'billing_postal_code' => array('title' => 'Postal Code'),
+            'billing_phone'       => array('title' => 'Phone')
+        ), $this->profile); ?>
+    </section>
+
+    <section class="shipping admin-list-right">
+        <h3>Shipping</h3>
+        <?php echo $this->objectToAdminList(array(
+            'shipping_first_name'  => array('title' => 'First Name'),
+            'shipping_last_name'   => array('title' => 'Last Name'),
+            'shipping_address'     => array('title' => 'Address'),
+            'shipping_address_2'   => array('title' => 'Address 2'),
+            'shipping_company'     => array('title' => 'Company'),
+            'shipping_city'        => array('title' => 'City'),
+            'shipping_state'       => array('title' => 'State'),
+            'shipping_country'     => array('title' => 'Country'),
+            'shipping_postal_code' => array('title' => 'Postal Code'),
+            'shipping_phone'       => array('title' => 'Phone')
+        ), $this->profile); ?>
+    </section>
+
+    <section class="orders clear full-width">
+        <h3>Orders</h3>
+        <?php 
+            echo $this->objectsToAdminTable(array(
+                'id'                 => array('title'  => 'Order ID'),
+                'date_created'       => array(
+                    'title'    => 'Order Date',
+                    'format'   => 'datetime'
+                ),
+                'email',
+                'billing_first_name' => array('title'  => 'First Name'),
+                'billing_last_name'  => array('title'  => 'Last Name'),
+                'total'              => array(
+                    'title'   => 'Total',
+                    'format'  => 'dollar'
+                ),
+                'view'               => array(
+                    'format'  => 'link',
+                    'label'   => 'View',
+                    'url'     => '/admin/orders/detail/id'
+                )
+            ), $this->orders);
+        ?>
+    </section>
+
+    <section class="shipping admin-list-left">
+        <h3>Marketing</h3>
+        <?php echo $this->objectToAdminList(array(
+            'opt_in', 
+            'opt_in_partner',
+            'opt_in_subscriber',
+            'comp',
+            'version',
+            'platform'
+        ), $this->profile); ?>
+    </section>
+</div>
+
+<pre style="clear: both; width: 800px;">
+<?php print_r($this->profile); ?>
+</pre>

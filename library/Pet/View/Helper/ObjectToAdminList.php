@@ -17,7 +17,7 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
             $i = (!is_array($field) ? $field : $k);
             if (is_array($field) && isset($field['callback'])) {
                 $value = $field['callback']($data);
-            } elseif ($data->$i) {
+            } elseif (isset($data->$i) && $data->$i) {
                 $value = $data->$i;
             }
             if (!is_array($field) || !isset($field['title'])) {
@@ -29,7 +29,7 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
             if (is_array($field) && isset($field['format'])) {
                 switch ($field['format']) {
                     case 'dollar':
-                        $value = $view->dollarFormat($data->$i);
+                        $value = $view->dollarFormat($value);
                         break;
                     case 'datetime':
                         $date = new DateTime($data->$i);

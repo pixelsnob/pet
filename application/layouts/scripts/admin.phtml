@@ -31,13 +31,15 @@ echo $this->headLink()
     <header>
         <h1>PET Admin</h1>
     </header>
-    <?php if ($this->isAuthenticated(true)): ?>
-        <nav>
-            <?php echo $this->navigation()->menu()->renderMenu(); ?>
-        </nav>
-    <?php endif; ?>
-    <div id="content">
-        <?php echo $this->layout()->content; ?>
+    <div id="content-wrap">
+        <?php if ($this->isAuthenticated(true)): ?>
+            <nav>
+                <?php echo $this->navigation()->menu()->renderMenu(); ?>
+            </nav>
+        <?php endif; ?>
+        <div id="content">
+            <?php echo $this->layout()->content; ?>
+        </div>
     </div>
     <footer>
 

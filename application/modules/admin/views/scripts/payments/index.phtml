@@ -49,19 +49,14 @@ if ($this->payments) {
             'format'  => 'dollar'
         ),
         'view'               => array(
-            'format'  => 'view',
+            'format'  => 'link',
             'label'   => 'View',
             'url'     => '/admin/payments/detail/id'
         )
-    ), $this->payments, $this->params);
+    ), $this->payments, $this->params, array('sortable' => true));
     echo $pagination;
 } else {
     echo '<p class="error">There are no payments to show</p>';
 }
 ?>
 
-<!--
-<pre>
-<?php print_r($this->payments); ?>
-</pre>
--->
