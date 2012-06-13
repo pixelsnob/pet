@@ -1,0 +1,18 @@
+
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="get" name="search" id="search-form">
+    <dl class="form">
+        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->getLabel(); ?></dt>
+        <dd class="date-start">
+            <?php echo $this->search_form->date_range->start_date->renderViewHelper(); ?>
+            <?php echo $this->search_form->date_range->start_date->renderErrors(); ?>
+        </dd>
+        <dt class="date-end"><?php echo $this->search_form->date_range->end_date->getLabel(); ?></dt>
+        <dd class="date-end">
+            <?php echo $this->search_form->date_range->end_date->renderViewHelper(); ?>
+            <?php echo $this->search_form->date_range->end_date->renderErrors(); ?>
+        </dd>
+    </dl>
+    <p class="submit">
+        <input type="submit" value="Search">
+    </p>
+</form>

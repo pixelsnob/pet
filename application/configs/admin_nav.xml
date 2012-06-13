@@ -19,6 +19,38 @@
             <action>index</action>
             <module>admin</module>
         </payments>
+        <reports>
+            <label>Reports</label>
+            <controller>reports</controller>
+            <action>index</action>
+            <module>admin</module>
+            <pages>
+                <sales>
+                    <label>Sales</label>
+                    <controller>reports</controller>
+                    <action>sales</action>
+                    <module>admin</module>
+                </sales>
+                <subscribers>
+                    <label>Subscribers</label>
+                    <controller>reports</controller>
+                    <action>subscribers</action>
+                    <module>admin</module>
+                </subscribers>
+                <mailing_list>
+                    <label>Mailing List</label>
+                    <controller>reports</controller>
+                    <action>mailing-list</action>
+                    <module>admin</module>
+                </mailing_list>
+                <transactions>
+                    <label>Transactions</label>
+                    <controller>reports</controller>
+                    <action>transactions</action>
+                    <module>admin</module>
+                </transactions>
+            </pages>
+        </reports>
         <logout>
             <label>Logout</label>
             <controller>index</controller>

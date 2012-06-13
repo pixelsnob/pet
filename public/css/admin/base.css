@@ -40,6 +40,19 @@ nav li.active a {
     font-weight: bold;
 }
 
+nav li ul {
+    margin-top: 10px;
+}
+
+/* Make sure class "active" on parent doesn't affect children */
+nav li.active ul li a {
+    font-weight: normal;
+}
+
+nav li.active ul li.active a {
+    font-weight: bold;
+}
+
 li {
     padding: 0;
 }
