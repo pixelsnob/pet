@@ -25,15 +25,10 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
                 if (isset($params['sort']) && strlen(trim($params['sort']))) {
                     $qs['sort_dir'] = 'asc';
                     $qs['sort'] = $i;
-                    if (isset($params['sort_dir'])) {
-                        if ($params['sort'] == $i) {
-                            if ($params['sort_dir'] == 'asc') {
-                                $qs['sort_dir'] = 'desc';
-                            } else {
-                                $qs['sort_dir'] = 'asc';
-                            }
-                            $th_class = ' class="sort-by"';
-                        }
+                    if (isset($params['sort_dir']) && $params['sort'] == $i) {
+                        $qs['sort_dir'] = ($params['sort_dir'] == 'asc' ?
+                            'desc' : 'asc');
+                        $th_class = ' class="sort-by"';
                     }
                 } else {
                     $qs['sort_dir'] = 'asc';

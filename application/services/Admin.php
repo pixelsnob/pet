@@ -16,10 +16,6 @@ class Service_Admin {
             ->getParam('bootstrap')->getResource('view');
     }
 
-    /*public function getPaginatedFilteredList($page = null, $filters = array()) {
-        return $this->_orders->getPaginatedFilteredList($page, $filters);
-    }*/
-
     /**
      * Adds date range and sort defaults to request params
      * 
