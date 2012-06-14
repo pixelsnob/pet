@@ -17,10 +17,15 @@ class Service_Admin {
     }
 
     /**
+     * Adds date range and sort defaults to request params
+     * 
      * @param Zend_Controller_Request_Abstract $request
+     * @param string $id_column The id column name for sorting
+     * @return array
      * 
      */
-    public function initDateRangeParams(Zend_Controller_Request_Abstract $request) {
+    public function initSearchParams(Zend_Controller_Request_Abstract $request,
+                                     $id_column = 'id') {
         $params = $request->getParams();
         $date = new DateTime;
         $params['end_date'] = $request->getParam('end_date',
@@ -28,30 +33,23 @@ class Service_Admin {
         $date->sub(new DateInterval('P1Y'));
         $params['start_date'] = $request->getParam('start_date',
             $date->format('Y-m-d'));
-        return $params;
-    }
-
-    /**
-     * @param Zend_Controller_Request_Abstract $request
-     * @param string $id_column The id column name for sorting
-     * @return array
-     * 
-     */
-    public function initSortParams(Zend_Controller_Request_Abstract $request,
-                                   $id_column = 'id') {
-        $params = $request->getParams();
         $params['sort'] = $request->getParam('sort', $id_column);
         $params['sort_dir'] = $request->getParam('sort_dir', 'desc');
         return $params;
     }
 
-    public function initSearchParams(Zend_Controller_Request_Abstract $request,
-                                     $id_column = 'id') {
-        
-        return array_merge(
-            $this->initSortParams($request, $id_column),
-            $this->initDateRangeParams($request)
-        );
+    public function outputReportCsv(array $data, $filename,
+                                    array $format = array()) {
+        $fp = fopen('php://output', 'w');
+        $header = array_keys($data[0]->toArray());
+        fputcsv($fp, $header);
+        foreach ($data as $row) {
+            $row = $row->toArray();
+            foreach ($row as $k => $v) {
+                
+            }
+            fputcsv($fp, $row);
+        }
+        fclose($fp);
     }
-
 }

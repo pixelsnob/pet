@@ -69,8 +69,8 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
      *               objects
      */
     public function getPaginatedFiltered(array $params) {
-        $sel = $this->_orders->select();
         $db = Zend_Db_Table::getDefaultAdapter();
+        $sel = $this->_orders->select();
         $this->addDateRangeToSelect($sel, 'date_created', $params);
         if (isset($params['search']) && $params['search']) {
             // If it's a number, try the order id, otherwise, try other text
@@ -102,6 +102,46 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
         }
         return array('paginator' => $paginator, 'data' => $orders);
     }
+
+    public function getSalesReport($start_date, $end_date) {
+        $start_date = new DateTime($start_date);
+        $start_date->setTime(12, 0, 0);
+        $end_date = new DateTime($end_date);
+        $end_date->setTime(23, 59, 59);
+        $orders = $this->_orders->getSalesReport(
+            $start_date->format('Y-m-d H:i:s'),
+            $end_date->format('Y-m-d H:i:s')
+        );
+        $orders_array = array();
+        foreach ($orders as $order) {
+            $orders_array[] = new Model_Report_Sale($order->toArray());
+        }
+        return $orders_array;
+    }
+    
+    /**
+     * Returns an array of order ids for the given date range
+     * 
+     * @param string $start_date
+     * @param string $end_date
+     * @return array
+     * 
+     */
+    /*public function getIdMapByDateRange($start_date, $end_date) {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $sel = $db->select()->from('orders', array('id'));
+        $this->addDateRangeToSelect($sel, 'date_created', array(
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ));
+        $stmt = $db->query($sel);
+        $res = $stmt->fetchAll();
+        $order_ids = array();
+        foreach ($res as $row) {
+            $order_ids[] = $row['id'];
+        }
+        return $order_ids;
+    }*/
 
     /**
      * @param bool $email_sent

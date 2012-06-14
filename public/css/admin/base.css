@@ -147,7 +147,7 @@ li {
 }
 
 #search-form dt {
-    clear: none;
+    clear: left;
     width: 90px;
 }
 
@@ -161,6 +161,10 @@ li {
 
 #search-form .submit {
     margin-top: 0;
+}
+
+#search-form .radio label {
+    padding-right: 10px;
 }
 
 .no-data {

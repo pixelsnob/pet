@@ -77,6 +77,12 @@ ul.errors li, ul.success li {
     -webkit-border-radius: 5px;
 }
 
+.form input.radio {
+    width: auto;
+    border: none;
+    margin-right: 10px;
+}
+
 .hide {
     display: none;
 }
