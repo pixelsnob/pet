@@ -1,15 +1,20 @@
 
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="search" id="search-form">
     <dl class="form">
-        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->renderLabel(); ?></dt>
+        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->getLabel(); ?></dt>
         <dd class="date-start">
             <?php echo $this->search_form->date_range->start_date->renderViewHelper(); ?>
             <?php echo $this->search_form->date_range->start_date->renderErrors(); ?>
         </dd>
-        <dt class="date-end"><?php echo $this->search_form->date_range->end_date->renderLabel(); ?></dt>
+        <dt class="date-end"><?php echo $this->search_form->date_range->end_date->getLabel(); ?></dt>
         <dd class="date-end">
             <?php echo $this->search_form->date_range->end_date->renderViewHelper(); ?>
             <?php echo $this->search_form->date_range->end_date->renderErrors(); ?>
+        </dd>
+        <dt class="radio"><?php echo $this->search_form->output->getLabel(); ?></dt>
+        <dd class="radio">
+            <?php echo $this->search_form->output->renderViewHelper(); ?>
+            <?php echo $this->search_form->output->renderErrors(); ?>
         </dd>
     </dl>
     <p class="submit">
@@ -17,7 +22,11 @@
     </p>
 </form>
 
-<?php if ($this->no_data): ?>
+<section class="sales">
+<?php if ($this->sales && $this->search_form->output->getValue() == 'screen'): ?>
+    <?php echo $this->objectsToAdminTable(array(), $this->sales); ?>
+<?php elseif ($this->no_data): ?>
     <p class="error">No sales to show</p>
 <?php endif; ?>
 
+</section>

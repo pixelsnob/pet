@@ -27,12 +27,19 @@ class Service_Admin {
     public function initSearchParams(Zend_Controller_Request_Abstract $request,
                                      $id_column = 'id') {
         $params = $request->getParams();
-        $date = new DateTime;
-        $params['end_date'] = $request->getParam('end_date',
-            $date->format('Y-m-d'));
-        $date->sub(new DateInterval('P1Y'));
-        $params['start_date'] = $request->getParam('start_date',
-            $date->format('Y-m-d'));
+        if (isset($params['start_date']) && !strlen(trim($params['start_date']))) {
+            $start_date = new DateTime('2000-01-01');
+        } elseif (isset($params['start_date']) && strlen(trim($params['start_date']))) {
+            $start_date = new DateTime($params['start_date']); 
+        } else {
+            $start_date = new DateTime;
+            $start_date->sub(new DateInterval('P1Y'));
+        }
+        $params['start_date'] = $start_date->format('Y-m-d');
+        $end_date = (isset($params['end_date']) && strlen(trim($params['end_date'])) ?
+            $params['end_date'] : null);
+        $end_date = new DateTime($end_date);
+        $params['end_date'] = $end_date->format('Y-m-d');
         $params['sort'] = $request->getParam('sort', $id_column);
         $params['sort_dir'] = $request->getParam('sort_dir', 'desc');
         return $params;

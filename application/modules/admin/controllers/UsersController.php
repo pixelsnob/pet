@@ -49,7 +49,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             throw new Exception("User profile for user $id not found");
         }
         $this->view->profile = $profile;
-        $this->view->expirations = $this->_users_svc->getExpirations();
+        $this->view->expirations = $this->_users_svc->getExpirations($id);
         $this->view->orders = $orders_mapper->getByUserId($id);
     }
 

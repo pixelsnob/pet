@@ -6,7 +6,8 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
      * Builds an admin table from a config array of fields and an array
      * of objects
      * 
-     * @param array $fields An array of config arrays used for display: format, title, etc. 
+     * @param array $fields An array of config arrays used for display: format, title, etc.
+     *                      If nothing is passed, all fields from $data are shown
      * @param array $data An array of data objects
      * @param array $params Request params to pass through in links, etc.
      * 
@@ -14,7 +15,15 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
     public function objectsToAdminTable(array $fields, array $data,
                                         array $params = array(),
                                         array $options = array()) {
+        if (empty($data)) {
+            return;
+        }
         $view = $this->view;
+        // If no fields were passed, use every field in $data
+        if (empty($fields)) {
+            $row = $data[0]->toArray();
+            $fields = array_keys($row);
+        }
         $out = "<table class=\"admin-table\">\n<tr>\n";
         foreach ($fields as $k => $field) {
             $qs = $params;

@@ -39,15 +39,18 @@ class Admin_ReportsController extends Zend_Controller_Action {
             $sales = $orders_mapper->getSalesReport($params['start_date'],
                 $params['end_date']);
             if ($sales) {
-                $date = new DateTime;
-                $filename = $date->format('Y-m-d') . '-sales-all.csv';
-                $this->_response->setHeader('Content-Type', 'text/csv')
-                    ->setHeader('Content-Disposition',
-                        "attachment;filename=$filename");
-                $this->_admin_svc->outputReportCsv($sales, 'test.csv');
-                $this->_helper->Layout->disableLayout(); 
-                $this->_helper->ViewRenderer->setNoRender(true);
-                return;
+                $this->view->sales = $sales;     
+                if ($search_form->output->getValue() == 'file') {
+                    $date = new DateTime;
+                    $filename = $date->format('Y-m-d') . '-sales-all.csv';
+                    $this->_response->setHeader('Content-Type', 'text/csv')
+                        ->setHeader('Content-Disposition',
+                            "attachment;filename=$filename");
+                    $this->_admin_svc->outputReportCsv($sales, 'test.csv');
+                    $this->_helper->Layout->disableLayout(); 
+                    $this->_helper->ViewRenderer->setNoRender(true);
+                    return;
+                }
             }
             $this->view->no_data = true;
         }

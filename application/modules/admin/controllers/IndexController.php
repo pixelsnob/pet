@@ -9,7 +9,7 @@ class Admin_IndexController extends Zend_Controller_Action {
     
     public function indexAction() {
         if ($this->_users_svc->isAuthenticated(true)) {
-            $this->_helper->Redirector->gotoSimple('orders');
+            $this->_helper->Redirector->gotoSimple('index', 'orders');
         }
         $login_form = $this->_users_svc->getLoginForm();
         $this->view->login_form = $login_form;

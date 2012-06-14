@@ -86,9 +86,11 @@ class Pet_View_Helper_HeadScriptMin extends Pet_View_Helper_HeadScript {
         // Append version, to control caching
         $version = $this->view->version();
         $version = ($version ? '?version=' . $version : '');
-        $url = self::MIN_URL . 'f=' . implode(',', $files) . $version;
-        // Replace scripts with one call to minify
-        $this->appendFile($url);
+        if (count($files)) {
+            $url = self::MIN_URL . 'f=' . implode(',', $files) . $version;
+            // Replace scripts with one call to minify
+            $this->appendFile($url);
+        }
         $this->appendScript($scripts);
         return parent::toString();
     }
