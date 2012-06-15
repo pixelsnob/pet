@@ -50,7 +50,8 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
                 array('version', 'platform', 'marketing', 'occupation'))
             ->joinLeft(array('pro' => 'promos'), 'o.promo_id = pro.id', 'pro.code as promo')
             ->where("o.date_created between $start_date and $end_date")
-            ->group('o.id');
+            ->group('o.id')
+            ->order('o.id desc');
         return $this->fetchAll($sel);
     }
 
