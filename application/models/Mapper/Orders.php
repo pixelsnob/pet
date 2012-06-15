@@ -102,7 +102,12 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
         }
         return array('paginator' => $paginator, 'data' => $orders);
     }
-
+    
+    /**
+     * @param string $start_date
+     * @param string $end_date
+     * 
+     */
     public function getSalesReport($start_date, $end_date) {
         $start_date = new DateTime($start_date);
         $start_date->setTime(12, 0, 0);

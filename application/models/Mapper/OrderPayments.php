@@ -14,29 +14,7 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
         $this->_payflow_mapper = new Model_Mapper_OrderPayments_Payflow;
         $this->_paypal_mapper = new Model_Mapper_OrderPayments_Paypal;
     }
-
-    /**
-     * @param array $data
-     * @return void
-     * 
-     */
-    public function insert(array $data) {
-        $op_model = new Model_OrderPayment($data);
-        $opid = $this->_order_payments->insert($op_model->toArray());
-        switch ($op_model->payment_type_id) {
-            case Model_PaymentType::PAYFLOW:
-                $payflow_model = new Model_OrderPayment_Payflow($data);
-                $payflow_model->order_payment_id = $opid;
-                $this->_payflow_mapper->insert($payflow_model->toArray());
-                break;
-            case Model_PaymentType::PAYPAL:
-                $paypal_model = new Model_OrderPayment_Paypal($data);;
-                $paypal_model->order_payment_id = $opid;
-                $this->_paypal_mapper->insert($paypal_model->toArray());
-                break;
-        }
-    }
-    
+ 
     /**
      * @param int $order_id
      * @return array
@@ -67,6 +45,27 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
         return $op_array;
     }
 
+    /**
+     * @param string $start_date
+     * @param string $end_date
+     * 
+     */
+    public function getTransactionsReport($start_date, $end_date) {
+        $start_date = new DateTime($start_date);
+        $start_date->setTime(12, 0, 0);
+        $end_date = new DateTime($end_date);
+        $end_date->setTime(23, 59, 59);
+        $order_payments = $this->_order_payments->getTransactionsReport(
+            $start_date->format('Y-m-d H:i:s'),
+            $end_date->format('Y-m-d H:i:s')
+        );
+        $op_array = array();
+        foreach ($order_payments as $op) {
+            $op_array[] = new Model_Report_Transaction($op->toArray());
+        }
+        return $op_array;
+    }
+    
     /** 
      * Builds a query out of search params and paginates the results
      * 
@@ -112,6 +111,28 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
             $payments[] = $op;
         }
         return array('paginator' => $paginator, 'data' => $payments);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function insert(array $data) {
+        $op_model = new Model_OrderPayment($data);
+        $opid = $this->_order_payments->insert($op_model->toArray());
+        switch ($op_model->payment_type_id) {
+            case Model_PaymentType::PAYFLOW:
+                $payflow_model = new Model_OrderPayment_Payflow($data);
+                $payflow_model->order_payment_id = $opid;
+                $this->_payflow_mapper->insert($payflow_model->toArray());
+                break;
+            case Model_PaymentType::PAYPAL:
+                $paypal_model = new Model_OrderPayment_Paypal($data);;
+                $paypal_model->order_payment_id = $opid;
+                $this->_paypal_mapper->insert($paypal_model->toArray());
+                break;
+        }
     }
 }
 

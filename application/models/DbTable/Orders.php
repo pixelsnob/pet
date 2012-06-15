@@ -28,7 +28,8 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
     }
 
     /**
-     * @param bool $user_id
+     * @param string $start_date
+     * @param string $end_date
      * @return Zend_Db_Table_Rowset object 
      * 
      */
@@ -50,8 +51,6 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
             ->group('o.id');
         return $this->fetchAll($sel);
     }
-
-
 
 }
 

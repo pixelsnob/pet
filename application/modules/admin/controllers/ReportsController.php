@@ -59,7 +59,7 @@ class Admin_ReportsController extends Zend_Controller_Action {
     }
 
     public function transactionsAction() {
-        $orders_mapper = new Model_Mapper_Orders;
+        $op_mapper = new Model_Mapper_OrderPayments;
         $request = $this->_request;
         $params = $request->getParams();
         $date = new DateTime;
@@ -74,7 +74,10 @@ class Admin_ReportsController extends Zend_Controller_Action {
         if ($request->isPost() && $search_form->isValid($params)) {
             //$sales = $orders_mapper->getSalesReport($params['start_date'],
             //    $params['end_date']);
+            $transactions = $op_mapper->getTransactionsReport(
+                $params['start_date'], $params['end_date']);
             if ($transactions) {
+                print_r($transactions); 
                 $date = new DateTime;
                 //$filename = $date->format('Y-m-d') . '-sales-all.csv';
                 //$this->_response->setHeader('Content-Type', 'text/csv')
@@ -94,7 +97,6 @@ class Admin_ReportsController extends Zend_Controller_Action {
     public function testAction() {
         $file = tempnam('tmp', 'zip');
         $zip = new ZipArchive;
-        // Zip will open and overwrite the file, rather than try to read it.
         $zip->open($file, ZipArchive::OVERWRITE);
         $zip->addFromString('test.txt', 'xxxxxxxxxxxxx');
         $zip->close();
