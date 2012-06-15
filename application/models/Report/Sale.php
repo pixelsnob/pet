@@ -6,7 +6,9 @@
 class Model_Report_Sale extends Pet_Model_Abstract {
 
     public $_data = array(
+        'order_id' => null,
         'date_created' => null,
+        'promo' => null,
         'sku' => null,
         'total' => null,
         'email' => null,

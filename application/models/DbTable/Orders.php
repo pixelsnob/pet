@@ -48,6 +48,7 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
                         'group_concat(p.sku) as sku')
             ->joinLeft(array('up' => 'user_profiles'), 'o.user_id = up.id',
                 array('version', 'platform', 'marketing', 'occupation'))
+            ->joinLeft(array('pro' => 'promos'), 'o.promo_id = pro.id', 'pro.code as promo')
             ->where("o.date_created between $start_date and $end_date")
             ->group('o.id');
         return $this->fetchAll($sel);
