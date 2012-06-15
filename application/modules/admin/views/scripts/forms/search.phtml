@@ -1,13 +1,13 @@
 
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="get" name="search" id="search-form">
     <dl class="form">
-        <dt class="date-start datepicker"><?php echo $this->search_form->date_range->start_date->renderLabel(); ?></dt>
-        <dd class="date-start datepicker">
+        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->renderLabel(); ?></dt>
+        <dd class="date-start">
             <?php echo $this->search_form->date_range->start_date->renderViewHelper(); ?>
             <?php echo $this->search_form->date_range->start_date->renderErrors(); ?>
         </dd>
-        <dt class="date-end datepicker"><?php echo $this->search_form->date_range->end_date->renderLabel(); ?></dt>
-        <dd class="date-end datepicker">
+        <dt class="date-end"><?php echo $this->search_form->date_range->end_date->renderLabel(); ?></dt>
+        <dd class="date-end">
             <?php echo $this->search_form->date_range->end_date->renderViewHelper(); ?>
             <?php echo $this->search_form->date_range->end_date->renderErrors(); ?>
         </dd>

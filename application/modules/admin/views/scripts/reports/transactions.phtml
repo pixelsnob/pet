@@ -1,1 +1,6 @@
-hi
+<?php echo $this->render('forms/report-search.phtml'); ?>
+
+<?php if ($this->no_data): ?>
+    <p class="error">No transactions to show</p>
+<?php endif; ?>
+
