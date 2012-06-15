@@ -16,7 +16,7 @@ abstract class Pet_Model_Mapper_Abstract {
         $db = Zend_Db_Table::getDefaultAdapter();
         if (isset($params['start_date']) && $params['start_date']) {
             $start_date = new DateTime($params['start_date']);
-            $start_date->setTime(12, 0, 0);
+            $start_date->setTime(0, 0, 0);
             $start_date = $db->quote($start_date->format('Y-m-d H:i:s'));
         }
         if (isset($params['end_date']) && $params['end_date']) {

@@ -110,7 +110,7 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
      */
     public function getSalesReport($start_date, $end_date) {
         $start_date = new DateTime($start_date);
-        $start_date->setTime(12, 0, 0);
+        $start_date->setTime(0, 0, 0);
         $end_date = new DateTime($end_date);
         $end_date->setTime(23, 59, 59);
         $orders = $this->_orders->getSalesReport(
