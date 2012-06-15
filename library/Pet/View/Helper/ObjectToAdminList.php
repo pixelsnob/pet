@@ -17,7 +17,7 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
             $i = (!is_array($field) ? $field : $k);
             if (is_array($field) && isset($field['callback'])) {
                 $value = $field['callback']($data);
-            } elseif (isset($data->$i) && $data->$i) {
+            } elseif ($data->$i) {
                 $value = $data->$i;
             }
             if (!is_array($field) || !isset($field['title'])) {
