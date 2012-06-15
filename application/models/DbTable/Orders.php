@@ -40,7 +40,8 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
         $subquery = '(select expiration from order_product_subscriptions ' .
             'where user_id = o.user_id limit 1,1) as previous_expiration';
         $sel = $this->select()->setIntegrityCheck(false)
-            ->from(array('o' => 'orders'), array('o.*', $subquery))
+            ->from(array('o' => 'orders'), array('o.*', $subquery,
+                'date_format(o.date_created, "%m-%d-%Y") as date_created'))
             ->joinLeft(array('op' => 'order_products'),
                         'op.order_id = o.id')
             ->joinLeft(array('p' => 'products'), 'op.product_id = p.id',

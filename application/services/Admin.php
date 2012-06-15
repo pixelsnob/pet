@@ -51,16 +51,12 @@ class Service_Admin {
         return $params;
     }
 
-    public function outputReportCsv(array $data, $filename,
-                                    array $format = array()) {
+    public function outputReportCsv(array $data) {
         $fp = fopen('php://output', 'w');
         $header = array_keys($data[0]->toArray());
         fputcsv($fp, $header);
         foreach ($data as $row) {
             $row = $row->toArray();
-            foreach ($row as $k => $v) {
-                
-            }
             fputcsv($fp, $row);
         }
         fclose($fp);

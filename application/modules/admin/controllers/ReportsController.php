@@ -38,7 +38,7 @@ class Admin_ReportsController extends Zend_Controller_Action {
                 $this->_response->setHeader('Content-Type', 'text/csv')
                     ->setHeader('Content-Disposition',
                         "attachment;filename=$filename");
-                $this->_admin_svc->outputReportCsv($sales, 'test.csv');
+                $this->_admin_svc->outputReportCsv($sales);
                 $this->_helper->Layout->disableLayout(); 
                 $this->_helper->ViewRenderer->setNoRender(true);
                 return;
@@ -77,13 +77,13 @@ class Admin_ReportsController extends Zend_Controller_Action {
             $transactions = $op_mapper->getTransactionsReport(
                 $params['start_date'], $params['end_date']);
             if ($transactions) {
-                print_r($transactions); 
                 $date = new DateTime;
-                //$filename = $date->format('Y-m-d') . '-sales-all.csv';
-                //$this->_response->setHeader('Content-Type', 'text/csv')
-                //    ->setHeader('Content-Disposition',
-                //        "attachment;filename=$filename");
-                //$this->_admin_svc->outputReportCsv($sales, 'test.csv');
+                $filename = $date->format('Y-m-d') .
+                    '-apet-transaction-report.csv';
+                $this->_response->setHeader('Content-Type', 'text/csv')
+                    ->setHeader('Content-Disposition',
+                        "attachment;filename=$filename");
+                $this->_admin_svc->outputReportCsv($transactions);
                 $this->_helper->Layout->disableLayout(); 
                 $this->_helper->ViewRenderer->setNoRender(true);
                 return;
