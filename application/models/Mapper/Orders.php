@@ -106,6 +106,7 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     /**
      * @param string $start_date
      * @param string $end_date
+     * @return Zend_Db_Table_Rowset 
      * 
      */
     public function getSalesReport($start_date, $end_date) {
@@ -117,11 +118,12 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
             $start_date->format('Y-m-d H:i:s'),
             $end_date->format('Y-m-d H:i:s')
         );
-        $orders_array = array();
+        /*$orders_array = array();
         foreach ($orders as $order) {
             $orders_array[] = new Model_Report_Sale($order->toArray());
         }
-        return $orders_array;
+        return $orders_array;*/
+        return $orders;
     }
     
     /**

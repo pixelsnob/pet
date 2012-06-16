@@ -32,7 +32,7 @@ class Admin_ReportsController extends Zend_Controller_Action {
         if ($request->isPost() && $search_form->isValid($params)) {
             $sales = $orders_mapper->getSalesReport($params['start_date'],
                 $params['end_date']);
-            if ($sales) {
+            if (count($sales)) {
                 $date = new DateTime;
                 $filename = $date->format('Y-m-d') . '-sales-all.csv';
                 $this->_response->setHeader('Content-Type', 'text/csv')
@@ -70,12 +70,38 @@ class Admin_ReportsController extends Zend_Controller_Action {
         if ($request->isPost() && $search_form->isValid($params)) {
             $usa_users = $ops_mapper->getMailingListReport('usa',
                 $params['start_date'], $params['end_date']);
-            if ($usa_users) {
-                $date = new DateTime;
-                $filename = $date->format('Y-m-d') . '-apet-mailing-list.csv';
+            $intl_users = $ops_mapper->getMailingListReport('intl',
+                $params['start_date'], $params['end_date']);
+            if (count($usa_users) || count($intl_users)) {
+                $tmp = tempnam('tmp', 'zip');
+                $zip = new ZipArchive;
+                $zip->open($tmp, ZipArchive::OVERWRITE);
+                $date_str = $date->format('Y-m-d');
+                if (count($usa_users)) {
+                    $usa_csv = $this->_admin_svc->getCsvAsString($usa_users, true);
+                    $zip->addFromString("$date_str-usa.csv", $usa_csv);
+                }
+                if (count($intl_users)) {
+                    $intl_csv = $this->_admin_svc->getCsvAsString($intl_users, true);
+                    $date = new DateTime;
+                    $date = $date->format('Y-m-d');
+                    $zip->addFromString("$date_str-intl.csv", $intl_csv);
+                }
+                $zip->close();
+                $filename = "$date_str-postal-mailing-list.zip";
+                $this->_response->setHeader('Content-Type', 'application/zip')
+                    ->setHeader('Content-Length', filesize($tmp))
+                    ->setHeader('Content-Disposition', "attachment; filename=$filename");
+                readfile($tmp);
+                unlink($tmp); 
+                $this->_helper->Layout->disableLayout(); 
+                $this->_helper->ViewRenderer->setNoRender(true);
+                return;
             }
             $this->view->no_data = true;
         }
+        $this->view->inlineScriptMin()
+            ->appendScript("Pet.loadView('Admin');");
 
     }
 
@@ -113,26 +139,5 @@ class Admin_ReportsController extends Zend_Controller_Action {
             ->appendScript("Pet.loadView('Admin');");
     }
     
-    public function testAction() {
-        $file = tempnam('tmp', 'zip');
-        $zip = new ZipArchive;
-        $zip->open($file, ZipArchive::OVERWRITE);
-        $zip->addFromString('test.txt', 'xxxxxxxxxxxxx');
-        $zip->close();
-        $date = new DateTime;
-        $filename = $date->format('Y-m-d') . '-apet-transaction-report.csv';
-        // Stream the file to the client
-        $this->_response->setHeader('Content-Type', 'application/zip')
-            ->setHeader('Content-Length', filesize($file))
-            ->setHeader('Content-Disposition', "attachment; filename=$filename");
-        //header("Content-Type: application/zip");
-        //header("Content-Length: " . filesize($file));
-        //header("Content-Disposition: attachment; filename=\"a_zip_file.zip\"");
-        readfile($file);
-        unlink($file); 
-        $this->_helper->Layout->disableLayout(); 
-        $this->_helper->ViewRenderer->setNoRender(true);
-        //exit;
-    }
 
 }

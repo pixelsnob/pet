@@ -50,8 +50,13 @@ class Service_Admin {
         $params['end_date'] = $end_date->format('Y-m-d');
         return $params;
     }
-
-    public function outputReportCsv(array $data) {
+    
+    /**
+     * @param mixed $data Array or iterator
+     * @return void
+     * 
+     */
+    public function outputReportCsv($data) {
         $fp = fopen('php://output', 'w');
         $header = array_keys($data[0]->toArray());
         fputcsv($fp, $header);
@@ -60,5 +65,27 @@ class Service_Admin {
             fputcsv($fp, $row);
         }
         fclose($fp);
+    }
+
+    /**
+     * @param mixed $data Array or iterator
+     * @return void
+     * 
+     */
+    public function getCsvAsString($data, $caps = false) {
+        $fp = fopen('php://temp/maxmemory:'. (12 * 1024 * 1024), 'r+');
+        if ($caps) {
+            stream_filter_append($fp, 'string.toupper', STREAM_FILTER_WRITE);
+        }
+        $header = array_keys($data[0]->toArray());
+        fputcsv($fp, $header);
+        foreach ($data as $row) {
+            $row = $row->toArray();
+            fputcsv($fp, $row);
+        }
+        rewind($fp);
+        $output = stream_get_contents($fp);
+        fclose($fp);
+        return $output;
     }
 }
