@@ -93,7 +93,7 @@ END;
                 'up.shipping_postal_code as POSTAL_CODE_SHIPPING',
                 'up.shipping_country as COUNTRY_SHIPPING'))
             ->where("ops.expiration = ($subquery)")
-            ->where('ops.expiration >= ?', $start_date)
+            ->where('ops.expiration > ?', $start_date)
             ->where('ops.digital_only = 0');
         if ($region == 'usa') {
             $sel->where("up.shipping_country = 'USA'");
