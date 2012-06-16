@@ -125,30 +125,6 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     }
     
     /**
-     * Returns an array of order ids for the given date range
-     * 
-     * @param string $start_date
-     * @param string $end_date
-     * @return array
-     * 
-     */
-    /*public function getIdMapByDateRange($start_date, $end_date) {
-        $db = Zend_Db_Table::getDefaultAdapter();
-        $sel = $db->select()->from('orders', array('id'));
-        $this->addDateRangeToSelect($sel, 'date_created', array(
-            'start_date' => $start_date,
-            'end_date'   => $end_date
-        ));
-        $stmt = $db->query($sel);
-        $res = $stmt->fetchAll();
-        $order_ids = array();
-        foreach ($res as $row) {
-            $order_ids[] = $row['id'];
-        }
-        return $order_ids;
-    }*/
-
-    /**
      * @param bool $email_sent
      * @return int Num rows updated
      * 
