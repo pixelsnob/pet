@@ -76,8 +76,9 @@ END;
      */
     public function getMailingListReport($region = null, $start_date, $end_date) {
         $db = $this->getAdapter();
+        $start_date = $db->quote($start_date);
         $subquery = 'select max(expiration) from order_product_subscriptions ' .
-            'where user_id = ops.user_id';
+            "where user_id = ops.user_id and expiration > $start_date";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'),
                 'date_format(ops.expiration, "%m/%Y") as EXPIRATION')
@@ -93,7 +94,6 @@ END;
                 'up.shipping_postal_code as POSTAL_CODE_SHIPPING',
                 'up.shipping_country as COUNTRY_SHIPPING'))
             ->where("ops.expiration = ($subquery)")
-            ->where('ops.expiration > ?', $start_date)
             ->where('ops.digital_only = 0');
         if ($region == 'usa') {
             $sel->where("up.shipping_country = 'USA'");
