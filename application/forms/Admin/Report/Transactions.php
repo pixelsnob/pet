@@ -1,9 +1,9 @@
 <?php
 /**
- * Sales report form
+ * Transactions report form
  * 
  */
-class Form_Admin_Report_Sales extends Pet_Form {
+class Form_Admin_Report_Transactions extends Pet_Form {
     
     public function init() {
         parent::init();

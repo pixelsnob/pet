@@ -27,10 +27,6 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
                 $temp_sub = new Model_OrderProductSubscription(
                     $sub->toArray());
                 $temp_product = $products_mapper->getById($sub->product_id);
-                /*if (!$temp_product) {
-                    $msg = "Product by id {$sub->product_id} not found";
-                    throw new Exception($msg);
-                }*/
                 $temp_sub->product = $temp_product;
                 $subs_array[] = $temp_sub;
             }
@@ -50,16 +46,6 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
             $ops_model = new Model_OrderProductSubscription($ops->toArray());
             return $ops_model;
         }
-    }
-    
-    /**
-     * @param array $data
-     * @return void
-     * 
-     */
-    public function insert(array $data) {
-        $ops_model = new Model_OrderProductSubscription($data);
-        $this->_ops->insert($ops_model->toArray());
     }
     
     /**
@@ -84,6 +70,40 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         }
         return $subs_array;
     }
+
+    /**
+     * @param string $start_date
+     * @param string $end_date
+     * 
+     */
+    public function getMailingListReport($country = null, $start_date, $end_date) {
+        $start_date = new DateTime($start_date);
+        $start_date->setTime(0, 0, 0);
+        $end_date = new DateTime($end_date);
+        $end_date->setTime(23, 59, 59);
+        $mailing_list = $this->_ops->getMailingListReport(
+            $country,
+            $start_date->format('Y-m-d H:i:s'),
+            $end_date->format('Y-m-d H:i:s')
+        );
+        $mailing_list_array = array();
+        foreach ($mailing_list as $row) {
+            $mailing_list_array[] = new Model_Report_MailingListItem(   
+                $row->toArray());
+        }
+        return $mailing_list_array;
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function insert(array $data) {
+        $ops_model = new Model_OrderProductSubscription($data);
+        $this->_ops->insert($ops_model->toArray());
+    }
+    
 
 }
 

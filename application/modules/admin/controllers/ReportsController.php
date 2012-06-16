@@ -55,6 +55,27 @@ class Admin_ReportsController extends Zend_Controller_Action {
 
 
     public function mailingListAction() {
+        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $request = $this->_request;
+        $params = $request->getParams();
+        $date = new DateTime;
+        $date->sub(new DateInterval('P1D'));
+        $params['end_date'] = $request->getParam('end_date',
+            $date->format('Y-m-d'));
+        $params['start_date'] = $request->getParam('start_date',
+            $date->format('Y-m-d'));
+        $search_form = new Form_Admin_Report_MailingList;
+        $this->view->search_form = $search_form;
+        $search_form->populate($params);
+        if ($request->isPost() && $search_form->isValid($params)) {
+            $usa_users = $ops_mapper->getMailingListReport('usa',
+                $params['start_date'], $params['end_date']);
+            if ($usa_users) {
+                $date = new DateTime;
+                $filename = $date->format('Y-m-d') . '-apet-mailing-list.csv';
+            }
+            $this->view->no_data = true;
+        }
 
     }
 
@@ -68,12 +89,10 @@ class Admin_ReportsController extends Zend_Controller_Action {
             $date->format('Y-m-d'));
         $params['start_date'] = $request->getParam('start_date',
             $date->format('Y-m-d'));
-        $search_form = new Form_Admin_Report_Sales;
+        $search_form = new Form_Admin_Report_Transactions;
         $this->view->search_form = $search_form;
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
-            //$sales = $orders_mapper->getSalesReport($params['start_date'],
-            //    $params['end_date']);
             $transactions = $op_mapper->getTransactionsReport(
                 $params['start_date'], $params['end_date']);
             if ($transactions) {
