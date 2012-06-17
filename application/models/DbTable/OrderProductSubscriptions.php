@@ -43,8 +43,7 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
      * 
      */
     public function getByExpiration($date) {
-        /*
-        $db = Zend_Db_Table::getDefaultAdapter();
+        /*$db = Zend_Db_Table::getDefaultAdapter();
         $sql = <<<END
 select *, (
     select min(expiration)
@@ -59,31 +58,34 @@ where expiration = (
     select max(expiration)
     from order_product_subscriptions ops3
     where ops3.user_id = ops2.user_id
+    and expiration = ?
 )
 group by user_id
-having expiration = ?
 END;
         $sql = $db->quoteInto($sql, $date);
-        return $db->query($sql)->fetchAll();
-        */
+        return $db->query($sql)->fetchAll();*/
         $db = $this->getAdapter();
         $date = $db->quote($date);
-        //$subquery = 'select max(expiration) from order_product_subscriptions ' .
-        //    "where user_id = ops.user_id and expiration > $start_date";
         $min_subquery = 'select min(expiration) from order_product_subscriptions ' .
-            'where ops.user_id = user_id';
+            'where user_id = ops.user_id ' .
+            'and order_product_id = ops.order_product_id';
         $max_subquery = 'select max(expiration) from order_product_subscriptions ' .
-            'where ops.user_id = user_id';
+            'where ops.user_id = user_id ';
+            //"and expiration = $date";
         $sel = $this->select()->setIntegrityCheck(false)
-            ->from(array('ops' => 'order_product_subscriptions'), '*')
-            ->joinLeft(array('op' => 'order_products'), 'ops.order_product_id = op.id')
+            ->from(array('ops' => 'order_product_subscriptions'), array(
+                'id',
+                'user_id',
+                'expiration',
+                'order_product_id',
+                'expiration as max_expiration',
+                "($min_subquery) as min_expiration"))
+            ->joinLeft(array('op' => 'order_products'), 'ops.order_product_id = op.id', array(
+                'op.order_id', 'op.product_id'))
             ->where("ops.expiration = ($max_subquery)")
-            //->where("ops.expiration > $start_date")
-            //->where('ops.digital_only = 0')
             ->group('ops.user_id')
-            ->having("expiration > $date");
-        echo $sel->__toString();
-        exit;
+            ->having("expiration = $date");
+        //echo $sel->__toString(); exit;
         return $this->fetchAll($sel);
     }
 

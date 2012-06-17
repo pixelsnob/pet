@@ -118,11 +118,6 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
             $start_date->format('Y-m-d H:i:s'),
             $end_date->format('Y-m-d H:i:s')
         );
-        /*$orders_array = array();
-        foreach ($orders as $order) {
-            $orders_array[] = new Model_Report_Sale($order->toArray());
-        }
-        return $orders_array;*/
         return $orders;
     }
     

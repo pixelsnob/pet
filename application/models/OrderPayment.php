@@ -44,7 +44,9 @@ class Model_OrderPayment extends Pet_Model_Abstract {
             unset($data['order']);
         } else {
             $data['gateway_data'] = $data['gateway_data']->toArray();
-            $data['order'] = $data['order']->toArray();
+            if ($data['order']) {
+                $data['order'] = $data['order']->toArray();
+            }
         }
         return $data;
     }

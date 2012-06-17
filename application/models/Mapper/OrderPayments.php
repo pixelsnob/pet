@@ -59,11 +59,6 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
             $start_date->format('Y-m-d H:i:s'),
             $end_date->format('Y-m-d H:i:s')
         );
-        /*$op_array = array();
-        foreach ($order_payments as $op) {
-            $op_array[] = new Model_Report_Transaction($op->toArray());
-        }
-        return $op_array;*/
         return $order_payments;
     }
     

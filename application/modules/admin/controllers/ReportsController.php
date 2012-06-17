@@ -121,7 +121,7 @@ class Admin_ReportsController extends Zend_Controller_Action {
         if ($request->isPost() && $search_form->isValid($params)) {
             $transactions = $op_mapper->getTransactionsReport(
                 $params['start_date'], $params['end_date']);
-            if ($transactions) {
+            if (count($transactions)) {
                 $date = new DateTime;
                 $filename = $date->format('Y-m-d') .
                     '-apet-transaction-report.csv';

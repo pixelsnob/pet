@@ -128,6 +128,7 @@ class Service_Orders {
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
+        $gateway_mapper     = new Model_Mapper_PaymentGateway;
         $rb_logger          = new Model_Mapper_RecurringBillingTransactions;
         $view               = Zend_Registry::get('view');
         $logger             = Zend_Registry::get('log');
@@ -144,7 +145,6 @@ class Service_Orders {
                 if (!$sub->product || !$sub->product->is_recurring) {
                     continue;
                 }
-                $gateway_mapper = new Model_Mapper_PaymentGateway;
                 $log_data = array(
                     'order'                     => null,
                     'gateway_calls'             => array(),

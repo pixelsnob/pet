@@ -59,7 +59,7 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         $subs_array = array();
         if ($subs) {
             foreach ($subs as $sub) {
-                $ops_model = new Model_OrderProductSubscription($sub);
+                $ops_model = new Model_OrderProductSubscription($sub->toArray());
                 $ops_model->min_expiration = $sub['min_expiration'];
                 if ($sub['product_id']) {
                     $product = $products_mapper->getById($sub['product_id']);
@@ -87,12 +87,6 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
             $start_date->format('Y-m-d H:i:s'),
             $end_date->format('Y-m-d H:i:s')
         );
-        /*$mailing_list_array = array();
-        foreach ($mailing_list as $row) {
-            $mailing_list_array[] = new Model_Report_MailingListItem(   
-                $row->toArray());
-        }
-        return $mailing_list_array;*/
         return $mailing_list;
     }
 
