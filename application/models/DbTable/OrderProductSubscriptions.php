@@ -43,27 +43,6 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
      * 
      */
     public function getByExpiration($date) {
-        /*$db = Zend_Db_Table::getDefaultAdapter();
-        $sql = <<<END
-select *, (
-    select min(expiration)
-    from order_product_subscriptions ops1
-    where ops1.user_id = ops2.user_id
-    and ops1.order_product_id = ops2.order_product_id
-) as min_expiration
-from order_product_subscriptions ops2
-left join order_products op
-on ops2.order_product_id = op.id
-where expiration = (
-    select max(expiration)
-    from order_product_subscriptions ops3
-    where ops3.user_id = ops2.user_id
-    and expiration = ?
-)
-group by user_id
-END;
-        $sql = $db->quoteInto($sql, $date);
-        return $db->query($sql)->fetchAll();*/
         $db = $this->getAdapter();
         $date = $db->quote($date);
         $min_subquery = 'select min(expiration) from order_product_subscriptions ' .
@@ -71,7 +50,6 @@ END;
             'and order_product_id = ops.order_product_id';
         $max_subquery = 'select max(expiration) from order_product_subscriptions ' .
             'where ops.user_id = user_id ';
-            //"and expiration = $date";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
                 'id',
@@ -83,28 +61,25 @@ END;
             ->joinLeft(array('op' => 'order_products'), 'ops.order_product_id = op.id', array(
                 'op.order_id', 'op.product_id'))
             ->where("ops.expiration = ($max_subquery)")
-            ->group('ops.user_id')
-            ->having("expiration = $date");
-        //echo $sel->__toString(); exit;
+            ->where("ops.expiration = $date")
+            ->group('ops.user_id');
         return $this->fetchAll($sel);
     }
 
     /**
-     * @param string $date
+     * @param string $region
+     * @param string $start_date
      * @return Zend_Db_Table_Rowset
      * 
      */
-    public function getMailingListReport($region = null, $start_date, $end_date) {
+    public function getMailingListReport($region = null, $start_date) {
         $db = $this->getAdapter();
         $start_date = $db->quote($start_date);
         $subquery = 'select max(expiration) from order_product_subscriptions ' .
             "where user_id = ops.user_id and expiration > $start_date";
-            //"where user_id = ops.user_id";
         $sel = $this->select()->setIntegrityCheck(false)
-            ->from(array('ops' => 'order_product_subscriptions'),
-                'date_format(ops.expiration, "%m/%Y") as EXPIRATION')
-            ->joinLeft(array('u' => 'users'), 'ops.user_id = u.id', null)
-            ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', array(
+            ->from(array('ops' => 'order_product_subscriptions'), array(
+                'date_format(ops.expiration, "%m/%Y") as EXPIRATION',
                 'up.shipping_first_name as FIRST_NAME_SHIPPING',
                 'up.shipping_last_name as LAST_NAME_SHIPPING',
                 'up.shipping_company as COMPANY_SHIPPING',
@@ -114,6 +89,8 @@ END;
                 'up.shipping_state as STATE_SHIPPING',
                 'up.shipping_postal_code as POSTAL_CODE_SHIPPING',
                 'up.shipping_country as COUNTRY_SHIPPING'))
+            ->joinLeft(array('u' => 'users'), 'ops.user_id = u.id', null)
+            ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where("ops.expiration = ($subquery)")
             ->where('ops.digital_only = 0')
             ->order('ops.expiration')

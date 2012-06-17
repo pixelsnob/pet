@@ -1,5 +1,17 @@
 
-<?php echo $this->render('forms/report-search.phtml'); ?>
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="search" id="search-form">
+    <p><a href="<?php echo $this->url(array('action' => 'mailing-list-all')); ?>">All current subs</a></p>
+    <dl class="form">
+        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->getLabel(); ?></dt>
+        <dd class="date-start">
+            <?php echo $this->search_form->date_range->start_date->renderViewHelper(); ?>
+            <?php echo $this->search_form->date_range->start_date->renderErrors(); ?>
+        </dd>
+    </dl>
+    <p class="submit">
+        <input type="submit" value="Search">
+    </p>
+</form>
 
 <?php if ($this->no_data): ?>
     <p class="error">No users to show</p>

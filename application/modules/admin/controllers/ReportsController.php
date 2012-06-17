@@ -55,13 +55,14 @@ class Admin_ReportsController extends Zend_Controller_Action {
 
 
     public function mailingListAction() {
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $request = $this->_request;
+        if ($request->getParam('no-results')) {
+            $this->view->no_data = true;
+        }
+        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $params = $request->getParams();
         $date = new DateTime;
         $date->sub(new DateInterval('P1D'));
-        $params['end_date'] = $request->getParam('end_date',
-            $date->format('Y-m-d'));
         $params['start_date'] = $request->getParam('start_date',
             $date->format('Y-m-d'));
         $search_form = new Form_Admin_Report_MailingList;
@@ -69,9 +70,9 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
             $usa_users = $ops_mapper->getMailingListReport('usa',
-                $params['start_date'], $params['end_date']);
+                $params['start_date']);
             $intl_users = $ops_mapper->getMailingListReport('intl',
-                $params['start_date'], $params['end_date']);
+                $params['start_date']);
             if (count($usa_users) || count($intl_users)) {
                 $tmp = tempnam('tmp', 'zip');
                 $zip = new ZipArchive;
@@ -103,6 +104,26 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
 
+    }
+
+    public function mailingListAllAction() {
+        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $date = new DateTime;
+        $date_str = $date->format('Y-m-d');
+        $users = $ops_mapper->getMailingListReport(null, $date_str);
+        if ($users) {
+            $filename = "$date_str-apet-postal-mailing-list-all.csv";
+            $this->_response->setHeader('Content-Type', 'text/csv')
+                ->setHeader('Content-Disposition',
+                            "attachment;filename=$filename");
+            $this->_admin_svc->outputReportCsv($users);
+            $this->_helper->Layout->disableLayout(); 
+            $this->_helper->ViewRenderer->setNoRender(true);
+            return;
+        } else {
+            $this->_helper->Redirector->gotoSimple('mailing-list', 'reports',
+                'admin', array('no-results' => 1));
+        }
     }
 
     public function transactionsAction() {

@@ -12,7 +12,7 @@ Pet.AdminView = Pet.View.extend({
     },
     
     initialize: function() {
-        var dp = $('.datepicker').datepicker({
+        var opts = { 
             dateFormat: 'yy-mm-dd',
             changeYear: true,
             maxDate: (new Date),
@@ -22,7 +22,10 @@ Pet.AdminView = Pet.View.extend({
                     first_of_month));
                 $(this).datepicker('setDate', first_of_month);
             }
-        });
+        };
+        $('.datepicker').datepicker(opts);
+        opts.maxDate = null;
+        $('.datepicker-no-max').datepicker(opts);
     }
 
 });
