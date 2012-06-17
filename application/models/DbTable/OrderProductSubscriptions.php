@@ -80,15 +80,15 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
                 'date_format(ops.expiration, "%m/%Y") as EXPIRATION',
-                'up.shipping_first_name as FIRST_NAME_SHIPPING',
-                'up.shipping_last_name as LAST_NAME_SHIPPING',
-                'up.shipping_company as COMPANY_SHIPPING',
-                'up.shipping_address as ADDRESS_SHIPPING',
-                'up.shipping_address_2 as ADDRESS2_SHIPPING',
-                'up.shipping_city as CITY_SHIPPING',
-                'up.shipping_state as STATE_SHIPPING',
-                'up.shipping_postal_code as POSTAL_CODE_SHIPPING',
-                'up.shipping_country as COUNTRY_SHIPPING'))
+                'upper(up.shipping_first_name) as FIRST_NAME_SHIPPING',
+                'upper(up.shipping_last_name) as LAST_NAME_SHIPPING',
+                'upper(up.shipping_company) as COMPANY_SHIPPING',
+                'upper(up.shipping_address) as ADDRESS_SHIPPING',
+                'upper(up.shipping_address_2) as ADDRESS2_SHIPPING',
+                'upper(up.shipping_city) as CITY_SHIPPING',
+                'upper(up.shipping_state) as STATE_SHIPPING',
+                'upper(up.shipping_postal_code) as POSTAL_CODE_SHIPPING',
+                'upper(up.shipping_country) as COUNTRY_SHIPPING'))
             ->joinLeft(array('u' => 'users'), 'ops.user_id = u.id', null)
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where("ops.expiration = ($subquery)")
