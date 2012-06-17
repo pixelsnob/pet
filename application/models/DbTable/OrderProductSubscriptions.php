@@ -43,15 +43,13 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
      * 
      */
     public function getByExpiration($date) {
+        /*
         $db = Zend_Db_Table::getDefaultAdapter();
         $sql = <<<END
 select *, (
     select min(expiration)
     from order_product_subscriptions ops1
     where ops1.user_id = ops2.user_id
-    /* We're only looking for min expirations for this same product id,
-       used to determine how many times this has been renewed via
-       recurring billing */
     and ops1.order_product_id = ops2.order_product_id
 ) as min_expiration
 from order_product_subscriptions ops2
@@ -67,6 +65,26 @@ having expiration = ?
 END;
         $sql = $db->quoteInto($sql, $date);
         return $db->query($sql)->fetchAll();
+        */
+        $db = $this->getAdapter();
+        $date = $db->quote($date);
+        //$subquery = 'select max(expiration) from order_product_subscriptions ' .
+        //    "where user_id = ops.user_id and expiration > $start_date";
+        $min_subquery = 'select min(expiration) from order_product_subscriptions ' .
+            'where ops.user_id = user_id';
+        $max_subquery = 'select max(expiration) from order_product_subscriptions ' .
+            'where ops.user_id = user_id';
+        $sel = $this->select()->setIntegrityCheck(false)
+            ->from(array('ops' => 'order_product_subscriptions'), '*')
+            ->joinLeft(array('op' => 'order_products'), 'ops.order_product_id = op.id')
+            ->where("ops.expiration = ($max_subquery)")
+            //->where("ops.expiration > $start_date")
+            //->where('ops.digital_only = 0')
+            ->group('ops.user_id')
+            ->having("expiration > $date");
+        echo $sel->__toString();
+        exit;
+        return $this->fetchAll($sel);
     }
 
     /**
@@ -79,6 +97,7 @@ END;
         $start_date = $db->quote($start_date);
         $subquery = 'select max(expiration) from order_product_subscriptions ' .
             "where user_id = ops.user_id and expiration > $start_date";
+            //"where user_id = ops.user_id";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'),
                 'date_format(ops.expiration, "%m/%Y") as EXPIRATION')
@@ -94,13 +113,14 @@ END;
                 'up.shipping_postal_code as POSTAL_CODE_SHIPPING',
                 'up.shipping_country as COUNTRY_SHIPPING'))
             ->where("ops.expiration = ($subquery)")
-            ->where('ops.digital_only = 0');
+            ->where('ops.digital_only = 0')
+            ->order('ops.expiration')
+            ->group('ops.user_id');
         if ($region == 'usa') {
             $sel->where("up.shipping_country = 'USA'");
         } elseif ($region == 'intl') {
             $sel->where("up.shipping_country != 'USA'");
         }
-        $sel->group('ops.user_id')->order('ops.expiration');
         return $this->fetchAll($sel);
     }
 
