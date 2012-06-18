@@ -5,7 +5,6 @@ class Admin_ReportsController extends Zend_Controller_Action {
     public function init() {
         $this->_helper->Layout->setLayout('admin');
         $this->_admin_svc = new Service_Admin;
-        //$this->_orders_svc = new Service_Orders;
         $this->_users_svc = new Service_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
             $this->_helper->Redirector->gotoSimple('index', 'index');
@@ -20,18 +19,11 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $orders_mapper = new Model_Mapper_Orders;
         $request = $this->_request;
         $params = $request->getParams();
-        $date = new DateTime;
-        $date->sub(new DateInterval('P1D'));
-        $params['end_date'] = $request->getParam('end_date',
-            $date->format('Y-m-d'));
-        $params['start_date'] = $request->getParam('start_date',
-            $date->format('Y-m-d'));
         $search_form = new Form_Admin_Report_Sales;
         $this->view->search_form = $search_form;
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
-            $sales = $orders_mapper->getSalesReport($params['start_date'],
-                $params['end_date']);
+            $sales = $orders_mapper->getSalesReport($search_form);
             if (count($sales)) {
                 $date = new DateTime;
                 $filename = $date->format('Y-m-d') . '-sales-all.csv';
@@ -50,7 +42,30 @@ class Admin_ReportsController extends Zend_Controller_Action {
     }
 
     public function subscribersAction() {
+        $request = $this->_request;
+        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $params = $request->getParams();
+        $date = new DateTime;
+        $date->sub(new DateInterval('P1D'));
+        $search_form = new Form_Admin_Report_Subscribers;
+        $this->view->search_form = $search_form;
+        $search_form->populate($params);
+        if ($request->isPost() && $search_form->isValid($params)) {
+            $users = $ops_mapper->getSubscribersReport($search_form);
+            if (count($users)) {
+                $date = new DateTime;
+                $filename = $date->format('Y-m-d') . '-apet-subscribers.csv';
+                $this->_response->setHeader('Content-Type', 'text/csv')
+                    ->setHeader('Content-Disposition',
+                        "attachment;filename=$filename");
+                $this->_admin_svc->outputReportCsv($users);
+                $this->_helper->Layout->disableLayout(); 
+                $this->_helper->ViewRenderer->setNoRender(true);
+                return;
 
+            }
+            $this->view->no_data = true;
+        }
     }
 
 
@@ -61,22 +76,19 @@ class Admin_ReportsController extends Zend_Controller_Action {
         }
         $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $params = $request->getParams();
-        $date = new DateTime;
-        $date->sub(new DateInterval('P1D'));
-        $params['start_date'] = $request->getParam('start_date',
-            $date->format('Y-m-d'));
         $search_form = new Form_Admin_Report_MailingList;
         $this->view->search_form = $search_form;
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
             $usa_users = $ops_mapper->getMailingListReport('usa',
-                $params['start_date']);
+                $search_form);
             $intl_users = $ops_mapper->getMailingListReport('intl',
-                $params['start_date']);
+                $search_form);
             if (count($usa_users) || count($intl_users)) {
                 $tmp = tempnam('tmp', 'zip');
                 $zip = new ZipArchive;
                 $zip->open($tmp, ZipArchive::OVERWRITE);
+                $date = new DateTime;
                 $date_str = $date->format('Y-m-d');
                 if (count($usa_users)) {
                     $usa_csv = $this->_admin_svc->getCsvAsString($usa_users, true);
@@ -110,7 +122,8 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $date = new DateTime;
         $date_str = $date->format('Y-m-d');
-        $users = $ops_mapper->getMailingListReport(null, $date_str);
+        $search_form = new Form_Admin_Report_MailingList;
+        $users = $ops_mapper->getMailingListReport(null, $search_form);
         if ($users) {
             $filename = "$date_str-apet-postal-mailing-list-all.csv";
             $this->_response->setHeader('Content-Type', 'text/csv')
@@ -130,18 +143,11 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $op_mapper = new Model_Mapper_OrderPayments;
         $request = $this->_request;
         $params = $request->getParams();
-        $date = new DateTime;
-        $date->sub(new DateInterval('P1D'));
-        $params['end_date'] = $request->getParam('end_date',
-            $date->format('Y-m-d'));
-        $params['start_date'] = $request->getParam('start_date',
-            $date->format('Y-m-d'));
         $search_form = new Form_Admin_Report_Transactions;
         $this->view->search_form = $search_form;
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
-            $transactions = $op_mapper->getTransactionsReport(
-                $params['start_date'], $params['end_date']);
+            $transactions = $op_mapper->getTransactionsReport($search_form);
             if (count($transactions)) {
                 $date = new DateTime;
                 $filename = $date->format('Y-m-d') .

@@ -1,2 +1,28 @@
 
-Coming soon!
+<form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="search" id="search-form">
+    <dl class="form">
+        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->getLabel(); ?></dt>
+        <dd class="date-start">
+            <?php echo $this->search_form->date_range->start_date->renderViewHelper(); ?>
+            <?php echo $this->search_form->date_range->start_date->renderErrors(); ?>
+        </dd>
+        <dt class="opt-in"><?php echo $this->search_form->subscriber_type->getLabel(); ?></dt>
+        <dd class="opt-in">
+            <?php echo $this->search_form->subscriber_type->renderViewHelper(); ?>
+            <?php echo $this->search_form->subscriber_type->renderErrors(); ?>
+        </dd>
+        <dt class="opt-in"><?php echo $this->search_form->opt_in->getLabel(); ?></dt>
+        <dd class="opt-in">
+            <?php echo $this->search_form->opt_in->renderViewHelper(); ?>
+            <?php echo $this->search_form->opt_in->renderErrors(); ?>
+        </dd>
+    </dl>
+    <p class="submit">
+        <input type="submit" value="Search">
+    </p>
+</form>
+
+<?php if ($this->no_data): ?>
+    <p class="error">No sales to show</p>
+<?php endif; ?>
+

@@ -40,16 +40,37 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
         $subquery = '(select expiration from order_product_subscriptions ' .
             'where user_id = o.user_id limit 1,1) as previous_expiration';
         $sel = $this->select()->setIntegrityCheck(false)
-            ->from(array('o' => 'orders'), array('o.*', $subquery,
-                'date_format(o.date_created, "%m-%d-%Y") as date_created'))
-            ->joinLeft(array('op' => 'order_products'),
-                        'op.order_id = o.id')
-            ->joinLeft(array('p' => 'products'), 'op.product_id = p.id',
-                        'group_concat(p.sku) as sku')
-            ->joinLeft(array('up' => 'user_profiles'), 'o.user_id = up.id',
-                array('version', 'platform', 'marketing', 'occupation'))
-            ->joinLeft(array('pro' => 'promos'), 'o.promo_id = pro.id',
-                'pro.code as promo')
+            ->from(array('o' => 'orders'), array(
+                'date_format(o.date_created, "%m-%d-%Y") as date',
+                'pro.code as promo',
+                'group_concat(p.sku) as sku',
+                'o.total',
+                'o.email',
+                'o.billing_first_name',
+                'o.billing_last_name',
+                'o.billing_address',
+                'o.billing_address_2',
+                'o.billing_city',
+                'o.billing_state',
+                'o.billing_country',
+                'o.billing_postal_code',
+                'o.shipping_address',
+                'o.shipping_address_2',
+                'o.shipping_city',
+                'o.shipping_state',
+                'o.shipping_country',
+                'o.shipping_postal_code',
+                $subquery,
+                'up.version',
+                'up.platform',
+                'up.marketing',
+                'up.occupation'
+
+            ))
+            ->joinLeft(array('op' => 'order_products'), 'op.order_id = o.id', null)
+            ->joinLeft(array('p' => 'products'), 'op.product_id = p.id', null)
+            ->joinLeft(array('up' => 'user_profiles'), 'o.user_id = up.id', null)
+            ->joinLeft(array('pro' => 'promos'), 'o.promo_id = pro.id', null)
             ->where("o.date_created between $start_date and $end_date")
             ->group('o.id')
             ->order('o.id desc');

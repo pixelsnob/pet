@@ -73,18 +73,35 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param string $region "usa", "intl" or null for all regions
-     * @param string $start_date
-     * @param string $end_date
+     * @param Form_Admin_Report_MailingList $form
      * @return Zend_Db_Table_Rowset 
      */
-    public function getMailingListReport($region = null, $start_date) {
-        $start_date = new DateTime($start_date);
+    public function getMailingListReport($region = null,
+                                         Form_Admin_Report_MailingList $form) {
+        $start_date = new DateTime($form->date_range->start_date->getValue());
         $start_date->setTime(0, 0, 0);
         $mailing_list = $this->_ops->getMailingListReport(
             $region,
             $start_date->format('Y-m-d H:i:s')
         );
         return $mailing_list;
+    }
+
+    /**
+     * @param string $start_date
+     * @param int $opt_in
+     * @param string $subscriber_type
+     * @return Zend_Db_Table_Rowset 
+     */
+    public function getSubscribersReport(Form_Admin_Report_Subscribers $form) {
+        $start_date = new DateTime($form->date_range->start_date->getValue());
+        $start_date->setTime(0, 0, 0);
+        $subscribers = $this->_ops->getSubscribersReport(
+            $start_date->format('Y-m-d H:i:s'),
+            $form->opt_in->getValue(),
+            $form->subscriber_type->getValue()
+        );
+        return $subscribers;
     }
 
     /**

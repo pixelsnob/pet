@@ -5,6 +5,14 @@ body, html {
     font: 13px/14px Verdana, sans-serif;
 }
 
+a:link, a:visited {
+    color: #5267AA;
+}
+
+a:hover {
+    color: #6D81C2;
+}
+
 h1 {
     font-size: 20px !important;
     text-transform: none;
@@ -69,13 +77,15 @@ li {
 
 .admin-table {
     margin: 5px 0 15px 0;    
+    border-collapse: separate;
+    border-spacing: 3px;
 }
 
 .admin-table th, .admin-table td {
     padding: 6px;
     text-align: left;
     white-space: nowrap;
-    border-spacing: 5px 5px;
+    margin: 5px !important;
 }
 
 .admin-table th {
@@ -203,3 +213,42 @@ li {
     width: 200px;
 }
 
+.table-list {
+    margin: 0;
+    padding: 0;
+}
+
+.table-list li {
+    list-style: none;
+}
+
+.table-list li.table-list-group {
+    padding: 0;
+    margin: 0 3px 0 0;
+    display: block;
+    float: left;
+    width: 250px;
+}
+
+.table-list h3 {
+    margin: 0;
+    padding: 6px;
+    text-transform: none;
+    background: #ddd;
+}
+
+.table-list li ul {
+    padding: 0;
+    margin: 0;
+}
+
+.table-list li li {
+    padding: 6px;
+    background: #f4f4f4;
+    margin: 3px 0;
+
+}
+
+.table-list h3, .table-list li li {
+    text-align: center;
+}

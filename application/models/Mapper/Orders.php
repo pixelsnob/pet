@@ -104,15 +104,14 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
     }
     
     /**
-     * @param string $start_date
-     * @param string $end_date
+     * @param Form_Admin_Report_Sales $form
      * @return Zend_Db_Table_Rowset 
      * 
      */
-    public function getSalesReport($start_date, $end_date) {
-        $start_date = new DateTime($start_date);
+    public function getSalesReport(Form_Admin_Report_Sales $form) {
+        $start_date = new DateTime($form->date_range->start_date->getValue());
         $start_date->setTime(0, 0, 0);
-        $end_date = new DateTime($end_date);
+        $end_date = new DateTime($form->date_range->end_date->getValue());
         $end_date->setTime(23, 59, 59);
         $orders = $this->_orders->getSalesReport(
             $start_date->format('Y-m-d H:i:s'),

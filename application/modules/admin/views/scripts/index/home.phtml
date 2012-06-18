@@ -1,0 +1,29 @@
+
+<div id="home">
+    <ul class="table-list">
+        <li class="table-list-group">
+            <h3>Sales</h3>
+            <ul>
+                <li><a href="<?php echo $this->url(array('controller' => 'orders', 'action' => 'index')); ?>">Order Lookup</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'payments', 'action' => 'index')); ?>">Payments</a></li>
+                <li><a href="#">Promo List</a></li>
+                <li><a href="#">Shipping Zones</a></li>
+            </ul>
+        </li>
+        <li class="table-list-group">
+            <h3>Customers</h3>
+            <ul>
+                <li><a href="<?php echo $this->url(array('controller' => 'users', 'action' => 'index')); ?>">Customer Lookup</a></li>
+            </ul>
+        </li>
+        <li class="table-list-group">
+            <h3>Reports</h3>
+            <ul>
+                <li><a href="<?php echo $this->url(array('controller' => 'reports', 'action' => 'sales')); ?>">Sales &ndash; All</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'reports', 'action' => 'subscribers')); ?>">Subscribers &ndash; Email</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'reports', 'action' => 'mailing-list')); ?>">Subscribers &ndash; Postal</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'reports', 'action' => 'transactions')); ?>">Transactions &ndash; Viewpoint</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
