@@ -6,6 +6,12 @@
             <?php echo $this->search_form->date_range->start_date->renderViewHelper(); ?>
             <?php echo $this->search_form->date_range->start_date->renderErrors(); ?>
         </dd>
+        <dt class="date-end"><?php echo $this->search_form->date_range->end_date->getLabel(); ?></dt>
+        <dd class="date-end">
+            <?php echo $this->search_form->date_range->end_date->renderViewHelper(); ?>
+            <?php echo $this->search_form->date_range->end_date->renderErrors(); ?>
+        </dd>
+
         <dt class="opt-in"><?php echo $this->search_form->subscriber_type->getLabel(); ?></dt>
         <dd class="opt-in">
             <?php echo $this->search_form->subscriber_type->renderViewHelper(); ?>
@@ -15,6 +21,11 @@
         <dd class="opt-in">
             <?php echo $this->search_form->opt_in->renderViewHelper(); ?>
             <?php echo $this->search_form->opt_in->renderErrors(); ?>
+        </dd>
+        <dt class="opt-in-partner"><?php echo $this->search_form->opt_in_partner->getLabel(); ?></dt>
+        <dd class="opt-in-partner">
+            <?php echo $this->search_form->opt_in_partner->renderViewHelper(); ?>
+            <?php echo $this->search_form->opt_in_partner->renderErrors(); ?>
         </dd>
     </dl>
     <p class="submit">

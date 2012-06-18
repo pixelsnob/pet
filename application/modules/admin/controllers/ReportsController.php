@@ -66,6 +66,8 @@ class Admin_ReportsController extends Zend_Controller_Action {
             }
             $this->view->no_data = true;
         }
+        $this->view->inlineScriptMin()
+            ->appendScript("Pet.loadView('Admin');");
     }
 
 

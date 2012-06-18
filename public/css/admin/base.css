@@ -65,6 +65,10 @@ li {
     padding: 0;
 }
 
+input.checkbox {
+    width: auto;
+}
+
 #content-wrap {
     width: 1100px;
 }

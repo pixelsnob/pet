@@ -104,15 +104,13 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
     }
 
     /**
-     * @param string $start_date
-     * @param int $opt_in
-     * @param $subscriber_type
+     * @param array $params
      * @return Zend_Db_Table_Rowset
      * 
      */
-    public function getSubscribersReport($start_date, $opt_in, $subscriber_type = null) {
+    public function getSubscribersReport($params) {
         $db = $this->getAdapter();
-        $start_date = $db->quote($start_date);
+        $start_date = $db->quote($params['start_date']);
         $subquery = 'select max(expiration) from order_product_subscriptions ' .
             "where user_id = ops.user_id and expiration > $start_date";
         $sel = $this->select()->setIntegrityCheck(false)
@@ -135,9 +133,10 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             ->where('ops.digital_only = 0')
             ->order('ops.expiration')
             ->group('ops.user_id');
-        if ($opt_in == 'apet') {
+        if (isset($params['opt_in']) && $params['opt_in']) {
             $sel->where('up.opt_in = 1');
-        } elseif ($opt_in == 'sponsor') {
+        }
+        if (isset($params['opt_in_partner']) && $params['opt_in_partner']) {
             $sel->where('up.opt_in_partner = 1');
         }
         return $this->fetchAll($sel);

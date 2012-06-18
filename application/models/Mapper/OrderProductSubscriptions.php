@@ -96,11 +96,14 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
     public function getSubscribersReport(Form_Admin_Report_Subscribers $form) {
         $start_date = new DateTime($form->date_range->start_date->getValue());
         $start_date->setTime(0, 0, 0);
-        $subscribers = $this->_ops->getSubscribersReport(
-            $start_date->format('Y-m-d H:i:s'),
-            $form->opt_in->getValue(),
-            $form->subscriber_type->getValue()
-        );
+        $end_date = new DateTime($form->date_range->end_date->getValue());
+        $end_date->setTime(23, 59, 59);
+        $subscribers = $this->_ops->getSubscribersReport(array(
+            'start_date'     => $start_date->format('Y-m-d H:i:s'),
+            'end_date'       => $end_date->format('Y-m-d H:i:s'),
+            'opt_in'         => $form->opt_in->getValue(),
+            'opt_in_partner' => $form->opt_in_partner->getValue()
+        ));
         return $subscribers;
     }
 
