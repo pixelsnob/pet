@@ -91,11 +91,11 @@ class Admin_ReportsController extends Zend_Controller_Action {
                 $date = new DateTime;
                 $date_str = $date->format('Y-m-d');
                 if (count($usa_users)) {
-                    $usa_csv = $this->_admin_svc->getCsvAsString($usa_users, true);
+                    $usa_csv = $this->_admin_svc->getCsvAsString($usa_users);
                     $zip->addFromString("$date_str-usa.csv", $usa_csv);
                 }
                 if (count($intl_users)) {
-                    $intl_csv = $this->_admin_svc->getCsvAsString($intl_users, true);
+                    $intl_csv = $this->_admin_svc->getCsvAsString($intl_users);
                     $date = new DateTime;
                     $date = $date->format('Y-m-d');
                     $zip->addFromString("$date_str-intl.csv", $intl_csv);

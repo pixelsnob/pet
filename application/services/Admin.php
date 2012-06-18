@@ -72,11 +72,8 @@ class Service_Admin {
      * @return void
      * 
      */
-    public function getCsvAsString($data, $caps = false) {
+    public function getCsvAsString($data) {
         $fp = fopen('php://temp/maxmemory:'. (12 * 1024 * 1024), 'r+');
-        if ($caps) {
-            stream_filter_append($fp, 'string.toupper', STREAM_FILTER_WRITE);
-        }
         $header = array_keys($data[0]->toArray());
         fputcsv($fp, $header);
         foreach ($data as $row) {
