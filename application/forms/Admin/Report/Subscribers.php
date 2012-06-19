@@ -29,7 +29,9 @@ class Form_Admin_Report_Subscribers extends Pet_Form {
         ))->addElement('select', 'subscriber_type', array(
             'label' => 'Subscribers',
             'multiOptions' => array(
-                'all' => 'All'
+                'all' => 'All',
+                'premium' => 'Premium Subscription',
+                'digital_only' => 'Digital Only'
             ),
             'required' => true
         ));
