@@ -82,7 +82,7 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         $start_date->setTime(0, 0, 0);
         $mailing_list = $this->_ops->getMailingListReport(
             $region,
-            $start_date->format('Y-m-d H:i:s')
+            $start_date->format('Y-m-d')
         );
         return $mailing_list;
     }
@@ -99,8 +99,8 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         $end_date = new DateTime($form->date_range->end_date->getValue());
         $end_date->setTime(23, 59, 59);
         $subscribers = $this->_ops->getSubscribersReport(array(
-            'start_date'      => $start_date->format('Y-m-d H:i:s'),
-            'end_date'        => $end_date->format('Y-m-d H:i:s'),
+            'start_date'      => $start_date->format('Y-m-d'),
+            'end_date'        => $end_date->format('Y-m-d'),
             'opt_in'          => $form->opt_in->getValue(),
             'opt_in_partner'  => $form->opt_in_partner->getValue(),
             'subscriber_type' => $form->subscriber_type->getValue()

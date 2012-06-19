@@ -79,8 +79,7 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             'where user_id = ops.user_id';     // and expiration > $start_date";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
-                //'date_format(ops.expiration, "%m/%Y") as EXPIRATION',
-                'ops.expiration as EXPIRATION',
+                'date_format(ops.expiration, "%m/%Y") as EXPIRATION',
                 'upper(up.shipping_first_name) as FIRST_NAME_SHIPPING',
                 'upper(up.shipping_last_name) as LAST_NAME_SHIPPING',
                 'upper(up.shipping_company) as COMPANY_SHIPPING',
@@ -95,7 +94,7 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             ->where("ops.expiration = ($subquery)")
             ->where('ops.digital_only = 0')
             ->order('ops.expiration')
-            ->having("EXPIRATION > $start_date")
+            ->where("ops.expiration >= $start_date")
             ->group('ops.user_id');
         if ($region == 'usa') {
             $sel->where("up.shipping_country = 'USA'");
@@ -118,8 +117,8 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             "where user_id = ops.user_id";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
-                //'date_format(ops.expiration, "%m/%Y") as expiration',
-                'ops.expiration',
+                'date_format(ops.expiration, "%m/%Y") as expiration',
+                //'ops.expiration',
                 'u.email',
                 'up.shipping_first_name',
                 'up.shipping_last_name',
@@ -136,8 +135,9 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             ->joinleft(array('u' => 'users'), 'ops.user_id = u.id', null)
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where("ops.expiration = ($subquery)")
+            //->having("expiration between $start_date and $end_date")
+            ->where("ops.expiration between $start_date and $end_date")
             ->order('ops.expiration')
-            ->having("expiration between $start_date and $end_date")
             ->group('ops.user_id');
         if (isset($params['opt_in']) && $params['opt_in']) {
             $sel->where('up.opt_in = 1');
