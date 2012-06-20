@@ -76,7 +76,7 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
         $db = $this->getAdapter();
         $start_date = $db->quote($start_date);
         $subquery = 'select max(expiration) from order_product_subscriptions ' .
-            "where user_id = ops.user_id and expiration > $start_date";
+            'where user_id = ops.user_id';     // and expiration > $start_date";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
                 'date_format(ops.expiration, "%m/%Y") as EXPIRATION',
@@ -94,6 +94,7 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             ->where("ops.expiration = ($subquery)")
             ->where('ops.digital_only = 0')
             ->order('ops.expiration')
+            ->where("ops.expiration >= $start_date")
             ->group('ops.user_id');
         if ($region == 'usa') {
             $sel->where("up.shipping_country = 'USA'");
@@ -111,11 +112,13 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
     public function getSubscribersReport($params) {
         $db = $this->getAdapter();
         $start_date = $db->quote($params['start_date']);
+        $end_date = $db->quote($params['end_date']);
         $subquery = 'select max(expiration) from order_product_subscriptions ' .
-            "where user_id = ops.user_id and expiration > $start_date";
+            "where user_id = ops.user_id";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
                 'date_format(ops.expiration, "%m/%Y") as expiration',
+                //'ops.expiration',
                 'u.email',
                 'up.shipping_first_name',
                 'up.shipping_last_name',
@@ -125,12 +128,15 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
                 'up.shipping_state',
                 'up.shipping_postal_code',
                 'up.version',
-                'up.marketing'
+                'up.marketing',
+                'up.opt_in',
+                'up.opt_in_partner'
             ))
             ->joinleft(array('u' => 'users'), 'ops.user_id = u.id', null)
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where("ops.expiration = ($subquery)")
-            ->where('ops.digital_only = 0')
+            //->having("expiration between $start_date and $end_date")
+            ->where("ops.expiration between $start_date and $end_date")
             ->order('ops.expiration')
             ->group('ops.user_id');
         if (isset($params['opt_in']) && $params['opt_in']) {
@@ -138,6 +144,13 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
         }
         if (isset($params['opt_in_partner']) && $params['opt_in_partner']) {
             $sel->where('up.opt_in_partner = 1');
+        }
+        $sub_type = (isset($params['subscriber_type']) ?
+            $params['subscriber_type'] : null);
+        if ($sub_type == 'premium') {
+            $sel->where('ops.digital_only = 0');
+        } elseif ($sub_type == 'digital_only') {
+            $sel->where('ops.digital_only = 1');
         }
         return $this->fetchAll($sel);
     }
