@@ -156,6 +156,11 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         return $this->_users->update(array(
             'last_login' => date('Y-m-d H:i:s', time())), $id);
     }
+    
+    public function update(array $data, $id) {
+        $user = new Model_User($data);
+        return $this->_users->update($user->toArray(), $id);
+    }
 
     /**
      * @param array $data

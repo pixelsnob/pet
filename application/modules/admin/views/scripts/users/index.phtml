@@ -20,6 +20,11 @@ if ($this->orders) {
             'format'  => 'link',
             'label'   => 'View',
             'url'     => '/admin/users/detail/id'
+        ),
+        'edit'        => array(
+            'format'  => 'link',
+            'label'   => 'Edit',
+            'url'     => '/admin/users/edit/id'
         )
     ), $this->orders, $this->params, array('sortable' => true));
     echo $pagination;

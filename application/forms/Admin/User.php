@@ -3,7 +3,7 @@
  * User profile form
  * 
  */
-class Form_UserProfile extends Pet_Form {
+class Form_Admin_User extends Pet_Form {
     
     /**
      * @var Model_User 
@@ -16,18 +16,6 @@ class Form_UserProfile extends Pet_Form {
      * 
      */
     protected $_mapper;
-
-    /**
-     * @var array
-     * 
-     */
-    protected $_countries;
-
-    /**
-     * @var array
-     * 
-     */
-    protected $_states;
 
     /**
      * @param Model_User $identity
@@ -46,44 +34,41 @@ class Form_UserProfile extends Pet_Form {
     }
 
     /**
-     * @param array $countries
-     * @return void
-     */
-    public function setCountries(array $countries) {
-        $this->_countries = $countries;
-    }
-
-    /**
-     * @param array $countries
-     * @return void
-     */
-    public function setStates(array $states) {
-        $this->_states = $states;
-    }
-
-    /**
      * @return void
      * 
      */
     public function init() {
         parent::init();
+        $states = new Zend_Config(require APPLICATION_PATH .
+            '/configs/states.php');
+        $states = $states->toArray();
+        $countries = new Zend_Config(require APPLICATION_PATH .
+            '/configs/countries.php');
+        $countries = $countries->toArray();
         $user_form = new Form_SubForm_User(array(
             'mapper' => $this->_mapper,
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
         $billing_form = new Form_SubForm_Billing(array(
-            'countries' => $this->_countries,
-            'states'    => $this->_states
+            'countries' => $countries,
+            'states'    => $states
         ));
         $this->addSubform($billing_form, 'billing');
         $shipping_form = new Form_SubForm_Shipping(array(
-            'countries' => $this->_countries,
-            'states'    => $this->_states
+            'countries' => $countries,
+            'states'    => $states
         ));
         $this->addSubform($shipping_form, 'shipping');
         $this->addSubform(new Form_SubForm_UserInfo, 'info');
+        // Username
+        $this->addElement('text', 'expiration', array(
+            'label' => 'Expiration',
+            'required' => false,
+            'validators'   => array(
+                array('Date', true, array(
+                    'messages' => 'Invalid date'
+                ))
+            )));
     }
-
 }
-

@@ -45,7 +45,7 @@ class Form_SubForm_Billing extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your address'
+                    'messages' => 'Address is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 128,
@@ -81,7 +81,7 @@ class Form_SubForm_Billing extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your city'
+                    'messages' => 'City is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,
@@ -95,7 +95,7 @@ class Form_SubForm_Billing extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your state'
+                    'messages' => 'State is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 2,
@@ -109,7 +109,7 @@ class Form_SubForm_Billing extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your postal code'
+                    'messages' => 'Postal code is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 30,
@@ -123,7 +123,7 @@ class Form_SubForm_Billing extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please select your country'
+                    'messages' => 'Country is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,

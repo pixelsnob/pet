@@ -1,5 +1,5 @@
 
-<div id="users-edit">
+<div id="user-edit">
     <?php echo $this->flashMessenger($this->messages); ?>
     <form action="<?php echo $this->profile_form->getAction(); ?>" method="<?php echo $this->profile_form->getMethod(); ?>" name="<?php echo $this->profile_form->getName(); ?>">
         <div class="admin-form-left">
@@ -16,12 +16,27 @@
                         <?php echo $this->profile_form->user->email->renderViewHelper(); ?>
                         <?php echo $this->profile_form->user->email->renderErrors(); ?>
                     </dd>
+                    <dt><?php echo $this->profile_form->expiration->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->expiration->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->expiration->renderErrors(); ?>
+                    </dd>
                 </dl>
-                <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>
+                <!--<p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>-->
             </fieldset>
             <fieldset class="billing">
                 <legend>Billing Information</legend>
                 <dl class="form">
+                    <dt><?php echo $this->profile_form->user->first_name->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->user->first_name->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->user->first_name->renderErrors(); ?>
+                    </dd>
+                    <dt><?php echo $this->profile_form->user->last_name->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->user->last_name->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->user->last_name->renderErrors(); ?>
+                    </dd>
                     <?php foreach ($this->profile_form->billing as $el): ?>
                         <dt><?php echo $el->renderLabel(); ?></dt>
                         <dd>

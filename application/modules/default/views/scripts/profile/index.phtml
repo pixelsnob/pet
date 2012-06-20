@@ -30,6 +30,16 @@
             <fieldset class="billing">
                 <legend>Billing Information</legend>
                 <dl class="form">
+                    <dt><?php echo $this->profile_form->user->first_name->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->user->first_name->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->user->first_name->renderErrors(); ?>
+                    </dd>
+                    <dt><?php echo $this->profile_form->user->last_name->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->user->last_name->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->user->last_name->renderErrors(); ?>
+                    </dd>
                     <?php foreach ($this->profile_form->billing as $el): ?>
                         <dt><?php echo $el->renderLabel(); ?></dt>
                         <dd>

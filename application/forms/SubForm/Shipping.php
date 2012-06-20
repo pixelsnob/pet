@@ -46,11 +46,11 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your first name'
+                    'messages' => 'First name is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 30,
-                    'messages' => 'Username must be %max% characters or less'
+                    'messages' => 'First name must be %max% characters or less'
                 ))
             )
         // Ship last name
@@ -60,7 +60,7 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your last name'
+                    'messages' => 'Last name is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 30,
@@ -74,7 +74,7 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your address'
+                    'messages' => 'Address is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 128,
@@ -110,7 +110,7 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your city'
+                    'messages' => 'City is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,
@@ -124,7 +124,7 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your state'
+                    'messages' => 'State is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 2,
@@ -138,7 +138,7 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your postal code'
+                    'messages' => 'Postal code is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 30,
@@ -152,7 +152,7 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please select your country'
+                    'messages' => 'Country is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,
@@ -183,13 +183,13 @@ class Form_SubForm_Shipping extends Zend_Form_SubForm {
     }
 
     public function isValid($data) {
-        $use_shipping = (isset($data['use_shipping']) ?
+        /*$use_shipping = (isset($data['use_shipping']) ?
             $data['use_shipping'] : '');
         if (!$use_shipping) {
             foreach ($this as $field) {
                 $field->clearValidators();
             }
-        }
+        }*/
         return parent::isValid($data);
     }
 }

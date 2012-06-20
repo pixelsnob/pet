@@ -54,6 +54,29 @@ class Admin_UsersController extends Zend_Controller_Action {
     }
 
     public function editAction() {
-        $this->view->profile_form = $this->_users_svc->getProfileForm(); 
+        $orders_mapper = new Model_Mapper_Orders;
+        $users_mapper = new Model_Mapper_Users;
+        $profiles_mapper = new Model_Mapper_UserProfiles;
+        $id = $this->_request->getParam('id');
+        if (!$id) {
+            throw new Exception('User id was not supplied');
+        }
+        $user = $users_mapper->getById($id);
+        $profile = $profiles_mapper->getByUserId($id);
+        if (!$user || !$profile) {
+            throw new Exception('User or user profile not found');
+        }
+        $params = $this->_request->getParams();
+        $form = new Form_Admin_User(array(
+            'identity' => $user,
+            'mapper'   => $users_mapper
+        ));
+        $form->populate(array_merge($user->toArray(), $profile->toArray()));
+        $this->view->profile_form = $form; 
+        if ($this->_request->isPost() && $form->isValid($params)) {
+            $users_mapper->updatePersonal($params, $id);
+            $profiles_mapper->updateByUserId($params, $id);
+            
+        }
     }
 }

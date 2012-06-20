@@ -64,7 +64,7 @@ class Form_SubForm_User extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your email address'
+                    'messages' => 'Email address is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 75,
@@ -80,7 +80,7 @@ class Form_SubForm_User extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your first name'
+                    'messages' => 'First name is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,
@@ -93,7 +93,7 @@ class Form_SubForm_User extends Zend_Form_SubForm {
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your last name'
+                    'messages' => 'Last name is required'
                 )),
                 array('StringLength', true, array(
                     'max' => 50,
