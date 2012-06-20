@@ -117,6 +117,20 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         $ops_model = new Model_OrderProductSubscription($data);
         $this->_ops->insert($ops_model->toArray());
     }
+
+    /**
+     * @param int $id
+     * @param array $data
+     * @return int Num cols updated
+     * 
+     */
+    public function update(array $data, $id) {
+        $ops_model = new Model_OrderProductSubscription($data);
+        $ops_array = $ops_model->toArray();
+        unset($ops_array['id']);
+        $this->_ops->update($ops_array, $id);
+    }
+    
     
 
 }

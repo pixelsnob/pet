@@ -21,6 +21,11 @@
                         <?php echo $this->profile_form->expiration->renderViewHelper(); ?>
                         <?php echo $this->profile_form->expiration->renderErrors(); ?>
                     </dd>
+                    <dt><?php echo $this->profile_form->digital_only->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->digital_only->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->digital_only->renderErrors(); ?>
+                    </dd>
                 </dl>
                 <!--<p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>-->
             </fieldset>
@@ -87,6 +92,6 @@
                 </dl>
             </fieldset>
         </div>
-            <p class="update"><input type="submit" value="Update" id="update-submit"></p>
+        <p class="update clear"><input type="submit" value="Update" id="update-submit"></p>
     </form>
 </div>

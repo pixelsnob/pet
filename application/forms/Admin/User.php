@@ -69,6 +69,11 @@ class Form_Admin_User extends Pet_Form {
                 array('Date', true, array(
                     'messages' => 'Invalid date'
                 ))
-            )));
+            )
+        ))->addElement('checkbox', 'digital_only', array(
+            'label' => 'Digital only',
+            'required' => false,
+            'class' => 'checkbox'
+        ));
     }
 }
