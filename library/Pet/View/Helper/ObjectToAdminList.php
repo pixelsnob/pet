@@ -39,6 +39,9 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
                         $date = new DateTime($data->$i);
                         $value = $date->format('M j, Y');
                         break;
+                    case 'email':
+                        $value = "<a href=\"mailto:$value\">$value</a>";
+                        break;
                 }
             }
             $out .= "<dt>{$title}:</dt>\n";

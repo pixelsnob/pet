@@ -169,6 +169,7 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         $user->date_joined = date('Y-m-d H:i:s');
         $user_array = $user->toArray();
         unset($user_array['id']);
+        $user_array['is_superuser'] = 0;
         return $this->_users->insert($user_array);
     }
 }

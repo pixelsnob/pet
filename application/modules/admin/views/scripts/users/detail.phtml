@@ -1,11 +1,11 @@
 
 <div id="user-detail">
-    <h2>User #<?php echo $this->escape($this->user->id); ?></h2>
-
+    <p><a href="<?php echo $this->serverUrl($this->url(array('action' => 'edit', 'id' => $this->user->id))); ?>">Edit this user</a></p>
     <section class="admin-list-left">
         <?php echo $this->objectToAdminList(array(
+            'id'          => array('title' => 'User ID'),
             'username',
-            'email',
+            'email'       => array('format' => 'email'),
             'date_joined' => array('format' => 'datetime'),
             'last_login'  => array('format' => 'datetime'),
         ), $this->user); ?>

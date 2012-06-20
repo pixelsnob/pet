@@ -70,6 +70,7 @@ class Admin_UsersController extends Zend_Controller_Action {
         if (!$user || !$profile) {
             throw new Exception('User or user profile not found');
         }
+        $this->view->user = $user;
         $form = new Form_Admin_User(array(
             'identity' => $user,
             'mapper'   => $this->_users_mapper
@@ -82,14 +83,15 @@ class Admin_UsersController extends Zend_Controller_Action {
                 'class' => 'datepicker-no-max'
             ));
             $form->digital_only->setValue($exp->digital_only);
+            $this->view->show_expiration_fields = true;
         }
         // Populate form
         $form->populate(array_merge($user->toArray(), $profile->toArray()));
         if ($this->_request->isPost() && $form->isValid($params)) {
             // Update
+            $db->query('set transaction isolation level serializable');
+            $db->beginTransaction();
             try {
-                $db->query('set transaction isolation level serializable');
-                $db->beginTransaction();
                 $this->_users_mapper->updatePersonal($params, $id);
                 $profiles_mapper->updateByUserId($params, $id);
                 $form_exp = $form->expiration->getValue();
@@ -108,13 +110,16 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $db->commit();
                 $this->_helper->FlashMessenger->addMessage('User updated');
             } catch (Exception $e) {
+                $db->rollBack();
                 $this->_helper->FlashMessenger->addMessage(
                     'An error occurred while attempting to update');
             }
-            $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
+            $this->view->messages = $this->_helper->FlashMessenger
+                ->getCurrentMessages();
         }
         if ($this->_request->isGet()) {
-            $this->view->messages = $this->_helper->FlashMessenger->getMessages();
+            $this->view->messages = $this->_helper->FlashMessenger
+                ->getMessages();
         }
         $this->view->profile_form = $form; 
         $this->_helper->ViewRenderer->render('form');
@@ -128,14 +133,13 @@ class Admin_UsersController extends Zend_Controller_Action {
         $profiles_mapper = new Model_Mapper_UserProfiles;
         $form = new Form_Admin_User(array('mapper' => $this->_users_mapper));
         $form->user->setIsArray(false)->addPasswordFields();
-        /*echo '<pre>';
-        print_r($params);
-        echo '</pre>';*/
         $this->view->show_pw_fields = true;
         if ($this->_request->isPost() && $form->isValid($params)) {
+            $db->query('set transaction isolation level serializable');
+            $db->beginTransaction();
             try {
-                $db->query('set transaction isolation level serializable');
-                $db->beginTransaction();
+                $params['password'] = $this->_users_svc->generateHash(
+                    $params['password']);
                 $params['user_id'] = $this->_users_mapper->insert($params);
                 $profiles_mapper->insert($params);
                 $db->commit();
@@ -144,9 +148,10 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $this->_helper->Redirector->gotoSimple('edit', 'users', 'admin',
                     array('id' => $params['user_id']));
             } catch (Exception $e) {
+                $db->rollBack();
+                print_r($e); exit;
                 $this->_helper->FlashMessenger->addMessage(
                     'An error occurred while attempting to add user');
-                print_r($e); exit;
             }
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }

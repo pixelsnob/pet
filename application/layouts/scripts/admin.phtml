@@ -37,6 +37,10 @@ echo $this->headLink()
                 <?php echo $this->navigation()->menu()->renderMenu(); ?>
             </nav>
         <?php endif; ?>
+        <div id="breadcrumbs">
+            <?php echo $this->navigation()->breadcrumbs()->setLinkLast(false); ?>
+
+        </div>
         <div id="content">
             <?php echo $this->layout()->content; ?>
         </div>

@@ -28,6 +28,7 @@
                         <?php echo $this->profile_form->user->confirm_password->renderErrors(); ?>
                     </dd>
                     <?php endif; ?>
+                    <?php if ($this->show_expiration_fields): ?>
                     <dt><?php echo $this->profile_form->expiration->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->profile_form->expiration->renderViewHelper(); ?>
@@ -38,6 +39,7 @@
                         <?php echo $this->profile_form->digital_only->renderViewHelper(); ?>
                         <?php echo $this->profile_form->digital_only->renderErrors(); ?>
                     </dd>
+                    <?php endif; ?>
                 </dl>
                 <!--<p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>-->
             </fieldset>

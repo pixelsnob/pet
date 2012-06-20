@@ -12,6 +12,26 @@
             <controller>users</controller>
             <action>index</action>
             <module>admin</module>
+            <pages>
+                <users_add>
+                    <label>New User</label>
+                    <controller>users</controller>
+                    <action>add</action>
+                    <module>admin</module>
+                </users_add>
+                <users_edit class="hide">
+                    <label>Edit User</label>
+                    <controller>users</controller>
+                    <action>edit</action>
+                    <module>admin</module>
+                </users_edit>
+                <users_detail class="hide">
+                    <label>User Detail</label>
+                    <controller>users</controller>
+                    <action>detail</action>
+                    <module>admin</module>
+                </users_detail>
+            </pages>
         </users>
         <payments>
             <label>Payments</label>
