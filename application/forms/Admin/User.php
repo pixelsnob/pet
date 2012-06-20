@@ -60,6 +60,10 @@ class Form_Admin_User extends Pet_Form {
             'states'    => $states
         ));
         $this->addSubform($shipping_form, 'shipping');
+        // Remove "not empty" validators
+        foreach ($this->shipping as $el) {
+            $el->removeValidator('NotEmpty')->setRequired(false);
+        }
         $this->addSubform(new Form_SubForm_UserInfo, 'info');
         // Username
         $this->addElement('text', 'expiration', array(

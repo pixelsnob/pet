@@ -16,6 +16,18 @@
                         <?php echo $this->profile_form->user->email->renderViewHelper(); ?>
                         <?php echo $this->profile_form->user->email->renderErrors(); ?>
                     </dd>
+                    <?php if ($this->show_pw_fields): ?>
+                    <dt><?php echo $this->profile_form->user->password->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->user->password->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->user->password->renderErrors(); ?>
+                    </dd>
+                    <dt><?php echo $this->profile_form->user->confirm_password->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->profile_form->user->confirm_password->renderViewHelper(); ?>
+                        <?php echo $this->profile_form->user->confirm_password->renderErrors(); ?>
+                    </dd>
+                    <?php endif; ?>
                     <dt><?php echo $this->profile_form->expiration->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->profile_form->expiration->renderViewHelper(); ?>

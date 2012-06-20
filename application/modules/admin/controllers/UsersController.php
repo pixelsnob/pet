@@ -55,8 +55,10 @@ class Admin_UsersController extends Zend_Controller_Action {
     }
 
     public function editAction() {
+        $db = Zend_Db_Table::getDefaultAdapter();
         $params = $this->_request->getParams();
         $orders_mapper = new Model_Mapper_Orders;
+        $profiles_mapper = new Model_Mapper_UserProfiles;
         $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $id = $this->_request->getParam('id');
         if (!$id) {
@@ -84,25 +86,73 @@ class Admin_UsersController extends Zend_Controller_Action {
         // Populate form
         $form->populate(array_merge($user->toArray(), $profile->toArray()));
         if ($this->_request->isPost() && $form->isValid($params)) {
-            $this->_users_svc->updateProfile($params, $id);
-            $form_exp = $form->expiration->getValue();
-            if ($exp && $form_exp) {
-                $ops_mapper->update(array(
-                    'expiration'   => $form_exp,
-                    'digital_only' => $form->digital_only->getValue(),
-                    'user_id' => $id
-                ), $exp->id);
-            } elseif ($form_exp) {
-                $ops_mapper->insert(array(
-                    'expiration'   => $form_exp,
-                    'digital_only' => $form->digital_only->getValue()
-                ));
+            // Update
+            try {
+                $db->query('set transaction isolation level serializable');
+                $db->beginTransaction();
+                $this->_users_mapper->updatePersonal($params, $id);
+                $profiles_mapper->updateByUserId($params, $id);
+                $form_exp = $form->expiration->getValue();
+                if ($exp && $form_exp) {
+                    $ops_mapper->update(array(
+                        'expiration'   => $form_exp,
+                        'digital_only' => $form->digital_only->getValue(),
+                        'user_id' => $id
+                    ), $exp->id);
+                } elseif ($form_exp) {
+                    $ops_mapper->insert(array(
+                        'expiration'   => $form_exp,
+                        'digital_only' => $form->digital_only->getValue()
+                    ));
+                }
+                $db->commit();
+                $this->_helper->FlashMessenger->addMessage('User updated');
+            } catch (Exception $e) {
+                $this->_helper->FlashMessenger->addMessage(
+                    'An error occurred while attempting to update');
             }
-            $this->_helper->FlashMessenger->addMessage('User updated');
+            $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
+        }
+        if ($this->_request->isGet()) {
+            $this->view->messages = $this->_helper->FlashMessenger->getMessages();
+        }
+        $this->view->profile_form = $form; 
+        $this->_helper->ViewRenderer->render('form');
+        $this->view->inlineScriptMin()
+            ->appendScript("Pet.loadView('Admin');");
+    }
+
+    public function addAction() {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $params = $this->_request->getPost();
+        $profiles_mapper = new Model_Mapper_UserProfiles;
+        $form = new Form_Admin_User(array('mapper' => $this->_users_mapper));
+        $form->user->setIsArray(false)->addPasswordFields();
+        /*echo '<pre>';
+        print_r($params);
+        echo '</pre>';*/
+        $this->view->show_pw_fields = true;
+        if ($this->_request->isPost() && $form->isValid($params)) {
+            try {
+                $db->query('set transaction isolation level serializable');
+                $db->beginTransaction();
+                $params['user_id'] = $this->_users_mapper->insert($params);
+                $profiles_mapper->insert($params);
+                $db->commit();
+                $this->_helper->FlashMessenger->addMessage(
+                    'User added');
+                $this->_helper->Redirector->gotoSimple('edit', 'users', 'admin',
+                    array('id' => $params['user_id']));
+            } catch (Exception $e) {
+                $this->_helper->FlashMessenger->addMessage(
+                    'An error occurred while attempting to add user');
+                print_r($e); exit;
+            }
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
         $this->view->profile_form = $form; 
         $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
+        $this->_helper->ViewRenderer->render('form');
     }
 }
