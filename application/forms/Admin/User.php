@@ -78,6 +78,14 @@ class Form_Admin_User extends Pet_Form {
             'label' => 'Digital only',
             'required' => false,
             'class' => 'checkbox'
+        ))->addElement('checkbox', 'is_active', array(
+            'label' => 'Active',
+            'required' => false,
+            'class' => 'checkbox',
+            'value' => 1
+        ))->addElement('submit', 'submit', array(
+            'label' => 'Update',
+            'class' => 'submit'
         ));
     }
 }

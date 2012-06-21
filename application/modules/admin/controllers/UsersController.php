@@ -93,6 +93,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             $db->beginTransaction();
             try {
                 $this->_users_mapper->updatePersonal($params, $id);
+                $this->_users_mapper->updateIsActive($form->is_active->getValue(), $id);
                 $profiles_mapper->updateByUserId($params, $id);
                 $form_exp = $form->expiration->getValue();
                 if ($exp && $form_exp) {
@@ -121,7 +122,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             $this->view->messages = $this->_helper->FlashMessenger
                 ->getMessages();
         }
-        $this->view->profile_form = $form; 
+        $this->view->user_form = $form; 
         $this->_helper->ViewRenderer->render('form');
         $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
@@ -132,6 +133,7 @@ class Admin_UsersController extends Zend_Controller_Action {
         $params = $this->_request->getPost();
         $profiles_mapper = new Model_Mapper_UserProfiles;
         $form = new Form_Admin_User(array('mapper' => $this->_users_mapper));
+        $form->submit->setLabel('Add');
         $form->user->setIsArray(false)->addPasswordFields();
         $this->view->show_pw_fields = true;
         if ($this->_request->isPost() && $form->isValid($params)) {
@@ -140,7 +142,9 @@ class Admin_UsersController extends Zend_Controller_Action {
             try {
                 $params['password'] = $this->_users_svc->generateHash(
                     $params['password']);
-                $params['user_id'] = $this->_users_mapper->insert($params);
+                //var_dump($form->is_active->getValue() == '1');
+                $params['user_id'] = $this->_users_mapper->insert($params,
+                    ($form->is_active->getValue() == '1'));
                 $profiles_mapper->insert($params);
                 $db->commit();
                 $this->_helper->FlashMessenger->addMessage(
@@ -149,13 +153,12 @@ class Admin_UsersController extends Zend_Controller_Action {
                     array('id' => $params['user_id']));
             } catch (Exception $e) {
                 $db->rollBack();
-                print_r($e); exit;
                 $this->_helper->FlashMessenger->addMessage(
                     'An error occurred while attempting to add user');
             }
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
-        $this->view->profile_form = $form; 
+        $this->view->user_form = $form; 
         $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
         $this->_helper->ViewRenderer->render('form');

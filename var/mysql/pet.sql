@@ -615,6 +615,9 @@ CREATE  TABLE IF NOT EXISTS `pet`.`user_profiles` (
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `user_profiles_ibfk_1` (`user_id` ASC) ,
+  INDEX `shipping_country` (`shipping_country` ASC) ,
+  INDEX `opt_in` (`opt_in` ASC) ,
+  INDEX `opt_in_partner` (`opt_in_partner` ASC) ,
   CONSTRAINT `user_profiles_ibfk_1`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )

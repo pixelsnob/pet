@@ -16,6 +16,12 @@ if ($this->orders) {
         'email',
         'first_name',
         'last_name',
+        'is_active'   => array(
+            'title' => 'Active',
+            'callback' => function($data) {
+                return ($data->is_active ? 'Y' : 'N');
+            }
+        ),
         'view'        => array(
             'format'  => 'link',
             'label'   => 'View',

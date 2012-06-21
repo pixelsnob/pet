@@ -129,6 +129,16 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param bool $is_active
+     * @param int $id User id
+     * @return int Num rows updated
+     */
+    public function updateIsActive($is_active, $id) {
+        $user_array = array('is_active' => $is_active);
+        return $this->_users->update($user_array, $id);
+    }
+
+    /**
      * @param string $email
      * @return int Num rows updated
      * 
