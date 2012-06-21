@@ -87,7 +87,7 @@ input.checkbox {
 .admin-table {
     margin: 5px 0 15px 0;    
     border-collapse: separate;
-    border-spacing: 3px;
+    border-spacing: 2px;
 }
 
 .admin-table th, .admin-table td {
@@ -108,6 +108,11 @@ input.checkbox {
 
 .admin-table td {
     background: #f4f4f4;
+}
+
+.admin-table td.hover {
+    background: #e9e9e9;
+    cursor: pointer;
 }
 
 .admin-table td.dollar {

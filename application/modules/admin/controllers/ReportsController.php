@@ -28,8 +28,7 @@ class Admin_ReportsController extends Zend_Controller_Action {
                 $date = new DateTime;
                 $filename = $date->format('Y-m-d') . '-sales-all.csv';
                 $this->_response->setHeader('Content-Type', 'text/csv')
-                    ->setHeader('Content-Disposition',
-                        "attachment;filename=$filename");
+                    ->setHeader('Content-Disposition', "attachment;filename=$filename");
                 $this->_admin_svc->outputReportCsv($sales);
                 $this->_helper->Layout->disableLayout(); 
                 $this->_helper->ViewRenderer->setNoRender(true);
@@ -56,8 +55,7 @@ class Admin_ReportsController extends Zend_Controller_Action {
                 $date = new DateTime;
                 $filename = $date->format('Y-m-d') . '-apet-subscribers.csv';
                 $this->_response->setHeader('Content-Type', 'text/csv')
-                    ->setHeader('Content-Disposition',
-                        "attachment;filename=$filename");
+                    ->setHeader('Content-Disposition', "attachment;filename=$filename");
                 $this->_admin_svc->outputReportCsv($users);
                 $this->_helper->Layout->disableLayout(); 
                 $this->_helper->ViewRenderer->setNoRender(true);
@@ -82,10 +80,8 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $this->view->search_form = $search_form;
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
-            $usa_users = $ops_mapper->getMailingListReport('usa',
-                $search_form);
-            $intl_users = $ops_mapper->getMailingListReport('intl',
-                $search_form);
+            $usa_users = $ops_mapper->getMailingListReport('usa', $search_form);
+            $intl_users = $ops_mapper->getMailingListReport('intl', $search_form);
             if (count($usa_users) || count($intl_users)) {
                 $tmp = tempnam('tmp', 'zip');
                 $zip = new ZipArchive;
@@ -129,8 +125,7 @@ class Admin_ReportsController extends Zend_Controller_Action {
         if ($users) {
             $filename = "$date_str-apet-postal-mailing-list-all.csv";
             $this->_response->setHeader('Content-Type', 'text/csv')
-                ->setHeader('Content-Disposition',
-                            "attachment;filename=$filename");
+                ->setHeader('Content-Disposition', "attachment;filename=$filename");
             $this->_admin_svc->outputReportCsv($users);
             $this->_helper->Layout->disableLayout(); 
             $this->_helper->ViewRenderer->setNoRender(true);
@@ -152,11 +147,9 @@ class Admin_ReportsController extends Zend_Controller_Action {
             $transactions = $op_mapper->getTransactionsReport($search_form);
             if (count($transactions)) {
                 $date = new DateTime;
-                $filename = $date->format('Y-m-d') .
-                    '-apet-transaction-report.csv';
+                $filename = $date->format('Y-m-d') . '-apet-transaction-report.csv';
                 $this->_response->setHeader('Content-Type', 'text/csv')
-                    ->setHeader('Content-Disposition',
-                        "attachment;filename=$filename");
+                    ->setHeader('Content-Disposition', "attachment;filename=$filename");
                 $this->_admin_svc->outputReportCsv($transactions);
                 $this->_helper->Layout->disableLayout(); 
                 $this->_helper->ViewRenderer->setNoRender(true);

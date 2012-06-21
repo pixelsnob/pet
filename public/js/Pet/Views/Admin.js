@@ -9,6 +9,8 @@ Pet.AdminView = Pet.View.extend({
     xhr: [], // An array of Ajax XHR objects
     
     events: {
+        'click .admin-table td': 'adminTableRowClick',
+        'hover .admin-table td': 'adminTableRowHover'
     },
     
     initialize: function() {
@@ -26,6 +28,20 @@ Pet.AdminView = Pet.View.extend({
         $('.datepicker').datepicker(opts);
         opts.maxDate = null;
         $('.datepicker-no-max').datepicker(opts);
+    },
+
+    adminTableRowClick: function(el) {
+        var href = $(el.target).parent().find('a:last').attr('href');
+        window.location.href = href;
+        return true;
+    },
+
+    adminTableRowHover: function(el) {
+        if (el.type == 'mouseenter') {
+            $(el.target).parent().find('td').addClass('hover');
+        } else {
+            $(el.target).parent().find('td').removeClass('hover');
+        }
     }
 
 });
