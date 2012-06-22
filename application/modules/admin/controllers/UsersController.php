@@ -79,8 +79,8 @@ class Admin_UsersController extends Zend_Controller_Action {
         $exp = $ops_mapper->getUnexpiredByUserId($id);
         if ($exp) {
             $form->expiration->setOptions(array(
-                'value' => $exp->expiration,
-                'class' => 'datepicker-no-max'
+                'value' => $exp->expiration
+                //'class' => 'datepicker-no-max'
             ));
             $form->digital_only->setValue($exp->digital_only);
             $this->view->show_expiration_fields = true;

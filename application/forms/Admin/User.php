@@ -69,10 +69,12 @@ class Form_Admin_User extends Pet_Form {
         $this->addElement('text', 'expiration', array(
             'label' => 'Expiration',
             'required' => false,
+            'class' => 'datepicker-min-today',
             'validators'   => array(
                 array('Date', true, array(
                     'messages' => 'Invalid date'
-                ))
+                )),
+                array(new Pet_Validate_DateNotBeforeToday, true)
             )
         ))->addElement('checkbox', 'digital_only', array(
             'label' => 'Digital only',

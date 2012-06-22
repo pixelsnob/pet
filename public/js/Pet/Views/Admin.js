@@ -17,7 +17,7 @@ Pet.AdminView = Pet.View.extend({
         var opts = { 
             dateFormat: 'yy-mm-dd',
             changeYear: true,
-            maxDate: (new Date),
+            maxDate: new Date,
             onChangeMonthYear: function(year, month, inst) {
                 var first_of_month = new Date(year, month - 1, 1);
                 $(this).val($.datepicker.formatDate('yy-mm-dd',
@@ -28,6 +28,8 @@ Pet.AdminView = Pet.View.extend({
         $('.datepicker').datepicker(opts);
         opts.maxDate = null;
         $('.datepicker-no-max').datepicker(opts);
+        opts.minDate = new Date;
+        $('.datepicker-min-today').datepicker(opts);
     },
 
     adminTableRowClick: function(el) {
