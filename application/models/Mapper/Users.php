@@ -26,10 +26,11 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param string $username
+     * @param bool $is_superuser
      * @return void|Model_User
      */
-    public function getActiveByUsername($username) {
-        $user = $this->_users->getActiveByUsername($username);
+    public function getActiveByUsername($username, $is_superuser = false) {
+        $user = $this->_users->getActiveByUsername($username, $is_superuser);
         if ($user) {
             return new Model_User($user->toArray());
         }

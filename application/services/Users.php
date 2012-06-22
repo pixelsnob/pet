@@ -21,18 +21,19 @@ class Service_Users extends Pet_Service {
     }
 
     /**
-     * @param $data Username and password, etc.
+     * @param array $data Username and password, etc.
+     * @param bool $is_superuser 
      * @return bool Auth status
      * 
      * 
      */
-    public function login($data) {
+    public function login($data, $is_superuser = false) {
         $config = Zend_Registry::get('app_config');
         $username = (isset($data['username']) ? $data['username'] : '');
         $password = (isset($data['password']) ? $data['password'] : '');
         $auth_session = new Zend_Session_Namespace('Zend_Auth');
         $auth_session->timestamp = time();
-        $auth_adapter = new Pet_Auth_Adapter($username, $password);
+        $auth_adapter = new Pet_Auth_Adapter($username, $password, $is_superuser);
         $auth = Zend_Auth::getInstance();
         Zend_Session::regenerateId();
         return $auth->authenticate($auth_adapter)->isValid();
@@ -88,11 +89,13 @@ class Service_Users extends Pet_Service {
     }
 
     /**
+     * @param string $username
+     * @param bool $is_superuser
      * @return Model_User
      * 
      */
-    public function getActiveUserByUsername($username) {
-        return $this->_users->getActiveByUsername($username); 
+    public function getActiveUserByUsername($username, $is_superuser = false) {
+        return $this->_users->getActiveByUsername($username, $is_superuser); 
     }
     
     /**

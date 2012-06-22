@@ -46,7 +46,9 @@
                         <?php echo $this->user_form->is_active->renderErrors(); ?>
                     </dd>
                 </dl>
-                <!--<p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>-->
+                <?php if (!$this->show_pw_fields): ?>
+                    <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array('action' => 'change-password'))); ?>">Change password</a></p>
+                <?php endif; ?>
             </fieldset>
             <fieldset class="billing">
                 <legend>Billing Information</legend>
@@ -74,6 +76,7 @@
         <div class="admin-form-right">
             <fieldset class="shipping">
                 <legend>Shipping Information</legend>
+                <p><a href="#" id="billing-to-shipping">Copy billing to shipping</a></p>
                 <dl class="form">
                     <?php foreach ($this->user_form->shipping as $el): ?>
                         <dt><?php echo $el->renderLabel(); ?></dt>

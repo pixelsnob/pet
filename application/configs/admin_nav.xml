@@ -31,6 +31,12 @@
                     <action>detail</action>
                     <module>admin</module>
                 </users_detail>
+                <change_password class="hide">
+                    <label>Change Password</label>
+                    <controller>users</controller>
+                    <action>change-password</action>
+                    <module>admin</module>
+                </change_password>
             </pages>
         </users>
         <payments>

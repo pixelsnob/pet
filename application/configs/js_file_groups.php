@@ -43,5 +43,8 @@ return array(
         'js/Pet/Pet.js',
         'js/Pet/Views/Base.js',
         'js/Pet/Views/Admin.js'
+    ),
+    'admin-users' => array(
+        'js/Pet/Views/AdminUsers.js'
     )
 );

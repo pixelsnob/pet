@@ -124,8 +124,8 @@ class Admin_UsersController extends Zend_Controller_Action {
         }
         $this->view->user_form = $form; 
         $this->_helper->ViewRenderer->render('form');
-        $this->view->inlineScriptMin()
-            ->appendScript("Pet.loadView('Admin');");
+        $this->view->inlineScriptMin()->loadGroup('admin-users')
+            ->appendScript("Pet.loadView('Admin'); Pet.loadView('AdminUsers');");
     }
 
     public function addAction() {
@@ -142,7 +142,6 @@ class Admin_UsersController extends Zend_Controller_Action {
             try {
                 $params['password'] = $this->_users_svc->generateHash(
                     $params['password']);
-                //var_dump($form->is_active->getValue() == '1');
                 $params['user_id'] = $this->_users_mapper->insert($params,
                     ($form->is_active->getValue() == '1'));
                 $profiles_mapper->insert($params);
@@ -159,8 +158,36 @@ class Admin_UsersController extends Zend_Controller_Action {
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
         $this->view->user_form = $form; 
-        $this->view->inlineScriptMin()
-            ->appendScript("Pet.loadView('Admin');");
+        $this->view->inlineScriptMin()->loadGroup('admin-users')
+            ->appendScript("Pet.loadView('Admin'); Pet.loadView('AdminUsers');");
         $this->_helper->ViewRenderer->render('form');
+    }
+
+    public function changePasswordAction() {
+        $params = $this->_request->getParams();
+        $users_mapper = new Model_Mapper_Users;
+        $id = $this->_request->getParam('id');
+        if (!$id) {
+            throw new Exception('User id not supplied');
+        }
+        $user = $this->_users_svc->getUser($id);
+        if (!$user) {
+            throw new Exception('User not found');
+        }
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('edit', 'users', 'admin',
+                array('id' => $id));
+        }
+        $this->view->user = $user;
+        $pw_form = new Form_Admin_ChangePassword; 
+        if ($this->_request->isPost() && $pw_form->isValid($params)) {
+            $hash = $this->_users_svc->generateHash(
+                $pw_form->new_password->getValue());
+            $users_mapper->updatePassword($hash, $id);
+            $this->_helper->FlashMessenger->addMessage('Password changed');
+            $this->_helper->Redirector->gotoSimple('edit', 'users', 'admin',
+                array('id' => $id));
+        }
+        $this->view->pw_form = $pw_form;
     }
 }
