@@ -55,6 +55,9 @@ class Admin_UsersController extends Zend_Controller_Action {
     }
 
     public function editAction() {
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('index');
+        }
         $db = Zend_Db_Table::getDefaultAdapter();
         $params = $this->_request->getParams();
         $orders_mapper = new Model_Mapper_Orders;
@@ -129,6 +132,9 @@ class Admin_UsersController extends Zend_Controller_Action {
     }
 
     public function addAction() {
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('index');
+        }
         $db = Zend_Db_Table::getDefaultAdapter();
         $params = $this->_request->getPost();
         $profiles_mapper = new Model_Mapper_UserProfiles;
