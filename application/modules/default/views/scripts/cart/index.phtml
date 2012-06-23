@@ -29,7 +29,7 @@
                                 // Qty input
                                 $qty = $this->cart_form->qty->getElement($product->key);
                                 if ($qty) {
-                                    echo $qty->renderLabel() . $qty->renderViewHelper();
+                                    echo $qty->getLabel() . $qty->renderViewHelper();
                                 }
                                 ?>
                                 <ul class="links">

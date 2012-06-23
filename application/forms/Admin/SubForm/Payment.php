@@ -11,10 +11,13 @@ class Form_Admin_SubForm_Payment extends Form_SubForm_Payment {
      */
     public function init() {
         parent::init();
-        $this->payment_method->setMultiOptions(array(
-            'credit_card' => 'Credit card',
-            'check'       => 'Check',
-            'bypass'      => 'Bypass payment'
+        $this->payment_method->setOptions(array(
+            'multiOptions' => array(
+                'credit_card' => 'Credit card',
+                'check'       => 'Check',
+                'bypass'      => 'Bypass payment'
+            ),
+            'value' => 'credit_card'
         ));
         $this->addElement('text', 'amount', array(
             'label' => 'Amount',

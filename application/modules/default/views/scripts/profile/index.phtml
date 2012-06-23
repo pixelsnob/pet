@@ -6,12 +6,12 @@
             <fieldset class="account">
                 <legend>Account Information</legend>
                 <dl class="form">
-                    <dt><?php echo $this->profile_form->user->username->renderLabel(); ?></dt>
+                    <dt><?php echo $this->profile_form->user->username->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->profile_form->user->username->renderViewHelper(); ?>
                         <?php echo $this->profile_form->user->username->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->profile_form->user->email->renderLabel(); ?></dt>
+                    <dt><?php echo $this->profile_form->user->email->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->profile_form->user->email->renderViewHelper(); ?>
                         <?php echo $this->profile_form->user->email->renderErrors(); ?>
@@ -30,18 +30,18 @@
             <fieldset class="billing">
                 <legend>Billing Information</legend>
                 <dl class="form">
-                    <dt><?php echo $this->profile_form->user->first_name->renderLabel(); ?></dt>
+                    <dt><?php echo $this->profile_form->user->first_name->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->profile_form->user->first_name->renderViewHelper(); ?>
                         <?php echo $this->profile_form->user->first_name->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->profile_form->user->last_name->renderLabel(); ?></dt>
+                    <dt><?php echo $this->profile_form->user->last_name->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->profile_form->user->last_name->renderViewHelper(); ?>
                         <?php echo $this->profile_form->user->last_name->renderErrors(); ?>
                     </dd>
                     <?php foreach ($this->profile_form->billing as $el): ?>
-                        <dt><?php echo $el->renderLabel(); ?></dt>
+                        <dt><?php echo $el->getLabel(); ?></dt>
                         <dd>
                             <?php echo $el->renderViewHelper(); ?>
                             <?php echo $el->renderErrors(); ?>
@@ -55,7 +55,7 @@
                 <legend>Shipping Information</legend>
                 <dl class="form">
                     <?php foreach ($this->profile_form->shipping as $el): ?>
-                        <dt><?php echo $el->renderLabel(); ?></dt>
+                        <dt><?php echo $el->getLabel(); ?></dt>
                         <dd>
                             <?php echo $el->renderViewHelper(); ?>
                             <?php echo $el->renderErrors(); ?>

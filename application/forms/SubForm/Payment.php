@@ -18,6 +18,7 @@ class Form_SubForm_Payment extends Zend_Form_SubForm {
             'multiOptions' => $payment_opts, 
             'label'        => 'Payment Method',
             'required'     => false,
+            'class'        => 'radio',
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Payment method is required'

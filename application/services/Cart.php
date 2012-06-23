@@ -128,8 +128,9 @@ class Service_Cart {
             }
             return true;
         }
-        $promo_svc = new Service_Promos;
-        $promo = $promo_svc->getUnexpiredPromoByCode($code);
+        //$promo_svc = new Service_Promos;
+        $promos_mapper = new Model_Mapper_Promos;
+        $promo = $promos_mapper->getUnexpiredPromoByCode($code);
         if ($promo && $this->_cart->addPromo($promo)) {
             $this->_message = "Promo $code added";
             return true;

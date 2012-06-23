@@ -13,7 +13,7 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
         $view = $this->view;
         $out = "<dl class=\"admin-list\">\n";
         foreach ($fields as $k => $field) {
-            $value = '&nbsp;';
+            $value = '';
             $i = (!is_array($field) ? $field : $k);
             if (is_array($field) && isset($field['callback'])) {
                 $value = $field['callback']($data);
@@ -44,6 +44,7 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
                         break;
                 }
             }
+            $value = (strlen(trim($value)) ? $value : '&nbsp;');
             $out .= "<dt>{$title}:</dt>\n";
             $out .= "<dd>{$value}</dd>\n";
         }

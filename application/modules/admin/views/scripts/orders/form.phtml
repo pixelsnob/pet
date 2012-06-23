@@ -6,7 +6,7 @@
         <fieldset class="products">
             <legend>Product</legend>
             <dl class="form">
-                <dt><?php echo $this->order_form->product->renderLabel(); ?></dt>
+                <dt><?php echo $this->order_form->product->getLabel(); ?></dt>
                 <dd>
                     <?php echo $this->order_form->product->renderViewHelper(); ?>
                     <?php echo $this->order_form->product->renderErrors(); ?>
@@ -18,22 +18,22 @@
             <fieldset class="account">
                 <legend>Account Information</legend>
                 <dl class="form">
-                    <dt><?php echo $this->order_form->user->username->renderLabel(); ?></dt>
+                    <dt><?php echo $this->order_form->user->username->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->order_form->user->username->renderViewHelper(); ?>
                         <?php echo $this->order_form->user->username->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->order_form->user->email->renderLabel(); ?></dt>
+                    <dt><?php echo $this->order_form->user->email->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->order_form->user->email->renderViewHelper(); ?>
                         <?php echo $this->order_form->user->email->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->order_form->user->password->renderLabel(); ?></dt>
+                    <dt><?php echo $this->order_form->user->password->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->order_form->user->password->renderViewHelper(); ?>
                         <?php echo $this->order_form->user->password->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->order_form->user->confirm_password->renderLabel(); ?></dt>
+                    <dt><?php echo $this->order_form->user->confirm_password->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->order_form->user->confirm_password->renderViewHelper(); ?>
                         <?php echo $this->order_form->user->confirm_password->renderErrors(); ?>
@@ -43,59 +43,23 @@
             <fieldset class="billing">
                 <legend>Billing Information</legend>
                 <dl class="form">
-                    <dt><?php echo $this->order_form->user->first_name->renderLabel(); ?></dt>
+                    <dt><?php echo $this->order_form->user->first_name->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->order_form->user->first_name->renderViewHelper(); ?>
                         <?php echo $this->order_form->user->first_name->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->order_form->user->last_name->renderLabel(); ?></dt>
+                    <dt><?php echo $this->order_form->user->last_name->getLabel(); ?></dt>
                     <dd>
                         <?php echo $this->order_form->user->last_name->renderViewHelper(); ?>
                         <?php echo $this->order_form->user->last_name->renderErrors(); ?>
                     </dd>
                     <?php foreach ($this->order_form->billing as $el): ?>
-                        <dt><?php echo $el->renderLabel(); ?></dt>
+                        <dt><?php echo $el->getLabel(); ?></dt>
                         <dd>
                             <?php echo $el->renderViewHelper(); ?>
                             <?php echo $el->renderErrors(); ?>
                         </dd>
                     <?php endforeach; ?>
-                </dl>
-            </fieldset>
-            <fieldset class="payment med">
-                <legend>Payment Information</legend>
-                <dl class="form">
-                    <dt class="payment-method"><?php echo $this->order_form->payment->payment_method->getLabel(); ?></dt>
-                    <dd class="payment-method">
-                        <?php echo $this->order_form->payment->payment_method; ?>
-                    </dd>
-                </dl>
-                <dl class="form cc">
-                    <dt><?php echo $this->order_form->payment->cc_num->renderLabel(); ?></dt>
-                    <dd class="cc-num">
-                        <?php echo $this->order_form->payment->cc_num->renderViewHelper(); ?>
-                        <?php echo $this->order_form->payment->cc_num->renderErrors(); ?>
-                    </dd>
-                    <dt class="cc-exp"><label>Expiration</label></dt>
-                    <dd class="cc-exp">
-                        <?php echo $this->order_form->payment->cc_exp_month->renderViewHelper(); ?>
-                        <?php echo $this->order_form->payment->cc_exp_year->renderViewHelper(); ?>
-                        <?php echo $this->order_form->payment->cc_exp_month->renderErrors(); ?>
-                        <?php echo $this->order_form->payment->cc_exp_year->renderErrors(); ?>
-                    </dd>
-                    <dt class="cc-cvv"><?php echo $this->order_form->payment->cc_cvv->renderLabel(); ?></dt>
-                    <dd class="cc-cvv">
-                        <?php echo $this->order_form->payment->cc_cvv->renderViewHelper(); ?>
-                        <?php echo $this->order_form->payment->cc_cvv->renderErrors(); ?>
-                    </dd>
-                </dl>
-                <dl class="form check">
-                    <dt class="cc-cvv"><?php echo $this->order_form->payment->check->renderLabel(); ?></dt>
-                    <dd class="cc-cvv">
-                        <?php echo $this->order_form->payment->check->renderViewHelper(); ?>
-                        <?php echo $this->order_form->payment->check->renderErrors(); ?>
-                    </dd>
-
                 </dl>
             </fieldset>
         </div>
@@ -105,7 +69,7 @@
                 <p><a href="#" id="billing-to-shipping">Copy billing to shipping</a></p>
                 <dl class="form">
                     <?php foreach ($this->order_form->shipping as $el): ?>
-                        <dt><?php echo $el->renderLabel(); ?></dt>
+                        <dt><?php echo $el->getLabel(); ?></dt>
                         <dd>
                             <?php echo $el->renderViewHelper(); ?>
                             <?php echo $el->renderErrors(); ?>
@@ -139,6 +103,56 @@
                     </dd>
                 </dl>
             </fieldset>
+        </div>
+        <div class="clear">
+            <fieldset class="payment med">
+                <legend>Payment Information</legend>
+                <div class="admin-form-left">
+                    <dl class="form">
+                        <dt class="payment-method"><?php echo $this->order_form->payment->payment_method->getLabel(); ?></dt>
+                        <dd class="payment-method radio-list">
+                            <?php echo $this->order_form->payment->payment_method; ?>
+                        </dd>
+                        <dt class="amount"><?php echo $this->order_form->payment->amount->getLabel(); ?></dt>
+                        <dd class="amount">
+                            <?php echo $this->order_form->payment->amount->renderViewHelper(); ?>
+                            <?php echo $this->order_form->payment->amount->renderErrors(); ?>
+                        </dd>
+                    </dl>
+                </div> 
+                <div class="admin-form-right">
+                    <dl class="form">
+                        <dt><?php echo $this->order_form->payment->cc_num->getLabel(); ?></dt>
+                        <dd class="cc-num">
+                            <?php echo $this->order_form->payment->cc_num->renderViewHelper(); ?>
+                            <?php echo $this->order_form->payment->cc_num->renderErrors(); ?>
+                        </dd>
+                        <dt class="cc-exp"><label>Expiration</label></dt>
+                        <dd class="cc-exp">
+                            <?php echo $this->order_form->payment->cc_exp_month->renderViewHelper(); ?>
+                            <?php echo $this->order_form->payment->cc_exp_year->renderViewHelper(); ?>
+                            <?php echo $this->order_form->payment->cc_exp_month->renderErrors(); ?>
+                            <?php echo $this->order_form->payment->cc_exp_year->renderErrors(); ?>
+                        </dd>
+                        <dt class="cc-cvv"><?php echo $this->order_form->payment->cc_cvv->getLabel(); ?></dt>
+                        <dd class="cc-cvv">
+                            <?php echo $this->order_form->payment->cc_cvv->renderViewHelper(); ?>
+                            <?php echo $this->order_form->payment->cc_cvv->renderErrors(); ?>
+                        </dd>
+                    </dl>
+                    <dl class="form check">
+                        <dt class="cc-cvv"><?php echo $this->order_form->payment->check->getLabel(); ?></dt>
+                        <dd class="cc-cvv">
+                            <?php echo $this->order_form->payment->check->renderViewHelper(); ?>
+                            <?php echo $this->order_form->payment->check->renderErrors(); ?>
+                        </dd>
+
+                    </dl>
+                </div>
+            </fieldset>
+        </div>
+        <div class="admin-form-right">
+
         </div>
         <p class="update clear">
             <?php echo $this->order_form->submit->renderViewHelper(); ?>
