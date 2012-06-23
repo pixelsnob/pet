@@ -82,6 +82,21 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
      * @return array
      * 
      */
+    public function getSubscriptions() {
+        $subs = $this->_products->getSubscriptions();
+        $out = array();
+        foreach ($subs as $sub) {
+            $out[] = new Model_Product_Subscription($sub->toArray());
+        }
+        return $out;
+    }
+
+    /**
+     * @param mixed $is_giftable
+     * @param bool $is_renewal
+     * @return array
+     * 
+     */
     public function getDigitalSubscriptions($is_giftable = null,
                                             $is_renewal = false) {
         $subs = $this->_products->getDigitalSubscriptions($is_giftable,

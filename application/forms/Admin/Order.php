@@ -1,15 +1,15 @@
 <?php
 /**
- * User profile form
+ * Order form, currently only handles one product
  * 
  */
-class Form_Admin_User extends Pet_Form {
+class Form_Admin_Order extends Pet_Form {
     
     /**
      * @var Model_User 
      * 
      */
-    protected $_identity;
+    //protected $_identity;
     
     /**
      * @var Pet_Model_Mapper_Abstract 
@@ -18,12 +18,24 @@ class Form_Admin_User extends Pet_Form {
     protected $_mapper;
 
     /**
+     * @var array
+     * 
+     */
+    protected $_subscriptions;
+
+    /**
+     * @var array
+     * 
+     */
+    protected $_digitalSubscriptions;
+
+    /**
      * @param Model_User $identity
      * @return void
      */
-    public function setIdentity(Model_User $identity) {
+    /*public function setIdentity(Model_User $identity) {
         $this->_identity = $identity;
-    }
+    }*/
 
     /**
      * @param Pet_Model_Mapper_Abstract $mapper
@@ -31,6 +43,22 @@ class Form_Admin_User extends Pet_Form {
      */
     public function setMapper(Pet_Model_Mapper_Abstract $mapper) {
         $this->_mapper = $mapper;
+    }
+
+    /**
+     * @param array An array of Model_Product_Subscription objects
+     * @return void
+     */
+    public function setSubscriptions(array $subs) {
+        $this->_subscriptions = $subs;
+    }
+
+    /**
+     * @param array An array of Model_Product_DigitalSubscription objects
+     * @return void
+     */
+    public function setDigitalSubscriptions(array $subs) {
+        $this->_digitalSubscriptions = $subs;
     }
 
     /**
@@ -45,15 +73,20 @@ class Form_Admin_User extends Pet_Form {
         $countries = new Zend_Config(require APPLICATION_PATH .
             '/configs/countries.php');
         $countries = $countries->toArray();
+        $subscriptions = array();
+        foreach ($this->_subscriptions as $sub) {
+            $subscriptions[$sub->product_id] = $sub->name;
+        }
+        $digital_subscriptions = array();
+        foreach ($this->_digitalSubscriptions as $digsub) {
+            $digital_subscriptions[$digsub->product_id] = $digsub->name;
+        }
         $user_form = new Form_SubForm_User(array(
             'mapper' => $this->_mapper,
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
-        $this->user->setIsArray(false)->addPasswordFields();
-        /*$this->user->username->setRequired(false);
-        $this->user->password->setRequired(false);
-        $this->user->confirm_password->setRequired(false);*/
+        $this->user->addPasswordFields();
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $countries,
             'states'    => $states
@@ -69,25 +102,18 @@ class Form_Admin_User extends Pet_Form {
             $el->removeValidator('NotEmpty')->setRequired(false);
         }
         $this->addSubform(new Form_SubForm_UserInfo, 'info');
-        $this->addElement('text', 'expiration', array(
-            'label' => 'Expiration',
-            'required' => false,
-            'class' => 'datepicker-min-today',
-            'validators'   => array(
-                array('Date', true, array(
-                    'messages' => 'Invalid date'
-                )),
-                array(new Pet_Validate_DateNotBeforeToday, true)
+        $promo_form = new Form_SubForm_Promo(array(
+            //'cart' => $this->_cart,
+            //'mapper' => $this->_promos
+        ));
+        $this->addSubform($promo_form, 'promo');
+        $this->addSubform(new Form_SubForm_Payment, 'payment');
+        $this->addElement('select', 'product', array(
+            'label'        => 'Choose a Product',
+            'multiOptions' => array(
+                'Subscriptions'          => $subscriptions,
+                'Digital Subscriptions'  => $digital_subscriptions,
             )
-        ))->addElement('checkbox', 'digital_only', array(
-            'label' => 'Digital only',
-            'required' => false,
-            'class' => 'checkbox'
-        ))->addElement('checkbox', 'is_active', array(
-            'label' => 'Active',
-            'required' => false,
-            'class' => 'checkbox',
-            'value' => 1
         ))->addElement('submit', 'submit', array(
             'label' => 'Update',
             'class' => 'submit'

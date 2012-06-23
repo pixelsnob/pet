@@ -1,0 +1,140 @@
+
+<?php print_r($this->subscriptions); ?>
+<div id="order-add">
+    <?php echo $this->flashMessenger($this->messages); ?>
+    <form action="<?php echo $this->order_form->getAction(); ?>" method="<?php echo $this->order_form->getMethod(); ?>" name="<?php echo $this->order_form->getName(); ?>">
+        <fieldset class="products">
+            <legend>Product</legend>
+            <dl class="form">
+                <dt><?php echo $this->order_form->product->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->order_form->product->renderViewHelper(); ?>
+                    <?php echo $this->order_form->product->renderErrors(); ?>
+                </dd>
+            </dl>
+        </fieldset>
+
+        <div class="admin-form-left">
+            <fieldset class="account">
+                <legend>Account Information</legend>
+                <dl class="form">
+                    <dt><?php echo $this->order_form->user->username->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->order_form->user->username->renderViewHelper(); ?>
+                        <?php echo $this->order_form->user->username->renderErrors(); ?>
+                    </dd>
+                    <dt><?php echo $this->order_form->user->email->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->order_form->user->email->renderViewHelper(); ?>
+                        <?php echo $this->order_form->user->email->renderErrors(); ?>
+                    </dd>
+                    <dt><?php echo $this->order_form->user->password->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->order_form->user->password->renderViewHelper(); ?>
+                        <?php echo $this->order_form->user->password->renderErrors(); ?>
+                    </dd>
+                    <dt><?php echo $this->order_form->user->confirm_password->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->order_form->user->confirm_password->renderViewHelper(); ?>
+                        <?php echo $this->order_form->user->confirm_password->renderErrors(); ?>
+                    </dd>
+                </dl>
+            </fieldset>
+            <fieldset class="billing">
+                <legend>Billing Information</legend>
+                <dl class="form">
+                    <dt><?php echo $this->order_form->user->first_name->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->order_form->user->first_name->renderViewHelper(); ?>
+                        <?php echo $this->order_form->user->first_name->renderErrors(); ?>
+                    </dd>
+                    <dt><?php echo $this->order_form->user->last_name->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->order_form->user->last_name->renderViewHelper(); ?>
+                        <?php echo $this->order_form->user->last_name->renderErrors(); ?>
+                    </dd>
+                    <?php foreach ($this->order_form->billing as $el): ?>
+                        <dt><?php echo $el->renderLabel(); ?></dt>
+                        <dd>
+                            <?php echo $el->renderViewHelper(); ?>
+                            <?php echo $el->renderErrors(); ?>
+                        </dd>
+                    <?php endforeach; ?>
+                </dl>
+            </fieldset>
+        </div>
+        <div class="admin-form-right">
+            <fieldset class="shipping">
+                <legend>Shipping Information</legend>
+                <p><a href="#" id="billing-to-shipping">Copy billing to shipping</a></p>
+                <dl class="form">
+                    <?php foreach ($this->order_form->shipping as $el): ?>
+                        <dt><?php echo $el->renderLabel(); ?></dt>
+                        <dd>
+                            <?php echo $el->renderViewHelper(); ?>
+                            <?php echo $el->renderErrors(); ?>
+                        </dd>
+                    <?php endforeach; ?>
+                </dl>
+            </fieldset>
+            <fieldset class="profile">
+                <legend>Profile Information</legend>
+                <dl class="form">
+                    <dt class="version">
+                        <label for="version">Version:</label>
+                    </dt>
+                    <dd class="version">
+                        <?php echo $this->order_form->info->version->renderViewHelper(); ?>
+                        <?php echo $this->order_form->info->version->renderErrors(); ?>
+                    </dd>
+                    <dt class="checkbox">
+                        <label for="opt-in">Opt-in:</label>
+                    </dt>
+                    <dd class="checkbox">
+                        <?php echo $this->order_form->info->opt_in->renderViewHelper(); ?>
+                        <?php echo $this->order_form->info->opt_in->renderErrors(); ?>
+                    </dd>
+                    <dt class="checkbox">
+                        <label for="opt-in-partner">Opt-in partner</label>
+                    </dt>
+                    <dd class="checkbox">
+                        <?php echo $this->order_form->info->opt_in_partner->renderViewHelper(); ?>
+                        <?php echo $this->order_form->info->opt_in_partner->renderErrors(); ?>
+                    </dd>
+                </dl>
+            </fieldset>
+            <fieldset class="payment med">
+                <legend>Enter your payment info</legend>
+                <dl class="form">
+                    <dt class="payment-method"><?php echo $this->order_form->payment->payment_method->getLabel(); ?></dt>
+                    <dd class="payment-method">
+                        <?php echo $this->order_form->payment->payment_method; ?>
+                    </dd>
+                </dl>
+                <dl class="form cc<?php echo ($this->cart->payment->payment_method != 'credit_card' ? ' hide' : ''); ?>">
+                    <dt><?php echo $this->order_form->payment->cc_num->renderLabel(); ?></dt>
+                    <dd class="cc-num">
+                        <?php echo $this->order_form->payment->cc_num->renderViewHelper(); ?>
+                        <?php echo $this->order_form->payment->cc_num->renderErrors(); ?>
+                    </dd>
+                    <dt class="cc-exp"><label>Expiration</label></dt>
+                    <dd class="cc-exp">
+                        <?php echo $this->order_form->payment->cc_exp_month->renderViewHelper(); ?>
+                        <?php echo $this->order_form->payment->cc_exp_year->renderViewHelper(); ?>
+                        <?php echo $this->order_form->payment->cc_exp_month->renderErrors(); ?>
+                        <?php echo $this->order_form->payment->cc_exp_year->renderErrors(); ?>
+                    </dd>
+                    <dt class="cc-cvv"><?php echo $this->order_form->payment->cc_cvv->renderLabel(); ?></dt>
+                    <dd class="cc-cvv">
+                        <?php echo $this->order_form->payment->cc_cvv->renderViewHelper(); ?>
+                        <?php echo $this->order_form->payment->cc_cvv->renderErrors(); ?>
+                    </dd>
+                </dl>
+            </fieldset>
+        </div>
+        <p class="update clear">
+            <?php echo $this->order_form->submit->renderViewHelper(); ?>
+            <input type="submit" value="Cancel" name="cancel">
+        </p>
+    </form>
+</div>

@@ -46,4 +46,18 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $this->view->order = $order;
     }
 
+    public function addAction() {
+        $users_mapper = new Model_Mapper_Users;
+        $products_mapper = new Model_Mapper_Products;
+        $subscriptions = $products_mapper->getSubscriptions();
+        $digital_subscriptions = $products_mapper->getDigitalSubscriptions();
+        $form = new Form_Admin_Order(array(
+            'mapper'                => $users_mapper,
+            'subscriptions'         => $subscriptions,
+            'digitalSubscriptions'  => $digital_subscriptions
+        ));
+        $this->view->order_form = $form;
+        $this->_helper->ViewRenderer->render('form'); 
+    }
+
 }

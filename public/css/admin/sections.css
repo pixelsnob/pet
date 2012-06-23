@@ -3,7 +3,7 @@
     width: 80px;
 }
 
-#user-edit .profile dt {
+#user-edit .profile dt, #order-add .profile dt {
     width: 100px;
 }
 

@@ -6,6 +6,14 @@
             <controller>orders</controller>
             <action>index</action>
             <module>admin</module>
+            <pages>
+                <orders_add>
+                    <label>New Order</label>
+                    <controller>orders</controller>
+                    <action>add</action>
+                    <module>admin</module>
+                </orders_add>
+            </pages>
         </orders>
         <users>
             <label>Users</label>

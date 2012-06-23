@@ -97,6 +97,22 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     }
 
     /**
+     * @return Zend_Db_Table_Rowset object 
+     * 
+     */
+    public function getSubscriptions() {
+        $sel = $this->select()->setIntegrityCheck(false)
+            ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
+            ->join(array('ps' => 'products_subscriptions'),
+                'ps.product_id = p.id')
+            ->join(array('s' => 'subscriptions'),
+                'ps.subscription_id = s.id')
+            ->where('p.active')
+            ->order(array('s.zone_id', 's.name'));
+        return $this->fetchAll($sel);
+    }
+
+    /**
      * @param int $zone_id
      * @param mixed $is_giftable
      * @param bool $is_renewal
