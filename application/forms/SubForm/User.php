@@ -100,6 +100,37 @@ class Form_SubForm_User extends Zend_Form_SubForm {
                     'messages' => 'Last name must be %max% characters or less'
                 ))
             )
+        ))->addElement('password', 'password', array(
+            'label' => 'Create a Password',
+            'required' => true,
+            'renderPassword' => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Please create a password for website access'
+                )),
+                array(new Pet_Validate_PasswordStrength, true),
+                array('StringLength', true, array(
+                    'max' => 40,
+                    'messages' => 'Password must be %max% characters or less'
+                ))
+            )
+        ))->addElement('password', 'confirm_password', array(
+            'label' => 'Confirm Password',
+            'required' => true,
+            'renderPassword' => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Please confirm your password'
+                )),
+                array('StringLength', true, array(
+                    'max' => 40,
+                    'messages' => 'Password must be %max% characters or less'
+                )),
+                array('Identical', true, array(
+                    'token' => 'password',
+                    'messages' => 'Whoops! Those don\'t match'
+                ))
+            )
         ))->setElementFilters(array('StringTrim'));
 
     }
@@ -108,7 +139,7 @@ class Form_SubForm_User extends Zend_Form_SubForm {
      * @return void
      * 
      */
-    public function addPasswordFields() {
+    /*public function addPasswordFields() {
         $this->addElement('password', 'password', array(
             'label' => 'Create a Password',
             'required' => true,
@@ -142,7 +173,7 @@ class Form_SubForm_User extends Zend_Form_SubForm {
             )
         ))->setElementFilters(array('StringTrim'));
         
-    }
+    }*/
 }
 
 

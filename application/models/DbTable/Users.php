@@ -37,8 +37,10 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
     public function getActiveByUsername($username, $is_superuser = false) {
         $is_superuser = (int) $is_superuser;
         $sel = $this->select()->where('username = ?', $username)
-            ->where('is_active = 1')
-            ->where('is_superuser = ?', $is_superuser);
+            ->where('is_active = 1');
+        if ($superuser !== null) {
+            $sel->where('is_superuser = ?', $is_superuser);
+        }
         return $this->fetchRow($sel);
     }
 

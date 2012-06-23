@@ -50,7 +50,7 @@ class Form_Admin_User extends Pet_Form {
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
-        $this->user->setIsArray(false)->addPasswordFields();
+        //$this->user->setIsArray(false)->addPasswordFields();
         /*$this->user->username->setRequired(false);
         $this->user->password->setRequired(false);
         $this->user->confirm_password->setRequired(false);*/

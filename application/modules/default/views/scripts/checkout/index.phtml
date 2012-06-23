@@ -8,7 +8,7 @@
                 <fieldset class="account<?php echo (!$this->is_authenticated ? ' med' : ''); ?>">
                     <legend>Create your account</legend>
                     <dl class="form">
-                        <?php if (!$this->is_authenticated): ?>
+                        <?php if (!$this->is_authenticated && $this->cart->products->hasDigitalSubscription()): ?>
                             <dt><?php echo $this->checkout_form->user->username->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->user->username->renderViewHelper(); ?>

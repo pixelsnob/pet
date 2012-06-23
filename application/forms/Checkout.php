@@ -102,7 +102,6 @@ class Form_Checkout extends Pet_Form {
             'mapper' => $this->_users,
             'identity' => $this->_identity
         ));
-        $user_form->addPasswordFields();
         $promo_form = new Form_SubForm_Promo(array(
             'cart' => $this->_cart,
             'mapper' => $this->_promos
@@ -123,6 +122,11 @@ class Form_Checkout extends Pet_Form {
         $totals = $this->_cart->getTotals();
         if ($totals['total']) {
             $this->addSubform(new Form_SubForm_Payment, 'payment');
+        }
+        if (!$this->_cart->products->hasDigitalSubscription()) {
+            $this->user->removeElement('password');
+            $this->user->removeElement('confirm_password');
+            $this->user->removeElement('username');
         }
         $this->addElement('checkbox', 'use_shipping', array(
             'label' => 'Check this box to enter a different delivery address',

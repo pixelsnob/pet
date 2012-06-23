@@ -185,12 +185,12 @@ class Service_Cart {
         ));
         $users_svc = new Service_Users;
         // We don't need pw/username fields if user is already logged in
-        if ($users_svc->isAuthenticated()) {
+        /*if ($users_svc->isAuthenticated()) {
             $form->user->username->setValidators(array())->setRequired(false);
             $form->user->password->setValidators(array())->setRequired(false);
             $form->user->confirm_password->setValidators(array())
                 ->setRequired(false);
-        }
+        }*/
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray(),
@@ -270,9 +270,9 @@ class Service_Cart {
             $data = array_merge($data, $form->payment->getValues(true));
         }
         // Remove pw validators
-        $form->user->password->setValidators(array())->setRequired(false);
+        /*$form->user->password->setValidators(array())->setRequired(false);
         $form->user->confirm_password->setValidators(array())
-            ->setRequired(false);
+            ->setRequired(false);*/
         return $form->isValid($data); 
     }
 

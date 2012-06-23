@@ -6,12 +6,6 @@
 class Form_Admin_Order extends Pet_Form {
     
     /**
-     * @var Model_User 
-     * 
-     */
-    //protected $_identity;
-    
-    /**
      * @var Pet_Model_Mapper_Abstract 
      * 
      */
@@ -28,14 +22,6 @@ class Form_Admin_Order extends Pet_Form {
      * 
      */
     protected $_digitalSubscriptions;
-
-    /**
-     * @param Model_User $identity
-     * @return void
-     */
-    /*public function setIdentity(Model_User $identity) {
-        $this->_identity = $identity;
-    }*/
 
     /**
      * @param Pet_Model_Mapper_Abstract $mapper
@@ -86,7 +72,6 @@ class Form_Admin_Order extends Pet_Form {
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
-        $this->user->addPasswordFields();
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $countries,
             'states'    => $states
@@ -97,7 +82,7 @@ class Form_Admin_Order extends Pet_Form {
             'states'    => $states
         ));
         $this->addSubform($shipping_form, 'shipping');
-        // Remove "not empty" validators
+        // Remove "not empty" validators <<<<<<<<<<<<<< ?????????????????????
         foreach ($this->shipping as $el) {
             $el->removeValidator('NotEmpty')->setRequired(false);
         }
@@ -107,7 +92,7 @@ class Form_Admin_Order extends Pet_Form {
             //'mapper' => $this->_promos
         ));
         $this->addSubform($promo_form, 'promo');
-        $this->addSubform(new Form_SubForm_Payment, 'payment');
+        $this->addSubform(new Form_Admin_SubForm_Payment, 'payment');
         $this->addElement('select', 'product', array(
             'label'        => 'Choose a Product',
             'multiOptions' => array(
