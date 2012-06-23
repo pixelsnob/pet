@@ -120,10 +120,11 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
      */
     public function updatePersonal(array $data, $id) {
         $user = new Model_User($data);
+        $username = (strlen(trim($user->username)) ? $user->username : null);
         $user_array = array(
             'first_name' => $user->first_name,
             'last_name'  => $user->last_name,
-            'username'   => $user->username,
+            'username'   => $username,
             'email'      => $user->email
         );
         return $this->_users->update($user_array, $id);

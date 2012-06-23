@@ -82,7 +82,7 @@ class Form_Admin_Order extends Pet_Form {
             'states'    => $states
         ));
         $this->addSubform($shipping_form, 'shipping');
-        // Remove "not empty" validators <<<<<<<<<<<<<< ?????????????????????
+        // Remove "not empty" validators
         foreach ($this->shipping as $el) {
             $el->removeValidator('NotEmpty')->setRequired(false);
         }
