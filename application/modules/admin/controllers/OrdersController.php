@@ -47,6 +47,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
     }
 
     public function addAction() {
+        $params = $this->_request->getPost();
         $users_mapper = new Model_Mapper_Users;
         $products_mapper = new Model_Mapper_Products;
         $subscriptions = $products_mapper->getSubscriptions();
@@ -56,6 +57,9 @@ class Admin_OrdersController extends Zend_Controller_Action {
             'subscriptions'         => $subscriptions,
             'digitalSubscriptions'  => $digital_subscriptions
         ));
+        if ($this->_request->isPost() && $form->isValid($params)) {
+            
+        }
         $this->view->order_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }

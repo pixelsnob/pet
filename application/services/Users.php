@@ -62,7 +62,9 @@ class Service_Users extends Pet_Service {
             $config = Zend_Registry::get('app_config');
             $auth_session = new Zend_Session_Namespace('Zend_Auth');
             $ts = (int) $auth_session->timestamp;
-            if ($ts && (time() - $ts > $config['user_session_timeout'])) {
+            $timeout = ($is_superuser ? $config['admin_session_timeout'] :
+                $config['user_session_timeout']);
+            if ($ts && (time() - $ts > $timeout)) {
                 $this->logUserAction('User timed out');
                 Zend_Auth::getInstance()->clearIdentity();
                 return false;

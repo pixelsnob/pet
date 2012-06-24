@@ -141,6 +141,7 @@ class Admin_UsersController extends Zend_Controller_Action {
         $profiles_mapper = new Model_Mapper_UserProfiles;
         $form = new Form_Admin_User(array('mapper' => $this->_users_mapper));
         $form->submit->setLabel('Add');
+        $form->user->username->setRequired(false);
         $this->view->show_pw_fields = true;
         if ($this->_request->isPost() && $form->isValid($params)) {
             $db->query('set transaction isolation level serializable');

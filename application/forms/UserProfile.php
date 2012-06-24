@@ -72,6 +72,8 @@ class Form_UserProfile extends Pet_Form {
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
+        $this->user->removeElement('password');
+        $this->user->removeElement('confirm_password');
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $this->_countries,
             'states'    => $this->_states

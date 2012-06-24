@@ -50,12 +50,6 @@ class Form_Admin_User extends Pet_Form {
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
-        //$this->user->removeElement('password');
-        //$this->user->removeElement('confirm_password');
-        //$this->user->setIsArray(false)->addPasswordFields();
-        /*$this->user->username->setRequired(false);
-        $this->user->password->setRequired(false);
-        $this->user->confirm_password->setRequired(false);*/
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $countries,
             'states'    => $states
@@ -95,4 +89,20 @@ class Form_Admin_User extends Pet_Form {
             'class' => 'submit'
         ));
     }
+
+    /**
+     * @param array $data
+     * @return bool
+     * 
+     */
+    public function isValid($data) {
+        $valid = true;
+        if (!isset($data['username']) || !strlen(trim($data['username']))) {
+            $this->user->password->setRequired(false)->clearValidators();
+            $this->user->confirm_password->setRequired(false)->clearValidators();
+        }
+        return parent::isValid($data);
+    }
+
+
 }
