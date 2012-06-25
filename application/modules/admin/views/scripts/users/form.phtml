@@ -16,18 +16,23 @@
                         <?php echo $this->user_form->user->email->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->email->renderErrors(); ?>
                     </dd>
-                    <?php if ($this->show_pw_fields): ?>
-                    <dt><?php echo $this->user_form->user->password->getLabel(); ?></dt>
+                    <?php if ($this->user_form->getMode() == 'edit'): ?>
+                    <dt><?php echo $this->user_form->change_password->getLabel(); ?></dt>
                     <dd>
+                        <?php echo $this->user_form->change_password->renderViewHelper(); ?>
+                        <?php echo $this->user_form->change_password->renderErrors(); ?>
+                    </dd>
+                    <?php endif; ?>
+                    <dt class="pw"><?php echo $this->user_form->user->password->getLabel(); ?></dt>
+                    <dd class="pw">
                         <?php echo $this->user_form->user->password->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->password->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->user_form->user->confirm_password->getLabel(); ?></dt>
-                    <dd>
+                    <dt class="pw"><?php echo $this->user_form->user->confirm_password->getLabel(); ?></dt>
+                    <dd class="pw">
                         <?php echo $this->user_form->user->confirm_password->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->confirm_password->renderErrors(); ?>
                     </dd>
-                    <?php endif; ?>
                     <?php if ($this->show_expiration_fields): ?>
                     <dt><?php echo $this->user_form->expiration->getLabel(); ?></dt>
                     <dd>
@@ -47,7 +52,7 @@
                     </dd>
                 </dl>
                 <?php if (!$this->show_pw_fields): ?>
-                    <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array('action' => 'change-password'))); ?>">Change password</a></p>
+                    <!--<p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array('action' => 'change-password'))); ?>">Change password</a></p>-->
                 <?php endif; ?>
             </fieldset>
             <fieldset class="billing">

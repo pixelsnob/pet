@@ -46,5 +46,8 @@ return array(
     ),
     'admin-users' => array(
         'js/Pet/Views/AdminUsers.js'
+    ),
+    'admin-orders' => array(
+        'js/Pet/Views/AdminOrders.js'
     )
 );

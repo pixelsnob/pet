@@ -8,7 +8,9 @@ class Admin_UsersController extends Zend_Controller_Action {
         if ($page) {
             $page->setActive();
         }
-        $this->_helper->Layout->setLayout('admin');
+        if ($this->_helper->Layout->getLayout() != 'nolayout') {
+            $this->_helper->Layout->setLayout('admin');
+        }
         $this->_orders_svc = new Service_Orders;
         $this->_users_svc = new Service_Users;
         $this->_admin_svc = new Service_Admin;
@@ -76,11 +78,9 @@ class Admin_UsersController extends Zend_Controller_Action {
         $this->view->user = $user;
         $form = new Form_Admin_User(array(
             'identity' => $user,
-            'mapper'   => $this->_users_mapper
+            'mapper'   => $this->_users_mapper,
+            'mode'     => 'edit'
         ));
-        $form->user->removeElement('password');
-        $form->user->removeElement('confirm_password');
-        $form->user->username->setRequired(false);
         // Get expiration, if any
         $exp = $ops_mapper->getUnexpiredByUserId($id);
         if ($exp) {
@@ -96,6 +96,10 @@ class Admin_UsersController extends Zend_Controller_Action {
             $db->beginTransaction();
             try {
                 $this->_users_mapper->updatePersonal($params, $id);
+                if ($form->change_password->getValue() == '1') {
+                    $enc_pw = $this->_users_svc->generateHash($form->user->password->getValue());
+                    $this->_users_mapper->updatePassword($enc_pw, $id);
+                }
                 $this->_users_mapper->updateIsActive($form->is_active->getValue(), $id);
                 $profiles_mapper->updateByUserId($params, $id);
                 $form_exp = $form->expiration->getValue();
@@ -115,7 +119,6 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $this->_helper->FlashMessenger->addMessage('User updated');
             } catch (Exception $e) {
                 $db->rollBack();
-                print_r($e);
                 $this->_helper->FlashMessenger->addMessage(
                     'An error occurred while attempting to update');
             }
@@ -139,9 +142,11 @@ class Admin_UsersController extends Zend_Controller_Action {
         $db = Zend_Db_Table::getDefaultAdapter();
         $params = $this->_request->getPost();
         $profiles_mapper = new Model_Mapper_UserProfiles;
-        $form = new Form_Admin_User(array('mapper' => $this->_users_mapper));
+        $form = new Form_Admin_User(array(
+            'mapper'  => $this->_users_mapper,
+            'mode'    => 'add'
+        ));
         $form->submit->setLabel('Add');
-        $form->user->username->setRequired(false);
         $this->view->show_pw_fields = true;
         if ($this->_request->isPost() && $form->isValid($params)) {
             $db->query('set transaction isolation level serializable');
@@ -162,8 +167,8 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $this->_helper->FlashMessenger->addMessage(
                     'An error occurred while attempting to add user');
             }
-            $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
+        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->user_form = $form; 
         $this->view->inlineScriptMin()->loadGroup('admin-users')
             ->appendScript("Pet.loadView('Admin'); Pet.loadView('AdminUsers');");

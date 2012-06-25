@@ -2,17 +2,26 @@
  * Base admin view
  * 
  */
-Pet.AdminUsersView = Pet.View.extend({
+Pet.AdminUsersView = Pet.AdminView.extend({
     
     el: $('body'),
 
     xhr: [], // An array of Ajax XHR objects
     
     events: {
-        'click #billing-to-shipping': 'copyBillingToShipping'
+        'click #billing-to-shipping': 'copyBillingToShipping',
+        'click #change_password': 'togglePasswordFields'
     },
     
     initialize: function() {
+        this.events = _.extend({}, Pet.AdminView.prototype.events, this.events)
+        if ($('form[name=user_edit]').length) {
+            if ($('#change_password:checked').length) {
+                $('.form dd.pw, .form dt.pw').show();
+            } else {
+                $('.form dd.pw, .form dt.pw').hide();
+            }
+        }
     },
 
     copyBillingToShipping: function() {
@@ -21,6 +30,14 @@ Pet.AdminUsersView = Pet.View.extend({
             $('#shipping_' + suffix).val($(this).val());
         });
         return false;
+    },
+
+    togglePasswordFields: function(el) {
+        if (el.target.checked) {
+            $('.form dd.pw, .form dt.pw').show();
+        } else {
+            $('.form dd.pw, .form dt.pw').hide();
+        }
     }
 
 });

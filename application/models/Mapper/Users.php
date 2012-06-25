@@ -182,6 +182,8 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
         $user_array = $user->toArray();
         unset($user_array['id']);
         $user_array['is_superuser'] = 0;
+        $user_array['username'] = (strlen(trim($user_array['username'])) ?
+            $user_array['username'] : null);
         return $this->_users->insert($user_array);
     }
 }

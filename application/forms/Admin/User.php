@@ -16,6 +16,12 @@ class Form_Admin_User extends Pet_Form {
      * 
      */
     protected $_mapper;
+    
+    /**
+     * @var string edit or add
+     * 
+     */
+    protected $_mode = 'edit';
 
     /**
      * @param Model_User $identity
@@ -34,11 +40,28 @@ class Form_Admin_User extends Pet_Form {
     }
 
     /**
+     * @param string $mode 
+     * @return void
+     */
+    public function setMode($mode) {
+        $this->_mode = $mode;
+    }
+
+    /**
+     * @return string edit or add
+     * 
+     */
+    public function getMode() {
+        return $this->_mode;
+    }
+
+    /**
      * @return void
      * 
      */
     public function init() {
         parent::init();
+        $this->setName('user_' . $this->_mode);
         $states = new Zend_Config(require APPLICATION_PATH .
             '/configs/states.php');
         $states = $states->toArray();
@@ -50,6 +73,7 @@ class Form_Admin_User extends Pet_Form {
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
+        $this->user->username->setRequired(false);
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $countries,
             'states'    => $states
@@ -88,6 +112,14 @@ class Form_Admin_User extends Pet_Form {
             'label' => 'Update',
             'class' => 'submit'
         ));
+        if ($this->_mode == 'edit') {
+            $this->addElement('checkbox', 'change_password', array(
+                'label' => 'Change Password',
+                'required' => false,
+                'class' => 'checkbox',
+                'value' => 0
+            ));
+        }
     }
 
     /**
@@ -98,6 +130,11 @@ class Form_Admin_User extends Pet_Form {
     public function isValid($data) {
         $valid = true;
         if (!isset($data['username']) || !strlen(trim($data['username']))) {
+            $this->user->password->setRequired(false)->clearValidators();
+            $this->user->confirm_password->setRequired(false)->clearValidators();
+        }
+        if ($this->_mode == 'edit' && (!isset($data['change_password']) ||
+                $data['change_password'] == '0')) {
             $this->user->password->setRequired(false)->clearValidators();
             $this->user->confirm_password->setRequired(false)->clearValidators();
         }

@@ -8,13 +8,17 @@ class Admin_OrdersController extends Zend_Controller_Action {
         if ($page) {
             $page->setActive();
         }
-        $this->_helper->Layout->setLayout('admin');
+        if ($this->_helper->Layout->getLayout() != 'nolayout') {
+            $this->_helper->Layout->setLayout('admin');
+        }
         $this->_admin_svc = new Service_Admin;
         $this->_orders_svc = new Service_Orders;
         $this->_users_svc = new Service_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
             $this->_helper->Redirector->gotoSimple('index', 'index');
         }
+        $this->view->inlineScriptMin()->loadGroup('admin-orders')
+            ->appendScript("Pet.loadView('AdminOrders');");
     }
     
     public function indexAction() {
@@ -30,8 +34,6 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $this->view->orders = $orders['data'];
         $this->view->params = $params;
         $this->view->search_form = $search_form;
-        $this->view->inlineScriptMin()
-            ->appendScript("Pet.loadView('Admin');");
     }
 
     public function detailAction() {
@@ -47,6 +49,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
     }
 
     public function addAction() {
+        $cart_svc = new Service_Cart;
+        $cart = $cart_svc->get();
         $params = $this->_request->getPost();
         $users_mapper = new Model_Mapper_Users;
         $products_mapper = new Model_Mapper_Products;
@@ -58,8 +62,11 @@ class Admin_OrdersController extends Zend_Controller_Action {
             'digitalSubscriptions'  => $digital_subscriptions
         ));
         if ($this->_request->isPost() && $form->isValid($params)) {
-            
+            //if ($cart_svc->addProduct($form->product->getValue())) {
+
+            //}
         }
+        print_r($cart_svc->get());
         $this->view->order_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }

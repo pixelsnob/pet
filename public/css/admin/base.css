@@ -276,3 +276,9 @@ input.checkbox {
 .table-list h3, .table-list li li {
     text-align: center;
 }
+
+#nolayout {
+    width: 880px;
+    height: 500px;
+    overflow: auto;
+}

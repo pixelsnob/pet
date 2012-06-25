@@ -8,6 +8,7 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
     const LENGTH  = 'length';
     const LETTER  = 'letter';
     const DIGIT   = 'digit';
+    const CHARS   = 'chars';
  
     /**
      * @var array
@@ -16,7 +17,8 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
     protected $_messageTemplates = array(
         self::LENGTH  => 'Password must be at least 6 characters in length',
         self::LETTER  => 'Password must contain at least one letter',
-        self::DIGIT   => 'Password must contain at least one number'
+        self::DIGIT   => 'Password must contain at least one number',
+        self::CHARS   => 'Password must contain only basic alphanumeric characters'
     );
     
     /**
