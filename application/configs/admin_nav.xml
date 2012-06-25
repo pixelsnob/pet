@@ -7,12 +7,12 @@
             <action>index</action>
             <module>admin</module>
             <pages>
-                <orders_add>
-                    <label>New Order</label>
+                <orders_detail class="hide">
+                    <label>Order Detail</label>
                     <controller>orders</controller>
-                    <action>add</action>
+                    <action>detail</action>
                     <module>admin</module>
-                </orders_add>
+                </orders_detail>
             </pages>
         </orders>
         <users>
