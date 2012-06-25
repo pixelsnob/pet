@@ -19,6 +19,8 @@ class Admin_UsersController extends Zend_Controller_Action {
             $this->_helper->Redirector->gotoSimple('index', 'index');
         }
         $this->_helper->FlashMessenger->setNamespace('admin_user');
+        $this->view->inlineScriptMin()->loadGroup('admin-users')
+            ->appendScript("Pet.loadView('AdminUsers');");
     }
     
     public function indexAction() {
@@ -32,8 +34,6 @@ class Admin_UsersController extends Zend_Controller_Action {
         $this->view->orders = $orders['data'];
         $this->view->params = $params;
         $this->view->search_form = $search_form;
-        $this->view->inlineScriptMin()
-            ->appendScript("Pet.loadView('Admin');");
     }
 
     public function detailAction() {
@@ -131,8 +131,6 @@ class Admin_UsersController extends Zend_Controller_Action {
         }
         $this->view->user_form = $form; 
         $this->_helper->ViewRenderer->render('form');
-        $this->view->inlineScriptMin()->loadGroup('admin-users')
-            ->appendScript("Pet.loadView('Admin'); Pet.loadView('AdminUsers');");
     }
 
     public function addAction() {
@@ -170,12 +168,10 @@ class Admin_UsersController extends Zend_Controller_Action {
         }
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->user_form = $form; 
-        $this->view->inlineScriptMin()->loadGroup('admin-users')
-            ->appendScript("Pet.loadView('Admin'); Pet.loadView('AdminUsers');");
         $this->_helper->ViewRenderer->render('form');
     }
 
-    public function changePasswordAction() {
+    /*public function changePasswordAction() {
         $params = $this->_request->getParams();
         $users_mapper = new Model_Mapper_Users;
         $id = $this->_request->getParam('id');
@@ -201,5 +197,5 @@ class Admin_UsersController extends Zend_Controller_Action {
                 array('id' => $id));
         }
         $this->view->pw_form = $pw_form;
-    }
+    }*/
 }

@@ -62,11 +62,16 @@ class Admin_OrdersController extends Zend_Controller_Action {
             'digitalSubscriptions'  => $digital_subscriptions
         ));
         if ($this->_request->isPost() && $form->isValid($params)) {
-            //if ($cart_svc->addProduct($form->product->getValue())) {
-
-            //}
+            try {
+                if (!$cart_svc->addProduct($form->product->getValue())) {
+                    throw new Exception('Error adding product to cart'); 
+                }
+                print_r($cart_svc->get());
+            } catch (Exception $e) {
+                
+            }
         }
-        print_r($cart_svc->get());
+        //print_r($cart_svc->get());
         $this->view->order_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }

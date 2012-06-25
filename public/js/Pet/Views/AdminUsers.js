@@ -9,7 +9,6 @@ Pet.AdminUsersView = Pet.AdminView.extend({
     xhr: [], // An array of Ajax XHR objects
     
     events: {
-        'click #billing-to-shipping': 'copyBillingToShipping',
         'click #change_password': 'togglePasswordFields'
     },
     
@@ -22,14 +21,6 @@ Pet.AdminUsersView = Pet.AdminView.extend({
                 $('.form dd.pw, .form dt.pw').hide();
             }
         }
-    },
-
-    copyBillingToShipping: function() {
-        $('.billing input, .billing select').each(function() {
-            var suffix = $(this).attr('id').replace(/billing_/, '');
-            $('#shipping_' + suffix).val($(this).val());
-        });
-        return false;
     },
 
     togglePasswordFields: function(el) {

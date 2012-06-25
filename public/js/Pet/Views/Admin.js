@@ -10,7 +10,8 @@ Pet.AdminView = Pet.View.extend({
     
     events: {
         'click .admin-table td': 'adminTableRowClick',
-        'hover .admin-table td': 'adminTableRowHover'
+        'hover .admin-table td': 'adminTableRowHover',
+        'click #billing-to-shipping': 'copyBillingToShipping'
     },
     
     initialize: function() {
@@ -44,6 +45,14 @@ Pet.AdminView = Pet.View.extend({
         } else {
             $(el.target).parent().find('td').removeClass('hover');
         }
+    },
+
+    copyBillingToShipping: function() {
+        $('.billing input, .billing select').each(function() {
+            var suffix = $(this).attr('id').replace(/billing_/, '');
+            $('#shipping_' + suffix).val($(this).val());
+        });
+        return false;
     }
 
 });

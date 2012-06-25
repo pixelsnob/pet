@@ -128,7 +128,6 @@ class Form_Admin_User extends Pet_Form {
      * 
      */
     public function isValid($data) {
-        $valid = true;
         if (!isset($data['username']) || !strlen(trim($data['username']))) {
             $this->user->password->setRequired(false)->clearValidators();
             $this->user->confirm_password->setRequired(false)->clearValidators();
