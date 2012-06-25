@@ -79,7 +79,6 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             'where user_id = ops.user_id';     // and expiration > $start_date";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
-                'date_format(ops.expiration, "%m/%Y") as EXPIRATION',
                 'upper(up.shipping_first_name) as FIRST_NAME_SHIPPING',
                 'upper(up.shipping_last_name) as LAST_NAME_SHIPPING',
                 'upper(up.shipping_company) as COMPANY_SHIPPING',
@@ -88,7 +87,9 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
                 'upper(up.shipping_city) as CITY_SHIPPING',
                 'upper(up.shipping_state) as STATE_SHIPPING',
                 'upper(up.shipping_postal_code) as POSTAL_CODE_SHIPPING',
-                'upper(up.shipping_country) as COUNTRY_SHIPPING'))
+                'upper(up.shipping_country) as COUNTRY_SHIPPING',
+                'date_format(ops.expiration, "%m/%Y") as EXPIRATION'
+            ))
             ->joinLeft(array('u' => 'users'), 'ops.user_id = u.id', null)
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where("ops.expiration = ($subquery)")
@@ -117,7 +118,7 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             "where user_id = ops.user_id";
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
-                'date_format(ops.expiration, "%m/%Y") as expiration',
+                'date_format(ops.expiration, "%m/%d/%Y") as expiration',
                 //'ops.expiration',
                 'u.email',
                 'up.shipping_first_name',

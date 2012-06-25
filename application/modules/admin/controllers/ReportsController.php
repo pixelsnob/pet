@@ -44,8 +44,6 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $request = $this->_request;
         $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $params = $request->getParams();
-        $date = new DateTime;
-        $date->sub(new DateInterval('P1D'));
         $search_form = new Form_Admin_Report_Subscribers;
         $this->view->search_form = $search_form;
         $search_form->populate($params);
@@ -80,36 +78,9 @@ class Admin_ReportsController extends Zend_Controller_Action {
         $this->view->search_form = $search_form;
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
-            $usa_users = $ops_mapper->getMailingListReport('usa', $search_form);
-            $intl_users = $ops_mapper->getMailingListReport('intl', $search_form);
-            if (count($usa_users) || count($intl_users)) {
-                $tmp = tempnam('tmp', 'zip');
-                $zip = new ZipArchive;
-                $zip->open($tmp, ZipArchive::OVERWRITE);
-                $date = new DateTime;
-                $date_str = $date->format('Y-m-d');
-                if (count($usa_users)) {
-                    $usa_csv = $this->_admin_svc->getCsvAsString($usa_users);
-                    $zip->addFromString("$date_str-usa.csv", $usa_csv);
-                }
-                if (count($intl_users)) {
-                    $intl_csv = $this->_admin_svc->getCsvAsString($intl_users);
-                    $date = new DateTime;
-                    $date = $date->format('Y-m-d');
-                    $zip->addFromString("$date_str-intl.csv", $intl_csv);
-                }
-                $zip->close();
-                $filename = "$date_str-postal-mailing-list.zip";
-                $this->_response->setHeader('Content-Type', 'application/zip')
-                    ->setHeader('Content-Length', filesize($tmp))
-                    ->setHeader('Content-Disposition', "attachment; filename=$filename");
-                readfile($tmp);
-                unlink($tmp); 
-                $this->_helper->Layout->disableLayout(); 
-                $this->_helper->ViewRenderer->setNoRender(true);
-                return;
+            if (!$this->_outputMailingListReport($search_form)) {
+                $this->view->no_data = true;
             }
-            $this->view->no_data = true;
         }
         $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
@@ -118,22 +89,45 @@ class Admin_ReportsController extends Zend_Controller_Action {
 
     public function mailingListAllAction() {
         $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
-        $date = new DateTime;
-        $date_str = $date->format('Y-m-d');
         $search_form = new Form_Admin_Report_MailingList;
-        $users = $ops_mapper->getMailingListReport(null, $search_form);
-        if ($users) {
-            $filename = "$date_str-apet-postal-mailing-list-all.csv";
-            $this->_response->setHeader('Content-Type', 'text/csv')
-                ->setHeader('Content-Disposition', "attachment;filename=$filename");
-            $this->_admin_svc->outputReportCsv($users);
-            $this->_helper->Layout->disableLayout(); 
-            $this->_helper->ViewRenderer->setNoRender(true);
-            return;
-        } else {
+        if (!$this->_outputMailingListReport($search_form)) {
             $this->_helper->Redirector->gotoSimple('mailing-list', 'reports',
                 'admin', array('no-results' => 1));
         }
+    }
+    
+    private function _outputMailingListReport(Form_Admin_Report_MailingList $search_form) {
+        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $usa_users = $ops_mapper->getMailingListReport('usa', $search_form);
+        $intl_users = $ops_mapper->getMailingListReport('intl', $search_form);
+        if (count($usa_users) || count($intl_users)) {
+            $tmp = tempnam('tmp', 'zip');
+            $zip = new ZipArchive;
+            $zip->open($tmp, ZipArchive::OVERWRITE);
+            $date = new DateTime;
+            $date_str = $date->format('Y-m-d');
+            if (count($usa_users)) {
+                $usa_csv = $this->_admin_svc->getCsvAsString($usa_users);
+                $zip->addFromString("$date_str-usa.csv", $usa_csv);
+            }
+            if (count($intl_users)) {
+                $intl_csv = $this->_admin_svc->getCsvAsString($intl_users);
+                $date = new DateTime;
+                $date = $date->format('Y-m-d');
+                $zip->addFromString("$date_str-intl.csv", $intl_csv);
+            }
+            $zip->close();
+            $filename = "$date_str-postal-mailing-list.zip";
+            $this->_response->setHeader('Content-Type', 'application/zip')
+                ->setHeader('Content-Length', filesize($tmp))
+                ->setHeader('Content-Disposition', "attachment; filename=$filename");
+            readfile($tmp);
+            unlink($tmp); 
+            $this->_helper->Layout->disableLayout(); 
+            $this->_helper->ViewRenderer->setNoRender(true);
+            return true;
+        }
+        return false;
     }
 
     public function transactionsAction() {
