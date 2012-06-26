@@ -23,12 +23,15 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
         if (payment_method == 'credit_card') {
             $('.form .check').hide();
             $('.form .cc').show();
+            $('.form .amount').show();
         } else if (payment_method == 'check') {
             $('.form .check').show();
             $('.form .cc').hide();
+            $('.form .amount').show();
         } else if (payment_method == 'bypass') {
             $('.form .check').hide();
             $('.form .cc').hide();
+            $('.form .amount').hide();
         }
     }
 
