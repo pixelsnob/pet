@@ -128,7 +128,6 @@ class Service_Cart {
             }
             return true;
         }
-        //$promo_svc = new Service_Promos;
         $promos_mapper = new Model_Mapper_Promos;
         $promo = $promos_mapper->getUnexpiredPromoByCode($code);
         if ($promo && $this->_cart->addPromo($promo)) {
@@ -185,13 +184,6 @@ class Service_Cart {
             'promos'    => new Model_Mapper_Promos
         ));
         $users_svc = new Service_Users;
-        // We don't need pw/username fields if user is already logged in
-        /*if ($users_svc->isAuthenticated()) {
-            $form->user->username->setValidators(array())->setRequired(false);
-            $form->user->password->setValidators(array())->setRequired(false);
-            $form->user->confirm_password->setValidators(array())
-                ->setRequired(false);
-        }*/
         $form_data = array_merge(
             $cart->billing->toArray(),
             $cart->shipping->toArray(),
@@ -270,10 +262,6 @@ class Service_Cart {
         if (!$this->_cart->get()->isFreeOrder()) {
             $data = array_merge($data, $form->payment->getValues(true));
         }
-        // Remove pw validators
-        /*$form->user->password->setValidators(array())->setRequired(false);
-        $form->user->confirm_password->setValidators(array())
-            ->setRequired(false);*/
         return $form->isValid($data); 
     }
 
@@ -296,13 +284,10 @@ class Service_Cart {
             $cart->getTotals(),
             $form->user->getValues(true),
             $form->getShippingValues(),
-            $form->info->getValues(true),
-            array(
-                'promo_id'       => ($cart->promo ? $cart->promo->id : null),
-                'old_expiration' => null
-            ),
-            array('products' => $cart->products->toArray())
+            $form->info->getValues(true)
         );
+        $data['promo_id'] = ($cart->promo ? $cart->promo->id : null);
+        $data['products'] = $cart->products->toArray();
         if (!$this->_cart->get()->isFreeOrder()) {
             $data = array_merge($data, $form->payment->getValues(true));
         }
@@ -341,9 +326,9 @@ class Service_Cart {
             // Save order data
             $orders_mapper = new Model_Mapper_Orders;
             $order->order_id = $orders_mapper->insert($order->toArray());
-            $this->_saveOrderProducts($order);
+            $this->saveOrderProducts($order);
             if (!$cart->isFreeOrder()) {
-                $order_payment_id = $this->_saveOrderPayments($order);
+                $order_payment_id = $this->saveOrderPayments($order);
             }
             // Log
             $log_data = array(
@@ -394,7 +379,7 @@ class Service_Cart {
      * @return void
      * 
      */
-    private function _saveOrderProducts(Model_Cart_Order $order) {
+    public function saveOrderProducts(Model_Cart_Order $order) {
         $users_svc  = new Service_Users;
         $is_auth    = $users_svc->isAuthenticated();
         $user_id    = $users_svc->getId();
@@ -467,7 +452,7 @@ class Service_Cart {
      * @return null|int The last insert id into OrderPayments
      * 
      */
-    private function _saveOrderPayments(Model_Cart_Order $order) {
+    public function saveOrderPayments(Model_Cart_Order $order) {
         $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
         $payments_mapper = new Model_Mapper_OrderPayments;
         foreach ($gateway_responses as $response) {

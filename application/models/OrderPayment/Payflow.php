@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Model_OrderPaymentPayflow
+ * @package Model_OrderPayment_Payflow
  * 
  */
 class Model_OrderPayment_Payflow extends Pet_Model_Abstract {

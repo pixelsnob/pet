@@ -9,7 +9,13 @@ class Form_Admin_Order extends Pet_Form {
      * @var Pet_Model_Mapper_Abstract 
      * 
      */
-    protected $_mapper;
+    protected $_users_mapper;
+
+    /**
+     * @var Pet_Model_Mapper_Abstract 
+     * 
+     */
+    protected $_promos_mapper;
 
     /**
      * @var array
@@ -24,12 +30,27 @@ class Form_Admin_Order extends Pet_Form {
     protected $_digitalSubscriptions;
 
     /**
+     * @var Model_Cart
+     * 
+     */
+    protected $_cart;
+
+    /**
      * @param Pet_Model_Mapper_Abstract $mapper
      * @return void
      */
-    public function setMapper(Pet_Model_Mapper_Abstract $mapper) {
-        $this->_mapper = $mapper;
+    public function setUsersMapper(Pet_Model_Mapper_Abstract $mapper) {
+        $this->_users_mapper = $mapper;
     }
+
+    /**
+     * @param Pet_Model_Mapper_Abstract $mapper
+     * @return void
+     */
+    public function setPromosMapper(Pet_Model_Mapper_Abstract $mapper) {
+        $this->_promos_mapper = $mapper;
+    }
+
 
     /**
      * @param array An array of Model_Product_Subscription objects
@@ -45,6 +66,14 @@ class Form_Admin_Order extends Pet_Form {
      */
     public function setDigitalSubscriptions(array $subs) {
         $this->_digitalSubscriptions = $subs;
+    }
+
+    /**
+     * @param Model_Cart $cart
+     * @return void
+     */
+    public function setCart(Model_Cart $cart) {
+        $this->_cart = $cart;
     }
 
     /**
@@ -68,7 +97,7 @@ class Form_Admin_Order extends Pet_Form {
             $digital_subscriptions[$digsub->product_id] = $digsub->name;
         }
         $user_form = new Form_SubForm_User(array(
-            'mapper' => $this->_mapper,
+            'mapper' => $this->_users_mapper,
             'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
@@ -89,10 +118,11 @@ class Form_Admin_Order extends Pet_Form {
         }
         $this->addSubform(new Form_SubForm_UserInfo, 'info');
         $promo_form = new Form_SubForm_Promo(array(
-            //'cart' => $this->_cart,
-            //'mapper' => $this->_promos
+            'cart'   => $this->_cart,
+            'mapper' => $this->_promos_mapper
         ));
         $this->addSubform($promo_form, 'promo');
+        $this->promo->promo_code->setLabel('Promo code')->clearValidators();
         $this->addSubform(new Form_Admin_SubForm_Payment, 'payment');
         $this->addElement('select', 'product', array(
             'label'        => 'Choose a Product',

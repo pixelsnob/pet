@@ -13,6 +13,7 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
         $this->_order_payments = new Model_DbTable_OrderPayments;
         $this->_payflow_mapper = new Model_Mapper_OrderPayments_Payflow;
         $this->_paypal_mapper = new Model_Mapper_OrderPayments_Paypal;
+        $this->_check_mapper = new Model_Mapper_OrderPayments_Check;
     }
  
     /**
@@ -35,9 +36,10 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
                         $op->gateway_data = $this->_paypal_mapper->getByOrderPaymentId(
                             $op->id);
                         break;
-                    //case Model_PaymentType::CHECK:
-                        
-                    //    break;
+                    case Model_PaymentType::CHECK:
+                        $op->gateway_data = $this->_check_mapper->getByOrderPaymentId(
+                            $op->id);
+                        break;
                 }
                 $op_array[] = $op;
             }
@@ -123,9 +125,14 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
                 $this->_payflow_mapper->insert($payflow_model->toArray());
                 break;
             case Model_PaymentType::PAYPAL:
-                $paypal_model = new Model_OrderPayment_Paypal($data);;
+                $paypal_model = new Model_OrderPayment_Paypal($data);
                 $paypal_model->order_payment_id = $opid;
                 $this->_paypal_mapper->insert($paypal_model->toArray());
+                break;
+            case Model_PaymentType::CHECK:
+                $check_model = new Model_OrderPayment_Check($data);
+                $check_model->order_payment_id = $opid;
+                $this->_check_mapper->insert($check_model->toArray());
                 break;
         }
     }

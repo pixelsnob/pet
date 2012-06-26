@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Model_OrderPaymentPaypal
+ * @package Model_OrderPayment_Paypal
  * 
  */
 class Model_OrderPayment_Paypal extends Pet_Model_Abstract {

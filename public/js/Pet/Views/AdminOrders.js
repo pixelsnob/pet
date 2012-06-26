@@ -13,6 +13,7 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
     
     initialize: function() {
         this.events = _.extend({}, Pet.AdminView.prototype.events, this.events)
+        Pet.AdminView.prototype.initialize.call(this);
     }
 
     /*adminTableRowClick: function(el) {

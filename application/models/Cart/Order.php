@@ -50,7 +50,8 @@ class Model_Cart_Order extends Pet_Model_Abstract {
         'old_expiration' => null,
         'user_id' => null,
         'order_id' => null,
-        'products' => array()
+        'products' => array(),
+        'check' => null
     );
 
 }

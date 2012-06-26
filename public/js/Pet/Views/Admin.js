@@ -31,6 +31,9 @@ Pet.AdminView = Pet.View.extend({
         $('.datepicker-no-max').datepicker(opts);
         opts.minDate = new Date;
         $('.datepicker-min-today').datepicker(opts);
+        if ($('form').length) {
+            $('form:first').find(':input:first:not(.hasDatepicker)').focus();
+        }
     },
 
     adminTableRowClick: function(el) {

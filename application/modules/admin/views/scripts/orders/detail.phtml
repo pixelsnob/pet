@@ -115,20 +115,22 @@
                         'title'    => 'Payment Type',
                         'callback' => function($data) {
                             $value = $data->payment_type_id;
-                            if ($value == Model_PaymentType::PAYFLOW) {
-                                return 'Payflow';
-                            } elseif (Model_PaymentType::PAYPAL) {
-                                return 'Paypal';
-                            } elseif (Model_PaymentType::CHECK) {
-                                return 'Check';
-                            } else {
-                                return 'Unknown';
+                            switch ($data->payment_type_id) {
+                                case Model_PaymentType::PAYFLOW:
+                                    return 'Payflow';
+                                case Model_PaymentType::PAYPAL:
+                                    return 'PayPal';    
+                                case Model_PaymentType::CHECK:
+                                    return 'Check';
+                                default:
+                                    return 'Unknown';    
                             }
                         }
                     ),
                     'pnref' => array('title' => 'PNREF'),
                     'correlation_id' => array('title' => 'Correlation ID'),
-                    'baid'  => array('title' => 'BAID')
+                    'baid'  => array('title' => 'BAID'),
+                    'check_number'
                 ), $payment); ?>
             <?php endforeach; ?>
         <?php else: ?>

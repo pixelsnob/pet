@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Model_OrderPaymentCheck
+ * @package Model_OrderPayment_Check
  * 
  */
 class Model_OrderPayment_Check extends Pet_Model_Abstract {

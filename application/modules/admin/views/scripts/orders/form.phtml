@@ -118,6 +118,11 @@
                             <?php echo $this->order_form->payment->amount->renderViewHelper(); ?>
                             <?php echo $this->order_form->payment->amount->renderErrors(); ?>
                         </dd>
+                        <dt class="promo"><?php echo $this->order_form->promo->promo_code->getLabel(); ?></dt>
+                        <dd class="promo">
+                            <?php echo $this->order_form->promo->promo_code->renderViewHelper(); ?>
+                            <?php echo $this->order_form->promo->promo_code->renderErrors(); ?>
+                        </dd>
                     </dl>
                 </div> 
                 <div class="admin-form-right">

@@ -21,6 +21,7 @@ Pet.AdminUsersView = Pet.AdminView.extend({
                 $('.form dd.pw, .form dt.pw').hide();
             }
         }
+        Pet.AdminView.prototype.initialize.call(this);
     },
 
     togglePasswordFields: function(el) {
