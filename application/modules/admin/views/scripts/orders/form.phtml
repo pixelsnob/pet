@@ -113,6 +113,10 @@
                         <dd class="payment-method radio-list">
                             <?php echo $this->order_form->payment->payment_method; ?>
                         </dd>
+                    </dl>
+                </div> 
+                <div class="admin-form-right">
+                    <dl class="form">
                         <dt class="amount"><?php echo $this->order_form->payment->amount->getLabel(); ?></dt>
                         <dd class="amount">
                             <?php echo $this->order_form->payment->amount->renderViewHelper(); ?>
@@ -123,31 +127,25 @@
                             <?php echo $this->order_form->promo->promo_code->renderViewHelper(); ?>
                             <?php echo $this->order_form->promo->promo_code->renderErrors(); ?>
                         </dd>
-                    </dl>
-                </div> 
-                <div class="admin-form-right">
-                    <dl class="form">
-                        <dt><?php echo $this->order_form->payment->cc_num->getLabel(); ?></dt>
-                        <dd class="cc-num">
+                        <dt class="cc-num cc"><?php echo $this->order_form->payment->cc_num->getLabel(); ?></dt>
+                        <dd class="cc-num cc">
                             <?php echo $this->order_form->payment->cc_num->renderViewHelper(); ?>
                             <?php echo $this->order_form->payment->cc_num->renderErrors(); ?>
                         </dd>
-                        <dt class="cc-exp"><label>Expiration</label></dt>
-                        <dd class="cc-exp">
+                        <dt class="cc-exp cc"><label>Expiration</label></dt>
+                        <dd class="cc-exp cc">
                             <?php echo $this->order_form->payment->cc_exp_month->renderViewHelper(); ?>
                             <?php echo $this->order_form->payment->cc_exp_year->renderViewHelper(); ?>
                             <?php echo $this->order_form->payment->cc_exp_month->renderErrors(); ?>
                             <?php echo $this->order_form->payment->cc_exp_year->renderErrors(); ?>
                         </dd>
-                        <dt class="cc-cvv"><?php echo $this->order_form->payment->cc_cvv->getLabel(); ?></dt>
-                        <dd class="cc-cvv">
+                        <dt class="cc-cvv cc"><?php echo $this->order_form->payment->cc_cvv->getLabel(); ?></dt>
+                        <dd class="cc-cvv cc">
                             <?php echo $this->order_form->payment->cc_cvv->renderViewHelper(); ?>
                             <?php echo $this->order_form->payment->cc_cvv->renderErrors(); ?>
                         </dd>
-                    </dl>
-                    <dl class="form check">
-                        <dt class="cc-cvv"><?php echo $this->order_form->payment->check->getLabel(); ?></dt>
-                        <dd class="cc-cvv">
+                        <dt class="check"><?php echo $this->order_form->payment->check->getLabel(); ?></dt>
+                        <dd class="check">
                             <?php echo $this->order_form->payment->check->renderViewHelper(); ?>
                             <?php echo $this->order_form->payment->check->renderErrors(); ?>
                         </dd>

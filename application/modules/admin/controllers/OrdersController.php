@@ -19,7 +19,6 @@ class Admin_OrdersController extends Zend_Controller_Action {
         }
         $this->view->inlineScriptMin()->loadGroup('admin-orders')
             ->appendScript("Pet.loadView('AdminOrders');");
-        $this->_helper->FlashMessenger->setNamespace('admin_order');
     }
     
     public function indexAction() {
@@ -47,6 +46,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
             throw new Exception("Order $id not found");
         }
         $this->view->order = $order;
+        $this->view->messages = $this->_helper->FlashMessenger
+            ->setNamespace('order_detail')->getMessages();
     }
 
     public function addAction() {
@@ -78,7 +79,6 @@ class Admin_OrdersController extends Zend_Controller_Action {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             try {
-                throw new Exception('fuck');
                 if (!$cart_svc->addProduct($form->product->getValue())) {
                     throw new Exception('Error adding product to cart'); 
                 }
@@ -91,7 +91,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 $data = array_merge(
                     $form->billing->getValues(true),
                     $form->shipping->getValues(true),
-                    $cart->getTotals(),
+                    //$cart->getTotals(),
                     $form->user->getValues(true),
                     $form->info->getValues(true),
                     $form->payment->getValues(true)
@@ -99,12 +99,14 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 $data['promo_id'] = ($cart->promo ? $cart->promo->id : null);
                 $data['products'] = $cart->products->toArray();
                 $order = new Model_Cart_Order($data);
-                if (!$cart->isFreeOrder() && $order->payment_method ==
-                        'credit_card') {
-                    $gateway->processSale($order);
-                }
                 if ($order->payment_method == 'bypass') {
                     $order->total = 0;
+                } elseif ($form->payment->amount->getValue()) {
+                    $order->total = $form->payment->amount->getValue();
+                    $order->discount = 0;
+                }
+                if ($order->total > 0 && $order->payment_method == 'credit_card') {
+                    $gateway->processSale($order);
                 }
                 $order->password = $this->_users_svc->generateHash(
                     $order->password);
@@ -116,7 +118,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 // Save order data
                 $order->order_id = $orders_mapper->insert($order->toArray());
                 $cart_svc->saveOrderProducts($order);
-                if (!$cart->isFreeOrder()) {
+                if ($order->total > 0) {
                     if ($order->payment_method == 'credit_card') {
                         $order_payment_id = $cart_svc->saveOrderPayments($order);
                     } elseif ($order->payment_method == 'check') {
@@ -143,13 +145,20 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     $gateway->getRawCalls()
                 );
                 $db->commit();
+                $this->_helper->FlashMessenger->setNamespace('order_detail')
+                    ->addMessage('Order added');
+                $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
+                    array('id' => $order->order_id));
             } catch (Exception $e) {
                 $db->rollBack();
-                $this->_helper->FlashMessenger->addMessage($e->getMessage());
-                $this->view->messages = $this->_helper->FlashMessenger
-                    ->getCurrentMessages();
+                $this->_helper->FlashMessenger->setNamespace('order_add')
+                    ->addMessage($e->getMessage());
             }
+        } elseif ($this->_request->isPost()) {
+            $this->_helper->FlashMessenger->setNamespace('order_add')
+                ->addMessage('Please recheck information entered');
         }
+        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->order_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }

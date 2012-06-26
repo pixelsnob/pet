@@ -160,11 +160,11 @@ DROP TABLE IF EXISTS `pet`.`users` ;
 
 CREATE  TABLE IF NOT EXISTS `pet`.`users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `username` VARCHAR(30) NOT NULL ,
+  `username` VARCHAR(30) NULL ,
   `first_name` VARCHAR(50) NOT NULL ,
   `last_name` VARCHAR(50) NOT NULL ,
   `email` VARCHAR(75) NULL DEFAULT NULL ,
-  `password` VARCHAR(128) NOT NULL ,
+  `password` VARCHAR(128) NULL ,
   `is_staff` TINYINT(4) NOT NULL DEFAULT '0' ,
   `is_active` TINYINT(4) NOT NULL DEFAULT '1' ,
   `is_superuser` TINYINT(4) NOT NULL DEFAULT '0' ,
@@ -616,8 +616,6 @@ CREATE  TABLE IF NOT EXISTS `pet`.`user_profiles` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `user_profiles_ibfk_1` (`user_id` ASC) ,
   INDEX `shipping_country` (`shipping_country` ASC) ,
-  INDEX `opt_in` (`opt_in` ASC) ,
-  INDEX `opt_in_partner` (`opt_in_partner` ASC) ,
   CONSTRAINT `user_profiles_ibfk_1`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )

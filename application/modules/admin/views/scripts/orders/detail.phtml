@@ -1,5 +1,7 @@
 
 <div id="order-detail">
+    
+    <?php echo $this->flashMessenger($this->messages); ?>
     <h2>Order #<?php echo $this->escape($this->order->id); ?></h2>
 
     <section class="admin-list-left">
