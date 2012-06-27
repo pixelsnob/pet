@@ -53,12 +53,12 @@
                 </change_password>
             </pages>
         </users>
-        <payments>
+        <!--<payments>
             <label>Payments</label>
             <controller>payments</controller>
             <action>index</action>
             <module>admin</module>
-        </payments>
+        </payments>-->
         <reports>
             <label>Reports</label>
             <controller>reports</controller>

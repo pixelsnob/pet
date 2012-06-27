@@ -122,6 +122,8 @@ input.checkbox {
 .admin-list {
     overflow: hidden;
     margin-bottom: 20px;
+    table-layout: fixed;
+    width: 380px;
 }
 
 .admin-list td, .admin-list th {
@@ -135,6 +137,9 @@ input.checkbox {
 .admin-list td {
     background: #f4f4f4;
     width: 230px;
+    overflow: hidden;
+    white-space: nowrap;
+    table-layout: fixed;
 }
 
 
@@ -142,26 +147,6 @@ input.checkbox {
     background: #eee;
     width: 150px;
 }
-
-/*.admin-list dt, .admin-list dd {
-    float: left;
-    padding: 6px;
-}*/
-
-/*.admin-list dt {
-    clear: left;
-    width: 150px;
-    font-weight: bold;
-    margin: 0;
-    margin-bottom: 2px;
-    background: #eee;
-}
-
-.admin-list dd {
-    width: 230px;
-    margin-left: 2px;
-    background: #f4f4f4;
-}*/
 
 .admin-list-left, .admin-list-right {
     float: left;
