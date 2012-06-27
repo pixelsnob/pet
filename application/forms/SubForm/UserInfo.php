@@ -3,7 +3,7 @@
  * Opt-in, informational fields for user profile
  * 
  */
-class Form_SubForm_UserInfo extends Zend_Form_SubForm {
+class Form_SubForm_UserInfo extends Pet_Form_SubForm {
 
     /**
      * @return void

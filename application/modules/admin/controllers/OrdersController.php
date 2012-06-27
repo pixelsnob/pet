@@ -54,8 +54,10 @@ class Admin_OrdersController extends Zend_Controller_Action {
         if ($this->_request->getParam('cancel')) {
             $this->_helper->Redirector->gotoSimple('index');
         }
+        $this->_helper->FlashMessenger->setNamespace('order_add');
         $db = Zend_Db_Table::getDefaultAdapter();
         $cart_svc = new Service_Cart;
+        // Reset each time, we don't need values to perist
         $cart_svc->reset();
         $params                 = $this->_request->getPost();
         $orders_mapper          = new Model_Mapper_Orders;
@@ -102,9 +104,6 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 $data['promo_id'] = ($cart->promo ? $cart->promo->id : null);
                 $data['products'] = $cart->products->toArray();
                 $order = new Model_Cart_Order($data);
-                //$order->total = 0;
-                //$order->discount = 0;
-                //print_r($order); exit;
                 if ($form->payment->amount->getValue()) {
                     $order->total = $form->payment->amount->getValue();
                     $order->discount = 0;
@@ -189,12 +188,27 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     array('id' => $order->order_id));
             } catch (Exception $e) {
                 $db->rollBack();
-                $this->_helper->FlashMessenger->setNamespace('order_add')
-                    ->addMessage($e->getMessage());
+                $this->_helper->FlashMessenger->addMessage($e->getMessage());
+                $log_data = array(
+                    'type'     => 'process',
+                    'order'    => $order->toArray(),
+                    'order_id' => $order->order_id,
+                    'user_id'  => $order->user_id
+                );
+                // These should fail silently if they do fail
+                try {
+                    $gateway->voidCalls();
+                    // Log
+                    $ot_mapper->insert(
+                        false,
+                        $log_data,
+                        $gateway->getRawCalls(),
+                        array($e->getMessage() . ' -- ' . $e->getTraceAsString())
+                    );
+                } catch (Exception $e1) {}
             }
         } elseif ($this->_request->isPost()) {
-            $this->_helper->FlashMessenger->setNamespace('order_add')
-                ->addMessage('Please recheck information entered');
+            $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->order_form = $form;

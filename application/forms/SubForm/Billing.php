@@ -3,7 +3,7 @@
  * Billing fields for user profile
  * 
  */
-class Form_SubForm_Billing extends Zend_Form_SubForm {
+class Form_SubForm_Billing extends Pet_Form_SubForm {
 
     /**
      * @var array

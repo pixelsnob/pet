@@ -3,7 +3,7 @@
  * Promo code subform
  * 
  */
-class Form_SubForm_Promo extends Zend_Form_SubForm {
+class Form_SubForm_Promo extends Pet_Form_SubForm {
     
     /**
      * @var Model_Cart

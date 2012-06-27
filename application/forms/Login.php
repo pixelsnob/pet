@@ -38,6 +38,7 @@ class Form_Login extends Pet_Form {
      * 
      */
     public function init() {
+        parent::init();
         $this->addElement('text', 'username', array(
             'label' => 'Username',
             'id' => 'login-username',

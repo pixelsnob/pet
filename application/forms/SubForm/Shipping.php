@@ -3,7 +3,7 @@
  * Shipping fields for user profile
  * 
  */
-class Form_SubForm_Shipping extends Zend_Form_SubForm {
+class Form_SubForm_Shipping extends Pet_Form_SubForm {
 
     /**
      * @var array

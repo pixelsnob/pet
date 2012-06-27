@@ -6,46 +6,46 @@
             <fieldset class="account">
                 <legend>Account Information</legend>
                 <dl class="form">
-                    <dt><?php echo $this->user_form->user->username->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->user->username->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->user->username->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->username->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->user_form->user->email->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->user->email->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->user->email->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->email->renderErrors(); ?>
                     </dd>
                     <?php if ($this->user_form->getMode() == 'edit'): ?>
-                    <dt><?php echo $this->user_form->change_password->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->change_password->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->change_password->renderViewHelper(); ?>
                         <?php echo $this->user_form->change_password->renderErrors(); ?>
                     </dd>
                     <?php endif; ?>
-                    <dt class="pw"><?php echo $this->user_form->user->password->getLabel(); ?></dt>
+                    <dt class="pw"><?php echo $this->user_form->user->password->renderLabel(); ?></dt>
                     <dd class="pw">
                         <?php echo $this->user_form->user->password->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->password->renderErrors(); ?>
                     </dd>
-                    <dt class="pw"><?php echo $this->user_form->user->confirm_password->getLabel(); ?></dt>
+                    <dt class="pw"><?php echo $this->user_form->user->confirm_password->renderLabel(); ?></dt>
                     <dd class="pw">
                         <?php echo $this->user_form->user->confirm_password->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->confirm_password->renderErrors(); ?>
                     </dd>
                     <?php if ($this->show_expiration_fields): ?>
-                    <dt><?php echo $this->user_form->expiration->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->expiration->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->expiration->renderViewHelper(); ?>
                         <?php echo $this->user_form->expiration->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->user_form->digital_only->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->digital_only->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->digital_only->renderViewHelper(); ?>
                         <?php echo $this->user_form->digital_only->renderErrors(); ?>
                     </dd>
                     <?php endif; ?>
-                    <dt><?php echo $this->user_form->is_active->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->is_active->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->is_active->renderViewHelper(); ?>
                         <?php echo $this->user_form->is_active->renderErrors(); ?>
@@ -55,18 +55,18 @@
             <fieldset class="billing">
                 <legend>Billing Information</legend>
                 <dl class="form">
-                    <dt><?php echo $this->user_form->user->first_name->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->user->first_name->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->user->first_name->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->first_name->renderErrors(); ?>
                     </dd>
-                    <dt><?php echo $this->user_form->user->last_name->getLabel(); ?></dt>
+                    <dt><?php echo $this->user_form->user->last_name->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->user->last_name->renderViewHelper(); ?>
                         <?php echo $this->user_form->user->last_name->renderErrors(); ?>
                     </dd>
                     <?php foreach ($this->user_form->billing as $el): ?>
-                        <dt><?php echo $el->getLabel(); ?></dt>
+                        <dt><?php echo $el->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $el->renderViewHelper(); ?>
                             <?php echo $el->renderErrors(); ?>
@@ -81,7 +81,7 @@
                 <p><a href="#" id="billing-to-shipping">Copy billing to shipping</a></p>
                 <dl class="form">
                     <?php foreach ($this->user_form->shipping as $el): ?>
-                        <dt><?php echo $el->getLabel(); ?></dt>
+                        <dt><?php echo $el->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $el->renderViewHelper(); ?>
                             <?php echo $el->renderErrors(); ?>

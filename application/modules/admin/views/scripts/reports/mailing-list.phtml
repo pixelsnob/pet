@@ -2,7 +2,7 @@
 <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="search" id="search-form">
     <p><a href="<?php echo $this->url(array('action' => 'mailing-list-all')); ?>">All current subs</a></p>
     <dl class="form">
-        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->getLabel(); ?></dt>
+        <dt class="date-start"><?php echo $this->search_form->date_range->start_date->renderLabel(); ?></dt>
         <dd class="date-start">
             <?php echo $this->search_form->date_range->start_date->renderViewHelper(); ?>
             <?php echo $this->search_form->date_range->start_date->renderErrors(); ?>

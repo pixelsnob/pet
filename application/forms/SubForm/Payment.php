@@ -3,7 +3,7 @@
  * Payment info subform
  * 
  */
-class Form_SubForm_Payment extends Zend_Form_SubForm {
+class Form_SubForm_Payment extends Pet_Form_SubForm {
     
     /** 
      * @return void

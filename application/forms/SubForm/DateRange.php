@@ -3,7 +3,7 @@
  * Date range subform
  * 
  */
-class Form_SubForm_DateRange extends Zend_Form_SubForm {
+class Form_SubForm_DateRange extends Pet_Form_SubForm {
 
     /**
      * @return void

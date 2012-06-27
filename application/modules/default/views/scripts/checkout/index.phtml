@@ -9,23 +9,23 @@
                     <legend>Create your account</legend>
                     <dl class="form">
                         <?php if (!$this->is_authenticated && $this->cart->products->hasDigitalSubscription()): ?>
-                            <dt><?php echo $this->checkout_form->user->username->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->user->username->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->user->username->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->user->username->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->user->password->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->user->password->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->user->password->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->user->password->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->user->confirm_password->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->user->confirm_password->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->user->confirm_password->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->user->confirm_password->renderErrors(); ?>
                             </dd>
                         <?php endif; ?>
-                        <dt><?php echo $this->checkout_form->user->email->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->user->email->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->user->email->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->user->email->renderErrors(); ?>
@@ -40,53 +40,53 @@
                         </p>
                     <?php endif; ?>
                     <dl class="form">
-                        <dt><?php echo $this->checkout_form->user->first_name->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->user->first_name->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->user->first_name->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->user->first_name->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->user->last_name->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->user->last_name->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->user->last_name->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->user->last_name->renderErrors(); ?>
                         </dd>
 
-                        <dt><?php echo $this->checkout_form->billing->billing_address->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_address->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_address->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_address->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->billing->billing_address_2->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_address_2->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_address_2->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_address_2->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->billing->billing_company->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_company->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_company->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_company->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->billing->billing_city->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_city->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_city->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_city->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->billing->billing_state->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_state->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_state->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_state->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->billing->billing_postal_code->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_postal_code->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_postal_code->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_postal_code->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->billing->billing_country->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_country->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_country->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_country->renderErrors(); ?>
                         </dd>
-                        <dt><?php echo $this->checkout_form->billing->billing_phone->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->billing->billing_phone->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->billing->billing_phone->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->billing->billing_phone->renderErrors(); ?>
@@ -133,7 +133,7 @@
                         </dd>
                     </dl>
                     <dl class="form cc<?php echo ($this->cart->payment->payment_method != 'credit_card' ? ' hide' : ''); ?>">
-                        <dt><?php echo $this->checkout_form->payment->cc_num->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->payment->cc_num->renderLabel(); ?></dt>
                         <dd class="cc-num">
                             <?php echo $this->checkout_form->payment->cc_num->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->payment->cc_num->renderErrors(); ?>
@@ -145,7 +145,7 @@
                             <?php echo $this->checkout_form->payment->cc_exp_month->renderErrors(); ?>
                             <?php echo $this->checkout_form->payment->cc_exp_year->renderErrors(); ?>
                         </dd>
-                        <dt class="cc-cvv"><?php echo $this->checkout_form->payment->cc_cvv->getLabel(); ?></dt>
+                        <dt class="cc-cvv"><?php echo $this->checkout_form->payment->cc_cvv->renderLabel(); ?></dt>
                         <dd class="cc-cvv">
                             <?php echo $this->checkout_form->payment->cc_cvv->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->payment->cc_cvv->renderErrors(); ?>
@@ -157,52 +157,52 @@
                     <fieldset class="shipping tall<?php echo ($this->cart->use_shipping ? '' : ' hide'); ?>">
                         <legend>Ship your magazines to . . .</legend>
                         <dl class="form">
-                            <dt><?php echo $this->checkout_form->shipping->shipping_first_name->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_first_name->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_first_name->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_first_name->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_last_name->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_last_name->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_last_name->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_last_name->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_address->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_address->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_address->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_address->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_address_2->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_address_2->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_address_2->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_address_2->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_company->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_company->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_company->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_company->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_city->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_city->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_city->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_city->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_state->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_state->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_state->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_state->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_postal_code->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_postal_code->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_postal_code->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_postal_code->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_country->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_country->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_country->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_country->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->shipping->shipping_phone->getLabel(); ?></dt>
+                            <dt><?php echo $this->checkout_form->shipping->shipping_phone->renderLabel(); ?></dt>
                             <dd>
                                 <?php echo $this->checkout_form->shipping->shipping_phone->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->shipping->shipping_phone->renderErrors(); ?>
@@ -213,7 +213,7 @@
                 <fieldset class="promo-code">
                     <legend>Do you have a promo code?</legend>
                     <dl class="form">
-                        <dt><?php echo $this->checkout_form->promo->promo_code->getLabel(); ?></dt>
+                        <dt><?php echo $this->checkout_form->promo->promo_code->renderLabel(); ?></dt>
                         <dd>
                             <?php echo $this->checkout_form->promo->promo_code->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->promo->promo_code->renderErrors(); ?>

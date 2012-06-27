@@ -1,11 +1,11 @@
 <?php
 /**
- * PET form base class
+ * PET subform base class
  * 
  * @package Pet_Form
  * 
  */
-class Pet_Form extends Zend_Form {
+class Pet_Form_SubForm extends Zend_Form_SubForm {
     
     /**
      * @return void
@@ -15,4 +15,6 @@ class Pet_Form extends Zend_Form {
         $this->addElementPrefixPath('Pet_Form_Decorator', 'Pet/Form/Decorator',
             'decorator');
     }
+    
 }
+
