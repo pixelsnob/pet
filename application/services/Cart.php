@@ -52,39 +52,6 @@ class Service_Cart {
     }
 
     /**
-     * @param string $code
-     * @return void
-     * 
-     */
-    public function addPromo($code) {
-        $cart = $this->_cart_mapper->get();
-        if (!strlen(trim($code))) {
-            if ($cart->promo) {
-                $this->_message = 'Promo removed';
-                $this->_cart_mapper->removePromo();
-            }
-            return true;
-        }
-        $promos_mapper = new Model_Mapper_Promos;
-        $promo = $promos_mapper->getUnexpiredPromoByCode($code);
-        if ($promo && $this->_cart_mapper->addPromo($promo)) {
-            $this->_message = "Promo $code added";
-            return true;
-        } else {
-            $this->_message = 'Promo is not valid';
-            return false;
-        }
-    }
-    
-    /**
-     * @return void
-     * 
-     */
-    public function removePromo() {
-        $this->_cart_mapper->removePromo();
-    }
-
-    /**
      * @return Form_Cart
      * 
      */

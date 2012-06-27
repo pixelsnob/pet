@@ -28,7 +28,42 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
             }
         }
     }
-
+    
+    /**
+     * Convenience method used to pull an entire order
+     * 
+     * @param int $id
+     * @return Model_Order
+     * 
+     */
+    public function getFullOrder($id) {
+        $op_mapper            = new Model_Mapper_OrderProducts;
+        $ops_mapper           = new Model_Mapper_OrderProductSubscriptions;
+        $opg_mapper           = new Model_Mapper_OrderProductGifts;
+        $payments_mapper      = new Model_Mapper_OrderPayments;
+        $products_mapper      = new Model_Mapper_Products;
+        $users_svc            = new Service_Users;
+        $profiles_mapper      = new Model_Mapper_UserProfiles;
+        $promos_mapper        = new Model_Mapper_Promos;
+        $msg_suffix           = " for order_id $id";
+        $order = $this->get($id);
+        if (!$order) {
+            $msg = 'Error retrieving order' . $msg_suffix;
+            throw new Exception($msg);
+        }
+        $order->user          = $users_svc->getUser($order->user_id);
+        $order->user_profile  = $users_svc->getProfile($order->user->id);
+        $order->products      = $op_mapper->getByOrderId($order->id);
+        $order->payments      = $payments_mapper->getByOrderId($order->id); 
+        $order->subscriptions = $ops_mapper->getByOrderId($order->id);
+        $order->expirations   = $users_svc->getExpirations($order->user->id);
+        $order->gifts         = $opg_mapper->getByOrderId($order->id);
+        if ($order->promo_id) {
+            $order->promo     = $promos_mapper->getById($order->promo_id);
+        }
+        return $order;
+    }
+    
     /**
      * @param bool $email_sent
      * @return array An array of Model_Order objects

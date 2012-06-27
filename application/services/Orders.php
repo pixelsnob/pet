@@ -12,7 +12,7 @@ class Service_Orders {
      * 
      */
     public function __construct() {
-        $this->_orders = new Model_Mapper_Orders;
+        $this->_orders_mapper = new Model_Mapper_Orders;
     }
     
     /**
@@ -20,45 +20,9 @@ class Service_Orders {
      * @return null|Model_Order
      * 
      */
-    public function getById($id) {
-        return $this->_orders->get($id); 
-    }
-    
-    /**
-     * Convenience method used to pull an entire order
-     * 
-     * @param int $id
-     * @return Model_Order
-     * 
-     */
-    public function getFullOrder($id) {
-        $op_mapper            = new Model_Mapper_OrderProducts;
-        $ops_mapper           = new Model_Mapper_OrderProductSubscriptions;
-        $opg_mapper           = new Model_Mapper_OrderProductGifts;
-        $payments_mapper      = new Model_Mapper_OrderPayments;
-        $products_mapper      = new Model_Mapper_Products;
-        $users_svc            = new Service_Users;
-        $profiles_mapper      = new Model_Mapper_UserProfiles;
-        $promos_mapper        = new Model_Mapper_Promos;
-        $msg_suffix           = " for order_id $id";
-    
-        $order = $this->getById($id);
-        if (!$order) {
-            $msg = 'Error retrieving order' . $msg_suffix;
-            throw new Exception($msg);
-        }
-        $order->user          = $users_svc->getUser($order->user_id);
-        $order->user_profile  = $users_svc->getProfile($order->user->id);
-        $order->products      = $op_mapper->getByOrderId($order->id);
-        $order->payments      = $payments_mapper->getByOrderId($order->id); 
-        $order->subscriptions = $ops_mapper->getByOrderId($order->id);
-        $order->expirations   = $users_svc->getExpirations($order->user->id);
-        $order->gifts         = $opg_mapper->getByOrderId($order->id);
-        if ($order->promo_id) {
-            $order->promo     = $promos_mapper->getById($order->promo_id);
-        }
-        return $order;
-    }
+    /*public function getById($id) {
+        return $this->_orders_mapper->get($id); 
+    }*/
     
     /**
      * @return void
@@ -72,17 +36,16 @@ class Service_Orders {
         try {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
-            $orders          = $this->_orders->getByEmailSent(false);
+            $orders          = $this->_orders_mapper->getByEmailSent(false);
             $orders_sent     = array();
             $mail_exceptions = array();
             foreach ($orders as $order) {
-                $full_order = $this->getFullOrder($order->id);
+                $full_order = $this->_orders_mapper->getFullOrder($order->id);
                 if (!$full_order) {
                     $msg = "Error retrieving order for id {$order->id}";
                     throw new Exception($msg);
                 }
                 $view->order = $full_order;
-                //print_r($full_order);
                 $message = $view->render('emails/order.phtml');
 
                 try {
@@ -100,7 +63,7 @@ class Service_Orders {
             }
             if (!empty($orders_sent)) {
                 foreach ($orders_sent as $order_id) {
-                    $this->_orders->updateEmailSent($order->id, true);
+                    $this->_orders_mapper->updateEmailSent($order->id, true);
                 }
             }
             $db->commit();
@@ -158,7 +121,7 @@ class Service_Orders {
                     continue; 
                 }
                 // Get order
-                $order = $this->getFullOrder($sub->order_id);
+                $order = $this->_orders_mapper->getFullOrder($sub->order_id);
                 if (!$order) {
                     throw new Exception('Error retrieving order');
                 }

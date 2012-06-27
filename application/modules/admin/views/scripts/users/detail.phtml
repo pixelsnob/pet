@@ -1,9 +1,15 @@
 
 <div id="user-detail">
-    <p><a href="<?php echo $this->serverUrl($this->url(array('action' => 'edit', 'id' => $this->user->id))); ?>">Edit this user</a></p>
     <section class="admin-list-left">
-        <?php echo $this->objectToAdminList(array(
-            'id'          => array('title' => 'User ID'),
+        <?php
+            $url = $this->serverUrl($this->url(array('action' => 'edit', 'id' => $this->user->id))); 
+            echo $this->objectToAdminList(array(
+            'id'          => array(
+                'title' => 'User ID',
+                'callback' => function($data) use ($url) {
+                    return '<a href="' . $url . '" title="Edit this user">' . $data->id . '</a>';
+                },
+            ),
             'username',
             'email'       => array('format' => 'email'),
             'date_joined' => array('format' => 'datetime'),

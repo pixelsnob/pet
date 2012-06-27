@@ -260,8 +260,24 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
      * @return bool
      * 
      */
-    public function addPromo(Model_Promo $promo) {
-        return $this->_cart->addPromo($promo);
+    public function addPromo($code) {
+        $cart = $this->get();
+        if (!strlen(trim($code))) {
+            if ($cart->promo) {
+                $this->_message = 'Promo removed';
+                $this->_cart->removePromo();
+            }
+            return true;
+        }
+        $promos_mapper = new Model_Mapper_Promos;
+        $promo = $promos_mapper->getUnexpiredPromoByCode($code);
+        if ($promo && $this->_cart->addPromo($promo)) {
+            $this->_message = "Promo $code added";
+            return true;
+        } else {
+            $this->_message = 'Promo is not valid';
+            return false;
+        }
     }
 
     /**

@@ -12,7 +12,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
             $this->_helper->Layout->setLayout('admin');
         }
         $this->_admin_svc = new Service_Admin;
-        $this->_orders_svc = new Service_Orders;
+        //$this->_orders_svc = new Service_Orders;
+        $this->_orders_mapper = new Model_Mapper_Orders;
         $this->_users_svc = new Service_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
             $this->_helper->Redirector->gotoSimple('index', 'index');
@@ -41,7 +42,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
         if (!$id) {
             throw new Exception('Order id was not supplied');
         }
-        $order = $this->_orders_svc->getFullOrder($id);
+        $order = $this->_orders_mapper->getFullOrder($id);
         if (!$order) {
             throw new Exception("Order $id not found");
         }

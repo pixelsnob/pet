@@ -11,7 +11,7 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
      */
     public function objectToAdminList(array $fields, $data) {
         $view = $this->view;
-        $out = "<dl class=\"admin-list\">\n";
+        $out = "<table class=\"admin-list\">\n";
         foreach ($fields as $k => $field) {
             $value = '';
             $i = (!is_array($field) ? $field : $k);
@@ -45,10 +45,10 @@ class Pet_View_Helper_ObjectToAdminList extends Zend_View_Helper_Abstract {
                 }
             }
             $value = (strlen(trim($value)) ? $value : '&nbsp;');
-            $out .= "<dt>{$title}:</dt>\n";
-            $out .= "<dd>{$value}</dd>\n";
+            $out .= "<tr>\n<th>{$title}:</th>\n";
+            $out .= "<td>{$value}</td>\n</tr>\n";
         }
-        $out .= "</dl>\n";
+        $out .= "</table>\n";
         return $out;
     }
 }

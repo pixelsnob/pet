@@ -5,14 +5,24 @@
     <h2>Order #<?php echo $this->escape($this->order->id); ?></h2>
 
     <section class="admin-list-left">
+        <?php $url = $this->serverUrl($this->url(array('controller' => 'users', 'action' => 'detail', 'id' => $this->order->user_id)));?>
         <?php echo $this->objectToAdminList(array(
-            'user_id'      => array('title' => 'User ID'),
+            'user_id'      => array(
+                'callback' => function($data) use ($url) {
+                    return '<a href="' . $url . '" title="View this user">' . $data->user_id . '</a>';
+                },
+                'title' => 'User ID'
+            ),
             'username'     => array('callback' => function($data) {
                 return $data->user->username;
             }),
             'date_created' => array('format' => 'datetime'),
             'date_updated' => array('format' => 'datetime'),
-            'email' 
+            'email' => array(
+                'callback' => function($data) {
+                    return '<a href="mailto:' . $data->email . '">' . $data->email . '</a>';
+                }
+            )
         ), $this->order); ?>
     </section>
     <section class="admin-list-right">

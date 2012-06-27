@@ -84,7 +84,7 @@ input.checkbox {
     width: 900px;
 }
 
-.admin-table {
+.admin-table, .admin-list {
     margin: 5px 0 15px 0;    
     border-collapse: separate;
     border-spacing: 2px;
@@ -124,12 +124,31 @@ input.checkbox {
     margin-bottom: 20px;
 }
 
-.admin-list dt, .admin-list dd {
-    float: left;
+.admin-list td, .admin-list th {
     padding: 6px;
+    text-align: left;
+    white-space: nowrap;
+    margin: 5px !important;
+
 }
 
-.admin-list dt {
+.admin-list td {
+    background: #f4f4f4;
+    width: 230px;
+}
+
+
+.admin-list th {
+    background: #eee;
+    width: 150px;
+}
+
+/*.admin-list dt, .admin-list dd {
+    float: left;
+    padding: 6px;
+}*/
+
+/*.admin-list dt {
     clear: left;
     width: 150px;
     font-weight: bold;
@@ -142,7 +161,7 @@ input.checkbox {
     width: 230px;
     margin-left: 2px;
     background: #f4f4f4;
-}
+}*/
 
 .admin-list-left, .admin-list-right {
     float: left;

@@ -9,8 +9,8 @@ Pet.AdminUsersView = Pet.AdminView.extend({
     xhr: [], // An array of Ajax XHR objects
     
     events: {
-        'click #users .admin-table td': 'adminTableRowClick',
-        'hover #users .admin-table td': 'adminTableRowHover',
+        'click #users .admin-table td, #user-detail .admin-table td': 'adminTableRowClick',
+        'hover #users .admin-table td, #user-detail .admin-table td': 'adminTableRowHover',
         'click #change_password': 'togglePasswordFields',
         'click #user-edit .submit': 'overlayFormSubmit'
     },
