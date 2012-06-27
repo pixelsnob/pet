@@ -9,8 +9,6 @@ Pet.AdminView = Pet.View.extend({
     xhr: [], // An array of Ajax XHR objects
     
     events: {
-        'click .admin-table td': 'adminTableRowClick',
-        'hover .admin-table td': 'adminTableRowHover',
         'click #billing-to-shipping': 'copyBillingToShipping'
     },
     
@@ -56,7 +54,15 @@ Pet.AdminView = Pet.View.extend({
             $('#shipping_' + suffix).val($(this).val());
         });
         return false;
+    },
+    
+    overlayFormSubmit: function() {
+        this.showSpinnerOverlay(function() {
+            $('form').get(0).submit();
+        }); 
+        return false;
     }
+
 
 });
 

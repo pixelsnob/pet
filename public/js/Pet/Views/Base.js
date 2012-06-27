@@ -97,7 +97,7 @@ Pet.View = Backbone.View.extend({
      * Creates an overlay with a spinner image
      * 
      */
-    showSpinnerOverlay: function() {
+    showSpinnerOverlay: function(cb) {
         var spinner = $('<img>').attr('src', '/images/ajax-loader.gif'),
             obj = this;
         spinner.on('load', function() {
@@ -121,6 +121,9 @@ Pet.View = Backbone.View.extend({
                 }
             });
             obj.spinner.overlay().load();
+            if (typeof cb == 'function') {
+                cb();
+            }
         });
     },
 

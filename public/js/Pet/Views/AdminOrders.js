@@ -9,7 +9,10 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
     xhr: [], // An array of Ajax XHR objects
     
     events: {
-        'click input[name=payment_method]': 'togglePaymentFields'
+        'click #orders .admin-table td': 'adminTableRowClick',
+        'hover #orders .admin-table td': 'adminTableRowHover',
+        'click input[name=payment_method]': 'togglePaymentFields',
+        'click #order-add .submit': 'overlayFormSubmit'
     },
     
     initialize: function() {

@@ -113,6 +113,11 @@
                         <dd class="payment-method radio-list">
                             <?php echo $this->order_form->payment->payment_method; ?>
                         </dd>
+                        <dt class="promo"><?php echo $this->order_form->promo->promo_code->getLabel(); ?></dt>
+                        <dd class="promo">
+                            <?php echo $this->order_form->promo->promo_code->renderViewHelper(); ?>
+                            <?php echo $this->order_form->promo->promo_code->renderErrors(); ?>
+                        </dd>
                     </dl>
                 </div> 
                 <div class="admin-form-right">
@@ -121,11 +126,6 @@
                         <dd class="amount">
                             <?php echo $this->order_form->payment->amount->renderViewHelper(); ?>
                             <?php echo $this->order_form->payment->amount->renderErrors(); ?>
-                        </dd>
-                        <dt class="promo"><?php echo $this->order_form->promo->promo_code->getLabel(); ?></dt>
-                        <dd class="promo">
-                            <?php echo $this->order_form->promo->promo_code->renderViewHelper(); ?>
-                            <?php echo $this->order_form->promo->promo_code->renderErrors(); ?>
                         </dd>
                         <dt class="cc-num cc"><?php echo $this->order_form->payment->cc_num->getLabel(); ?></dt>
                         <dd class="cc-num cc">
@@ -158,7 +158,7 @@
 
         </div>
         <p class="update clear">
-            <?php echo $this->order_form->submit->renderViewHelper(); ?>
+            <input type="submit" value="Submit" class="submit">
             <input type="submit" value="Cancel" name="cancel">
         </p>
     </form>

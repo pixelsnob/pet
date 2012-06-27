@@ -82,7 +82,7 @@ class Service_Orders {
                     throw new Exception($msg);
                 }
                 $view->order = $full_order;
-                print_r($full_order);
+                //print_r($full_order);
                 $message = $view->render('emails/order.phtml');
 
                 try {

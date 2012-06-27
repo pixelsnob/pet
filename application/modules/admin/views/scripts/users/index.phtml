@@ -1,40 +1,43 @@
 
-<?php echo $this->render('forms/search.phtml'); ?>
+<div id="users">
 
-<?php
-if ($this->orders) {
+    <?php echo $this->render('forms/search.phtml'); ?>
 
-    $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
-    echo $pagination;
-    echo $this->objectsToAdminTable(array(
-        'id'           => array('title'  => 'User ID'),
-        'date_joined'  => array(
-            'title'    => 'Date Joined',
-            'format'   => 'datetime'
-        ),
-        'username', 
-        'email',
-        'first_name',
-        'last_name',
-        'is_active'   => array(
-            'title' => 'Active',
-            'callback' => function($data) {
-                return ($data->is_active ? 'Y' : 'N');
-            }
-        ),
-        'view'        => array(
-            'format'  => 'link',
-            'label'   => 'View',
-            'url'     => '/admin/users/detail/id'
-        ),
-        'edit'        => array(
-            'format'  => 'link',
-            'label'   => 'Edit',
-            'url'     => '/admin/users/edit/id'
-        )
-    ), $this->orders, $this->params, array('sortable' => true));
-    echo $pagination;
-} else {
-    echo '<p class="error">There are no orders to show</p>';
-}
-?>
+    <?php
+    if ($this->orders) {
+
+        $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
+        echo $pagination;
+        echo $this->objectsToAdminTable(array(
+            'id'           => array('title'  => 'User ID'),
+            'date_joined'  => array(
+                'title'    => 'Date Joined',
+                'format'   => 'datetime'
+            ),
+            'username', 
+            'email',
+            'first_name',
+            'last_name',
+            'is_active'   => array(
+                'title' => 'Active',
+                'callback' => function($data) {
+                    return ($data->is_active ? 'Y' : 'N');
+                }
+            ),
+            'view'        => array(
+                'format'  => 'link',
+                'label'   => 'View',
+                'url'     => '/admin/users/detail/id'
+            ),
+            'edit'        => array(
+                'format'  => 'link',
+                'label'   => 'Edit',
+                'url'     => '/admin/users/edit/id'
+            )
+        ), $this->orders, $this->params, array('sortable' => true));
+        echo $pagination;
+    } else {
+        echo '<p class="error">There are no orders to show</p>';
+    }
+    ?>
+</div>

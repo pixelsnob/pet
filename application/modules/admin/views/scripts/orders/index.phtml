@@ -1,32 +1,34 @@
 
-<?php echo $this->render('forms/search.phtml'); ?>
+<div id="orders">
+    <?php echo $this->render('forms/search.phtml'); ?>
 
-<?php
-if ($this->orders) {
+    <?php
+    if ($this->orders) {
 
-    $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
-    echo $pagination;
-    echo $this->objectsToAdminTable(array(
-        'id'                 => array('title'  => 'Order ID'),
-        'date_created'       => array(
-            'title'    => 'Order Date',
-            'format'   => 'datetime'
-        ),
-        'email',
-        'billing_first_name' => array('title'  => 'First Name'),
-        'billing_last_name'  => array('title'  => 'Last Name'),
-        'total'              => array(
-            'title'   => 'Total',
-            'format'  => 'dollar'
-        ),
-        'view'               => array(
-            'format'  => 'link',
-            'label'   => 'View',
-            'url'     => '/admin/orders/detail/id'
-        )
-    ), $this->orders, $this->params, array('sortable' => true));
-    echo $pagination;
-} else {
-    echo '<p class="error">There are no orders to show</p>';
-}
-?>
+        $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
+        echo $pagination;
+        echo $this->objectsToAdminTable(array(
+            'id'                 => array('title'  => 'Order ID'),
+            'date_created'       => array(
+                'title'    => 'Order Date',
+                'format'   => 'datetime'
+            ),
+            'email',
+            'billing_first_name' => array('title'  => 'First Name'),
+            'billing_last_name'  => array('title'  => 'Last Name'),
+            'total'              => array(
+                'title'   => 'Total',
+                'format'  => 'dollar'
+            ),
+            'view'               => array(
+                'format'  => 'link',
+                'label'   => 'View',
+                'url'     => '/admin/orders/detail/id'
+            )
+        ), $this->orders, $this->params, array('sortable' => true, 'id' => 'orders'));
+        echo $pagination;
+    } else {
+        echo '<p class="error">There are no orders to show</p>';
+    }
+    ?>
+</div>

@@ -110,6 +110,8 @@ class Form_Admin_User extends Pet_Form {
             'value' => 1
         ))->addElement('submit', 'submit', array(
             'label' => 'Update',
+            'id'    => 'user-edit-submit',
+            'name'  => 'user-edit-submit',
             'class' => 'submit'
         ));
         if ($this->_mode == 'edit') {

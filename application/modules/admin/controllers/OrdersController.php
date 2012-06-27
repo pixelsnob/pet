@@ -65,6 +65,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $profile_mapper         = new Model_Mapper_UserProfiles;
         $gateway                = new Model_Mapper_PaymentGateway;
         $ot_mapper              = new Model_Mapper_OrderTransactions;
+        $op_mapper              = new Model_Mapper_OrderProducts;
+        $ops_mapper             = new Model_Mapper_OrderProductSubscriptions;
         $subscriptions          = $products_mapper->getSubscriptions();
         $digital_subscriptions  = $products_mapper->getDigitalSubscriptions();
         $logger                 = Zend_Registry::get('log');
@@ -88,10 +90,11 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     throw new Exception('Error adding promo');
                 }
                 $cart = $cart_svc->get();
+                // Create order object
                 $data = array_merge(
                     $form->billing->getValues(true),
                     $form->shipping->getValues(true),
-                    //$cart->getTotals(),
+                    $cart->getTotals(),
                     $form->user->getValues(true),
                     $form->info->getValues(true),
                     $form->payment->getValues(true)
@@ -105,9 +108,11 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     $order->total = $form->payment->amount->getValue();
                     $order->discount = 0;
                 }
+                // Process payment
                 if ($order->total > 0 && $order->payment_method == 'credit_card') {
                     $gateway->processSale($order);
                 }
+                // Insert user/user profile
                 $order->password = $this->_users_svc->generateHash(
                     $order->password);
                 $order->user_id = $users_mapper->insert($order->toArray(), true);
@@ -117,7 +122,24 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 }
                 // Save order data
                 $order->order_id = $orders_mapper->insert($order->toArray());
-                $cart_svc->saveOrderProducts($order);
+                // Save order products
+                foreach ($cart->products as $product) {
+                    // Insert into order_products
+                    $opid = $op_mapper->insert($product->toArray(), $order->order_id); 
+                    if ($product->isSubscription() || $product->isDigital()) {
+                        $term = (int) $product->term_months;
+                        // If expiration is null here, DateTime defaults to today
+                        $date = new DateTime($expiration);
+                        $extra_days = ($cart->promo ? $cart->promo->extra_days : 0);
+                        $date->add(new DateInterval("P{$term}M{$extra_days}D"));
+                        $ops_mapper->insert(array(
+                            'user_id'            => $order->user_id,
+                            'order_product_id'   => $opid,
+                            'expiration'         => $date->format('Y-m-d H:i:s')
+                        ));
+                    }
+                }
+                // Save payments
                 if ($order->total > 0) {
                     if ($order->payment_method == 'credit_card') {
                         $order_payment_id = $cart_svc->saveOrderPayments($order);
