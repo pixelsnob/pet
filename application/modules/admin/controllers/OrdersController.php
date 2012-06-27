@@ -56,10 +56,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
         }
         $this->_helper->FlashMessenger->setNamespace('order_add');
         $db = Zend_Db_Table::getDefaultAdapter();
-        $cart_svc = new Service_Cart;
-        // Reset each time, we don't need values to perist
-        $cart_svc->reset();
         $params                 = $this->_request->getPost();
+        $cart_mapper            = new Model_Mapper_Cart;
         $orders_mapper          = new Model_Mapper_Orders;
         $products_mapper        = new Model_Mapper_Products;
         $promos_mapper          = new Model_Mapper_Promos;
@@ -72,26 +70,28 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $subscriptions          = $products_mapper->getSubscriptions();
         $digital_subscriptions  = $products_mapper->getDigitalSubscriptions();
         $logger                 = Zend_Registry::get('log');
+        // Reset each time, we don't need values to perist
+        $cart_mapper->reset();
         $form = new Form_Admin_Order(array(
             'usersMapper'           => new Model_Mapper_Users,
             'promosMapper'          => $promos_mapper,
             'subscriptions'         => $subscriptions,
             'digitalSubscriptions'  => $digital_subscriptions,
-            'cart'                  => $cart_svc->get()
+            'cart'                  => $cart_mapper->get()
         ));
         if ($this->_request->isPost() && $form->isValid($params)) {
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             try {
-                if (!$cart_svc->addProduct($form->product->getValue())) {
+                if (!$cart_mapper->addProductById($form->product->getValue())) {
                     throw new Exception('Error adding product to cart'); 
                 }
                 $promo_code = $form->promo->promo_code->getValue();
-                if ($promo_code && !$cart_svc->addPromo($promo_code)) {
+                if ($promo_code && !$cart_mapper->addPromo($promo_code)) {
                     $form->promo->promo_code->markAsError()->addError('Promo is not valid');
                     throw new Exception('Error adding promo');
                 }
-                $cart = $cart_svc->get();
+                $cart = $cart_mapper->get();
                 // Create order object
                 $data = array_merge(
                     $form->billing->getValues(true),

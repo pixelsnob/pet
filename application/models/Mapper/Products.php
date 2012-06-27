@@ -92,6 +92,16 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param string $country_name
+     * @return Model_SubscriptionZone 
+     * 
+     */
+    public function getSubscriptionZoneByName($country_name) {
+        $sz_mapper = new Model_Mapper_SubscriptionZones;
+        return $sz_mapper->getByName($country_name);
+    }
+    
+    /**
      * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return array

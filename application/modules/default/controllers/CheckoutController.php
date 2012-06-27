@@ -6,6 +6,7 @@ class CheckoutController extends Zend_Controller_Action {
 
     public function init() {
         $this->_cart_svc = new Service_Cart;
+        $this->_cart_mapper = new Model_Mapper_Cart;
         $this->_users_svc = new Service_Users;
         $this->_messenger = $this->_helper->FlashMessenger;
         $this->_messenger->setNamespace('checkout');
@@ -26,12 +27,12 @@ class CheckoutController extends Zend_Controller_Action {
             return;
         }
         ///////////////////////////////////////////////////////////////////////
-        $cart = $this->_cart_svc->get();
+        $cart = $this->_cart_mapper->get();
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         // User is logged out but is trying to purchase a renewal. Clear cart
         // show them what happened
         if ($cart->products->hasRenewal() && !$this->_users_svc->isAuthenticated()) {
-            $this->_cart_svc->reset();
+            $this->_cart_mapper->reset();
             $this->_forward('renewal-login-error');
             return;
         }
@@ -41,7 +42,7 @@ class CheckoutController extends Zend_Controller_Action {
             $valid = $checkout_form->isValid($post);
             $this->_cart_svc->saveCheckoutForm($checkout_form, $post);
             if ($valid) {
-                $cart = $this->_cart_svc->get();
+                $cart = $this->_cart_mapper->get();
                 if ($cart->payment->payment_method == 'credit_card') {
                     // Credit card transactions
                     if ($this->_cart_svc->process($checkout_form)) {
@@ -76,9 +77,9 @@ class CheckoutController extends Zend_Controller_Action {
             $checkout_form = $this->_cart_svc->getCheckoutForm();
             $this->view->messages = $this->_messenger->getMessages();
         }
-        $this->view->cart = $this->_cart_svc->get();
+        $this->view->cart = $this->_cart_mapper->get();
         $this->view->checkout_form = $checkout_form;
-        $this->view->cart_totals = $this->_cart_svc->get()->getTotals();
+        $this->view->cart_totals = $this->_cart_mapper->get()->getTotals();
         $this->view->inlineScriptMin()->loadGroup('checkout')
             ->appendScript("Pet.loadView('Checkout');");
     }
@@ -89,7 +90,7 @@ class CheckoutController extends Zend_Controller_Action {
      */
     private function _updateCheckoutFormJson() {
         if ($this->_request->isPost()) {
-            $cart = $this->_cart_svc->get();
+            $cart = $this->_cart_mapper->get();
             if (!count($cart->products) || $cart->products->hasRenewal() &&
                     !$this->_users_svc->isAuthenticated()) {
                 $this->_helper->json(array(
@@ -113,7 +114,7 @@ class CheckoutController extends Zend_Controller_Action {
     }
     
     public function processPaypalAction() {
-        $cart = $this->_cart_svc->get();
+        $cart = $this->_cart_mapper->get();
         $token = $this->_request->getParam('token');
         $payer_id = $this->_request->getParam('PayerID'); // Notice capitalization!
         // Make sure token and payer id exist, and validate token against
@@ -124,7 +125,7 @@ class CheckoutController extends Zend_Controller_Action {
             exit;
         }
         // Validate stored values
-        $checkout_form = $this->_cart_svc->getCheckoutForm();
+        $checkout_form = $this->_cart_mapper->getCheckoutForm();
         if ($this->_cart_svc->validateSavedForm($checkout_form)) {
             if ($this->_cart_svc->process($checkout_form, $payer_id)) {
                 $this->_helper->Redirector->gotoSimple('confirmation');
@@ -162,7 +163,7 @@ class CheckoutController extends Zend_Controller_Action {
         $this->view->getHelper('serverUrl')->setScheme('https');
     }
 
-    public function testAction() {
+    /*public function testAction() {
         $mongo = Pet_Mongo::getInstance();
         for ($i = 0; $i < 10000; $i++) {
             $mongo->testing->insert(array(
@@ -171,6 +172,6 @@ class CheckoutController extends Zend_Controller_Action {
             ), array('fsync' => false));
         }
         exit('?');
-    }
+    }*/
 
 }

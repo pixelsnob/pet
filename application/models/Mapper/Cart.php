@@ -61,14 +61,13 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     }
     
     /**
-     * @param Model_Product_Abstract $product
+     * @param int $product_id
      * @param bool $is_gift
      * @param null|int $order_product_gift_id The order_product_gift id, used
      *                                        to redeem a gift
      * @return bool
      * 
      */
-
     public function addProduct(Model_Product_Abstract $product,
                                $is_gift = false,
                                $order_product_gift_id = null) {
@@ -77,9 +76,38 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
             'is_gift'               => $is_gift,
             'order_product_gift_id' => $order_product_gift_id
         ));
-        $status = $this->_cart->addProduct($product); 
+        $status = $this->_cart->addProduct($product);
         $this->_message = $this->_cart->getMessage();
         return $status;
+    }
+
+    /**
+     * @param int $product_id
+     * @param bool $is_gift
+     * @param null|int $order_product_gift_id The order_product_gift id, used
+     *                                        to redeem a gift
+     * @return bool
+     * 
+     */
+    public function addProductById($product_id, $is_gift = false,
+                                   $order_product_gift_id = null) {
+        $products_mapper = new Model_Mapper_Products;
+        $product = $products_mapper->getById($product_id);
+        if ($product) {
+            $product_model = new Model_Cart_Product(array(
+                'product'               => $product,
+                'is_gift'               => $is_gift,
+                'order_product_gift_id' => $order_product_gift_id
+            ));
+            if ($this->_cart->addProduct($product_model, $is_gift)) {
+                return true;
+            } else {
+                $this->_message = $this->_cart->getMessage();
+                return false;
+            }
+        }
+        $this->_message = 'Product not found';
+        return false;
     }
 
     /**

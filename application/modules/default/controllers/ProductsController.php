@@ -3,7 +3,7 @@
 class ProductsController extends Zend_Controller_Action {
 
     public function init() {
-        $this->_products_svc = new Service_Products;
+        $this->_products_mapper = new Model_Mapper_Products;
         $this->_users_svc = new Service_Users;
     }
 
@@ -55,7 +55,7 @@ class ProductsController extends Zend_Controller_Action {
         // passed
         if ($is_renewal && !$zone_id && $this->_users_svc->isAuthenticated()) {
             $profile = $this->_users_svc->getProfile();
-            $sz = $this->_products_svc->getSubscriptionZoneByName(
+            $sz = $this->_products_mapper->getSubscriptionZoneByName(
                 $profile->billing_country);
             if ($sz) {
                 $zone_id = $sz->id;
@@ -64,11 +64,19 @@ class ProductsController extends Zend_Controller_Action {
         if (!$zone_id) {
             throw new Exception('Zone not defined');
         }
-        $subs = $this->_products_svc->getSubscriptionsByZoneId(
+        $subs = $this->_products_mapper->getSubscriptionsByZoneId(
             $zone_id, $is_gift, $is_renewal);
         if ($subs) {
-            $form = $this->_products_svc->getSubscriptionTermSelectForm(
-                $subs, $zone_id, $is_gift, $is_renewal);
+            $form = new Form_SubscriptionTermSelect(array(
+                'zoneId'  => $zone_id,
+                'isGift'    => $is_gift,
+                'isRenewal' => $is_renewal
+            ));
+            $opts = array();
+            foreach ($subs as $sub) {
+                $opts[$sub->product_id] = $sub->name . ($is_gift ? ' (gift)' : '');
+            }
+            $form->product_id->setMultiOptions($opts);
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
@@ -123,11 +131,19 @@ class ProductsController extends Zend_Controller_Action {
         $is_gift    = $this->_request->getParam('is_gift');
         $is_gift = (strlen(trim($is_gift)) ? true : null);
         $is_renewal = $this->_request->getParam('is_renewal');
-        $subs = $this->_products_svc->getDigitalSubscriptions($is_gift,
+        $subs = $this->_products_mapper->getDigitalSubscriptions($is_gift,
             $is_renewal);
         if ($subs) {
-            $form = $this->_products_svc->getDigitalSubscriptionSelectForm(
-                $subs, $is_gift, $is_renewal);
+            $form = new Form_DigitalSubscriptionSelect(array(
+                'isGift'    => $is_gift,
+                'isRenewal' => $is_renewal
+            ));
+            $opts = array();
+            foreach ($subs as $sub) {
+                $opts[$sub->product_id] = $sub->name . ($is_gift ? ' (gift)' : '');
+            }
+            $form->product_id->setMultiOptions($opts);
+
             $post = $this->_request->getPost();
             if ($this->_request->isPost() && $form->isValid($post)) {
                 $product_id = $this->_request->getPost('product_id');
@@ -160,7 +176,7 @@ class ProductsController extends Zend_Controller_Action {
      *
      */
     public function physicalAction() {
-        $this->view->products = $this->_products_svc->getPhysicalProducts(); 
+        $this->view->products = $this->_products_mapper->getPhysicalProducts(); 
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
     }

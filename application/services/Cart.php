@@ -26,46 +26,8 @@ class Service_Cart {
      * 
      */
     public function __construct() {
-        $this->_cart = new Model_Mapper_Cart;
-        $this->_products_svc = new Service_Products;
+        $this->_cart_mapper = new Model_Mapper_Cart;
         $this->_gateway = new Model_Mapper_PaymentGateway;
-    }
-    
-    /**
-     * @return Model_Cart
-     * 
-     */
-    public function get() {
-        return $this->_cart->get();
-    }
-    
-    /**
-     * @param array $data
-     * @return void
-     * 
-     */
-    public function update(array $data) {
-        $this->_cart->update($data);
-    }
-
-    /**
-     * @param int $product_id
-     * @param int $is_gift
-     * @return bool
-     * 
-     */
-    public function addProduct($product_id, $is_gift = false) {
-        $product = $this->_products_svc->getById($product_id);
-        if ($product) {
-            if (!$this->_cart->addProduct($product, $is_gift)) {
-                $this->_message = $this->_cart->getMessage();
-                return false;
-            }
-        } else {
-            $this->_message = 'Product not found';
-            return false;
-        }
-        return true;
     }
     
     /**
@@ -74,7 +36,7 @@ class Service_Cart {
      * 
      */
     public function redeemGift($token) {
-        $this->_cart->reset();
+        $this->_cart_mapper->reset();
         $opg_mapper = new Model_Mapper_OrderProductGifts; 
         $gift = $opg_mapper->getUnredeemedByToken($token);
         if (!$gift) {
@@ -82,36 +44,11 @@ class Service_Cart {
             return false;
         }
         $gift->product->cost = 0;
-        if (!$this->_cart->addProduct($gift->product, false, $gift->id)) {
+        if (!$this->_cart_mapper->addProduct($gift->product, false, $gift->id)) {
             $this->_message = 'An error ocurred while processing your gift';
             return false;
         }
         return true;
-    }
-
-    /**
-     * @param string $key
-     * @param int $qty
-     * @return void
-     * 
-     */
-    public function setProductQty($key, $qty) {
-        $this->_cart->setProductQty($key, $qty);
-    }
-
-    /**
-     * @param string $key
-     * @return void
-     */
-    public function removeProduct($key) {
-        $this->_cart->removeProduct($key);
-    }
-
-    /**
-     * @return void
-     */
-    public function reset() {
-        $this->_cart->reset();
     }
 
     /**
@@ -120,17 +57,17 @@ class Service_Cart {
      * 
      */
     public function addPromo($code) {
-        $cart = $this->_cart->get();
+        $cart = $this->_cart_mapper->get();
         if (!strlen(trim($code))) {
             if ($cart->promo) {
                 $this->_message = 'Promo removed';
-                $this->_cart->removePromo();
+                $this->_cart_mapper->removePromo();
             }
             return true;
         }
         $promos_mapper = new Model_Mapper_Promos;
         $promo = $promos_mapper->getUnexpiredPromoByCode($code);
-        if ($promo && $this->_cart->addPromo($promo)) {
+        if ($promo && $this->_cart_mapper->addPromo($promo)) {
             $this->_message = "Promo $code added";
             return true;
         } else {
@@ -144,7 +81,7 @@ class Service_Cart {
      * 
      */
     public function removePromo() {
-        $this->_cart->removePromo();
+        $this->_cart_mapper->removePromo();
     }
 
     /**
@@ -152,7 +89,7 @@ class Service_Cart {
      * 
      */
     public function getCartForm() {
-        $cart = $this->_cart->get();
+        $cart = $this->_cart_mapper->get();
         $form = new Form_Cart(array(
             'cart' => $cart
         ));
@@ -169,7 +106,7 @@ class Service_Cart {
      * 
      */
     public function getCheckoutForm() {
-        $cart = $this->_cart->get();
+        $cart = $this->_cart_mapper->get();
         $identity = Zend_Auth::getInstance()->getIdentity();
         $states = new Zend_Config(require APPLICATION_PATH .
             '/configs/states.php');
@@ -223,13 +160,13 @@ class Service_Cart {
      * 
      */
     public function saveCheckoutForm(Form_Checkout $form, array $data) {
-        $cart = $this->_cart->get();
-        $this->_cart->setBilling($form->billing->getValues(true));
-        $this->_cart->setShipping($form->getShippingValues());
-        $this->_cart->setUser($form->user->getValues(true));
-        $this->_cart->setUserInfo($form->info->getValues(true));
+        $cart = $this->_cart_mapper->get();
+        $this->_cart_mapper->setBilling($form->billing->getValues(true));
+        $this->_cart_mapper->setShipping($form->getShippingValues());
+        $this->_cart_mapper->setUser($form->user->getValues(true));
+        $this->_cart_mapper->setUserInfo($form->info->getValues(true));
         if (!$cart->isFreeOrder()) {
-            $this->_cart->setPayment($form->payment->getValues(true));
+            $this->_cart_mapper->setPayment($form->payment->getValues(true));
         }
         $promo_code = $form->promo->promo_code->getValue();
         $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
@@ -237,14 +174,14 @@ class Service_Cart {
             $promos_mapper = new Model_Mapper_Promos;
             $promo = $promos_mapper->getUnexpiredPromoByCode($promo_code);
             if ($promo) {
-                $this->_cart->addPromo($promo);
+                $this->_cart_mapper->addPromo($promo);
             }
         } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
-            $this->_cart->removePromo();
+            $this->_cart_mapper->removePromo();
         }
         $use_shipping = (isset($data['use_shipping']) ?
             (int) $data['use_shipping'] : 0);
-        $this->_cart->setUseShipping($use_shipping);
+        $this->_cart_mapper->setUseShipping($use_shipping);
     }
     
     /**
@@ -259,7 +196,7 @@ class Service_Cart {
             $form->getShippingValues(),
             array('promo_code' => $form->promo->promo_code->getValue())
         );
-        if (!$this->_cart->get()->isFreeOrder()) {
+        if (!$this->_cart_mapper->get()->isFreeOrder()) {
             $data = array_merge($data, $form->payment->getValues(true));
         }
         return $form->isValid($data); 
@@ -277,7 +214,7 @@ class Service_Cart {
         $config    = Zend_Registry::get('app_config');
         $logger    = Zend_Registry::get('log');
         // Operate on a copy of cart -- we don't want to modify it in here
-        $cart      = clone $this->get();
+        $cart      = clone $this->_cart_mapper->get();
         // Merge input data into one array
         $data = array_merge(
             $form->billing->getValues(true),
@@ -288,7 +225,7 @@ class Service_Cart {
         );
         $data['promo_id'] = ($cart->promo ? $cart->promo->id : null);
         $data['products'] = $cart->products->toArray();
-        if (!$this->_cart->get()->isFreeOrder()) {
+        if (!$this->_cart_mapper->get()->isFreeOrder()) {
             $data = array_merge($data, $form->payment->getValues(true));
         }
         $order  = new Model_Cart_Order($data);
@@ -365,9 +302,9 @@ class Service_Cart {
         }
         // Reset cart
         if ($status) {
-            $this->_cart->setConfirmation($this->_cart->get());
+            $this->_cart_mapper->setConfirmation($this->_cart_mapper->get());
             if ($config['reset_cart_after_process']) {
-                $this->_cart->reset();
+                $this->_cart_mapper->reset();
             }
         }
         return $status;
@@ -383,7 +320,7 @@ class Service_Cart {
         $users_svc  = new Service_Users;
         $is_auth    = $users_svc->isAuthenticated();
         $user_id    = $users_svc->getId();
-        $cart       = clone $this->get();
+        $cart       = clone $this->_cart_mapper->get();
         $op         = new Model_Mapper_OrderProducts;
         $ops        = new Model_Mapper_OrderProductSubscriptions;
         $gifts      = new Model_Mapper_OrderProductGifts;
@@ -492,7 +429,7 @@ class Service_Cart {
     public function getECUrl($return_url, $cancel_url) {
         $ot_mapper = new Model_Mapper_OrderTransactions;
         $config = Zend_Registry::get('app_config');
-        $cart = $this->get();
+        $cart = $this->_cart_mapper->get();
         $totals = $cart->getTotals();
         $data = array(
             'email'        => $cart->user->email,
@@ -535,7 +472,7 @@ class Service_Cart {
      * 
      */
     public function getConfirmation() {
-        return $this->_cart->getConfirmation();
+        return $this->_cart_mapper->getConfirmation();
     }
 
     /**

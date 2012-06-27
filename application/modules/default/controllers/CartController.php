@@ -4,12 +4,13 @@ class CartController extends Zend_Controller_Action {
 
     public function init() {
         $this->_cart_svc = new Service_Cart;
+        $this->_cart_mapper = new Model_Mapper_Cart;
         $this->_messenger = $this->_helper->FlashMessenger;
         $this->_messenger->setNamespace('cart');
     }
 
     public function indexAction() {
-        $cart = $this->_cart_svc->get();
+        $cart = $this->_cart_mapper->get();
         if ($this->_request->isXmlHttpRequest() &&
                 !$this->_request->getParam('nolayout')) {
             $json = array(
@@ -25,7 +26,7 @@ class CartController extends Zend_Controller_Action {
         $post = $this->_request->getPost();
         if ($this->_request->isPost()) {
             if ($cart_form->isValid($post)) {
-                $this->_cart_svc->update($post);
+                $this->_cart_mapper->update($post);
                 $msg = 'Cart updated';
             } else {
                 $msg = 'Submitted information is not valid';
@@ -41,10 +42,10 @@ class CartController extends Zend_Controller_Action {
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
         $is_gift = $this->_request->getParam('is_gift');
-        if ($this->_cart_svc->addProduct($product_id, $is_gift)) {
+        if ($this->_cart_mapper->addProductById($product_id, $is_gift)) {
             $msg = 'Product added';
         } else {
-            $msg = $this->_cart_svc->getMessage();
+            $msg = $this->_cart_mapper->getMessage();
         }
         $this->_messenger->addMessage($msg);
         $this->_helper->Redirector->setGotoSimple('index');
@@ -55,14 +56,14 @@ class CartController extends Zend_Controller_Action {
             $json = $this->_request->getParam('model');
             $model = Zend_Json::decode($json);
             $code = (isset($model['code']) ? $model['code'] : '');
-            $success = $this->_cart_svc->addPromo($code);
+            $success = $this->_cart_mapper->addPromo($code);
             $this->_helper->json(array(
-                'message' => $this->_cart_svc->getMessage(),
+                'message' => $this->_cart_mapper->getMessage(),
                 'success' => (int) $success
             ));
         } else {
             $code = $this->_request->getParam('code');
-            $this->_cart_svc->addPromo($code);
+            $this->_cart_mapper->addPromo($code);
             $this->_helper->Redirector->setGotoSimple('index');
         }
     }
@@ -70,21 +71,21 @@ class CartController extends Zend_Controller_Action {
     public function setQtyAction() {
         $product_id = $this->_request->getParam('key');
         $qty = (int) $this->_request->getParam('qty');
-        $this->_cart_svc->setProductQty($key, $qty);
+        $this->_cart_mapper->setProductQty($key, $qty);
         $this->_messenger->addMessage('Quantity updated');
         $this->_helper->Redirector->setGotoSimple('index');
     }
 
     public function removeAction() {
         $key = $this->_request->getParam('key');
-        $this->_cart_svc->removeProduct($key);
+        $this->_cart_mapper->removeProduct($key);
         $this->_messenger->addMessage('Product removed');
         $this->_helper->Redirector->setGotoSimple('index');
     }
     
     public function redeemGiftAction() {
         $token = $this->_request->getParam('token');
-        if ($this->_cart_svc->redeemGift($token)) {
+        if ($this->_cart_mapper->redeemGift($token)) {
             $this->_messenger->setNamespace('checkout');
             $this->_messenger->addMessage('Your gift card was redeemed');
             $this->_helper->Redirector->setGotoRoute(array(), 'checkout');
@@ -93,12 +94,12 @@ class CartController extends Zend_Controller_Action {
     }
 
     public function resetAction() {
-        $this->_cart_svc->reset();
+        $this->_cart_mapper->reset();
         $this->_helper->Redirector->setGotoSimple('index');
     }
 
     public function test1Action() {
-        $cart = $this->_cart_svc->get();
+        $cart = $this->_cart_mapper->get();
         echo '<pre>';
         print_r($cart);
         print_r($cart->getTotals());
