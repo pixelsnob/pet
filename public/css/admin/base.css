@@ -139,14 +139,14 @@ input.checkbox {
 }
 
 .admin-list dd {
-    width: 210px;
+    width: 230px;
     margin-left: 2px;
     background: #f4f4f4;
 }
 
 .admin-list-left, .admin-list-right {
     float: left;
-    width: 400px;
+    width: 440px;
 }
 
 .admin-list-left {
@@ -198,15 +198,15 @@ input.checkbox {
 
 
 .full-width {
-    width: 788px;
+    width: 818px;
 }
 
-.full-width .admin-list dd {
+/*.full-width .admin-list dd {
     width: 610px;
-}
+}*/
 
 .full-width .admin-table {
-    width: 788px;
+    width: 848px;
 }
 
 .admin-form-left, .admin-form-right {

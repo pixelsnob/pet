@@ -48,6 +48,7 @@ return array(
         'js/Pet/Views/AdminUsers.js'
     ),
     'admin-orders' => array(
+        'js/Pet/Models/ProductCost.js',
         'js/Pet/Views/AdminOrders.js'
     )
 );

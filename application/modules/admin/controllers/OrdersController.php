@@ -102,9 +102,10 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 $data['promo_id'] = ($cart->promo ? $cart->promo->id : null);
                 $data['products'] = $cart->products->toArray();
                 $order = new Model_Cart_Order($data);
-                if ($order->payment_method == 'bypass') {
-                    $order->total = 0;
-                } elseif ($form->payment->amount->getValue()) {
+                //$order->total = 0;
+                //$order->discount = 0;
+                //print_r($order); exit;
+                if ($form->payment->amount->getValue()) {
                     $order->total = $form->payment->amount->getValue();
                     $order->discount = 0;
                 }
@@ -129,7 +130,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     if ($product->isSubscription() || $product->isDigital()) {
                         $term = (int) $product->term_months;
                         // If expiration is null here, DateTime defaults to today
-                        $date = new DateTime($expiration);
+                        $date = new DateTime;
                         $extra_days = ($cart->promo ? $cart->promo->extra_days : 0);
                         $date->add(new DateInterval("P{$term}M{$extra_days}D"));
                         $ops_mapper->insert(array(
@@ -141,16 +142,31 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 }
                 // Save payments
                 if ($order->total > 0) {
+                    $payments_mapper = new Model_Mapper_OrderPayments;
                     if ($order->payment_method == 'credit_card') {
-                        $order_payment_id = $cart_svc->saveOrderPayments($order);
+                        $gateway_responses = $gateway->getSuccessfulResponseObjects();
+                        if (isset($gateway_responses[0])) {
+                            $response = $gateway_responses[0];
+                            $payments_mapper->insert(array( 
+                                'order_id'            => $order->order_id,
+                                'amount'              => $order->total,
+                                'payment_type_id'     => Model_PaymentType::PAYFLOW,
+                                'pnref'               => $response->pnref,
+                                'date'                => date('Y-m-d H:i:s'),
+                                'cc_number'           => substr($order->cc_num, -4),
+                                'cc_expiration_month' => $order->cc_exp_month,
+                                'cc_expiration_year'  => $order->cc_exp_year,
+                                'cvv2match'           => $response->cvv2match,
+                                'ppref'               => $response->ppref,
+                                'correlationid'       => $response->correlationid
+                            ));
+                        }
                     } elseif ($order->payment_method == 'check') {
-                        $payments_mapper = new Model_Mapper_OrderPayments;
                         $payments_mapper->insert(array( 
                             'order_id'            => $order->order_id,
                             'amount'              => $order->total,
                             'payment_type_id'     => Model_PaymentType::CHECK,
                             'check_number'        => $order->check
-
                         ));
                     }
                 }
@@ -184,5 +200,16 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $this->view->order_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }
-
+    
+    /** 
+     * Returns a product's cost by product id, json output
+     * 
+     */
+    public function productPriceAction() {
+        $products_mapper = new Model_Mapper_Products;
+        $id = $this->_request->getQuery('id');
+        $product = $products_mapper->getById($id);
+        $cost = ($product && isset($product->cost) ? $product->cost : 0);
+        $this->_helper->json(array('cost' => number_format($cost, 2)));
+    }
 }

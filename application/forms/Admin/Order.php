@@ -126,10 +126,15 @@ class Form_Admin_Order extends Pet_Form {
         $this->addSubform(new Form_Admin_SubForm_Payment, 'payment');
         $this->addElement('select', 'product', array(
             'label'        => 'Choose a Product',
+            'required'     => true,
             'multiOptions' => array(
+                ''                       => 'Please select...',
                 'Subscriptions'          => $subscriptions,
                 'Digital Subscriptions'  => $digital_subscriptions,
-            )
+            ),
+            'validators' => array(array('NotEmpty', true, array(
+                'messages' => 'Select a product'
+            )))
         ))->addElement('submit', 'submit', array(
             'label' => 'Update',
             'class' => 'submit'

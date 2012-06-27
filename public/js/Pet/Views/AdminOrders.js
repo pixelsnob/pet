@@ -12,7 +12,8 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
         'click #orders .admin-table td': 'adminTableRowClick',
         'hover #orders .admin-table td': 'adminTableRowHover',
         'click input[name=payment_method]': 'togglePaymentFields',
-        'click #order-add .submit': 'overlayFormSubmit'
+        'click #order-add .submit': 'overlayFormSubmit',
+        'change #order-add #product': 'productChange'
     },
     
     initialize: function() {
@@ -36,6 +37,16 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
             $('.form .cc').hide();
             $('.form .amount').hide();
         }
+    },
+
+    productChange: function(el) {
+        Backbone.emulateJSON = true;
+        var cost_model = new Pet.ProductCostModel;
+        cost_model.fetch({ data: { id: $(el.target).val() }});
+        cost_model.on('change', function(model) {
+            var cost = cost_model.get('cost');
+            $('#amount').val(cost);
+        });
     }
 
 });
