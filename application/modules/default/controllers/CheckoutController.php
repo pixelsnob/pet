@@ -125,7 +125,7 @@ class CheckoutController extends Zend_Controller_Action {
             exit;
         }
         // Validate stored values
-        $checkout_form = $this->_cart_mapper->getCheckoutForm();
+        $checkout_form = $this->_cart_svc->getCheckoutForm();
         if ($this->_cart_svc->validateSavedForm($checkout_form)) {
             if ($this->_cart_svc->process($checkout_form, $payer_id)) {
                 $this->_helper->Redirector->gotoSimple('confirmation');

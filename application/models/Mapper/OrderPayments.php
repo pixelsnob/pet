@@ -17,6 +17,36 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
     }
  
     /**
+     * @param int $id
+     * @return Model_OrderPayment
+     * 
+     */
+    public function get($id) {
+        $payment = $this->_order_payments->find($id);
+        if ($payment) {
+            $payment_array = $payment->toArray();
+            if (isset($payment_array[0])) {
+                $op = new Model_OrderPayment($payment_array[0]);
+                switch ($op->payment_type_id) {
+                    case Model_PaymentType::PAYFLOW:
+                        $op->gateway_data = $this->_payflow_mapper
+                            ->getByOrderPaymentId($op->id);
+                        break;
+                    case Model_PaymentType::PAYPAL:
+                        $op->gateway_data = $this->_paypal_mapper
+                            ->getByOrderPaymentId($op->id);
+                        break;
+                    case Model_PaymentType::CHECK:
+                        $op->gateway_data = $this->_check_mapper
+                            ->getByOrderPaymentId($op->id);
+                        break;
+                }
+                return $op;
+            }
+        }
+    }
+    
+    /**
      * @param int $order_id
      * @return array
      * 
@@ -29,16 +59,16 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
                 $op = new Model_OrderPayment($op->toArray());
                 switch ($op->payment_type_id) {
                     case Model_PaymentType::PAYFLOW:
-                        $op->gateway_data = $this->_payflow_mapper->getByOrderPaymentId(
-                            $op->id);
+                        $op->gateway_data = $this->_payflow_mapper
+                            ->getByOrderPaymentId($op->id);
                         break;
                     case Model_PaymentType::PAYPAL:
-                        $op->gateway_data = $this->_paypal_mapper->getByOrderPaymentId(
-                            $op->id);
+                        $op->gateway_data = $this->_paypal_mapper
+                            ->getByOrderPaymentId($op->id);
                         break;
                     case Model_PaymentType::CHECK:
-                        $op->gateway_data = $this->_check_mapper->getByOrderPaymentId(
-                            $op->id);
+                        $op->gateway_data = $this->_check_mapper
+                            ->getByOrderPaymentId($op->id);
                         break;
                 }
                 $op_array[] = $op;

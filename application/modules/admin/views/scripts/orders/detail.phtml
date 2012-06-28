@@ -144,6 +144,9 @@
                     'baid'  => array('title' => 'BAID'),
                     'check_number'
                 ), $payment); ?>
+                <?php if ($payment->amount > 0): ?>
+                    <a href="<?php echo $this->serverUrl($this->url(array('action' => 'credit', 'controller' => 'payments', 'id' => $payment->order_payment_id))); ?>" id="credit">Credit this payment</a>
+                <?php endif; ?>
             <?php endforeach; ?>
         <?php else: ?>
             <p class="no-data">No payments</p>

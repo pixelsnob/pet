@@ -1,0 +1,17 @@
+
+<div id="credit-payment">
+    <?php echo $this->flashMessenger($this->messages); ?>
+    <form action="<?php echo $this->credit_form->getAction(); ?>" method="<?php echo $this->credit_form->getMethod(); ?>" name="<?php echo $this->credit_form->getName(); ?>">
+        <dl class="form">
+            <dt><?php echo $this->credit_form->amount->renderLabel(); ?></dt>
+            <dd>
+                <?php echo $this->credit_form->amount->renderViewHelper(); ?>
+                <?php echo $this->credit_form->amount->renderErrors(); ?>
+            </dd>
+        </dl>
+        <p class="update clear">
+            <input type="submit" value="Submit" name="credit-submit">
+            <input type="submit" value="Cancel" name="cancel">
+        </p>
+    </form>
+</div>

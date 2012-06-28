@@ -12,7 +12,6 @@ class Admin_OrdersController extends Zend_Controller_Action {
             $this->_helper->Layout->setLayout('admin');
         }
         $this->_admin_svc = new Service_Admin;
-        //$this->_orders_svc = new Service_Orders;
         $this->_orders_mapper = new Model_Mapper_Orders;
         $this->_users_svc = new Service_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
@@ -160,6 +159,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
                                 'ppref'               => $response->ppref,
                                 'correlationid'       => $response->correlationid
                             ));
+                        } else {
+                            throw new Exception('No gateway responses');
                         }
                     } elseif ($order->payment_method == 'check') {
                         $payments_mapper->insert(array( 

@@ -16,15 +16,6 @@ class Service_Orders {
     }
     
     /**
-     * @param int $id
-     * @return null|Model_Order
-     * 
-     */
-    /*public function getById($id) {
-        return $this->_orders_mapper->get($id); 
-    }*/
-    
-    /**
      * @return void
      * 
      */

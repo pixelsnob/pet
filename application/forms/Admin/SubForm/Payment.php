@@ -26,12 +26,7 @@ class Form_Admin_SubForm_Payment extends Form_SubForm_Payment {
                 array('NotEmpty', true, array(
                     'messages' => 'Amount is required'
                 )),
-                array('Callback', true, array(
-                    'callback' => function($value) {
-                        return preg_match('/^\d+(\.\d\d)?$/', $value);
-                    },
-                    'messages' => 'Amount is invalid'
-                )),
+                array(new Pet_Validate_Currency, true),
                 array('LessThan', true, array(
                     'max' => 1000,
                     'messages' => 'Amount must be less than $%max%'

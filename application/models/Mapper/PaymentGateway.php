@@ -233,7 +233,34 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             throw new Exception($msg);
         }
     }
-
+    
+    /**
+     * Processes a credit
+     * 
+     * @param string $orig_id
+     * @param float $amount
+     * @return void 
+     */
+    public function processCredit($orig_id, $amount) {
+        $this->resetGateway();
+        $this->_gateway->setField('ORIGID', $orig_id)
+            ->setField('AMT', $amount)
+            ->setField('TRXTYPE', 'C')
+            ->send()
+            ->processResponse();
+        $this->saveCall();
+        if (!$this->_gateway->isSuccess()) {
+            $msg = __FUNCTION__ . '() failed.';
+            if ($this->_gateway->getError()) {
+                $msg .= ' Gateway error: ' . $this->_gateway->getError();
+                $this->_error = self::ERR_GENERIC;
+            } else {
+                $this->_error = self::ERR_DECLINED;
+            }
+            throw new Exception($msg);
+        }
+    }
+    
     /**
      * Processes a credit card void.
      * 
@@ -297,7 +324,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
         foreach ($this->_calls as $call) {
             $result = (isset($call['response']['RESULT']) ?
                 ((string) $call['response']['RESULT']) : null);
-            // Only void successful transactions
             if ($result !== '0') {
                 continue;
             }
@@ -330,6 +356,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
                     $objs[] = $ro;
                     break;
                 case 'C':
+                default:
                     $ro = new Model_PaymentGateway_Response_Payflow;
                     foreach ($ro->toArray() as $k => $v) {
                         $uk = strtoupper($k);
@@ -379,10 +406,6 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
      */
     public function formatData(Model_Cart_Order $order) {
         $order->cc_exp  = $order->cc_exp_month  . substr($order->cc_exp_year , 2, 2);
-        //$order->name  = $order->first_name  . ' ' . $order->last_name ;
-        //$order->address  = $order->billing_address  . ' ' . $order->billing_address_2 ;
-        //$order->shipping_address  = $order->shipping_address  . ' ' .
-        //    $order->shipping_address_2 ;
         return $order;
     }
 
