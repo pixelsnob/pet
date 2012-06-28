@@ -30,7 +30,7 @@ class Admin_PaymentsController extends Zend_Controller_Action {
     public function creditAction() {
         $payments_mapper = new Model_Mapper_OrderPayments;
         $gateway_mapper  = new Model_Mapper_PaymentGateway;
-        $gateway_logger  = new Model_Mapper_PaymentGateway_Logger_Orders;
+        $gateway_logger  = new Model_Mapper_PaymentGateway_Logger_Credits;
         $mongo = Pet_Mongo::getInstance();
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
@@ -68,12 +68,23 @@ class Admin_PaymentsController extends Zend_Controller_Action {
                 } else {
                     throw new Exception('No gateway responses');
                 }
+                $gateway_logger->insert(
+                    true,
+                    $payment->toArray(), 
+                    $gateway_mapper->getRawCalls()
+                );
                 $this->_helper->FlashMessenger->setNamespace('order_detail')
                     ->addMessage('Payment was credited successfully');
                 $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
                     array('id' => $payment->order_id));
             } catch (Exception $e) {
                 $this->_helper->FlashMessenger->addMessage($e->getMessage());
+                $gateway_logger->insert(
+                    true,
+                    $payment->toArray(), 
+                    $gateway_mapper->getRawCalls(),
+                    array($e->getMessage() . ' ' . $e->getTraceAsString())
+                );
             }
         }
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();

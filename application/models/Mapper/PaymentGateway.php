@@ -252,6 +252,7 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
                 $msg .= ' Gateway error: ' . $this->_gateway->getError();
                 $this->_error = self::ERR_GENERIC;
             } else {
+                $msg .= ' ' . $this->_gateway->getResponseField('RESPMSG');
                 $this->_error = self::ERR_DECLINED;
             }
             throw new Exception($msg);

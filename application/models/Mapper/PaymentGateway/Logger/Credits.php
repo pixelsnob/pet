@@ -17,25 +17,25 @@ class Model_Mapper_PaymentGateway_Logger_Credits extends Pet_Model_Mapper_Abstra
     
     /**
      * @param bool $status
-     * @param array $cart
+     * @param array $orig_payment
      * @param array $gateway_calls
      * @param array $exceptions
      * @return void
      * 
      */
-    public function insert($status, array $cart, array $gateway_calls,
+    public function insert($status, array $orig_payment, array $gateway_calls,
                            array $exceptions = array()) {
         $mongo = Pet_Mongo::getInstance();
         $data = array(
             'timestamp'         => time(),
             'date_r'            => date('Y-m-d H:i:s'),
             'status'            => $status,
-            'original_payment'  => $cart,
+            'original_payment'  => $orig_payment,
             'gateway_calls'     => $gateway_calls,
             'exceptions'        => $exceptions
         );
-        $mongo->payment_gateway_express_checkout->ensureIndex('status');  
-        $mongo->payment_gateway_express_checkout->insert($data,
+        $mongo->payment_gateway_credits->ensureIndex('status');  
+        $mongo->payment_gateway_credits->insert($data,
             array('fsync' => true));
     }
 }
