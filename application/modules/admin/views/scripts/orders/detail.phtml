@@ -116,41 +116,50 @@
 
     <section class="payments clear full-width">
         <h3>Payments</h3>
-        <?php if ($this->order->payments): ?>
-            <?php foreach ($this->order->payments as $payment): ?>
-                <?php echo $this->objectToAdminList(array(
-                    'date'   => array('format' => 'datetime'),
-                    'amount' => array(
-                        'format' => 'dollar'
-                    ),
-                    'payment_type_id' => array(
-                        'title'    => 'Payment Type',
-                        'callback' => function($data) {
-                            $value = $data->payment_type_id;
-                            switch ($data->payment_type_id) {
-                                case Model_PaymentType::PAYFLOW:
-                                    return 'Payflow';
-                                case Model_PaymentType::PAYPAL:
-                                    return 'PayPal';    
-                                case Model_PaymentType::CHECK:
-                                    return 'Check';
-                                default:
-                                    return 'Unknown';    
-                            }
-                        }
-                    ),
-                    'pnref' => array('title' => 'PNREF'),
-                    'correlation_id' => array('title' => 'Correlation ID'),
-                    'baid'  => array('title' => 'BAID'),
-                    'check_number'
-                ), $payment); ?>
-                <?php if ($payment->amount > 0): ?>
-                    <a href="<?php echo $this->serverUrl($this->url(array('action' => 'credit', 'controller' => 'payments', 'id' => $payment->order_payment_id))); ?>" id="credit">Credit this payment</a>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="no-data">No payments</p>
-        <?php endif; ?>
+        <?php
+        $view = $this;
+        echo $this->objectsToAdminTable(array(
+            'id'           => array(
+                'title'  => 'Payment ID',
+                'callback' => function($data) {
+                    return $data->order_payment_id;
+                }
+            ),
+            'date'  => array(
+                'title'    => 'Date',
+                'format'   => 'datetime'
+            ),
+            'payment_type_id' => array(
+                'title' => 'Payment Type',
+                'callback' => function($data) {
+                    $value = $data->payment_type_id;
+                    switch ($data->payment_type_id) {
+                        case Model_PaymentType::PAYFLOW:
+                            return 'Payflow';
+                        case Model_PaymentType::PAYPAL:
+                            return 'PayPal';    
+                        case Model_PaymentType::CHECK:
+                            return 'Check';
+                        default:
+                            return 'Unknown';    
+                    }
+                }
+            ),
+            'amount' => array('format' => 'dollar'), 
+            'pnref'       => array('title' => 'PNREF'),
+            'credit'      => array(
+                'title'    => '',
+                'callback' => function($data) use ($view) {
+                    if ($data->amount > 0) {
+                        $url = $view->serverUrl($view->url(array(
+                            'action'     => 'credit',
+                            'controller' => 'payments',
+                            'id'         => $data->order_payment_id
+                        )));
+                        return '<a href="' . $url . '">Credit</a>';
+                    }
+                }
+            )
+        ), $this->order->payments); ?>
     </section>
 </div>
-<pre style="clear: both; width: 800px;">

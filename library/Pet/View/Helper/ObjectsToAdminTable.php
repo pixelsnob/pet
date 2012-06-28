@@ -108,7 +108,8 @@ class Pet_View_Helper_ObjectsToAdminTable extends Zend_View_Helper_Abstract {
                             break;
                     }
                 }
-                $out .= "<td>" . $value . "</td>\n";
+                $class = (is_array($field) && $format ? " class=\"$format\"" : '');
+                $out .= "<td$class>" . $value . "</td>\n";
             }
             $out .= "</tr>\n";
         }

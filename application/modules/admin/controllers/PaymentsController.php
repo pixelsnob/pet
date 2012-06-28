@@ -30,10 +30,15 @@ class Admin_PaymentsController extends Zend_Controller_Action {
     public function creditAction() {
         $payments_mapper = new Model_Mapper_OrderPayments;
         $gateway_mapper  = new Model_Mapper_PaymentGateway;
+        $mongo = Pet_Mongo::getInstance();
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
         if (!($payment = $payments_mapper->get($id))) {
             throw new Exception('Payment not found');
+        }
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
+                array('id' => $payment->order_id));
         }
         if ($payment->amount <= 0) {
             throw new Exception('Cannot credit credits: redundant!');
@@ -48,7 +53,7 @@ class Admin_PaymentsController extends Zend_Controller_Action {
                 $gateway_mapper->processCredit($payment->pnref,
                     $form->amount->getValue()); 
                 $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
-                /*if (isset($gateway_responses[0])) {
+                if (isset($gateway_responses[0])) {
                     $response = $gateway_responses[0];
                     $payments_mapper->insert(array( 
                         'order_id'            => $payment->order_id,
@@ -59,16 +64,38 @@ class Admin_PaymentsController extends Zend_Controller_Action {
                         'correlationid'       => $response->correlationid,
                         'date'                => date('Y-m-d H:i:s')
                     ));
-                    exit('wow');
                 } else {
                     throw new Exception('No gateway responses');
-                }*/
-                print_r($gateway_mapper->getRawCalls()); exit;
+                }
+                /*$mongo->order_credit_transactions->insert(array(
+                    'order_id'         => $payment->order_id,
+                    'timestamp'        => time(),
+                    'date_r'           => date('Y-m-d H:i:s'),
+                    'original_payment' => $payment->toArray(),
+                    'amount'           => $form->amount->getValue(),
+                    'gateway_calls'    => $gateway_mapper->getRawCalls(),
+                    'exceptions'       => array()
+
+                ));*/
+                $this->_helper->FlashMessenger->setNamespace('order_detail')
+                    ->addMessage('Payment was credited successfully');
+                $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
+                    array('id' => $payment->order_id));
             } catch (Exception $e) {
-                print_r($e);       
-                print_r($gateway_mapper->getRawCalls()); exit;
+                $this->_helper->FlashMessenger->addMessage($e->getMessage());
+                /*$mongo->order_credit_transactions->insert(array(
+                    'order_id'         => $payment->order_id,
+                    'timestamp'        => time(),
+                    'date_r'           => date('Y-m-d H:i:s'),
+                    'original_payment' => $payment->toArray(),
+                    'amount'           => $form->amount->getValue(),
+                    'gateway_calls'    => $gateway_mapper->getRawCalls(),
+                    'exceptions'       => $e->getMessage() . ' ' .
+                                          $e->getTraceAsString()
+                ));*/
             }
         }
+        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
     }
