@@ -177,7 +177,7 @@ class Service_Cart {
      */
     public function process($form, $payer_id = '') {
         $users_svc = new Service_Users;
-        $ot_mapper = new Model_Mapper_OrderTransactions;
+        $gateway_logger = new Model_Mapper_PaymentGateway_Logger_Orders;
         $config    = Zend_Registry::get('app_config');
         $logger    = Zend_Registry::get('log');
         // Operate on a copy of cart -- we don't want to modify it in here
@@ -234,34 +234,21 @@ class Service_Cart {
             if (!$cart->isFreeOrder()) {
                 $order_payment_id = $this->saveOrderPayments($order);
             }
-            // Log
-            $log_data = array(
-                'type'     => 'process',
-                'cart'     => $cart->toArray(),
-                'order_id' => $order->order_id,
-                'user_id'  => $order->user_id
-            );
-            $ot_mapper->insert(
-                $status,
-                $log_data,
+            $gateway_logger->insert(
+                true,
+                $order->toArray(),
                 $this->_gateway->getRawCalls()
             );
             $db->commit();
         } catch (Exception $e) {
             $status = false;
-            $log_data = array(
-                'type'     => 'process',
-                'cart'     => $cart->toArray(),
-                'order_id' => $order->order_id,
-                'user_id'  => $order->user_id
-            );
             // These should fail silently if they do fail
             try {
                 $this->_gateway->voidCalls();
                 // Log
-                $ot_mapper->insert(
+                $gateway_logger->insert(
                     $status,
-                    $log_data,
+                    $order->toArray(),
                     $this->_gateway->getRawCalls(),
                     array($e->getMessage() . ' -- ' . $e->getTraceAsString())
                 );
@@ -394,8 +381,8 @@ class Service_Cart {
      * 
      */
     public function getECUrl($return_url, $cancel_url) {
-        $ot_mapper = new Model_Mapper_OrderTransactions;
         $config = Zend_Registry::get('app_config');
+        $gateway_logger = new Model_Mapper_PaymentGateway_Logger_ExpressCheckout;
         $cart = $this->_cart_mapper->get();
         $totals = $cart->getTotals();
         $data = array(
@@ -415,7 +402,7 @@ class Service_Cart {
             $cart->ec_token = $token;
             $ot_mapper->insert(
                 $status,
-                array('cart' => $cart->toArray(), 'type' => 'ec_get_token'),
+                $cart->toArray(),
                 $this->_gateway->getRawCalls()
             );
         } catch (Exception $e) {
@@ -423,9 +410,9 @@ class Service_Cart {
             try {
                 $ot_mapper->insert(
                     $status,
-                    array('cart' => $cart->toArray()),
+                    $cart->toArray(),
                     $this->_gateway->getRawCalls(),
-                    array($e->getMessage())
+                    array($e->getMessage() . ' ' . $e->getTraceAsString())
                 );
             } catch (Exception $e2) {}
         }

@@ -82,8 +82,8 @@ class Service_Orders {
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
-        $gateway_mapper     = new Model_Mapper_PaymentGateway;
-        $rb_logger          = new Model_Mapper_RecurringBillingTransactions;
+        $gateway            = new Model_Mapper_PaymentGateway;
+        $gateway_logger     = new Model_Mapper_PaymentGateway_Logger_RecurringBilling;
         $view               = Zend_Registry::get('view');
         $logger             = Zend_Registry::get('log');
         $gateway_exceptions = array();
@@ -99,11 +99,7 @@ class Service_Orders {
                 if (!$sub->product || !$sub->product->is_recurring) {
                     continue;
                 }
-                $log_data = array(
-                    'order'                     => null,
-                    'gateway_calls'             => array(),
-                    'exceptions'                => array()
-                );
+                $exceptions = array();
                 $min_expiration = new DateTime($sub->min_expiration);
                 // Stop repeating around a year -- reference transactions will only
                 // last that long...
@@ -116,7 +112,6 @@ class Service_Orders {
                 if (!$order) {
                     throw new Exception('Error retrieving order');
                 }
-                $log_data['order'] = $order->toArray(true);
                 if (!isset($order->payments[0])) {
                     throw new Exception('Error retrieving order payment');
                 }
@@ -125,11 +120,11 @@ class Service_Orders {
                 try {
                     if ($payment->payment_type_id == Model_PaymentType::PAYFLOW) {
                         // Payment type was payflow
-                        $gateway_mapper->processReferenceTransaction(
+                        $gateway->processReferenceTransaction(
                             $sub->product->cost, $payment->gateway_data->pnref); 
                     } elseif ($payment->payment_type_id == Model_PaymentType::PAYPAL) {
                         // Payment type was paypal
-                        $gateway_mapper->processECReferenceTransaction(
+                        $gateway->processECReferenceTransaction(
                             $sub->product->cost, $payment->gateway_data->baid); 
                     } else {
                         throw new Exception('Error determining payment type');
@@ -137,18 +132,17 @@ class Service_Orders {
                     $status = true;
                 } catch (Exception $e2) {
                     $status = false;
-                    $log_data['exceptions'] = $e2->getMessage() . ' ' .
+                    $exceptions[] = $e2->getMessage() . ' ' .
                         $e2->getTraceAsString();
                     $logger->log('Recurring payment failed for ' .
                         $order->user->email . ' ' .
                         $e2->getMessage() . ' ' . $e2->getTraceAsString(),
                         Zend_Log::CRIT);
                 }
-                $log_data['gateway_calls'] = $gateway_mapper->getRawCalls();
                 // Only save successful payment
                 if ($status) {
                     // Save gateway data
-                    $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
+                    $gateway_responses = $gateway->getSuccessfulResponseObjects();
                     foreach ($gateway_responses as $response) {
                         $payment_data = array(
                             'order_id'        => $order->id,
@@ -200,11 +194,17 @@ class Service_Orders {
                     // Log
                     $exception_str = $e3->getMessage() . ' ' .
                         $e3->getTraceAsString();
+                    $exceptions[] = $exception_str;
                     $logger->log('Recurring billing failure, mail not sent for ' .
                         $order->user->email . ' ' . 
                         $exception_str, Zend_Log::CRIT);
                 }
-                $rb_logger->insertTransaction($status, $log_data);
+                $gateway_logger->insert(
+                    $status,
+                    $order->toArray(),
+                    $gateway->getRawCalls(),
+                    $exceptions
+                );
                 // Important! Break the loop and cause this method to run again
                 // if this is taking too damn long, since it blocks inserts
                 // and updates
@@ -213,6 +213,7 @@ class Service_Orders {
                     break;
                 }
             } 
+            throw new Exception('uh oh');
             $db->commit();
             //echo "elapsed time: " . (time() - $start_time) . "\n";
             if ($run_again) {
@@ -224,11 +225,13 @@ class Service_Orders {
                 $exception_str = 'Urgent action necessary, recurring billing: ' .
                     $e->getMessage() . ' ' . $e->getTraceAsString();
                 $logger->log($exception_str, Zend_Log::EMERG);
-                $gateway_mapper->voidCalls();
-                $rb_logger->insertErrors(false, array(
-                    'gateway_calls' => $gateway_mapper->getRawCalls(),
-                    'exceptions'    => $exception_str
-                ));
+                $gateway->voidCalls();
+                $gateway_logger->insert(
+                    false,
+                    $order->toArray(),
+                    $gateway->getRawCalls(),
+                    array($exception_str)
+                );
             } catch (Exception $f) {}
         }
     }

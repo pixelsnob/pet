@@ -64,9 +64,9 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $users_mapper           = new Model_Mapper_Users;
         $profile_mapper         = new Model_Mapper_UserProfiles;
         $gateway                = new Model_Mapper_PaymentGateway;
-        $ot_mapper              = new Model_Mapper_OrderTransactions;
         $op_mapper              = new Model_Mapper_OrderProducts;
         $ops_mapper             = new Model_Mapper_OrderProductSubscriptions;
+        $gateway_logger         = new Model_Mapper_PaymentGateway_Logger_Orders;
         $subscriptions          = $products_mapper->getSubscriptions();
         $digital_subscriptions  = $products_mapper->getDigitalSubscriptions();
         $logger                 = Zend_Registry::get('log');
@@ -171,16 +171,9 @@ class Admin_OrdersController extends Zend_Controller_Action {
                         ));
                     }
                 }
-                // Log
-                $log_data = array(
-                    'type'     => 'process',
-                    'order'    => $order->toArray(),
-                    'order_id' => $order->order_id,
-                    'user_id'  => $order->user_id
-                );
-                $ot_mapper->insert(
+                $gateway_logger->insert(
                     true,
-                    $log_data,
+                    $order->toArray(),
                     $gateway->getRawCalls()
                 );
                 $db->commit();
@@ -191,19 +184,13 @@ class Admin_OrdersController extends Zend_Controller_Action {
             } catch (Exception $e) {
                 $db->rollBack();
                 $this->_helper->FlashMessenger->addMessage($e->getMessage());
-                $log_data = array(
-                    'type'     => 'process',
-                    'order'    => $order->toArray(),
-                    'order_id' => $order->order_id,
-                    'user_id'  => $order->user_id
-                );
                 // These should fail silently if they do fail
                 try {
                     $gateway->voidCalls();
                     // Log
-                    $ot_mapper->insert(
+                    $gateway_logger->insert(
                         false,
-                        $log_data,
+                        $order->toArray(),
                         $gateway->getRawCalls(),
                         array($e->getMessage() . ' -- ' . $e->getTraceAsString())
                     );

@@ -130,12 +130,9 @@ class Model_Mapper_PaymentGateway extends Pet_Model_Mapper_Abstract {
             ->setField('RETURNURL', $return_url)
             ->setField('CANCELURL', $cancel_url)
             ->setField('ITEMAMT', $order->total)
-            // Ask about this
             ->setField('BA_DESC', 'Photoshop Elements User Subscription')
             ->setField('BILLINGTYPE', 'MerchantInitiatedBilling')
             ->setField('PAYMENTTYPE', 'any');
-            //->setField('L_BILLINGTYPE0', 'MerchantInitiatedBilling');
-            //->setField('ITEMAMT', $order->total);
         // Add line item info
         $i = 0;
         foreach ($order->products as $product) {
