@@ -12,9 +12,14 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
         'click #orders .admin-table td': 'adminTableRowClick',
         'hover #orders .admin-table td': 'adminTableRowHover',
         'click input[name=payment_method]': 'togglePaymentFields',
+
         'click #order-add .submit': 'overlayFormSubmit',
         'change #order-add #product': 'productChange',
+        
         'click #order-detail .credit': 'openCreditPopup',
+        'click #order-detail .payments td': 'adminTableRowClick',
+        'hover #order-detail .payments td': 'adminTableRowHover',
+
         'click #credit-payment [name=credit-submit]': 'submitCreditForm',
         'click #credit-payment [name=credit-cancel]': 'closeCreditPopup',
         'click #credit-payment-success [name=credit-return]': 'closeCreditPopup'

@@ -160,6 +160,13 @@
                         return '<a href="' . $url . '" class="credit">Credit</a>';
                     }
                 }
+            ),
+            'view' => array(
+                'title' => '',
+                'callback' => function($data) use ($view) {
+                    $url = $view->serverUrl($view->url(array('controller' => 'payments', 'action' => 'detail', 'id' => $data->id)));
+                    return "<a href=\"$url\">View</a>";
+                }
             )
         ), $this->order->payments); ?>
     </section>

@@ -102,8 +102,15 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
      */
     public function getPaginatedFiltered(array $params) {
         $sel = $this->_order_payments->select()->setIntegrityCheck(false)
-            ->from(array('op' => 'order_payments'))
-            ->joinLeft(array('o' => 'orders'), 'o.id = op.order_id');
+            ->from(array('op' => 'order_payments'), array(
+                'op.*',
+                'op.id',
+                'op.order_id',
+                'o.email',
+                'o.billing_first_name',
+                'o.billing_last_name'
+            ))
+            ->joinLeft(array('o' => 'orders'), 'o.id = op.order_id', null);
         $db = Zend_Db_Table::getDefaultAdapter();
         $this->addDateRangeToSelect($sel, 'op.date', $params);
         if (isset($params['search']) && $params['search']) {

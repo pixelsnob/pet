@@ -25,7 +25,7 @@ class Model_OrderPayment extends Pet_Model_Abstract {
      * 
      */
     public function __get($field) {
-        if (isset($this->_data['gateway_data']->$field)) {
+        if ($field != 'id' && isset($this->_data['gateway_data']->$field)) {
             return $this->_data['gateway_data']->$field;
         } else {
             return parent::__get($field);
