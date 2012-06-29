@@ -1,0 +1,42 @@
+
+<div id="payment-detail">
+    
+    <?php echo $this->flashMessenger($this->messages); ?>
+    <h2>Payment #<?php echo $this->escape($this->payment->order_payment_id); ?></h2>
+
+    <section class="payments clear full-width">
+        <?php echo $this->objectToAdminList(array(
+            'order_payment_id'      => array(
+                'title' => 'Payment ID'
+            ),
+            'payment_type_id' => array(
+                'title' => 'Payment Type',
+                'callback' => function($data) {
+                    $value = $data->payment_type_id;
+                    switch ($data->payment_type_id) {
+                        case Model_PaymentType::PAYFLOW:
+                            return 'Payflow';
+                        case Model_PaymentType::PAYPAL:
+                            return 'PayPal';    
+                        case Model_PaymentType::CHECK:
+                            return 'Check';
+                        default:
+                            return 'Unknown';    
+                    }
+                }
+            ),
+            'order_id' => array('title' => 'Order ID'),
+            'date',
+            'pnref' => array('title' => 'PNREF'),
+            'ppref' => array('title' => 'PPREF'),
+            'correlationid' => array('title' => 'Correlation ID'),
+            'cvv2match' => array('title' => 'Security Code Match'),
+            'cc_number' => array('title' => 'CC Number'),
+            'cc_expiration_month' => array('title' => 'Exp. Month'),
+            'cc_expiration_year' => array('title' => 'Exp. Year'),
+            'check' => array('title' => 'Check Number'),
+            'baid' => array('title' => 'Billing Agreement ID')
+
+        ), $this->payment); ?>
+    </section>
+</div>
