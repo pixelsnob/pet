@@ -13,6 +13,10 @@ a:hover {
     color: #6D81C2;
 }
 
+a:active {
+    color: #000 !important;
+}
+
 h1 {
     font-size: 20px !important;
     text-transform: none;

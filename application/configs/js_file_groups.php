@@ -50,5 +50,8 @@ return array(
     'admin-orders' => array(
         'js/Pet/Models/ProductCost.js',
         'js/Pet/Views/AdminOrders.js'
+    ),
+    'admin-payments' => array(
+        'js/Pet/Views/AdminPayments.js'
     )
 );

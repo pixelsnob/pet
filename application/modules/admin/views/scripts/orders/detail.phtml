@@ -118,6 +118,7 @@
         <h3>Payments</h3>
         <?php
         $view = $this;
+        $payment_type_check = Model_PaymentType::CHECK;
         echo $this->objectsToAdminTable(array(
             'id'           => array(
                 'title'  => 'Payment ID',
@@ -149,8 +150,8 @@
             'pnref'       => array('title' => 'PNREF'),
             'credit'      => array(
                 'title'    => '',
-                'callback' => function($data) use ($view) {
-                    if ($data->amount > 0) {
+                'callback' => function($data) use ($view, $payment_type_check) {
+                    if ($data->amount > 0 && $data->payment_type_id != Model_PaymentType::CHECK) {
                         $url = $view->serverUrl($view->url(array(
                             'action'     => 'credit',
                             'controller' => 'payments',

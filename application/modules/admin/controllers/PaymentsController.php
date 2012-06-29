@@ -25,8 +25,17 @@ class Admin_PaymentsController extends Zend_Controller_Action {
         $this->view->payments = $payments['data'];
         $this->view->params = $params;
         $this->view->search_form = $search_form;
-        $this->view->inlineScriptMin()
-            ->appendScript("Pet.loadView('Admin');");
+        $this->view->inlineScriptMin()->loadGroup('admin-payments')
+            ->appendScript("Pet.loadView('AdminPayments');");
+    }
+
+    public function detailAction() {
+        $id = $this->_request->getParam('id');
+        $op_mapper = new Model_Mapper_OrderPayments;
+        if (!($payment = $op_mapper->get($id))) {
+            throw new Exception('Payment not found');
+        }
+        $this->view->payment = $payment;
     }
 
     public function creditAction() {
@@ -91,8 +100,8 @@ class Admin_PaymentsController extends Zend_Controller_Action {
             }
         }
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
-        $this->view->inlineScriptMin()
-            ->appendScript("Pet.loadView('Admin');");
+        $this->view->inlineScriptMin()->loadGroup('admin-payments')
+            ->appendScript("Pet.loadView('AdminPayments');");
     }
     
     public function creditSuccessAction() {
