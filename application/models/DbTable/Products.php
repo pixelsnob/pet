@@ -20,71 +20,84 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
 
     /**
      * @param int $product_id
+     * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 
      * 
      */
-    public function getDownloadByProductId($product_id) {
+    public function getDownloadByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('pd' => 'products_downloads'), 'pd.product_id = p.id')
             ->join(array('d' => 'downloads'), 'd.id = pd.download_id')
-            ->where('p.id = ?', $product_id)
-            ->where('p.active');
+            ->where('p.id = ?', $product_id);
+        if ($is_active_check) {
+            $sel->where('p.active');
+        }
         return $this->fetchRow($sel);
     }
 
     /**
      * @param int $product_id
+     * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 
      * 
      */
-    public function getPhysicalProductByProductId($product_id) {
+    public function getPhysicalProductByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('pp' => 'physical_products'), 'pp.product_id = p.id')
-            ->where('p.id = ?', $product_id)
-            ->where('p.active');
+            ->where('p.id = ?', $product_id);
+        if ($is_active_check) {
+            $sel->where('p.active');
+        }
         return $this->fetchRow($sel);
     }
 
     /**
      * @param int $product_id
+     * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 
      * 
      */
-    public function getSubscriptionByProductId($product_id) {
+    public function getSubscriptionByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('ps' => 'products_subscriptions'),
                 'ps.product_id = p.id')
             ->join(array('s' => 'subscriptions'), 's.id = ps.subscription_id')
-            ->where('p.id = ?', $product_id)
-            ->where('p.active');
+            ->where('p.id = ?', $product_id);
+        if ($is_active_check) {
+            $sel->where('p.active');
+        }
         return $this->fetchRow($sel);
     }
 
     /**
      * @param int $product_id
+     * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 
      * 
      */
-    public function getCourseByProductId($product_id) {
+    public function getCourseByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'),
                 array('p.*', 'p.id as product_id'))
             ->join(array('pc' => 'products_courses'), 'pc.product_id = p.id')
             ->join(array('c' => 'courses'), 'c.id = pc.course_id')
-            ->where('p.id = ?', $product_id)
-            ->where('p.active');
+            ->where('p.id = ?', $product_id);
+        if ($is_active_check) {
+            $sel->where('p.active');
+        }
         return $this->fetchRow($sel);
     }
 
     /**
      * @param int $product_id
+     * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 
      * 
      */
-    public function getDigitalSubscriptionByProductId($product_id) {
+    public function getDigitalSubscriptionByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('pds' => 'products_digital_subscriptions'),
@@ -93,6 +106,9 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
                 'pds.digital_subscription_id = ds.id')
             ->where('p.id = ?', $product_id)
             ->where('p.active');
+        if ($is_active_check) {
+            $sel->where('p.active');
+        }
         return $this->fetchRow($sel);
     }
 

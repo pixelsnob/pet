@@ -1,0 +1,50 @@
+
+<div id="products">
+
+    <?php
+    if ($this->products) {
+
+        $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml');
+        echo $pagination;
+        echo $this->objectsToAdminTable(array(
+            'id' => array('title'  => 'Order ID'),
+            'name',
+            'product_type_id' => array(
+                'title' => 'Product Type',
+                'callback' => function($data) {
+                    switch ($data->product_type_id) {
+                        case Model_ProductType::SUBSCRIPTION:
+                            return 'Subscription';
+                        case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                            return 'Digital Subscription';
+                        case Model_ProductType::PHYSICAL:
+                            return 'Physical Product';
+                        case Model_ProductType::COURSE:
+                            return 'Course';
+                        case Model_ProductType::DOWNLOAD:
+                            return 'Download';
+                    }
+                }
+            ),
+            'sku' => array('title' => 'SKU'),
+            'cost' => array(
+                'format' => 'dollar'
+            ),
+            'active' => array(
+                'callback' => function($data) {
+                    return ($data->active ? 'Y' : 'N');
+                }
+            ),
+            'edit'               => array(
+                'format'  => 'link',
+                'label'   => 'Edit',
+                'url'     => '/admin/products/edit/id'
+            )
+        ), $this->products);
+        echo $pagination;
+    } else {
+        echo '<p class="error">There are no products to show</p>';
+    }
+    ?>
+</div>
+

@@ -15,16 +15,18 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param int $id
+     * @param bool $is_active_check Whether to check if the product is active
      * @return Model_Product_Abstract
      * 
      */
-    public function getById($id) {
+    public function getById($id, $is_active_check = true) {
         $db_product = $this->_products->getById($id);
         if ($db_product) {
             $product = new Model_Product($db_product->toArray());
             switch ($product->product_type_id) {
                 case Model_ProductType::DOWNLOAD;
-                    $dl = $this->_products->getDownloadByProductId($id);
+                    $dl = $this->_products->getDownloadByProductId($id,
+                        $is_active_check);
                     if ($dl) {
                         $data = array_merge($product->toArray(),
                             $dl->toArray());
@@ -33,7 +35,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     break;
                 case Model_ProductType::PHYSICAL;
                     $physical = $this->_products
-                        ->getPhysicalProductByProductId($id);
+                        ->getPhysicalProductByProductId($id, $is_active_check);
                     if ($physical) {
                         $data = array_merge($product->toArray(),
                             $physical->toArray());
@@ -41,7 +43,8 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::COURSE;
-                    $course = $this->_products->getCourseByProductId($id);
+                    $course = $this->_products->getCourseByProductId($id,
+                        $is_active_check);
                     if ($course) {
                         $data = array_merge($product->toArray(),
                             $course->toArray());
@@ -49,7 +52,8 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::SUBSCRIPTION;
-                    $sub = $this->_products->getSubscriptionByProductId($id);
+                    $sub = $this->_products->getSubscriptionByProductId($id,
+                        $is_active_check);
                     if ($sub) {
                         $data = array_merge($product->toArray(),
                             $sub->toArray());
@@ -63,8 +67,8 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                     }
                     break;
                 case Model_ProductType::DIGITAL_SUBSCRIPTION;
-                    $sub = $this->_products
-                        ->getDigitalSubscriptionByProductId($id);
+                    $sub = $this->_products->getDigitalSubscriptionByProductId($id,
+                        $is_active_check);
                     if ($sub) {
                         $data = array_merge($product->toArray(),
                             $sub->toArray());
@@ -151,5 +155,33 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
             $out[] = new Model_Product_Physical($product->toArray());
         }
         return $out;
+    }
+
+    /** 
+     * Gets paginated products
+     * 
+     * @return array Returns the paginator object as well as an array of model
+     *               objects
+     */
+    public function getPaginatedFiltered(array $params) {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $sel = $this->_products->select();
+        $sel->order(array('id asc'));
+        $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
+        $paginator = new Zend_Paginator($adapter);
+        if (isset($params['page'])) {
+            $paginator->setCurrentPageNumber((int) $params['page']);
+        }
+        $paginator->setItemCountPerPage(35);
+        $products = array();
+        foreach ($paginator as $row) {
+            $product_model = new Model_Product($row);
+            $temp_prod = $this->getById($row['id'], false);
+            if ($temp_prod) {
+                $product_model->item = $temp_prod;
+            }
+            $products[] = $product_model;
+        }
+        return array('paginator' => $paginator, 'data' => $products);
     }
 }

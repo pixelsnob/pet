@@ -99,6 +99,12 @@
                 </transactions>
             </pages>
         </reports>
+        <products>
+            <label>Products</label>
+            <controller>products</controller>
+            <action>index</action>
+            <module>admin</module>
+        </products>
         <logout>
             <label>Logout</label>
             <controller>index</controller>

@@ -1,8 +1,11 @@
 
 <?php /* Generic pagination view */ ?>
 
-<?php unset($this->params['page']); ?>
-<?php if ($this->pageCount): ?>
+<?php
+$this->params = (isset($this->params) ? $this->params : array());
+unset($this->params['page']);
+if ($this->pageCount):
+?>
 <ul class="pagination">
     <?php if (isset($this->previous)): ?>
         <li class="text-link">
