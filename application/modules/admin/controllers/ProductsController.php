@@ -25,8 +25,23 @@ class Admin_ProductsController extends Zend_Controller_Action {
         $request = $this->_request;
         $params = $this->_request->getParams();
         $products = $this->_products_mapper->getPaginatedFiltered($params);
+        $product_types = $this->_products_mapper->getProductTypes();
+        $form = new Form_Admin_ProductsSearch(array(
+            'productTypes' => $product_types
+        ));
+        if (!$form->isValid($params)) {
+            $params = array();
+        }
+        $this->view->filter_form = $form;
+        $this->view->params = $params;
         $this->view->paginator = $products['paginator'];
         $this->view->products = $products['data'];
     }
-
+    
+    public function editAction() {
+        $id = $this->_request->getParam('id');
+        $product = $this->_products_mapper->getById($id);
+        print_r($product);
+        $this->_helper->ViewRenderer->render('form'); 
+    }
 }

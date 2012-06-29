@@ -23,60 +23,71 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         $db_product = $this->_products->getById($id);
         if ($db_product) {
             $product = new Model_Product($db_product->toArray());
-            switch ($product->product_type_id) {
-                case Model_ProductType::DOWNLOAD;
-                    $dl = $this->_products->getDownloadByProductId($id,
-                        $is_active_check);
-                    if ($dl) {
-                        $data = array_merge($product->toArray(),
-                            $dl->toArray());
-                        return new Model_Product_Download($data);
+            return $this->getItem($product);
+        }
+    }
+    
+    /**
+     * @param Model_Product $product
+     * @param bool $is_active_check
+     * @return Model_Product_Abstract 
+     * 
+     */
+    public function getItem(Model_Product $product, $is_active_check = true) {
+        $id = $product->id;
+        switch ($product->product_type_id) {
+            case Model_ProductType::DOWNLOAD;
+                $dl = $this->_products->getDownloadByProductId($id,
+                    $is_active_check);
+                if ($dl) {
+                    $data = array_merge($product->toArray(),
+                        $dl->toArray());
+                    return new Model_Product_Download($data);
+                }
+                break;
+            case Model_ProductType::PHYSICAL;
+                $physical = $this->_products
+                    ->getPhysicalProductByProductId($id, $is_active_check);
+                if ($physical) {
+                    $data = array_merge($product->toArray(),
+                        $physical->toArray());
+                    return new Model_Product_Physical($data);
+                }
+                break;
+            case Model_ProductType::COURSE;
+                $course = $this->_products->getCourseByProductId($id,
+                    $is_active_check);
+                if ($course) {
+                    $data = array_merge($product->toArray(),
+                        $course->toArray());
+                    return new Model_Product_Course($data);
+                }
+                break;
+            case Model_ProductType::SUBSCRIPTION;
+                $sub = $this->_products->getSubscriptionByProductId($id,
+                    $is_active_check);
+                if ($sub) {
+                    $data = array_merge($product->toArray(),
+                        $sub->toArray());
+                    $model = new Model_Product_Subscription($data);
+                    $sz_mapper = new Model_Mapper_SubscriptionZones;
+                    $sz = $sz_mapper->getById($model->zone_id);
+                    if ($sz) {
+                        $model->zone = $sz->name;
                     }
-                    break;
-                case Model_ProductType::PHYSICAL;
-                    $physical = $this->_products
-                        ->getPhysicalProductByProductId($id, $is_active_check);
-                    if ($physical) {
-                        $data = array_merge($product->toArray(),
-                            $physical->toArray());
-                        return new Model_Product_Physical($data);
-                    }
-                    break;
-                case Model_ProductType::COURSE;
-                    $course = $this->_products->getCourseByProductId($id,
-                        $is_active_check);
-                    if ($course) {
-                        $data = array_merge($product->toArray(),
-                            $course->toArray());
-                        return new Model_Product_Course($data);
-                    }
-                    break;
-                case Model_ProductType::SUBSCRIPTION;
-                    $sub = $this->_products->getSubscriptionByProductId($id,
-                        $is_active_check);
-                    if ($sub) {
-                        $data = array_merge($product->toArray(),
-                            $sub->toArray());
-                        $model = new Model_Product_Subscription($data);
-                        $sz_mapper = new Model_Mapper_SubscriptionZones;
-                        $sz = $sz_mapper->getById($model->zone_id);
-                        if ($sz) {
-                            $model->zone = $sz->name;
-                        }
-                        return $model;
-                    }
-                    break;
-                case Model_ProductType::DIGITAL_SUBSCRIPTION;
-                    $sub = $this->_products->getDigitalSubscriptionByProductId($id,
-                        $is_active_check);
-                    if ($sub) {
-                        $data = array_merge($product->toArray(),
-                            $sub->toArray());
-                        return new Model_Product_DigitalSubscription($data);
-                    }
-                    break;
+                    return $model;
+                }
+                break;
+            case Model_ProductType::DIGITAL_SUBSCRIPTION;
+                $sub = $this->_products->getDigitalSubscriptionByProductId($id,
+                    $is_active_check);
+                if ($sub) {
+                    $data = array_merge($product->toArray(),
+                        $sub->toArray());
+                    return new Model_Product_DigitalSubscription($data);
+                }
+                break;
 
-            }
         }
     }
 
@@ -156,17 +167,38 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         }
         return $out;
     }
+    
+    /**
+     * @return array 
+     * 
+     */
+    public function getAll() {
+        $products = $this->_products->getAll();
+        $out = array();
+        foreach ($products as $product) {
+            $product_model = new Model_Product($product->toArray());
+            $item = $this->getItem($product_model); 
+            if ($item) {
+                $out[] = $item;
+            }
+        }
+        return $out;
+    }
 
     /** 
      * Gets paginated products
      * 
+     * @param array $params
      * @return array Returns the paginator object as well as an array of model
      *               objects
      */
     public function getPaginatedFiltered(array $params) {
         $db = Zend_Db_Table::getDefaultAdapter();
-        $sel = $this->_products->select();
-        $sel->order(array('id asc'));
+        $sel = $db->select()->from('view_products');
+        if (isset($params['product_type']) && (int) $params['product_type']) {
+            $sel->where('product_type_id = ?', (int) $params['product_type']);
+        }
+        $sel->order(array('product_type asc', 'name asc'));
         $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
         $paginator = new Zend_Paginator($adapter);
         if (isset($params['page'])) {
@@ -176,12 +208,28 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         $products = array();
         foreach ($paginator as $row) {
             $product_model = new Model_Product($row);
-            $temp_prod = $this->getById($row['id'], false);
-            if ($temp_prod) {
-                $product_model->item = $temp_prod;
+            $item = $this->getItem($product_model, false);
+            if ($item) {
+                $product_model->item = $item;
             }
             $products[] = $product_model;
         }
         return array('paginator' => $paginator, 'data' => $products);
+    }
+
+    /**
+     * @return array
+     * 
+     */
+    public function getProductTypes() {
+        $pt = new Model_DbTable_ProductTypes;
+        $product_types = $pt->fetchAll($pt->select());
+        $out = array();
+        if ($product_types) {
+            foreach ($product_types as $product_type) {
+                $out[] = new Model_ProductType($product_type->toArray());
+            }
+        }
+        return $out;
     }
 }

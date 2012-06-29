@@ -185,7 +185,11 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->order('pp.sequence');
         return $this->fetchAll($sel);
     }
-
+    
+    public function getAll() {
+        $sel = $this->select();
+        return $this->fetchAll($sel);
+    }
 
 }
 

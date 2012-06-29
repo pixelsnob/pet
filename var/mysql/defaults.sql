@@ -135,9 +135,9 @@ insert into pet.products_digital_subscriptions values
 
 /* Add products that were deleted that still exist in the ordered_products table */
 
-/*insert into pet.products (product_type_id, sku, cost, image, active) values
+insert into pet.products (product_type_id, sku, cost, image, active) values
 (2, 'BODVD1-2', 0, '', 0), (2, 'BODVD1-2-3', 0, '', 0), (2, 'BODVD2-3', 0, '', 0),
-(4, 'E6BK', 0, '', 0), (4, 'E7BK', 0, '', 0), (4, 'V2N9', 0, '', 0), (4, 'V3N9', 0, '', 0);*/
+(4, 'E6BK', 0, '', 0), (4, 'E7BK', 0, '', 0), (4, 'V2N9', 0, '', 0), (4, 'V3N9', 0, '', 0);
 
 
 /***************************************************************************************************
