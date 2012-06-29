@@ -106,7 +106,7 @@ h1, #nolayout h2, h3, h4, legend {
 
 h2 {
     text-transform: none;
-    font-style: italic;
+    /*font-style: italic;*/
     font-size: 28px !important;
     padding-bottom: 5px;
     font-weight: normal !important;

@@ -31,7 +31,6 @@ Pet.CartView = Pet.View.extend({
     },
 
     update: function() {
-        var obj = this;
         var qs = $('form[name=cart]', this.el).serialize();
         this.populateFancybox('/cart', qs);
         return false; 

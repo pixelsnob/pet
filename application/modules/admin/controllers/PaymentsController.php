@@ -3,7 +3,9 @@
 class Admin_PaymentsController extends Zend_Controller_Action {
 
     public function init() {
-        $this->_helper->Layout->setLayout('admin');
+        if ($this->_helper->Layout->getLayout() != 'nolayout') {
+            $this->_helper->Layout->setLayout('admin');
+        }
         $this->_admin_svc = new Service_Admin;
         $this->_users_svc = new Service_Users;
         if (!$this->_users_svc->isAuthenticated(true)) {
@@ -41,11 +43,13 @@ class Admin_PaymentsController extends Zend_Controller_Action {
             $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
                 array('id' => $payment->order_id));
         }
+        $this->view->payment = $payment;
         if ($payment->amount <= 0) {
             throw new Exception('Cannot credit credits: redundant!');
         }
         $form = new Form_Admin_CreditPayment(array(
-            'origAmount' => $payment->amount
+            'origAmount' => $payment->amount,
+            'orderPaymentId'  => $payment->order_payment_id
         ));
         $this->view->credit_form = $form;
         $payment_type = $payment->payment_type_id;
@@ -75,12 +79,11 @@ class Admin_PaymentsController extends Zend_Controller_Action {
                 );
                 $this->_helper->FlashMessenger->setNamespace('order_detail')
                     ->addMessage('Payment was credited successfully');
-                $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
-                    array('id' => $payment->order_id));
+                $this->_helper->Redirector->gotoSimple('credit-success');
             } catch (Exception $e) {
                 $this->_helper->FlashMessenger->addMessage($e->getMessage());
                 $gateway_logger->insert(
-                    true,
+                    false,
                     $payment->toArray(), 
                     $gateway_mapper->getRawCalls(),
                     array($e->getMessage() . ' ' . $e->getTraceAsString())
@@ -91,6 +94,9 @@ class Admin_PaymentsController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()
             ->appendScript("Pet.loadView('Admin');");
     }
-
+    
+    public function creditSuccessAction() {
+         
+    }
 
 }

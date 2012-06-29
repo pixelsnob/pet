@@ -86,7 +86,6 @@ class Service_Orders {
         $gateway_logger     = new Model_Mapper_PaymentGateway_Logger_RecurringBilling;
         $view               = Zend_Registry::get('view');
         $logger             = Zend_Registry::get('log');
-        $gateway_exceptions = array();
         $email_exceptions   = array();
         $db = Zend_Db_Table::getDefaultAdapter();
         $run_again          = false;

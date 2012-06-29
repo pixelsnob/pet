@@ -12,11 +12,25 @@ class Form_Admin_CreditPayment extends Pet_Form {
     protected $_orig_amount;
 
     /**
+     * @var int
+     * 
+     */
+    protected $_order_payment_id;
+
+    /**
      * @param int
      * @return void
      */
     public function setOrigAmount($orig_amount) {
         $this->_orig_amount = $orig_amount;
+    }
+
+    /**
+     * @param int
+     * @return void
+     */
+    public function setOrderPaymentId($id) {
+        $this->_order_payment_id = $id;
     }
 
     /**
@@ -26,6 +40,7 @@ class Form_Admin_CreditPayment extends Pet_Form {
     public function init() {
         parent::init();
         $orig_amount = $this->_orig_amount;
+        $this->setName('credit_payment');
         $this->addElement('text', 'amount', array(
             'label'        => 'Credit Amount',
             'required'     => false,
@@ -40,6 +55,8 @@ class Form_Admin_CreditPayment extends Pet_Form {
                 ))
             ),
             'registerInArrayValidator' => false
+        ))->addElement('hidden', 'order_payment_id', array(
+            'value' => $this->_order_payment_id
         ));
     }
 

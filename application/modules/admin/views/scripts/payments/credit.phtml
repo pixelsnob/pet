@@ -1,5 +1,6 @@
 
 <div id="credit-payment">
+    <h2>Credit Payment for Order #<span id="order-id"><?php echo $this->payment->order_id; ?></span></h2>
     <?php echo $this->flashMessenger($this->messages); ?>
     <form action="<?php echo $this->credit_form->getAction(); ?>" method="<?php echo $this->credit_form->getMethod(); ?>" name="<?php echo $this->credit_form->getName(); ?>">
         <dl class="form">
@@ -10,8 +11,9 @@
             </dd>
         </dl>
         <p class="update clear">
+            <?php echo $this->credit_form->order_payment_id->renderViewHelper(); ?>
             <input type="submit" value="Submit" name="credit-submit">
-            <input type="submit" value="Cancel" name="cancel">
+            <input type="submit" value="Cancel" name="credit-cancel">
         </p>
     </form>
 </div>

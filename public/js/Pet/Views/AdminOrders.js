@@ -13,7 +13,11 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
         'hover #orders .admin-table td': 'adminTableRowHover',
         'click input[name=payment_method]': 'togglePaymentFields',
         'click #order-add .submit': 'overlayFormSubmit',
-        'change #order-add #product': 'productChange'
+        'change #order-add #product': 'productChange',
+        'click #order-detail .credit': 'openCreditPopup',
+        'click #credit-payment [name=credit-submit]': 'submitCreditForm',
+        'click #credit-payment [name=credit-cancel]': 'closeCreditPopup',
+        'click #credit-payment-success [name=credit-return]': 'closeCreditPopup'
     },
     
     initialize: function() {
@@ -47,6 +51,31 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
             var cost = cost_model.get('cost');
             $('#amount').val(cost);
         });
+    },
+
+    openCreditPopup: function(el) {
+        this.showFancybox({
+            href: $(el.target).attr('href'),
+            afterClose: function() {
+                window.location.href = window.location.href;
+            }
+        });
+        return false;
+    },
+
+    submitCreditForm: function(el) {
+        var qs = $('form[name=credit_payment]', this.el).serialize();
+        var url = '/admin/payments/credit/id/' + $('#order_payment_id').val();
+        //this.showSpinner();
+        $(el.target).parent().find('input[type=submit]').attr('disabled', true);
+        this.populateFancybox(url, qs);
+        return false;
+    },
+
+    closeCreditPopup: function(el) {
+        $.fancybox.close(); 
+        window.location.href = window.location.href;
+        return true;
     }
 
 });
