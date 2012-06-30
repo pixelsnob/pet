@@ -26,14 +26,12 @@ from pet_old.sales_product
 where category = 'digital';
 
 insert into pet.downloads
-select id, format_id, title, `desc`, date, path, size, thumb, subscriber_only
-from pet_old.sales_download sd;
-
-insert into pet.products_downloads
-select null, p.id, sp.download_id 
-from pet.products p
+select null, p.id, sd.format_id, title, `desc`, date, path, size, thumb, subscriber_only
+from pet.products p 
 left join pet_old.sales_product sp
 on p.sku = sp.code
+left join pet_old.sales_download sd
+on sp.download_id = sd.id
 where p.product_type_id = 1;
 
 /* Physical products */
@@ -59,24 +57,19 @@ where p.product_type_id = 2;
 
 /* Courses */
 
-insert into pet.courses
-select sc.id, sc.name, sp.description, sc.slug, sc.live, sc.free
-from pet_old.streams_course sc
-left join pet_old.sales_product sp
-on sc.id = sp.course_id;
-
 insert into pet.products
 (product_type_id, sku, cost, image, active) 
 select 3, code, price, image, 1
 from pet_old.sales_product
 where category = 'stream';
 
-insert into pet.products_courses
-select null, p.id, sp.course_id 
-from pet.products p
+insert into pet.courses
+select sc.id, p.id, sc.name, sp.description, sc.slug, sc.live, sc.free
+from pet_old.streams_course sc
 left join pet_old.sales_product sp
-on p.sku = sp.code
-where sp.category = 'stream';
+on sc.id = sp.course_id
+left join products p
+on p.sku = sp.code;
 
 /* Subscriptions */
 
@@ -90,7 +83,7 @@ insert into pet.subscription_zones values
 (1, 'Canada', 'can'), (2, 'USA', 'usa'), (3, 'International', 'intl');
 
 insert into pet.subscriptions
-select null, 
+select null, p.id,
 if (sp.zone = 'usa', 2, if (sp.zone = 'can', 1, if (sp.zone = 'int', 3, null))),
 sp.name, sp.description, (term * 12)/* Term in old db was in years, convert to months*/,
 is_renewal
@@ -99,14 +92,14 @@ left join pet_old.sales_product sp
 on p.sku = sp.code
 where p.product_type_id = 4;
 
-insert into pet.products_subscriptions
+/*insert into pet.products_subscriptions
 select null, p.id, s.id
 from pet.products p
 left join pet_old.sales_product sp
 on p.sku = sp.code
 left join pet.subscriptions s
 on sp.name = s.name
-where p.product_type_id = 4;
+where p.product_type_id = 4;*/
 
 /* Gift subscriptions */
 
@@ -122,16 +115,16 @@ insert into pet.products values
 (303, 5, 'DIGITAL-YEARLY-RENEWAL', 39, '', 1, 1, 0);
 
 insert into digital_subscriptions values
-(1, 'Digital Subscription, Monthly', '', 0, 1, 1),
-(2, 'Digital Subscription, Monthly, Renewal', '', 1, 1, 1),
-(3, 'Digital Subscription, Yearly', '', 0, 0, 12),
-(4, 'Digital Subscription, Yearly, Renewal', '', 1, 0, 12);
+(1, 300, 'Digital Subscription, Monthly', '', 0, 1, 1),
+(2, 301, 'Digital Subscription, Monthly, Renewal', '', 1, 1, 1),
+(3, 302, 'Digital Subscription, Yearly', '', 0, 0, 12),
+(4, 303, 'Digital Subscription, Yearly, Renewal', '', 1, 0, 12);
 
-insert into pet.products_digital_subscriptions values
+/*insert into pet.products_digital_subscriptions values
 (null, 300, 1),
 (null, 301, 2),
 (null, 302, 3),
-(null, 303, 4);
+(null, 303, 4);*/
 
 /* Add products that were deleted that still exist in the ordered_products table */
 
