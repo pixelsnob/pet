@@ -1,0 +1,20 @@
+
+<fieldset class="course clear">
+    <dl class="form">
+        <dt><?php echo $this->product_form->course->description->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->course->description->renderViewHelper(); ?>
+            <?php echo $this->product_form->course->description->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->product_form->course->slug->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->course->slug->renderViewHelper(); ?>
+            <?php echo $this->product_form->course->slug->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->product_form->course->free->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->course->free->renderViewHelper(); ?>
+            <?php echo $this->product_form->course->free->renderErrors(); ?>
+        </dd>
+    </dl>
+</fieldset>

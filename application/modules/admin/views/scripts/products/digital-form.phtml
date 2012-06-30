@@ -1,0 +1,20 @@
+
+<fieldset class="digital clear">
+    <dl class="form">
+        <dt><?php echo $this->product_form->digital->description->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->digital->description->renderViewHelper(); ?>
+            <?php echo $this->product_form->digital->description->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->product_form->digital->is_renewal->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->digital->is_renewal->renderViewHelper(); ?>
+            <?php echo $this->product_form->digital->is_renewal->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->product_form->digital->is_recurring->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->digital->is_recurring->renderViewHelper(); ?>
+            <?php echo $this->product_form->digital->is_recurring->renderErrors(); ?>
+        </dd>
+    </dl>
+</fieldset>

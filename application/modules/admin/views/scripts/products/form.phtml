@@ -46,6 +46,15 @@
             case Model_ProductType::DOWNLOAD:
                 echo $this->render('products/download-form.phtml');
                 break;
+            case Model_ProductType::PHYSICAL:
+                echo $this->render('products/physical-form.phtml');
+                break;
+            case Model_ProductType::COURSE:
+                echo $this->render('products/course-form.phtml');
+                break;
+            case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                echo $this->render('products/digital-form.phtml');
+                break;
         }
         ?>
         <p class="update clear">

@@ -3,7 +3,7 @@
  * Admin subscription subform
  * 
  */
-class Form_Admin_SubForm_Subscription extends Form_SubForm {
+class Form_Admin_SubForm_Subscription extends Zend_Form_SubForm {
     
     /**
      * @var Model_Product
@@ -15,7 +15,7 @@ class Form_Admin_SubForm_Subscription extends Form_SubForm {
      * @var array
      * 
      */
-    protected $_download_formats;
+    protected $_subscription_zones;
 
     /**
      * @param Model_Product $product
@@ -25,13 +25,12 @@ class Form_Admin_SubForm_Subscription extends Form_SubForm {
         $this->_product = $product;
     }
 
-
     /**
-     * @param array $download_formats
+     * @param array
      * @return void
      */
-    public function setDownloadFormats($download_formats) {
-        $this->_download_formats = $download_formats;
+    public function setSubscriptionZones(array $zones) {
+        $this->_subscription_zones = $zones;
     }
 
     /** 
@@ -40,34 +39,30 @@ class Form_Admin_SubForm_Subscription extends Form_SubForm {
      */
     public function init() {
         parent::init();
-        $df = array('' => 'Please select...');
-        foreach ($this->_download_formats as $format) {
-            $df[$format->id] = $format->name;
+        $zones = array('' => 'Please select...');
+        foreach ($this->_subscription_zones as $zone) {
+            $zones[$zone->id] = $zone->name;
         }
-        $this->addElement('select', 'download_format', array(
-            'label'        => 'Download Format',
-            'required'     => false,
-            'multiOptions' => $df,
-            'value'        => $this->_product->download_format
+        $this->addElement('select', 'zone_id', array(
+            'label'        => 'Subscription Zone',
+            'required'     => true,
+            'multiOptions' => $zones,
+            'value'        => $this->_product->zone_id
         ))->addElement('textarea', 'description', array(
             'label'        => 'Description',
-            'required'     => false
-        ))->addElement('text', 'date', array(
-            'label'        => 'Download Format',
             'required'     => false,
-        ))->addElement('text', 'path', array(
-            'label'        => 'Download Format',
+            'value'        => $this->_product->description
+        ))->addElement('text', 'term_months', array(
+            'label'        => 'Term (months)',
+            'required'     => true,
+            'value'        => $this->_product->term_months
+        ))->addElement('checkbox', 'is_renewal', array(
+            'label'        => 'Renewal?',
+            'class'        => 'checkbox',
             'required'     => false,
-        ))->addElement('text', 'size', array(
-            'label'        => 'Download Format',
-            'required'     => false,
-        ))->addElement('text', 'date', array(
-            'label'        => 'Download Format',
-            'required'     => false,
-        ))->addElement('checkbox', 'subscriber_only', array(
-            'label'        => 'Subscriber Only',
-            'required'     => false
+            'value'        => $this->_product->is_renewal
         ));
+
     }
 
 }

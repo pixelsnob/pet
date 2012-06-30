@@ -104,6 +104,14 @@
             <controller>products</controller>
             <action>index</action>
             <module>admin</module>
+            <pages>
+                <edit class="hide">
+                    <label>Edit Product</label>
+                    <controller>products</controller>
+                    <action>edit</action>
+                    <module>admin</module>
+                </edit>
+            </pages>
         </products>
         <logout>
             <label>Logout</label>

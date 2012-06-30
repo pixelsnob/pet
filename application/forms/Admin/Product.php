@@ -24,6 +24,12 @@ class Form_Admin_Product extends Pet_Form {
     protected $_download_formats;
 
     /**
+     * @var array
+     * 
+     */
+    protected $_subscription_zones;
+
+    /**
      * @param Model_Product $product
      * @return void
      */
@@ -47,6 +53,14 @@ class Form_Admin_Product extends Pet_Form {
         $this->_download_formats = $formats;
     }
 
+    /**
+     * @param array
+     * @return void
+     */
+    public function setSubscriptionZones(array $zones) {
+        $this->_subscription_zones = $zones;
+    }
+
     /** 
      * @return void
      * 
@@ -57,6 +71,7 @@ class Form_Admin_Product extends Pet_Form {
         foreach ($this->_product_types as $product_type) {
             $prod_types[$product_type->id] = $product_type->name;
         }
+        // Elements common to all product types
         $this->addElement('select', 'product_type', array(
             'label'        => 'Product Type',
             'required'     => false,
@@ -85,14 +100,20 @@ class Form_Admin_Product extends Pet_Form {
             'class'     => 'checkbox',
             'value'     => $this->_product->is_giftable
         ));
+        // Product type forms
         switch ($this->_product->product_type_id) {
             case Model_ProductType::SUBSCRIPTION:
                 $this->addSubform(new Form_Admin_SubForm_Subscription(array(
-                    'product'         => $this->_product
+                    'product'           => $this->_product,
+                    'subscriptionZones' => $this->_subscription_zones
                 )), 'subscription'); 
+                $this->subscription->populate($this->_product->toArray());
                 break;
             case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                
+                $this->addSubform(new Form_Admin_SubForm_DigitalSubscription(array(
+                    'product'           => $this->_product,
+                )), 'digital'); 
+                $this->digital->populate($this->_product->toArray());
                 break;
             case Model_ProductType::DOWNLOAD:
                 $this->addSubform(new Form_Admin_SubForm_Download(array(
@@ -102,10 +123,16 @@ class Form_Admin_Product extends Pet_Form {
                 $this->download->populate($this->_product->toArray());
                 break;
             case Model_ProductType::PHYSICAL:
-                
+                $this->addSubform(new Form_Admin_SubForm_Physical(array(
+                    'product'         => $this->_product
+                )), 'physical'); 
+                $this->physical->populate($this->_product->toArray());
                 break;
             case Model_ProductType::COURSE:
-                
+                $this->addSubform(new Form_Admin_SubForm_Course(array(
+                    'product'         => $this->_product
+                )), 'course'); 
+                $this->course->populate($this->_product->toArray());
                 break;
         }
     }

@@ -15,6 +15,22 @@ class Model_Mapper_SubscriptionZones extends Pet_Model_Mapper_Abstract {
     }
     
     /**
+     * @return array
+     * 
+     */
+    public function getAll() {
+        $zones = $this->_subscription_zones->fetchAll(
+            $this->_subscription_zones->select());
+        if ($zones) {
+            $out = array();
+            foreach ($zones as $zone) {
+                $out[] = new Model_SubscriptionZone($zone->toArray());
+            }
+            return $out;
+        }
+    }
+
+    /**
      * @param string $name
      * @return Model_SubscriptionZone
      * 

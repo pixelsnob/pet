@@ -74,7 +74,11 @@ li {
     padding: 0;
 }
 
-input.checkbox {
+.form input {
+    width: 220px;
+}
+
+.form input.checkbox {
     width: auto;
 }
 

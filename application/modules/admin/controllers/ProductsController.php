@@ -40,18 +40,24 @@ class Admin_ProductsController extends Zend_Controller_Action {
     
     public function editAction() {
         $dlf_mapper = new Model_Mapper_DownloadFormats;
+        $sz_mapper  = new Model_Mapper_SubscriptionZones;
         $id = $this->_request->getParam('id');
         $product = $this->_products_mapper->getById($id, false);
         if (!$product) {
             throw new Exception('Product not found');
         }
         $form = new Form_Admin_Product(array(
-            'productTypes'    => $this->_products_mapper->getProductTypes(),
-            'product'         => $product,
-            'downloadFormats' => $dlf_mapper->getAll() 
+            'productTypes'      => $this->_products_mapper->getProductTypes(),
+            'product'           => $product,
+            'downloadFormats'   => $dlf_mapper->getAll(),
+            'subscriptionZones' => $sz_mapper->getAll()
         ));
         $this->view->product_form = $form;
         $this->view->product = $product;
         $this->_helper->ViewRenderer->render('form'); 
+    }
+
+    public function subscriptionFormAction() {
+        
     }
 }

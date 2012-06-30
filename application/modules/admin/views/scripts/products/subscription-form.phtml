@@ -1,10 +1,25 @@
 
 <fieldset class="subscription clear">
     <dl class="form">
-        <dt><?php echo $this->product_form->subscription->download_format->renderLabel(); ?></dt>
+        <dt><?php echo $this->product_form->subscription->zone_id->renderLabel(); ?></dt>
         <dd>
-            <?php echo $this->product_form->subscription->download_format->renderViewHelper(); ?>
-            <?php echo $this->product_form->subscription->download_format->renderErrors(); ?>
+            <?php echo $this->product_form->subscription->zone_id->renderViewHelper(); ?>
+            <?php echo $this->product_form->subscription->zone_id->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->product_form->subscription->description->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->subscription->description->renderViewHelper(); ?>
+            <?php echo $this->product_form->subscription->description->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->product_form->subscription->term_months->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->subscription->term_months->renderViewHelper(); ?>
+            <?php echo $this->product_form->subscription->term_months->renderErrors(); ?>
+        </dd>
+        <dt><?php echo $this->product_form->subscription->is_renewal->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->subscription->is_renewal->renderViewHelper(); ?>
+            <?php echo $this->product_form->subscription->is_renewal->renderErrors(); ?>
         </dd>
     </dl>
 </fieldset>
