@@ -34,8 +34,6 @@ class Form_Admin_ProductsSearch extends Pet_Form {
             'label'        => 'Product Type',
             'required'     => false,
             'multiOptions' => $pt
-        ))->addElement('hidden', 'order_payment_id', array(
-            'value' => $this->_order_payment_id
         ));
     }
 

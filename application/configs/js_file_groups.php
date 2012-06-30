@@ -53,5 +53,8 @@ return array(
     ),
     'admin-payments' => array(
         'js/Pet/Views/AdminPayments.js'
+    ),
+    'admin-products' => array(
+        'js/Pet/Views/AdminProducts.js'
     )
 );

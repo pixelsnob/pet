@@ -19,6 +19,7 @@
         echo $pagination;
         echo $this->objectsToAdminTable(array(
             'id' => array('title'  => 'Product ID'),
+            'sku' => array('title' => 'SKU'),
             'name',
             'product_type_id' => array(
                 'title' => 'Product Type',
@@ -37,7 +38,6 @@
                     }
                 }
             ),
-            'sku' => array('title' => 'SKU'),
             'cost' => array(
                 'format' => 'dollar'
             ),

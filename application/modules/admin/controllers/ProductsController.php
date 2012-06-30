@@ -17,8 +17,8 @@ class Admin_ProductsController extends Zend_Controller_Action {
         if (!$this->_users_svc->isAuthenticated(true)) {
             $this->_helper->Redirector->gotoSimple('index', 'index');
         }
-        $this->view->inlineScriptMin()->loadGroup('admin-orders')
-            ->appendScript("Pet.loadView('AdminOrders');");
+        $this->view->inlineScriptMin()->loadGroup('admin-products')
+            ->appendScript("Pet.loadView('AdminProducts');");
     }
     
     public function indexAction() {
@@ -39,9 +39,19 @@ class Admin_ProductsController extends Zend_Controller_Action {
     }
     
     public function editAction() {
+        $dlf_mapper = new Model_Mapper_DownloadFormats;
         $id = $this->_request->getParam('id');
-        $product = $this->_products_mapper->getById($id);
-        print_r($product);
+        $product = $this->_products_mapper->getById($id, false);
+        if (!$product) {
+            throw new Exception('Product not found');
+        }
+        $form = new Form_Admin_Product(array(
+            'productTypes'    => $this->_products_mapper->getProductTypes(),
+            'product'         => $product,
+            'downloadFormats' => $dlf_mapper->getAll() 
+        ));
+        $this->view->product_form = $form;
+        $this->view->product = $product;
         $this->_helper->ViewRenderer->render('form'); 
     }
 }

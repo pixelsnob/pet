@@ -19,14 +19,14 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
      * @return Model_Product_Abstract
      * 
      */
-    public function getById($id, $is_active_check = true) {
+    public function getById($id, $is_active_check = true) { 
         $db_product = $this->_products->getById($id);
         if ($db_product) {
             $product = new Model_Product($db_product->toArray());
-            return $this->getItem($product);
+            return $this->getItem($product, $is_active_check);
         }
     }
-    
+
     /**
      * @param Model_Product $product
      * @param bool $is_active_check
@@ -172,7 +172,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
      * @return array 
      * 
      */
-    public function getAll() {
+    /*public function getAll() {
         $products = $this->_products->getAll();
         $out = array();
         foreach ($products as $product) {
@@ -183,7 +183,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
             }
         }
         return $out;
-    }
+    }*/
 
     /** 
      * Gets paginated products
