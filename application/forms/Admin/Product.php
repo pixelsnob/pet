@@ -67,28 +67,49 @@ class Form_Admin_Product extends Pet_Form {
      */
     public function init() {
         parent::init();
-        $prod_types = array('' => 'All products');
+        $prod_types = array('' => 'Please select...');
         foreach ($this->_product_types as $product_type) {
             $prod_types[$product_type->id] = $product_type->name;
         }
         // Elements common to all product types
         $this->addElement('select', 'product_type', array(
             'label'        => 'Product Type',
-            'required'     => false,
+            'required'     => true,
             'multiOptions' => $prod_types,
-            'value'        => $this->_product->product_type_id
+            'value'        => $this->_product->product_type_id,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Product type is required'
+                ))
+            )
         ))->addElement('text', 'name', array(
             'label'     => 'Name',
             'required'  => true,
-            'value'     => $this->_product->name
+            'value'     => $this->_product->name,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Name is required'
+                ))
+            )
         ))->addElement('text', 'sku', array(
             'label'     => 'SKU',
             'required'  => true,
-            'value'     => $this->_product->sku
+            'value'     => $this->_product->sku,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'SKU is required'
+                ))
+            )
         ))->addElement('text', 'cost', array(
             'label'     => 'Cost',
             'required'  => true,
-            'value'     => $this->_product->cost
+            'value'     => $this->_product->cost,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Cost is required'
+                )),
+                array(new Pet_Validate_Currency, true)
+            )
         ))->addElement('checkbox', 'active', array(
             'label'     => 'Active',
             'required'  => false,
@@ -104,34 +125,27 @@ class Form_Admin_Product extends Pet_Form {
         switch ($this->_product->product_type_id) {
             case Model_ProductType::SUBSCRIPTION:
                 $this->addSubform(new Form_Admin_SubForm_Subscription(array(
-                    'product'           => $this->_product,
                     'subscriptionZones' => $this->_subscription_zones
                 )), 'subscription'); 
                 $this->subscription->populate($this->_product->toArray());
                 break;
             case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                $this->addSubform(new Form_Admin_SubForm_DigitalSubscription(array(
-                    'product'           => $this->_product,
-                )), 'digital'); 
+                $this->addSubform(new Form_Admin_SubForm_DigitalSubscription,
+                    'digital'); 
                 $this->digital->populate($this->_product->toArray());
                 break;
             case Model_ProductType::DOWNLOAD:
                 $this->addSubform(new Form_Admin_SubForm_Download(array(
                     'downloadFormats' => $this->_download_formats,
-                    'product'         => $this->_product
                 )), 'download'); 
                 $this->download->populate($this->_product->toArray());
                 break;
             case Model_ProductType::PHYSICAL:
-                $this->addSubform(new Form_Admin_SubForm_Physical(array(
-                    'product'         => $this->_product
-                )), 'physical'); 
+                $this->addSubform(new Form_Admin_SubForm_Physical, 'physical'); 
                 $this->physical->populate($this->_product->toArray());
                 break;
             case Model_ProductType::COURSE:
-                $this->addSubform(new Form_Admin_SubForm_Course(array(
-                    'product'         => $this->_product
-                )), 'course'); 
+                $this->addSubform(new Form_Admin_SubForm_Course, 'course'); 
                 $this->course->populate($this->_product->toArray());
                 break;
         }

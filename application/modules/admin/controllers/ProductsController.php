@@ -41,6 +41,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
     public function editAction() {
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
+        $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
         $product = $this->_products_mapper->getById($id, false);
         if (!$product) {
@@ -52,6 +53,9 @@ class Admin_ProductsController extends Zend_Controller_Action {
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll()
         ));
+        if ($this->_request->isPost() && $form->isValid($params)) {
+
+        }
         $this->view->product_form = $form;
         $this->view->product = $product;
         $this->_helper->ViewRenderer->render('form'); 

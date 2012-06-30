@@ -6,25 +6,10 @@
 class Form_Admin_SubForm_Download extends Pet_Form_SubForm {
     
     /**
-     * @var Model_Product
-     * 
-     */
-    protected $_product;
-
-    /**
      * @var array
      * 
      */
     protected $_download_formats;
-
-    /**
-     * @param Model_Product $product
-     * @return void
-     */
-    public function setProduct($product) {
-        $this->_product = $product;
-    }
-
 
     /**
      * @param array $download_formats
@@ -46,21 +31,43 @@ class Form_Admin_SubForm_Download extends Pet_Form_SubForm {
         }
         $this->addElement('select', 'download_format_id', array(
             'label'        => 'Download Format',
-            'required'     => false,
+            'required'     => true,
             'multiOptions' => $df,
-            'value'        => $this->_product->download_format_id
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Download format is required'
+                ))
+            )
         ))->addElement('textarea', 'description', array(
             'label'        => 'Description',
             'required'     => false
         ))->addElement('text', 'date', array(
             'label'        => 'Date',
-            'required'     => false
+            'required'     => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Date is required'
+                )),
+                array('Date', true, array(
+                    'messages' => 'Invalid date'
+                ))
+            )
         ))->addElement('text', 'path', array(
             'label'        => 'Path',
-            'required'     => false
+            'required'     => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Path is required'
+                ))
+            )
         ))->addElement('text', 'size', array(
             'label'        => 'Size',
-            'required'     => false
+            'required'     => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Size is required'
+                ))
+            )
         ))->addElement('checkbox', 'subscriber_only', array(
             'label'        => 'Subscriber Only',
             'required'     => false,

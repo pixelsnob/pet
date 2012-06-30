@@ -5,20 +5,6 @@
  */
 class Form_Admin_SubForm_Course extends Zend_Form_SubForm {
     
-    /**
-     * @var Model_Product
-     * 
-     */
-    protected $_product;
-
-    /**
-     * @param Model_Product $product
-     * @return void
-     */
-    public function setProduct($product) {
-        $this->_product = $product;
-    }
-
     /** 
      * @return void
      * 
@@ -27,17 +13,19 @@ class Form_Admin_SubForm_Course extends Zend_Form_SubForm {
         parent::init();
         $this->addElement('textarea', 'description', array(
             'label'        => 'Description',
-            'required'     => false,
-            'value'        => $this->_product->description
+            'required'     => false
         ))->addElement('text', 'slug', array(
             'label'        => 'Slug',
-            'required'     => false,
-            'value'        => $this->_product->slug
+            'required'     => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Slug is required'
+                ))
+            )
         ))->addElement('checkbox', 'free', array(
             'label'        => 'Free?',
             'class'        => 'checkbox',
-            'required'     => false,
-            'value'        => $this->_product->description
+            'required'     => false
         ));
     }
 
