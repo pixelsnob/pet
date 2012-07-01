@@ -168,23 +168,6 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         return $out;
     }
     
-    /**
-     * @return array 
-     * 
-     */
-    /*public function getAll() {
-        $products = $this->_products->getAll();
-        $out = array();
-        foreach ($products as $product) {
-            $product_model = new Model_Product($product->toArray());
-            $item = $this->getItem($product_model); 
-            if ($item) {
-                $out[] = $item;
-            }
-        }
-        return $out;
-    }*/
-
     /** 
      * Gets paginated products
      * 
@@ -231,5 +214,12 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
             }
         }
         return $out;
+    }
+
+    public function update($data, $id) {
+        $product_model = new Model_Product($data);
+        $product = $product_model->toArray();
+        unset($product['id']);
+        $this->_products->update($product, $id); 
     }
 }

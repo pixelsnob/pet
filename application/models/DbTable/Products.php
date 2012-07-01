@@ -174,6 +174,16 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         return $this->fetchAll($sel);
     }
     
+    /** 
+     * @param array $data
+     * @param int $id
+     * @return int Num rows updated
+     * 
+     */
+    public function update(array $data, $id) {
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        return parent::update($data, $where);
+    }
 
 }
 

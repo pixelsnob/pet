@@ -39,7 +39,7 @@
         </fieldset>
         <div id="product-subform">
             <?php
-            switch ($this->product->product_type_id) {
+            switch ($this->product_type_id) {
                 case Model_ProductType::SUBSCRIPTION:
                     echo $this->render('products/subscription-form.phtml');
                     break;

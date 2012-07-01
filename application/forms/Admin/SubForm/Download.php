@@ -44,6 +44,7 @@ class Form_Admin_SubForm_Download extends Pet_Form_SubForm {
         ))->addElement('text', 'date', array(
             'label'        => 'Date',
             'required'     => true,
+            'class'        => 'datepicker',
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Date is required'
@@ -66,6 +67,9 @@ class Form_Admin_SubForm_Download extends Pet_Form_SubForm {
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Size is required'
+                )),
+                array('Digits', true, array(
+                    'messages' => 'Size must be a number'
                 ))
             )
         ))->addElement('checkbox', 'subscriber_only', array(

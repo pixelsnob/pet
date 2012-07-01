@@ -39,6 +39,9 @@ class Admin_ProductsController extends Zend_Controller_Action {
     }
     
     public function editAction() {
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('index');
+        }
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
         $params = $this->_request->getParams();
@@ -47,18 +50,21 @@ class Admin_ProductsController extends Zend_Controller_Action {
         if (!$product) {
             throw new Exception('Product not found');
         }
+        $product_type_id = $product->product_type_id;
         $form = new Form_Admin_Product(array(
             'productTypes'      => $this->_products_mapper->getProductTypes(),
-            'productTypeId'    => $product->product_type_id,
+            'productTypeId'     => $product_type_id,
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll()
         ));
         $form->populate($product->toArray());
+        $form->product_type_id->setOptions(array('readonly' => true));
         if ($this->_request->isPost() && $form->isValid($params)) {
-            
+            $this->_products_mapper->update($params, $id);    
         }
         $this->view->product_form = $form;
         $this->view->product = $product;
+        $this->view->product_type_id = $product_type_id;
         $this->_helper->ViewRenderer->render('form'); 
     }
 

@@ -32,13 +32,30 @@ class Form_Admin_SubForm_Subscription extends Zend_Form_SubForm {
         $this->addElement('select', 'zone_id', array(
             'label'        => 'Subscription Zone',
             'required'     => true,
-            'multiOptions' => $zones
+            'multiOptions' => $zones,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Subscription zone is required'
+                ))
+            )
         ))->addElement('textarea', 'description', array(
             'label'        => 'Description',
             'required'     => false
         ))->addElement('text', 'term_months', array(
             'label'        => 'Term (months)',
-            'required'     => true
+            'required'     => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Term is required'
+                )),
+                array('Digits', true, array(
+                    'messages' => 'Please enter a positive number'
+                )),
+                array('LessThan', true, array(
+                    'max'      => 360,
+                    'messages' => 'Term must be less than %max%'
+                ))
+            )
         ))->addElement('checkbox', 'is_renewal', array(
             'label'        => 'Renewal?',
             'class'        => 'checkbox',
