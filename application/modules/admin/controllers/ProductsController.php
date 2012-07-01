@@ -49,19 +49,49 @@ class Admin_ProductsController extends Zend_Controller_Action {
         }
         $form = new Form_Admin_Product(array(
             'productTypes'      => $this->_products_mapper->getProductTypes(),
-            'product'           => $product,
+            'productTypeId'    => $product->product_type_id,
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll()
         ));
+        $form->populate($product->toArray());
         if ($this->_request->isPost() && $form->isValid($params)) {
-
+            
         }
         $this->view->product_form = $form;
         $this->view->product = $product;
         $this->_helper->ViewRenderer->render('form'); 
     }
 
-    public function subscriptionFormAction() {
-        
+    public function productSubformAction() {
+        $dlf_mapper = new Model_Mapper_DownloadFormats;
+        $sz_mapper  = new Model_Mapper_SubscriptionZones;
+        $product_type_id = $this->_request->getParam('product_type_id');
+        $form = new Form_Admin_Product(array(
+            'productTypes'      => $this->_products_mapper->getProductTypes(),
+            'productTypeId'     => $product_type_id,
+            'downloadFormats'   => $dlf_mapper->getAll(),
+            'subscriptionZones' => $sz_mapper->getAll()
+        ));
+        $this->view->product_form = $form;
+        switch ($product_type_id) {
+            case Model_ProductType::SUBSCRIPTION:
+                $this->_helper->ViewRenderer->render('subscription-form');
+                break;
+            case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                $this->_helper->ViewRenderer->render('digital-form');
+                break;
+            case Model_ProductType::PHYSICAL:
+                $this->_helper->ViewRenderer->render('physical-form');
+                break;
+            case Model_ProductType::COURSE:
+                $this->_helper->ViewRenderer->render('course-form');
+                break;
+            case Model_ProductType::DOWNLOAD:
+                $this->_helper->ViewRenderer->render('download-form');
+                break;
+
+        }
+        $this->_helper->Layout->disableLayout();
+        $this->_helper->ViewRenderer->setNoRender(true);
     }
 }

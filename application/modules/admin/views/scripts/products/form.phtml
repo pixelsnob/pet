@@ -1,5 +1,4 @@
 
-
 <div id="product-edit">
     <?php echo $this->flashMessenger($this->messages); ?>
     <form action="<?php echo $this->product_form->getAction(); ?>" method="<?php echo $this->product_form->getMethod(); ?>" name="<?php echo $this->product_form->getName(); ?>">
@@ -11,10 +10,10 @@
                     <?php echo $this->product_form->name->renderViewHelper(); ?>
                     <?php echo $this->product_form->name->renderErrors(); ?>
                 </dd>
-                <dt><?php echo $this->product_form->product_type->renderLabel(); ?></dt>
+                <dt><?php echo $this->product_form->product_type_id->renderLabel(); ?></dt>
                 <dd>
-                    <?php echo $this->product_form->product_type->renderViewHelper(); ?>
-                    <?php echo $this->product_form->product_type->renderErrors(); ?>
+                    <?php echo $this->product_form->product_type_id->renderViewHelper(); ?>
+                    <?php echo $this->product_form->product_type_id->renderErrors(); ?>
                 </dd>
                 <dt><?php echo $this->product_form->sku->renderLabel(); ?></dt>
                 <dd>
@@ -38,31 +37,30 @@
                 </dd>
             </dl>
         </fieldset>
-        <?php
-        switch ($this->product->product_type_id) {
-            case Model_ProductType::SUBSCRIPTION:
-                echo $this->render('products/subscription-form.phtml');
-                break;
-            case Model_ProductType::DOWNLOAD:
-                echo $this->render('products/download-form.phtml');
-                break;
-            case Model_ProductType::PHYSICAL:
-                echo $this->render('products/physical-form.phtml');
-                break;
-            case Model_ProductType::COURSE:
-                echo $this->render('products/course-form.phtml');
-                break;
-            case Model_ProductType::DIGITAL_SUBSCRIPTION:
-                echo $this->render('products/digital-form.phtml');
-                break;
-        }
-        ?>
+        <div id="product-subform">
+            <?php
+            switch ($this->product->product_type_id) {
+                case Model_ProductType::SUBSCRIPTION:
+                    echo $this->render('products/subscription-form.phtml');
+                    break;
+                case Model_ProductType::DOWNLOAD:
+                    echo $this->render('products/download-form.phtml');
+                    break;
+                case Model_ProductType::PHYSICAL:
+                    echo $this->render('products/physical-form.phtml');
+                    break;
+                case Model_ProductType::COURSE:
+                    echo $this->render('products/course-form.phtml');
+                    break;
+                case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                    echo $this->render('products/digital-form.phtml');
+                    break;
+            }
+            ?>
+        </div>
         <p class="update clear">
             <input type="submit" value="Submit" class="submit">
             <input type="submit" value="Cancel" name="cancel">
         </p>
     </form>
 </div>
-<pre>
-<?php print_r($this->product); ?>
-</pre>

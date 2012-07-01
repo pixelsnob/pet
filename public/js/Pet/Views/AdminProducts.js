@@ -10,12 +10,28 @@ Pet.AdminProductsView = Pet.AdminView.extend({
     
     events: {
         'click #products .admin-table td': 'adminTableRowClick',
-        'hover #products .admin-table td': 'adminTableRowHover'
+        'hover #products .admin-table td': 'adminTableRowHover',
+        'change #product-edit #product_type_id': 'productTypeIdChange'
     },
     
     initialize: function() {
         this.events = _.extend({}, Pet.AdminView.prototype.events, this.events)
         Pet.AdminView.prototype.initialize.call(this);
+    },
+
+    productTypeIdChange: function(el) {
+        var product_type_id = $(el.target);
+        product_type_id.attr('disabled', true);
+        var qs = $('form[name=product_edit]', this.el).serialize();
+        $.ajax({
+            type: 'get',
+            url: '/admin/products/product-subform',
+            data: { product_type_id: product_type_id.val() },
+            success: function(data) {
+                $('#product-subform').html(data);
+                product_type_id.attr('disabled', false);
+            }
+        });
     }
 });
 
