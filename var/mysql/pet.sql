@@ -785,7 +785,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Placeholder table for view `pet`.`view_products`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_giftable` INT, `name` INT, `description` INT);
+CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_giftable` INT, `name` INT, `product_type` INT);
 
 -- -----------------------------------------------------
 -- View `pet`.`view_products`
@@ -794,39 +794,35 @@ DROP VIEW IF EXISTS `pet`.`view_products` ;
 DROP TABLE IF EXISTS `pet`.`view_products`;
 USE `pet`;
 CREATE  OR REPLACE VIEW `pet`.`view_products` AS
-select p.*, d.name, d.description
+select p.*,
+(case p.product_type_id
+    when 1 then d.name
+    when 2 then pp.name
+    when 3 then c.name
+    when 4 then s.name
+    when 5 then ds.name end) as name,
+pt.name as product_type
 from products p
+left join product_types pt
+on p.product_type_id = pt.id
 left join products_downloads pd
 on p.id = pd.product_id
 left join downloads d
 on pd.download_id = d.id
-where p.product_type_id = 1
-
-union
-select p.*, pp.name, pp.description
-from products p
-left join physical_products pp
-on p.id = pp.product_id
-where p.product_type_id = 2
-
-union
-select p.*, c.name, c.description
-from products p
-left join products_courses pc
-on p.id = pc.product_id
-left join courses c
-on pc.course_id = c.id
-where p.product_type_id = 3
-
-union
-select p.*, s.name, s.description
-from products p
+left join products_digital_subscriptions pds
+on p.id = pds.product_id
+left join digital_subscriptions ds
+on pds.digital_subscription_id = ds.id
 left join products_subscriptions ps
 on p.id = ps.product_id
 left join subscriptions s
 on ps.subscription_id = s.id
-where p.product_type_id = 4;
-;
+left join physical_products pp
+on p.id = pp.product_id
+left join products_courses pc
+on p.id = pc.product_id
+left join courses c
+on pc.course_id = c.id;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

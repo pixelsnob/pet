@@ -27,7 +27,6 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     public function getDownloadByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
-            //->join(array('pd' => 'products_downloads'), 'pd.product_id = p.id')
             ->join(array('d' => 'downloads'), 'd.product_id = p.id')
             ->where('p.id = ?', $product_id);
         if ($is_active_check) {
@@ -62,8 +61,6 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     public function getSubscriptionByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
-            //->join(array('ps' => 'products_subscriptions'),
-            //    'ps.product_id = p.id')
             ->join(array('s' => 'subscriptions'), 's.product_id = p.id')
             ->where('p.id = ?', $product_id);
         if ($is_active_check) {
@@ -82,7 +79,6 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'),
                 array('p.*', 'p.id as product_id'))
-            //->join(array('pc' => 'products_courses'), 'pc.product_id = p.id')
             ->join(array('c' => 'courses'), 'c.product_id = p.id')
             ->where('p.id = ?', $product_id);
         if ($is_active_check) {
@@ -100,8 +96,6 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     public function getDigitalSubscriptionByProductId($product_id, $is_active_check = true) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
-            //->join(array('pds' => 'products_digital_subscriptions'),
-            //    'pds.product_id = p.id')
             ->join(array('ds' => 'digital_subscriptions'),
                 'p.id = ds.product_id')
             ->where('p.id = ?', $product_id)
@@ -119,8 +113,6 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     public function getSubscriptions() {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
-            //->join(array('ps' => 'products_subscriptions'),
-            //    'ps.product_id = p.id')
             ->join(array('s' => 'subscriptions'),
                 'p.id = s.product_id')
             ->where('p.active')
@@ -138,8 +130,6 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     public function getSubscriptionsByZoneId($zone_id, $is_giftable = null, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
-            //->join(array('ps' => 'products_subscriptions'),
-            //    'ps.product_id = p.id')
             ->join(array('s' => 'subscriptions'), 's.product_id = p.id')
             ->where('s.zone_id = ?', $zone_id)
             ->where('p.active')
@@ -160,8 +150,6 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     public function getDigitalSubscriptions($is_giftable = null, $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
-            //->join(array('pds' => 'products_digital_subscriptions'),
-            //    'pds.product_id = p.id')
             ->join(array('ds' => 'digital_subscriptions'),
                 'p.id = ds.product_id')
             ->where('p.active')
