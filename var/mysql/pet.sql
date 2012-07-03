@@ -24,34 +24,6 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`downloads`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`downloads` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`downloads` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `download_format_id` INT(11) NOT NULL ,
-  `name` VARCHAR(200) NOT NULL ,
-  `description` LONGTEXT NULL DEFAULT NULL ,
-  `date` DATE NOT NULL ,
-  `path` VARCHAR(250) NOT NULL ,
-  `size` VARCHAR(50) NOT NULL ,
-  `thumb` VARCHAR(100) NULL DEFAULT NULL ,
-  `subscriber_only` TINYINT(1) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `downloads_ibfk_1` (`download_format_id` ASC) ,
-  CONSTRAINT `downloads_ibfk_1`
-    FOREIGN KEY (`download_format_id` )
-    REFERENCES `pet`.`download_formats` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-AUTO_INCREMENT = 54
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `pet`.`product_types`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `pet`.`product_types` ;
@@ -91,6 +63,42 @@ CREATE  TABLE IF NOT EXISTS `pet`.`products` (
     REFERENCES `pet`.`product_types` (`id` ))
 ENGINE = InnoDB
 AUTO_INCREMENT = 102
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `pet`.`downloads`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`downloads` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`downloads` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `product_id` INT(11) NOT NULL ,
+  `download_format_id` INT(11) NOT NULL ,
+  `name` VARCHAR(200) NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `date` DATE NOT NULL ,
+  `path` VARCHAR(250) NOT NULL ,
+  `size` VARCHAR(50) NOT NULL ,
+  `thumb` VARCHAR(100) NULL DEFAULT NULL ,
+  `subscriber_only` TINYINT(1) NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `downloads_ibfk_1` (`download_format_id` ASC) ,
+  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
+  INDEX `downloads_ibfk_2` (`product_id` ASC) ,
+  CONSTRAINT `downloads_ibfk_1`
+    FOREIGN KEY (`download_format_id` )
+    REFERENCES `pet`.`download_formats` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `downloads_ibfk_2`
+    FOREIGN KEY (`product_id` )
+    REFERENCES `pet`.`products` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 54
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -286,17 +294,25 @@ DROP TABLE IF EXISTS `pet`.`subscriptions` ;
 
 CREATE  TABLE IF NOT EXISTS `pet`.`subscriptions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `product_id` INT(11) NOT NULL ,
   `zone_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
-  `description` LONGTEXT NULL DEFAULT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
   `term_months` INT(11) NOT NULL DEFAULT '1' ,
   `is_renewal` INT(1) NOT NULL DEFAULT '0' ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
   INDEX `zone_id` (`zone_id` ASC) ,
+  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
+  INDEX `subscription_products_ibfk_1` (`product_id` ASC) ,
   CONSTRAINT `subscription_products_ibfk_3`
     FOREIGN KEY (`zone_id` )
-    REFERENCES `pet`.`subscription_zones` (`id` ))
+    REFERENCES `pet`.`subscription_zones` (`id` ),
+  CONSTRAINT `subscription_products_ibfk_1`
+    FOREIGN KEY (`product_id` )
+    REFERENCES `pet`.`products` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 16
 DEFAULT CHARACTER SET = utf8
@@ -310,13 +326,21 @@ DROP TABLE IF EXISTS `pet`.`courses` ;
 
 CREATE  TABLE IF NOT EXISTS `pet`.`courses` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `product_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
-  `description` LONGTEXT NULL DEFAULT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
   `slug` VARCHAR(200) NOT NULL ,
   `active` TINYINT(4) NOT NULL DEFAULT '0' ,
   `free` TINYINT(4) NOT NULL DEFAULT '0' ,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id` (`id` ASC) )
+  UNIQUE INDEX `id` (`id` ASC) ,
+  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
+  INDEX `courses_ibfk_1` (`product_id` ASC) ,
+  CONSTRAINT `courses_ibfk_1`
+    FOREIGN KEY (`product_id` )
+    REFERENCES `pet`.`products` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8
@@ -333,7 +357,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`physical_products` (
   `product_id` INT(11) NOT NULL ,
   `shipping_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
-  `description` LONGTEXT NULL DEFAULT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
   `sequence` INT(5) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) ,
@@ -487,97 +511,6 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`products_downloads`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`products_downloads` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`products_downloads` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `product_id` INT(11) NOT NULL ,
-  `download_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
-  UNIQUE INDEX `download_id_UNIQUE` (`download_id` ASC) ,
-  INDEX `products_downloads_fk_1` (`product_id` ASC) ,
-  INDEX `products_downloads_fk_2` (`download_id` ASC) ,
-  CONSTRAINT `products_downloads_fk_1`
-    FOREIGN KEY (`product_id` )
-    REFERENCES `pet`.`products` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `products_downloads_fk_2`
-    FOREIGN KEY (`download_id` )
-    REFERENCES `pet`.`downloads` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 64
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `pet`.`products_courses`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`products_courses` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`products_courses` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `product_id` INT(11) NOT NULL ,
-  `course_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
-  UNIQUE INDEX `course_id_UNIQUE` (`course_id` ASC) ,
-  INDEX `products_courses_fk_1` (`product_id` ASC) ,
-  INDEX `products_courses_fk_2` (`course_id` ASC) ,
-  CONSTRAINT `products_courses_fk_1`
-    FOREIGN KEY (`product_id` )
-    REFERENCES `pet`.`products` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `products_courses_fk_2`
-    FOREIGN KEY (`course_id` )
-    REFERENCES `pet`.`courses` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 2
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `pet`.`products_subscriptions`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`products_subscriptions` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`products_subscriptions` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `product_id` INT(11) NOT NULL ,
-  `subscription_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
-  UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
-  INDEX `products_subscriptions_fk_1` (`product_id` ASC) ,
-  INDEX `products_subscriptions_fk_2` (`subscription_id` ASC) ,
-  CONSTRAINT `products_subscriptions_fk_1`
-    FOREIGN KEY (`product_id` )
-    REFERENCES `pet`.`products` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `products_subscriptions_fk_2`
-    FOREIGN KEY (`subscription_id` )
-    REFERENCES `pet`.`subscriptions` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `pet`.`user_profiles`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `pet`.`user_profiles` ;
@@ -678,44 +611,23 @@ DROP TABLE IF EXISTS `pet`.`digital_subscriptions` ;
 
 CREATE  TABLE IF NOT EXISTS `pet`.`digital_subscriptions` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `product_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
-  `description` LONGTEXT NULL DEFAULT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
   `is_renewal` INT(1) NOT NULL DEFAULT '0' ,
   `is_recurring` TINYINT(1) NOT NULL DEFAULT 0 ,
   `term_months` INT(4) NULL COMMENT '					' ,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id` (`id` ASC) )
-ENGINE = InnoDB
-AUTO_INCREMENT = 16
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `pet`.`products_digital_subscriptions`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`products_digital_subscriptions` ;
-
-CREATE  TABLE IF NOT EXISTS `pet`.`products_digital_subscriptions` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `product_id` INT(11) NOT NULL ,
-  `digital_subscription_id` INT(11) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  UNIQUE INDEX `id` (`id` ASC) ,
   UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
-  INDEX `products_subscriptions_fk_1` (`product_id` ASC) ,
-  INDEX `products_subscriptions_fk_2` (`digital_subscription_id` ASC) ,
-  CONSTRAINT `products_digital_subscriptions_fk_1`
+  INDEX `digital_subscriptions_ibfk_1` (`product_id` ASC) ,
+  CONSTRAINT `digital_subscriptions_ibfk_1`
     FOREIGN KEY (`product_id` )
     REFERENCES `pet`.`products` (`id` )
     ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `products_digital_subscriptions_fk_2`
-    FOREIGN KEY (`digital_subscription_id` )
-    REFERENCES `pet`.`digital_subscriptions` (`id` )
-    ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 16
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -805,24 +717,16 @@ pt.name as product_type
 from products p
 left join product_types pt
 on p.product_type_id = pt.id
-left join products_downloads pd
-on p.id = pd.product_id
 left join downloads d
-on pd.download_id = d.id
-left join products_digital_subscriptions pds
-on p.id = pds.product_id
+on p.id = d.product_id
 left join digital_subscriptions ds
-on pds.digital_subscription_id = ds.id
-left join products_subscriptions ps
-on p.id = ps.product_id
+on p.id = ds.product_id
 left join subscriptions s
-on ps.subscription_id = s.id
+on p.id = s.product_id
 left join physical_products pp
 on p.id = pp.product_id
-left join products_courses pc
-on p.id = pc.product_id
 left join courses c
-on pc.course_id = c.id;
+on p.id = c.product_id;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
