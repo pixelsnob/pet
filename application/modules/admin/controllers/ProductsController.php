@@ -119,6 +119,10 @@ class Admin_ProductsController extends Zend_Controller_Action {
     }
 
     public function addAction() {
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('index');
+        }
+        $db = Zend_Db_Table::getDefaultAdapter();
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
         $params = $this->_request->getParams();
@@ -131,7 +135,18 @@ class Admin_ProductsController extends Zend_Controller_Action {
             'mode'              => 'add'
         ));
         if ($this->_request->isPost() && $form->isValidPartial($params)) {
-            
+            $db->beginTransaction();
+            try {
+                $this->_products_mapper->update($params, $id); 
+                $db->commit();
+                $this->_helper->FlashMessenger->addMessage('Product updated');
+            } catch (Exception $e) {
+                $db->rollBack();
+                $msg = 'There was an error updating the database';
+                $this->_helper->FlashMessenger->addMessage($msg);
+            }
+        } elseif ($this->_request->isPost()) {
+            $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
         $this->view->product_type_id = $product_type_id;
         $this->view->product_form = $form;
