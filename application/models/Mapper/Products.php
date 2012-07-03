@@ -216,10 +216,34 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         return $out;
     }
 
+    /**
+     * @param array $data
+     * @param int $id
+     * @return void
+     * 
+     */
     public function update($data, $id) {
         $product_model = new Model_Product($data);
         $product = $product_model->toArray();
         unset($product['id']);
         $this->_products->update($product, $id); 
+        $digital_mapper = new Model_Mapper_DigitalSubscriptions;
+        $subscription_mapper = new Model_Mapper_Subscriptions;
+        switch ($product['product_type_id']) {
+            case Model_ProductType::SUBSCRIPTION:
+                $subscription_mapper->updateByProductId($data, $id);
+                break;
+            case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                $digital_mapper->updateByProductId($data, $id);
+                break;
+            case Model_ProductType::PHYSICAL:
+                break;
+            case Model_ProductType::COURSE:
+                break;
+            case Model_ProductType::DOWNLOAD:
+                break;
+
+        }
+        
     }
 }
