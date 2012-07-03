@@ -7,6 +7,7 @@ class Model_Subscription extends Pet_Model_Abstract {
 
     public $_data = array(
         'id' => null,
+        'product_id' => null,
         'zone_id' => null,
         'name' => null,
         'description' => null,

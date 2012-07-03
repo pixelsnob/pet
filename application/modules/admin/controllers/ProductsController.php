@@ -140,11 +140,14 @@ class Admin_ProductsController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $form->isValidPartial($params)) {
             $db->beginTransaction();
             try {
-                $this->_products_mapper->update($params, $id); 
+                $product_id = $this->_products_mapper->insert($params); 
                 $db->commit();
                 $this->_helper->FlashMessenger->addMessage('Product updated');
+                $this->_helper->Redirector->gotoSimple('edit', 'products', 'admin',
+                    array('id' => $product_id));
             } catch (Exception $e) {
                 $db->rollBack();
+                print_r($e->getMessage());
                 $msg = 'There was an error updating the database';
                 $this->_helper->FlashMessenger->addMessage($msg);
             }

@@ -32,11 +32,24 @@ class Model_Mapper_Subscriptions extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function updateByProductId($data, $product_id) {
-        $digital_model = new Model_Subscription($data);
-        $sub = $digital_model->toArray();
+        $sub_model = new Model_Subscription($data);
+        $sub = $sub_model->toArray();
         unset($sub['id']);
         unset($sub['product_id']);
         $this->_subscriptions->updateByProductId($sub, $product_id); 
+    }
+
+    /**
+     * @param array $data
+     * @return int product_id
+     * 
+     */
+    function insert(array $data) {
+        $sub = new Model_Subscription($data);
+        $sub_array = $sub->toArray();
+        unset($sub_array['id']);
+        print_r($sub_array);
+        return $this->_subscriptions->insert($sub_array);
     }
 }
 

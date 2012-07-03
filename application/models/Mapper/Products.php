@@ -235,7 +235,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
      * @return void
      * 
      */
-    public function update($data, $id) {
+    public function update(array $data, $id) {
         $product_model = new Model_Product($data);
         $product = $product_model->toArray();
         unset($product['id']);
@@ -263,6 +263,40 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                 break;
 
         }
-        
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * 
+     */
+    public function insert(array $data) {
+        $product_model        = new Model_Product($data);
+        $product              = $product_model->toArray();
+        $data['product_id']   = $this->_products->insert($product); 
+        $digital_mapper       = new Model_Mapper_DigitalSubscriptions;
+        $subscription_mapper  = new Model_Mapper_Subscriptions;
+        $physical_mapper      = new Model_Mapper_PhysicalProducts;
+        $course_mapper        = new Model_Mapper_Courses;
+        $download_mapper      = new Model_Mapper_Downloads;
+        switch ($product['product_type_id']) {
+            case Model_ProductType::SUBSCRIPTION:
+                $subscription_mapper->insert($data);
+                break;
+            case Model_ProductType::DIGITAL_SUBSCRIPTION:
+                $digital_mapper->insert($data);
+                break;
+            case Model_ProductType::PHYSICAL:
+                $physical_mapper->insert($data);
+                break;
+            case Model_ProductType::COURSE:
+                $course_mapper->insert($data);
+                break;
+            case Model_ProductType::DOWNLOAD:
+                $download_mapper->insert($data);
+                break;
+
+        }
+        return $data['product_id'];
     }
 }

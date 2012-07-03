@@ -145,6 +145,7 @@ class Form_Admin_Product extends Pet_Form {
             'label'     => 'Active',
             'required'  => false,
             'class'     => 'checkbox',
+            'checked'   => true
         ))->addElement('checkbox', 'is_giftable', array(
             'label'     => 'Giftable?',
             'required'  => false,
