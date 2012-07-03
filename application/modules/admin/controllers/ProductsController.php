@@ -65,6 +65,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
             try {
                 $this->_products_mapper->update($params, $id); 
                 $db->commit();
+                $this->_helper->FlashMessenger->addMessage('Product updated');
             } catch (Exception $e) {
                 $db->rollBack();
                 $msg = 'There was an error updating the database';
