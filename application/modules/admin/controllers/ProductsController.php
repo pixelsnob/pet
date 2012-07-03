@@ -121,9 +121,10 @@ class Admin_ProductsController extends Zend_Controller_Action {
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
         $params = $this->_request->getParams();
+        $product_type_id = $this->_request->getParam('product_type_id');
         $form = new Form_Admin_Product(array(
             'productTypes'      => $this->_products_mapper->getProductTypes(),
-            'productTypeId'     => null,
+            'productTypeId'     => $product_type_id,
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll(),
             'mode'              => 'add'
@@ -131,7 +132,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
         if ($this->_request->isPost() && $form->isValidPartial($params)) {
             
         }
-        //$form->populate($product->toArray());
+        $this->view->product_type_id = $product_type_id;
         $this->view->product_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }
