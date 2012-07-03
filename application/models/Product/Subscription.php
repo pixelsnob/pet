@@ -17,7 +17,8 @@ class Model_Product_Subscription extends Model_Product_Abstract {
         'name' => null,
         'description' => null,
         'term_months' => null,
-        'is_renewal' => null
+        'is_renewal' => null,
+        'is_giftable' => null
     );
     
 }

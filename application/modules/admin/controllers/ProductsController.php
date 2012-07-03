@@ -80,6 +80,10 @@ class Admin_ProductsController extends Zend_Controller_Action {
         $this->_helper->ViewRenderer->render('form'); 
     }
 
+    /**
+     * Outputs a form for each product type
+     * 
+     */
     public function productSubformAction() {
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
@@ -111,5 +115,24 @@ class Admin_ProductsController extends Zend_Controller_Action {
         }
         $this->_helper->Layout->disableLayout();
         $this->_helper->ViewRenderer->setNoRender(true);
+    }
+
+    public function addAction() {
+        $dlf_mapper = new Model_Mapper_DownloadFormats;
+        $sz_mapper  = new Model_Mapper_SubscriptionZones;
+        $params = $this->_request->getParams();
+        $form = new Form_Admin_Product(array(
+            'productTypes'      => $this->_products_mapper->getProductTypes(),
+            'productTypeId'     => null,
+            'downloadFormats'   => $dlf_mapper->getAll(),
+            'subscriptionZones' => $sz_mapper->getAll(),
+            'mode'              => 'add'
+        ));
+        if ($this->_request->isPost() && $form->isValidPartial($params)) {
+            
+        }
+        //$form->populate($product->toArray());
+        $this->view->product_form = $form;
+        $this->_helper->ViewRenderer->render('form'); 
     }
 }

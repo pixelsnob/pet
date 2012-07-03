@@ -35,6 +35,7 @@ class Model_Mapper_Subscriptions extends Pet_Model_Mapper_Abstract {
         $digital_model = new Model_Subscription($data);
         $sub = $digital_model->toArray();
         unset($sub['id']);
+        unset($sub['product_id']);
         $this->_subscriptions->updateByProductId($sub, $product_id); 
     }
 }

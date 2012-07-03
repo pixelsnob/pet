@@ -227,8 +227,11 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         $product = $product_model->toArray();
         unset($product['id']);
         $this->_products->update($product, $id); 
-        $digital_mapper = new Model_Mapper_DigitalSubscriptions;
-        $subscription_mapper = new Model_Mapper_Subscriptions;
+        $digital_mapper       = new Model_Mapper_DigitalSubscriptions;
+        $subscription_mapper  = new Model_Mapper_Subscriptions;
+        $physical_mapper      = new Model_Mapper_PhysicalProducts;
+        $course_mapper        = new Model_Mapper_Courses;
+        $download_mapper      = new Model_Mapper_Downloads;
         switch ($product['product_type_id']) {
             case Model_ProductType::SUBSCRIPTION:
                 $subscription_mapper->updateByProductId($data, $id);
@@ -237,10 +240,13 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
                 $digital_mapper->updateByProductId($data, $id);
                 break;
             case Model_ProductType::PHYSICAL:
+                $physical_mapper->updateByProductId($data, $id);
                 break;
             case Model_ProductType::COURSE:
+                $course_mapper->updateByProductId($data, $id);
                 break;
             case Model_ProductType::DOWNLOAD:
+                $download_mapper->updateByProductId($data, $id);
                 break;
 
         }

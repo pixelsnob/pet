@@ -16,7 +16,8 @@ class Model_Product_Course extends Model_Product_Abstract {
         'description' => null,
         'slug' => null,
         'active' => null,
-        'free' => null
+        'free' => null,
+        'is_giftable' => null
     );
     
 }
