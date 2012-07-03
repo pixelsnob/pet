@@ -98,8 +98,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('ds' => 'digital_subscriptions'),
                 'p.id = ds.product_id')
-            ->where('p.id = ?', $product_id)
-            ->where('p.active');
+            ->where('p.id = ?', $product_id);
         if ($is_active_check) {
             $sel->where('p.active');
         }

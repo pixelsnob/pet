@@ -50,21 +50,21 @@ class Admin_ProductsController extends Zend_Controller_Action {
         if (!$product) {
             throw new Exception('Product not found');
         }
-        $product_type_id = $product->product_type_id;
+        $params['product_type_id'] = $product->product_type_id;
         $form = new Form_Admin_Product(array(
             'productTypes'      => $this->_products_mapper->getProductTypes(),
-            'productTypeId'     => $product_type_id,
+            'productTypeId'     => $params['product_type_id'],
             'downloadFormats'   => $dlf_mapper->getAll(),
-            'subscriptionZones' => $sz_mapper->getAll()
+            'subscriptionZones' => $sz_mapper->getAll(),
+            'mode'              => 'edit'
         ));
         $form->populate($product->toArray());
-        $form->product_type_id->setOptions(array('readonly' => true));
-        if ($this->_request->isPost() && $form->isValid($params)) {
+        if ($this->_request->isPost() && $form->isValidPartial($params)) {
             $this->_products_mapper->update($params, $id);    
         }
         $this->view->product_form = $form;
         $this->view->product = $product;
-        $this->view->product_type_id = $product_type_id;
+        $this->view->product_type_id = $params['product_type_id'];
         $this->_helper->ViewRenderer->render('form'); 
     }
 

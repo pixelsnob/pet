@@ -59,6 +59,7 @@
             ?>
         </div>
         <p class="update clear">
+            <?php /* In case product_type_id is disabled */ echo $this->product_form->product_type_id_2->renderViewHelper(); ?>
             <input type="submit" value="Submit" class="submit">
             <input type="submit" value="Cancel" name="cancel">
         </p>

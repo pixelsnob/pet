@@ -4,6 +4,12 @@
  * 
  */
 class Form_Admin_Product extends Pet_Form {
+
+    /**
+     * @var string
+     * 
+     */
+    protected $_mode;
     
     /**
      * @var array
@@ -35,6 +41,14 @@ class Form_Admin_Product extends Pet_Form {
      */
     public function setProductTypes(array $product_types) {
         $this->_product_types = $product_types;
+    }
+
+    /**
+     * @param string
+     * @return void
+     */
+    public function setMode($mode) {
+        $this->_mode = $mode;
     }
 
     /**
@@ -116,6 +130,13 @@ class Form_Admin_Product extends Pet_Form {
             'required'  => false,
             'class'     => 'checkbox',
         ));
+        if ($this->_mode == 'edit') {
+            $this->product_type_id->setOptions(array('disabled' => true));
+            $this->addElement('hidden', 'product_type_id_2', array(
+                'name'  => 'product_type_id_2',
+                'value' => $this->_product_type_id    
+            ));
+        }
 
         // Product type forms
         switch ($this->_product_type_id) {
