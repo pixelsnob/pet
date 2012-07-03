@@ -90,6 +90,19 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
 
         }
     }
+    
+    /**
+     * @param string $sku
+     * @return Model_Product|null
+     * 
+     */
+    public function getBySku($sku) {
+        $db_product = $this->_products->getBySku($sku);
+        if ($db_product) {
+            $product = new Model_Product($db_product->toArray());
+            return $this->getItem($product);
+        }
+    }
 
     /**
      * @param mixed $is_giftable

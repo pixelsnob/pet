@@ -53,11 +53,13 @@ class Admin_ProductsController extends Zend_Controller_Action {
         }
         $params['product_type_id'] = $product->product_type_id;
         $form = new Form_Admin_Product(array(
-            'productTypes'      => $this->_products_mapper->getProductTypes(),
+            'productsMapper'    => $this->_products_mapper,
             'productTypeId'     => $params['product_type_id'],
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll(),
-            'mode'              => 'edit'
+            'mode'              => 'edit',
+            'product'           => $product
+
         ));
         $form->populate($product->toArray());
         if ($this->_request->isPost() && $form->isValidPartial($params)) {
@@ -90,7 +92,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
         $product_type_id = $this->_request->getParam('product_type_id');
         $form = new Form_Admin_Product(array(
-            'productTypes'      => $this->_products_mapper->getProductTypes(),
+            'productsMapper'   => $this->_products_mapper,
             'productTypeId'     => $product_type_id,
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll()
@@ -128,6 +130,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
         $params = $this->_request->getParams();
         $product_type_id = $this->_request->getParam('product_type_id');
         $form = new Form_Admin_Product(array(
+            'productsMapper'    => $this->_products_mapper,
             'productTypes'      => $this->_products_mapper->getProductTypes(),
             'productTypeId'     => $product_type_id,
             'downloadFormats'   => $dlf_mapper->getAll(),

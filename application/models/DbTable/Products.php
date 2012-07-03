@@ -19,6 +19,16 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     }
 
     /**
+     * @param string $sku
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
+    public function getBySku($sku) {
+        $sel = $this->select()->where('sku = ?', $sku);
+        return $this->fetchRow($sel);
+    }
+
+    /**
      * @param int $product_id
      * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 
