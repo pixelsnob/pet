@@ -38,5 +38,17 @@ class Model_Mapper_Downloads extends Pet_Model_Mapper_Abstract {
         unset($download['product_id']);
         $this->_downloads->updateByProductId($download, $product_id); 
     }
+
+    /**
+     * @param array $data
+     * @return int product_id
+     * 
+     */
+    function insert(array $data) {
+        $download = new Model_Download($data);
+        $dl_array = $download->toArray();
+        unset($dl_array['id']);
+        return $this->_downloads->insert($dl_array);
+    }
 }
 

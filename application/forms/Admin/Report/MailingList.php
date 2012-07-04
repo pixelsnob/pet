@@ -12,7 +12,7 @@ class Form_Admin_Report_MailingList extends Pet_Form {
         $this->date_range->removeElement('end_date');
         $start_date = new DateTime;
         $this->date_range->start_date->setOptions(array(
-            'class' => 'datepicker-no-max',
+            'class' => 'datepicker datepicker-no-max',
             'label' => 'Valid as of',
             'value' => $start_date->format('Y-m-d')
         ));

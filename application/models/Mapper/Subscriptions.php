@@ -48,7 +48,6 @@ class Model_Mapper_Subscriptions extends Pet_Model_Mapper_Abstract {
         $sub = new Model_Subscription($data);
         $sub_array = $sub->toArray();
         unset($sub_array['id']);
-        print_r($sub_array);
         return $this->_subscriptions->insert($sub_array);
     }
 }

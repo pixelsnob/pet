@@ -11,7 +11,9 @@ Pet.AdminProductsView = Pet.AdminView.extend({
     events: {
         'click #products .admin-table td': 'adminTableRowClick',
         'hover #products .admin-table td': 'adminTableRowHover',
-        'change #product-edit #product_type_id': 'productTypeIdChange'
+        'change #product-edit #product_type_id': 'productTypeIdChange',
+        'click #product-edit .submit': 'overlayFormSubmit',
+        //'click .datepicker': 'openDatepicker'
     },
     
     initialize: function() {

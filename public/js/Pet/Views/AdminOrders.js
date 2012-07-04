@@ -71,7 +71,6 @@ Pet.AdminOrdersView = Pet.AdminView.extend({
     submitCreditForm: function(el) {
         var qs = $('form[name=credit_payment]', this.el).serialize();
         var url = '/admin/payments/credit/id/' + $('#order_payment_id').val();
-        //this.showSpinner();
         $(el.target).parent().find('input[type=submit]').attr('disabled', true);
         this.populateFancybox(url, qs);
         return false;

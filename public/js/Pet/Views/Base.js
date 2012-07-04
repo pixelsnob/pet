@@ -108,7 +108,7 @@ Pet.View = Backbone.View.extend({
             obj.spinner.overlay({
                 mask: {
                     color: '#000',
-                    loadSpeed: 500,
+                    loadSpeed: 200,
                     opacity: 0.4
                 },
                 load: false,

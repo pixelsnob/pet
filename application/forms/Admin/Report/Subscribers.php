@@ -11,11 +11,11 @@ class Form_Admin_Report_Subscribers extends Pet_Form {
         $this->addSubform($date_range_form, 'date_range');
         $date = new DateTime;
         $this->date_range->start_date->setOptions(array(
-            'class' => 'datepicker-no-max',
+            'class' => 'datepicker datepicker-no-max',
             'value' => $date->format('Y-m-d')
         ));
         $this->date_range->end_date->setOptions(array(
-            'class' => 'datepicker-no-max',
+            'class' => 'datepicker datepicker-no-max',
             'value' => $date->format('Y-m-d')
         ));
         $this->addElement('checkbox', 'opt_in', array(

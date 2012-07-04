@@ -76,7 +76,11 @@ class Admin_ProductsController extends Zend_Controller_Action {
         } elseif ($this->_request->isPost()) {
             $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
-        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
+        if ($this->_request->isPost()) {
+            $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
+        } else {
+            $this->view->messages = $this->_helper->FlashMessenger->getMessages();
+        }
         $this->view->product_form = $form;
         $this->view->product = $product;
         $this->view->product_type_id = $params['product_type_id'];
@@ -142,7 +146,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
             try {
                 $product_id = $this->_products_mapper->insert($params); 
                 $db->commit();
-                $this->_helper->FlashMessenger->addMessage('Product updated');
+                $this->_helper->FlashMessenger->addMessage('Product added');
                 $this->_helper->Redirector->gotoSimple('edit', 'products', 'admin',
                     array('id' => $product_id));
             } catch (Exception $e) {
@@ -154,6 +158,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
         } elseif ($this->_request->isPost()) {
             $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
+        $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         $this->view->product_type_id = $product_type_id;
         $this->view->product_form = $form;
         $this->_helper->ViewRenderer->render('form'); 

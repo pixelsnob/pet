@@ -9,26 +9,11 @@ Pet.AdminView = Pet.View.extend({
     xhr: [], // An array of Ajax XHR objects
     
     events: {
-        'click #billing-to-shipping': 'copyBillingToShipping'
+        'click #billing-to-shipping': 'copyBillingToShipping',
+        'click .datepicker': 'openDatepicker'
     },
     
     initialize: function() {
-        var opts = { 
-            dateFormat: 'yy-mm-dd',
-            changeYear: true,
-            maxDate: new Date,
-            onChangeMonthYear: function(year, month, inst) {
-                var first_of_month = new Date(year, month - 1, 1);
-                $(this).val($.datepicker.formatDate('yy-mm-dd',
-                    first_of_month));
-                $(this).datepicker('setDate', first_of_month);
-            }
-        };
-        $('.datepicker').datepicker(opts);
-        opts.maxDate = null;
-        $('.datepicker-no-max').datepicker(opts);
-        opts.minDate = new Date;
-        $('.datepicker-min-today').datepicker(opts);
         if ($('form').length) {
             $('form:first').find(':input:first:not(.hasDatepicker)').focus();
         }
@@ -61,8 +46,29 @@ Pet.AdminView = Pet.View.extend({
             $('form').get(0).submit();
         }); 
         return false;
-    }
+    },
 
+    openDatepicker: function(el) {
+        var opts = { 
+            dateFormat: 'yy-mm-dd',
+            changeYear: true,
+            maxDate: new Date,
+            onChangeMonthYear: function(year, month, inst) {
+                var first_of_month = new Date(year, month - 1, 1);
+                $(this).val($.datepicker.formatDate('yy-mm-dd',
+                    first_of_month));
+                $(this).datepicker('setDate', first_of_month);
+            },
+            showOn: 'focus'
+        };
+        if ($(el.target).hasClass('datepicker-no-max')) {
+            opts.maxDate = null;
+        } else if ($(el.target).hasClass('datepicker-min-today')) {
+            opts.minDate = new Date;
+            opts.maxDate = null;
+        }
+        $(el.target).datepicker(opts).focus();
+    }
 
 });
 

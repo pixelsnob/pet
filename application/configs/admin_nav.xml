@@ -111,6 +111,12 @@
                     <action>edit</action>
                     <module>admin</module>
                 </edit>
+                <add>
+                    <label>Add Product</label>
+                    <controller>products</controller>
+                    <action>add</action>
+                    <module>admin</module>
+                </add>
             </pages>
         </products>
         <logout>
