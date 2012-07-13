@@ -299,4 +299,14 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
         }
         return $data['product_id'];
     }
+
+    /**
+     * @param int $id
+     * @return void
+     * 
+     */
+    public function delete($id) {
+        $where = $this->_products->getAdapter()->quoteInto('id = ?', $id);
+        $this->_products->delete($where);
+    }
 }

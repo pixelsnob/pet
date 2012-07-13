@@ -104,11 +104,11 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`shipping`
+-- Table `pet`.`shipping_zones`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`shipping` ;
+DROP TABLE IF EXISTS `pet`.`shipping_zones` ;
 
-CREATE  TABLE IF NOT EXISTS `pet`.`shipping` (
+CREATE  TABLE IF NOT EXISTS `pet`.`shipping_zones` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `usa` DECIMAL(5,2) NOT NULL DEFAULT '0.00' ,
   `can` DECIMAL(5,2) NOT NULL DEFAULT '0.00' ,
@@ -371,7 +371,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`physical_products` (
     ON UPDATE CASCADE,
   CONSTRAINT `physical_products_ibfk_2`
     FOREIGN KEY (`shipping_id` )
-    REFERENCES `pet`.`shipping` (`id` ))
+    REFERENCES `pet`.`shipping_zones` (`id` ))
 ENGINE = InnoDB
 AUTO_INCREMENT = 16
 DEFAULT CHARACTER SET = utf8

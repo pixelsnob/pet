@@ -16,11 +16,6 @@ Pet.ProfileFormView = Pet.View.extend({
     initialize: function(){
         
     },
-    
-    test: function() {
-        alert('');
-        return false;
-    },
 
     /**
      * Shows the "change password" form in a lightbox

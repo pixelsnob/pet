@@ -26,6 +26,7 @@ Pet.AdminView = Pet.View.extend({
     },
 
     adminTableRowHover: function(el) {
+        $(el.target).parent().parent().find('td').removeClass('hover');
         if (el.type == 'mouseenter') {
             $(el.target).parent().find('td').addClass('hover');
         } else {

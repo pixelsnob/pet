@@ -183,13 +183,6 @@ class Form_SubForm_Shipping extends Pet_Form_SubForm {
     }
 
     public function isValid($data) {
-        /*$use_shipping = (isset($data['use_shipping']) ?
-            $data['use_shipping'] : '');
-        if (!$use_shipping) {
-            foreach ($this as $field) {
-                $field->clearValidators();
-            }
-        }*/
         return parent::isValid($data);
     }
 }

@@ -152,15 +152,35 @@ class Admin_ProductsController extends Zend_Controller_Action {
             } catch (Exception $e) {
                 $db->rollBack();
                 print_r($e->getMessage());
-                $msg = 'There was an error updating the database';
+                $msg = 'There was an error inserting into the database';
                 $this->_helper->FlashMessenger->addMessage($msg);
             }
         } elseif ($this->_request->isPost()) {
             $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
-        $this->view->messages = $this->_helper->FlashMessenger->getMessages();
+        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->product_type_id = $product_type_id;
         $this->view->product_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
+    }
+    
+    public function deleteDialogAction() {
+        $id = $this->_request->getParam('id');
+        $product = $this->_products_mapper->getById($id, false);
+        if (!$product) {
+            throw new Exception('Product not found');
+        }
+        $this->view->product = $product;
+    }
+
+    public function deleteAction() {
+        $id = $this->_request->getParam('id'); 
+        try {
+            $this->_products_mapper->delete($id);
+            $this->view->status = true;
+        } catch (Exception $e) {
+            $this->view->status = false;
+        }
+        //$this->_helper->ViewRenderer->setNoRender(true); 
     }
 }

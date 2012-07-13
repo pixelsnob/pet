@@ -27,5 +27,16 @@ class Model_Mapper_Courses extends Pet_Model_Mapper_Abstract {
         $this->_courses->updateByProductId($course, $product_id); 
     }
 
+    /**
+     * @param array $data
+     * @return int product_id
+     * 
+     */
+    function insert(array $data) {
+        $course = new Model_Course($data);
+        $course_array = $course->toArray();
+        unset($course_array['id']);
+        return $this->_courses->insert($course_array);
+    }
 }
 

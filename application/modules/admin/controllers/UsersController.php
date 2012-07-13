@@ -144,7 +144,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             'mapper'  => $this->_users_mapper,
             'mode'    => 'add'
         ));
-        $form->submit->setLabel('Add');
+        $form->submit->setLabel('Add'); // <<<<<<<<<<<
         $this->view->show_pw_fields = true;
         if ($this->_request->isPost() && $form->isValid($params)) {
             $db->query('set transaction isolation level serializable');

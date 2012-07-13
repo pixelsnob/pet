@@ -16,5 +16,10 @@
             <?php echo $this->product_form->digital->is_recurring->renderViewHelper(); ?>
             <?php echo $this->product_form->digital->is_recurring->renderErrors(); ?>
         </dd>
+        <dt><?php echo $this->product_form->digital->term_months->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->digital->term_months->renderViewHelper(); ?>
+            <?php echo $this->product_form->digital->term_months->renderErrors(); ?>
+        </dd>
     </dl>
 </fieldset>

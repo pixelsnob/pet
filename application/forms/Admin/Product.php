@@ -96,7 +96,6 @@ class Form_Admin_Product extends Pet_Form {
     public function init() {
         parent::init();
         $this->setName('product_edit');
-        //print_r($this->_product); exit;
         $product_types = $this->_products_mapper->getProductTypes();
         $prod_type_opts = array('' => 'Please select...');
         foreach ($product_types as $product_type) {

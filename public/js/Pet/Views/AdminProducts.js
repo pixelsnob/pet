@@ -13,7 +13,10 @@ Pet.AdminProductsView = Pet.AdminView.extend({
         'hover #products .admin-table td': 'adminTableRowHover',
         'change #product-edit #product_type_id': 'productTypeIdChange',
         'click #product-edit .submit': 'overlayFormSubmit',
-        //'click .datepicker': 'openDatepicker'
+        'click #products .admin-table .delete': 'openDeleteDialogPopup',
+        'click #delete-product-dialog #submit': 'deleteProduct',
+        'click #delete-product-dialog #cancel': 'closeDeleteDialog',
+        'click #delete-product #close': 'closeDeleteDialogAndUpdateList'
     },
     
     initialize: function() {
@@ -34,6 +37,41 @@ Pet.AdminProductsView = Pet.AdminView.extend({
                 product_type_id.attr('disabled', false);
             }
         });
+    },
+
+    openDeleteDialogPopup: function(el) {
+        this.showFancybox({
+            href: $(el.target).attr('href')
+        });
+        return false;
+    },
+    
+    deleteProduct: function(el) {
+        var id = $('input[name=id]', this.el).val();
+        this.populateFancybox('/admin/products/delete/id/' + id);
+        return false;
+    },
+
+    closeDeleteDialog: function(el) {
+        $.fancybox.close();
+        return false;
+    },
+
+    closeDeleteDialogAndUpdateList: function(el) {
+        $.fancybox.close();
+        var delete_status = $('input[name=status]').val();
+        if (delete_status == '1') {
+            $('#search-form').get(0).submit();
+        }
+        return false;
+    },
+
+
+    adminTableRowClick: function(el) {
+        var href = $(el.target).parent().find('a:first').attr('href');
+        window.location.href = href;
+        return true;
     }
+
 });
 

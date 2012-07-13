@@ -14,7 +14,7 @@
     </form>
     <?php
     if ($this->products) {
-
+        $view = $this;
         $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
         echo $pagination;
         echo $this->objectsToAdminTable(array(
@@ -46,10 +46,16 @@
                     return ($data->active ? 'Y' : 'N');
                 }
             ),
-            'edit'               => array(
+            'edit' => array(
                 'format'  => 'link',
                 'label'   => 'Edit',
                 'url'     => '/admin/products/edit/id'
+            ),
+            'delete' => array(
+                'title'    => '',
+                'callback' => function($data) use ($view) {
+                    return '<a href="' . $view->serverUrl($view->url(array('action' => 'delete-dialog', 'id' => $data->product_id))) . '" class="delete">Delete</a>';
+                }
             )
         ), $this->products);
         echo $pagination;

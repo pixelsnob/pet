@@ -22,8 +22,22 @@ class Form_Admin_SubForm_DigitalSubscription extends Zend_Form_SubForm {
             'label'        => 'Recurring?',
             'class'        => 'checkbox',
             'required'     => false
+        ))->addElement('text', 'term_months', array(
+            'label'        => 'Term (months)',
+            'required'     => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Term is required'
+                )),
+                array('Digits', true, array(
+                    'messages' => 'Please enter a positive number'
+                )),
+                array('LessThan', true, array(
+                    'max'      => 360,
+                    'messages' => 'Term must be less than %max%'
+                ))
+            )
         ));
-
     }
 
 }

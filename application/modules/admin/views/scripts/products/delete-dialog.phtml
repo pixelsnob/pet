@@ -1,0 +1,9 @@
+
+<form name="delete-product-dialog" id="delete-product-dialog" method="post" action="">
+    <h2><strong>Are you sure you want to delete product <?php echo $this->escape($this->product->sku); ?>?</strong></h2>
+    <p>
+        <input type="hidden" name="id" value="<?php echo $this->escape($this->product->product_id); ?>">
+        <input type="submit" id="submit" value="Submit">
+        <input type="submit" id="cancel" value="Cancel">
+    </p>
+</form>

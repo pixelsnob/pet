@@ -28,5 +28,17 @@ class Model_Mapper_PhysicalProducts extends Pet_Model_Mapper_Abstract {
         $this->_physical_products->updateByProductId($product, $product_id);
     }
 
+    /**
+     * @param array $data
+     * @return int product_id
+     * 
+     */
+    function insert(array $data) {
+        $product = new Model_PhysicalProduct($data);
+        $product_array = $product->toArray();
+        unset($product_array['id']);
+        return $this->_physical_products->insert($product_array);
+    }
+
 }
 

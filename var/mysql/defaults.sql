@@ -36,7 +36,7 @@ where p.product_type_id = 1;
 
 /* Physical products */
 
-insert into pet.shipping
+insert into pet.shipping_zones
 select * from pet_old.sales_shipping;
 
 insert into pet.products
@@ -132,6 +132,16 @@ insert into pet.products (product_type_id, sku, cost, image, active) values
 (2, 'BODVD1-2', 0, '', 0), (2, 'BODVD1-2-3', 0, '', 0), (2, 'BODVD2-3', 0, '', 0),
 (4, 'E6BK', 0, '', 0), (4, 'E7BK', 0, '', 0), (4, 'V2N9', 0, '', 0), (4, 'V3N9', 0, '', 0);
 
+insert into physical_products values
+(null, 304, 1, 'BODVD1-2', null, 1),
+(null, 305, 1, 'BODVD1-2-3', null, 1),
+(null, 306, 1, 'BODVD2-3', null, 1);
+
+insert into subscriptions values
+(null, 307, 1, 'E6BK', null, 12, 0),
+(null, 308, 1, 'E7BK', null, 12, 0),
+(null, 309, 1, 'V2N9', null, 12, 0),
+(null, 310, 1, 'V3N9', null, 12, 0);
 
 /***************************************************************************************************
   Promotions
