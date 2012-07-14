@@ -48,7 +48,8 @@ Pet.CheckoutView = Pet.View.extend({
                 if (model.get('success') === 1) {
                     type = 'success';
                     // Get updated total after applying promo
-                    var cart = new Pet.CartModel;
+                    obj.updateTotal();
+                    /*var cart = new Pet.CartModel;
                     obj.xhr.push(cart.fetch());
                     cart.on('change', function(model) {
                         var totals = cart.get('totals');
@@ -56,7 +57,7 @@ Pet.CheckoutView = Pet.View.extend({
                             var total = '$' + totals.total.toFixed(2);
                             $('.total-value').text(total);
                         }
-                    });
+                    });*/
                 }
                 if ($.trim(msg).length) {
                     $('.promo-code .errors, .promo-code .success').remove();
@@ -65,6 +66,18 @@ Pet.CheckoutView = Pet.View.extend({
             }
         }));
         return true;
+    },
+    
+    updateTotal: function() {
+        var cart = new Pet.CartModel;
+        this.xhr.push(cart.fetch());
+        cart.on('change', function(model) {
+            var totals = cart.get('totals');
+            if (typeof totals.total == 'number') {
+                var total = '$' + totals.total.toFixed(2);
+                $('.total-value').text(total);
+            }
+        });
     },
 
     saveForm: function(el) {
@@ -80,6 +93,7 @@ Pet.CheckoutView = Pet.View.extend({
                 }
                 // Remove existing errors
                 el.parent().find('.errors, .success').remove();
+                obj.updateTotal();
                 var messages = model.get('messages'); 
                 // Special case for cc expiration selects
                 if (el.attr('name') == 'cc_exp_month' || el.attr('name') == 'cc_exp_year') {
