@@ -45,6 +45,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
         $db = Zend_Db_Table::getDefaultAdapter();
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
+        $sh_mapper  = new Model_Mapper_ShippingZones;
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
         $product = $this->_products_mapper->getById($id, false);
@@ -57,6 +58,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
             'productTypeId'     => $params['product_type_id'],
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll(),
+            'shippingZones'     => $sh_mapper->getAll(),
             'mode'              => 'edit',
             'product'           => $product
 
@@ -94,12 +96,15 @@ class Admin_ProductsController extends Zend_Controller_Action {
     public function productSubformAction() {
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
+        $sh_mapper  = new Model_Mapper_ShippingZones;
         $product_type_id = $this->_request->getParam('product_type_id');
         $form = new Form_Admin_Product(array(
-            'productsMapper'   => $this->_products_mapper,
+            'productsMapper'    => $this->_products_mapper,
             'productTypeId'     => $product_type_id,
             'downloadFormats'   => $dlf_mapper->getAll(),
-            'subscriptionZones' => $sz_mapper->getAll()
+            'subscriptionZones' => $sz_mapper->getAll(),
+            'shippingZones'     => $sh_mapper->getAll()
+
         ));
         $this->view->product_form = $form;
         switch ($product_type_id) {
@@ -131,6 +136,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
         $db = Zend_Db_Table::getDefaultAdapter();
         $dlf_mapper = new Model_Mapper_DownloadFormats;
         $sz_mapper  = new Model_Mapper_SubscriptionZones;
+        $sh_mapper  = new Model_Mapper_ShippingZones;
         $params = $this->_request->getParams();
         $product_type_id = $this->_request->getParam('product_type_id');
         $form = new Form_Admin_Product(array(
@@ -139,6 +145,7 @@ class Admin_ProductsController extends Zend_Controller_Action {
             'productTypeId'     => $product_type_id,
             'downloadFormats'   => $dlf_mapper->getAll(),
             'subscriptionZones' => $sz_mapper->getAll(),
+            'shippingZones'     => $sh_mapper->getAll(),
             'mode'              => 'add'
         ));
         if ($this->_request->isPost() && $form->isValidPartial($params)) {

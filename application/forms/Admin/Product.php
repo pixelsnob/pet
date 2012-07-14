@@ -36,6 +36,12 @@ class Form_Admin_Product extends Pet_Form {
     protected $_subscription_zones;
 
     /**
+     * @var array
+     * 
+     */
+    protected $_shipping_zones;
+
+    /**
      * @var Model_Mapper_Products
      * 
      */
@@ -79,6 +85,14 @@ class Form_Admin_Product extends Pet_Form {
      */
     public function setSubscriptionZones(array $zones) {
         $this->_subscription_zones = $zones;
+    }
+
+    /**
+     * @param array
+     * @return void
+     */
+    public function setShippingZones(array $zones) {
+        $this->_shipping_zones = $zones;
     }
 
     /**
@@ -175,7 +189,9 @@ class Form_Admin_Product extends Pet_Form {
                 )), 'download'); 
                 break;
             case Model_ProductType::PHYSICAL:
-                $this->addSubform(new Form_Admin_SubForm_Physical, 'physical'); 
+                $this->addSubform(new Form_Admin_SubForm_Physical(array(
+                    'shippingZones' => $this->_shipping_zones
+                )), 'physical'); 
                 break;
             case Model_ProductType::COURSE:
                 $this->addSubform(new Form_Admin_SubForm_Course, 'course'); 

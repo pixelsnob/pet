@@ -355,7 +355,7 @@ DROP TABLE IF EXISTS `pet`.`physical_products` ;
 CREATE  TABLE IF NOT EXISTS `pet`.`physical_products` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `product_id` INT(11) NOT NULL ,
-  `shipping_id` INT(11) NOT NULL ,
+  `shipping_zone_id` INT(11) NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
   `description` TEXT NULL DEFAULT NULL ,
   `sequence` INT(5) NOT NULL DEFAULT 0 ,
@@ -363,14 +363,14 @@ CREATE  TABLE IF NOT EXISTS `pet`.`physical_products` (
   UNIQUE INDEX `id` (`id` ASC) ,
   UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC) ,
   INDEX `product_id` (`product_id` ASC) ,
-  INDEX `shipping_id` (`shipping_id` ASC) ,
+  INDEX `shipping_id` (`shipping_zone_id` ASC) ,
   CONSTRAINT `physical_products_ibfk_1`
     FOREIGN KEY (`product_id` )
     REFERENCES `pet`.`products` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `physical_products_ibfk_2`
-    FOREIGN KEY (`shipping_id` )
+    FOREIGN KEY (`shipping_zone_id` )
     REFERENCES `pet`.`shipping_zones` (`id` ))
 ENGINE = InnoDB
 AUTO_INCREMENT = 16

@@ -6,5 +6,10 @@
             <?php echo $this->product_form->physical->description->renderViewHelper(); ?>
             <?php echo $this->product_form->physical->description->renderErrors(); ?>
         </dd>
+        <dt><?php echo $this->product_form->physical->shipping_zone_id->renderLabel(); ?></dt>
+        <dd>
+            <?php echo $this->product_form->physical->shipping_zone_id->renderViewHelper(); ?>
+            <?php echo $this->product_form->physical->shipping_zone_id->renderErrors(); ?>
+        </dd>
     </dl>
 </fieldset>
