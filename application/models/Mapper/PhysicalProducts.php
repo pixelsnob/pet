@@ -24,7 +24,6 @@ class Model_Mapper_PhysicalProducts extends Pet_Model_Mapper_Abstract {
         $product = $physical_model->toArray();
         unset($product['id']);
         unset($product['product_id']);
-        //unset($product['shipping_id']); // ask about this
         $this->_physical_products->updateByProductId($product, $product_id);
     }
 

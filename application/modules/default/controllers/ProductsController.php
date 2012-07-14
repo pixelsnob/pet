@@ -1,5 +1,7 @@
 <?php
 
+require_once 'markdown.php';
+
 class ProductsController extends Zend_Controller_Action {
 
     public function init() {
