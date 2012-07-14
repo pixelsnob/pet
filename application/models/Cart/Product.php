@@ -14,7 +14,8 @@ class Model_Cart_Product extends Pet_Model_Abstract {
         'qty' => 1,
         'is_gift' => 0,
         'key' => null,
-        'order_product_gift_id' => null
+        'order_product_gift_id' => null,
+        'shipping_zone' => null
     );
 
     /**

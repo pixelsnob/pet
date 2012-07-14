@@ -92,12 +92,20 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     public function addProductById($product_id, $is_gift = false,
                                    $order_product_gift_id = null) {
         $products_mapper = new Model_Mapper_Products;
+        $sz_mapper = new Model_Mapper_ShippingZones;
         $product = $products_mapper->getById($product_id);
         if ($product) {
+            if ($product->product_type_id == Model_ProductType::PHYSICAL) {
+                $shipping_zone = $sz_mapper->getById($product->shipping_zone_id);
+                if (!$shipping_zone) {
+                    throw new Exception('Misconfigured/missing shipping zone');
+                }
+            }   
             $product_model = new Model_Cart_Product(array(
                 'product'               => $product,
                 'is_gift'               => $is_gift,
-                'order_product_gift_id' => $order_product_gift_id
+                'order_product_gift_id' => $order_product_gift_id,
+                'shipping_zone'         => $shipping_zone
             ));
             if ($this->_cart->addProduct($product_model, $is_gift)) {
                 return true;

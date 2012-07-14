@@ -254,8 +254,8 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         if ($this->isShippingAddressRequired() && !$this->use_shipping) {
             $billing = $this->_data['billing'];
             return array(
-                'shipping_first_name'  => $this->_data['user']['first_name'],
-                'shipping_last_name'   => $this->_data['user']['last_name'],
+                'shipping_first_name'  => $this->_data['user']->first_name,
+                'shipping_last_name'   => $this->_data['user']->last_name,
                 'shipping_address'     => $billing->billing_address,
                 'shipping_address_2'   => $billing->billing_address_2,
                 'shipping_company'     => $billing->billing_company,
@@ -298,12 +298,30 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $totals = array(
             'subtotal' => 0,
             'discount' => 0,
-            'total'    => 0
+            'total'    => 0,
+            'shipping' => 0
         );
+        $shipping = $this->getShippingValues();
         foreach ($this->_data['products'] as $product) {
             $totals['subtotal'] += ($product->qty * $product->cost);
+            if ($product->shipping_zone && strlen(trim($shipping['shipping_country']))) {
+                switch ($shipping['shipping_country']) {
+                    case 'USA':
+                        $totals['shipping'] += ($product->shipping_zone->usa *
+                            $product->qty); 
+                        break;
+                    case 'Canada':
+                        $totals['shipping'] += ($product->shipping_zone->can *
+                            $product->qty);  
+                        break;
+                    default:
+                        $totals['shipping'] += ($product->shipping_zone->intl *
+                            $product->qty);
+                        break;
+                }
+            }
         }
-        $totals['total'] = $totals['subtotal'];
+        $totals['total'] = $totals['subtotal'] + $totals['shipping'];
         $promo = $this->_data['promo'];
         if ($totals['total'] && $promo && isset($promo->discount)) {
             $totals['discount'] = $promo->discount;
