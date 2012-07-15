@@ -26,6 +26,8 @@ echo $this->headLink()
 <script src="/js/lib/html5.js"></script>
 <![endif]-->
 
+<?php echo $this->headScript()->prependScript('document.write(\'<link href="/css/admin/js_enabled.css" media="screen" rel="stylesheet" type="text/css">\');'); ?>
+
 </head>
 
 <body>
