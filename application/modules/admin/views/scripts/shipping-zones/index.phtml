@@ -1,0 +1,32 @@
+
+
+<div id="shipping-zones">
+    <?php
+    if ($this->shipping_zones) {
+        $view = $this;
+        echo $this->objectsToAdminTable(array(
+            'id' => array('title'  => 'ID'),
+            'label' => array(
+                'callback' => function($data) {
+                    return "\${$data->usa}/\${$data->can}/\${$data->intl}";
+                },
+                'title' => ''
+            ),
+            'edit' => array(
+                'format'  => 'link',
+                'label'   => 'Edit',
+                'url'     => '/admin/shipping-zones/edit/id'
+            ),
+            'delete' => array(
+                'title'    => '',
+                'callback' => function($data) use ($view) {
+                    return '<a href="' . $view->serverUrl($view->url(array('action' => 'delete-dialog', 'id' => $data->product_id))) . '" class="delete">Delete</a>';
+                }
+            )
+        ), $this->shipping_zones);
+    } else {
+        echo '<p class="error">There are no shipping zones to show</p>';
+    }
+    ?>
+</div>
+

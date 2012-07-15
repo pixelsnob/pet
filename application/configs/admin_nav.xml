@@ -119,6 +119,26 @@
                 </add>
             </pages>
         </products>
+        <shipping_zones>
+            <label>Shipping Zones</label>
+            <controller>shipping-zones</controller>
+            <action>index</action>
+            <module>admin</module>
+            <pages>
+                <edit class="hide">
+                    <label>Edit Shipping Zone</label>
+                    <controller>shipping-zones</controller>
+                    <action>edit</action>
+                    <module>admin</module>
+                </edit>
+                <add>
+                    <label>Add Shipping Zone</label>
+                    <controller>shipping-zones</controller>
+                    <action>add</action>
+                    <module>admin</module>
+                </add>
+            </pages>
+        </shipping_zones>
         <logout>
             <label>Logout</label>
             <controller>index</controller>
