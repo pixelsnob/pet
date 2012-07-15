@@ -188,6 +188,5 @@ class Admin_ProductsController extends Zend_Controller_Action {
         } catch (Exception $e) {
             $this->view->status = false;
         }
-        //$this->_helper->ViewRenderer->setNoRender(true); 
     }
 }

@@ -1,0 +1,29 @@
+
+<div id="shipping-zone-edit">
+    <?php echo $this->flashMessenger($this->messages); ?>
+    <form action="<?php echo $this->shipping_zone_form->getAction(); ?>" method="<?php echo $this->shipping_zone_form->getMethod(); ?>" name="<?php echo $this->shipping_zone_form->getName(); ?>">
+        <fieldset class="shipping-zones">
+            <dl class="form">
+                <dt><?php echo $this->shipping_zone_form->usa->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->shipping_zone_form->usa->renderViewHelper(); ?>
+                    <?php echo $this->shipping_zone_form->usa->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->shipping_zone_form->can->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->shipping_zone_form->can->renderViewHelper(); ?>
+                    <?php echo $this->shipping_zone_form->can->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->shipping_zone_form->intl->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->shipping_zone_form->intl->renderViewHelper(); ?>
+                    <?php echo $this->shipping_zone_form->intl->renderErrors(); ?>
+                </dd>
+            </dl>
+        </fieldset>
+        <p class="update clear">
+            <input type="submit" value="Submit" class="submit">
+            <input type="submit" value="Cancel" name="cancel">
+        </p>
+    </form>
+</div>

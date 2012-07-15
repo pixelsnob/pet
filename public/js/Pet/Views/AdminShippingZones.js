@@ -11,11 +11,11 @@ Pet.AdminShippingZonesView = Pet.AdminView.extend({
     events: {
         'click #shipping-zones .admin-table td': 'adminTableRowClick',
         'hover #shipping-zones .admin-table td': 'adminTableRowHover',
-        //'click #product-edit .submit': 'overlayFormSubmit',
-        'click #shipping-zones .admin-table .delete': 'openDeleteDialogPopup'
-        //'click #delete-product-dialog #submit': 'deleteProduct',
-        //'click #delete-product-dialog #cancel': 'closeDeleteDialog',
-        //'click #delete-product #close': 'closeDeleteDialogAndUpdateList'
+        'click #shipping-zone-edit .submit': 'overlayFormSubmit',
+        'click #shipping-zones .admin-table .delete': 'openDeleteDialogPopup',
+        'click #delete-shipping-zone-dialog #submit': 'deleteShippingZone',
+        'click #delete-shipping-zone-dialog #cancel': 'closeDeleteDialog',
+        'click #delete-shipping-zone-dialog #close': 'closeDeleteDialogAndUpdateList'
     },
     
     initialize: function() {
@@ -45,7 +45,7 @@ Pet.AdminShippingZonesView = Pet.AdminView.extend({
         $.fancybox.close();
         var delete_status = $('input[name=status]').val();
         if (delete_status == '1') {
-            //$('#search-form').get(0).submit();
+            window.location.href = window.location.href;
         }
         return false;
     },

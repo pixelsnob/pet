@@ -267,7 +267,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param array $data
-     * @return void
+     * @return int $product_id
      * 
      */
     public function insert(array $data) {

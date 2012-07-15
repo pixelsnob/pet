@@ -8,9 +8,9 @@
             'id' => array('title'  => 'ID'),
             'label' => array(
                 'callback' => function($data) {
-                    return "\${$data->usa}/\${$data->can}/\${$data->intl}";
+                    return $data->getLabel();
                 },
-                'title' => ''
+                'title' => 'USA/CAN/INTL'
             ),
             'edit' => array(
                 'format'  => 'link',
@@ -20,7 +20,7 @@
             'delete' => array(
                 'title'    => '',
                 'callback' => function($data) use ($view) {
-                    return '<a href="' . $view->serverUrl($view->url(array('action' => 'delete-dialog', 'id' => $data->product_id))) . '" class="delete">Delete</a>';
+                    return '<a href="' . $view->serverUrl($view->url(array('action' => 'delete-dialog', 'id' => $data->id))) . '" class="delete">Delete</a>';
                 }
             )
         ), $this->shipping_zones);
