@@ -26,6 +26,7 @@ class Model_Cart_Order extends Pet_Model_Abstract {
         'cc_cvv' => null,
         'subtotal' => null,
         'discount' => null,
+        'shipping' => null,
         'total' => null,
         'username' => null,
         'email' => null,
