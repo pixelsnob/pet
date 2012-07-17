@@ -14,6 +14,21 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @return array
+     * 
+     */
+    public function getAll() {
+        $promos = $this->_promos->fetchAll($this->_promos->select());
+        if ($promos) {
+            $out = array();
+            foreach ($promos as $promo) {
+                $out[] = new Model_Promo($promo->toArray());
+            }
+            return $out;
+        }
+    }
+
+    /**
      * @param int $id
      * @return array
      * 
@@ -43,6 +58,35 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
                 $promo->id);
             return $promo;
         }
+    }
+
+    /** 
+     * Builds a query out of search params and paginates the results
+     * 
+     * @param array $params
+     * @return array Returns the paginator object as well as an array of model
+     *               objects
+     */
+    public function getPaginatedFiltered(array $params) {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $sel = $this->_promos->select();
+        if (isset($params['search']) && $params['search']) {
+            $code = $db->quote('%' . $params['code'] . '%');
+            $sel->where('code like ?', $code);
+        }
+        $this->addDateRangeToSelect($sel, 'expiration', $params);
+        $this->addSortToSelect($sel, 'id', 'desc', $params);
+        $adapter = new Zend_Paginator_Adapter_DbSelect($sel);
+        $paginator = new Zend_Paginator($adapter);
+        if (isset($params['page'])) {
+            $paginator->setCurrentPageNumber((int) $params['page']);
+        }
+        $paginator->setItemCountPerPage(35);
+        $promos = array();
+        foreach ($paginator as $row) {
+            $promos[] = new Model_Promo($row);
+        }
+        return array('paginator' => $paginator, 'data' => $promos);
     }
 }
 

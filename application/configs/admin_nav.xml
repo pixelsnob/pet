@@ -13,7 +13,7 @@
                     <action>add</action>
                     <module>admin</module>
                 </orders_add>
-                <orders_detail class="hide">
+                <orders_detail hide="1">
                     <label>Order Detail</label>
                     <controller>orders</controller>
                     <action>detail</action>
@@ -33,19 +33,19 @@
                     <action>add</action>
                     <module>admin</module>
                 </users_add>
-                <users_edit class="hide">
+                <users_edit hide="1">
                     <label>Edit User</label>
                     <controller>users</controller>
                     <action>edit</action>
                     <module>admin</module>
                 </users_edit>
-                <users_detail class="hide">
+                <users_detail hide="1">
                     <label>User Detail</label>
                     <controller>users</controller>
                     <action>detail</action>
                     <module>admin</module>
                 </users_detail>
-                <change_password class="hide">
+                <change_password hide="1">
                     <label>Change Password</label>
                     <controller>users</controller>
                     <action>change-password</action>
@@ -59,7 +59,7 @@
             <action>index</action>
             <module>admin</module>
             <pages>
-                <detail class="hide">
+                <detail hide="1">
                     <label>Detail</label>
                     <controller>payments</controller>
                     <action>detail</action>
@@ -67,11 +67,9 @@
                 </detail>
             </pages>
         </payments>
-        <reports>
+        <reports nolink="1">
             <label>Reports</label>
-            <controller>reports</controller>
-            <action>index</action>
-            <module>admin</module>
+            <uri>#</uri>
             <pages>
                 <sales>
                     <label>Sales</label>
@@ -105,7 +103,7 @@
             <action>index</action>
             <module>admin</module>
             <pages>
-                <edit class="hide">
+                <edit hide="1">
                     <label>Edit Product</label>
                     <controller>products</controller>
                     <action>edit</action>
@@ -119,13 +117,33 @@
                 </add>
             </pages>
         </products>
+        <promos>
+            <label>Promos</label>
+            <controller>promos</controller>
+            <action>index</action>
+            <module>admin</module>
+            <pages>
+                <edit hide="1">
+                    <label>Edit Promo</label>
+                    <controller>promos</controller>
+                    <action>edit</action>
+                    <module>admin</module>
+                </edit>
+                <add>
+                    <label>Add Promo</label>
+                    <controller>promos</controller>
+                    <action>add</action>
+                    <module>admin</module>
+                </add>
+            </pages>
+        </promos>
         <shipping_zones>
             <label>Shipping Zones</label>
             <controller>shipping-zones</controller>
             <action>index</action>
             <module>admin</module>
             <pages>
-                <edit class="hide">
+                <edit hide="1">
                     <label>Edit Shipping Zone</label>
                     <controller>shipping-zones</controller>
                     <action>edit</action>

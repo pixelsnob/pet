@@ -3,6 +3,10 @@
 class Admin_ReportsController extends Zend_Controller_Action {
 
     public function init() {
+        $page = $this->view->navigation()->findOneByLabel('Reports'); 
+        if ($page) {
+            $page->setActive();
+        }
         $this->_helper->Layout->setLayout('admin');
         $this->_admin_svc = new Service_Admin;
         $this->_users_svc = new Service_Users;

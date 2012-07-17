@@ -1,0 +1,35 @@
+
+<div id="promos">
+    <?php
+    if ($this->promos) {
+        $pagination = $this->paginationControl($this->paginator, 'Sliding', 'pagination/default.phtml', array('params' => $this->params));
+        echo $pagination;
+        $view = $this;
+        echo $this->objectsToAdminTable(array(
+            'id' => array('title'  => 'ID'),
+            'code',
+            'expiration' => array(
+                'format' => 'date'
+            ),
+            'discount' => array(
+                'format' => 'dollar'
+            ),
+            'edit' => array(
+                'format'  => 'link',
+                'label'   => 'Edit',
+                'url'     => '/admin/promos/edit/id'
+            ),
+            'delete' => array(
+                'title'    => '',
+                'callback' => function($data) use ($view) {
+                    return '<a href="' . $view->serverUrl($view->url(array('action' => 'delete-dialog', 'id' => $data->id))) . '" class="delete">Delete</a>';
+                }
+            )
+        ), $this->promos, $this->params, array('sortable' => true));
+        echo $pagination;
+    } else {
+        echo '<p class="error">There are no promos to show</p>';
+    }
+    ?>
+</div>
+

@@ -1,0 +1,41 @@
+
+<ul id="menu">
+    <?php 
+    $html = array();
+    foreach ($this->container as $page) {
+        $active = $page->isActive();
+        if ($page->nolink) {
+            $html[] = sprintf(
+                '<li class="%s">%s</li>',
+                ($page->isActive() ? 'active' : 'inactive'),
+                $page->getLabel()
+            );
+        } else {
+            $html[] = sprintf(
+                '<li class="%s"><a href="%s">%s</a></li>',
+                ($page->isActive() ? 'active' : 'inactive'),
+                $page->getHref(),
+                $page->getLabel()
+            );
+        }
+        $html[] = '</li>';
+        if (!empty($page->pages)) {
+            $html[] = '<ul>';
+            foreach ($page->pages as $subpage) {
+                if ($subpage->hide) {
+                    continue;
+                }
+                $html[] = '<li>';
+                $html[] = sprintf(
+                    '<li class="%s"><a href="%s">%s</a></li>',
+                    ($subpage->isActive() ? 'active' : 'inactive'),
+                    $subpage->getHref(),
+                    $subpage->getLabel()
+                );
+            }
+            $html[] = '</ul>';
+        }
+    }
+    echo implode(PHP_EOL, $html);
+    ?>
+</ul>

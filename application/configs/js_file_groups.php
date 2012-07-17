@@ -59,5 +59,8 @@ return array(
     ),
     'admin-shipping-zones' => array(
         'js/Pet/Views/AdminShippingZones.js'
+    ),
+    'admin-promos' => array(
+        'js/Pet/Views/AdminPromos.js'
     )
 );

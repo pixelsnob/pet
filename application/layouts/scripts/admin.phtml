@@ -37,7 +37,10 @@ echo $this->headLink()
     <div id="content-wrap">
         <?php if ($this->isAuthenticated(true)): ?>
             <nav>
-                <?php echo $this->navigation()->menu()->renderMenu(); ?>
+                <?php
+                $this->navigation()->menu()->setPartial(array('navigation/menu.phtml', 'admin'));
+                echo $this->navigation()->menu()->render();
+                ?>
             </nav>
         <?php endif; ?>
         <div id="breadcrumbs">
