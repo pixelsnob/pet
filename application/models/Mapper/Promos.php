@@ -70,9 +70,9 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
     public function getPaginatedFiltered(array $params) {
         $db = Zend_Db_Table::getDefaultAdapter();
         $sel = $this->_promos->select();
-        if (isset($params['search']) && $params['search']) {
+        if (isset($params['code']) && $params['code']) {
             $code = $db->quote('%' . $params['code'] . '%');
-            $sel->where('code like ?', $code);
+            $sel->where("code like $code");
         }
         $this->addDateRangeToSelect($sel, 'expiration', $params);
         $this->addSortToSelect($sel, 'id', 'desc', $params);

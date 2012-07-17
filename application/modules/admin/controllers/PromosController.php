@@ -25,7 +25,7 @@ class Admin_PromosController extends Zend_Controller_Action {
         $request = $this->_request;
         $params = $this->_admin_svc->initSearchParams($request);
         $this->view->promos = $this->_promos_mapper->getAll();
-        $search_form = new Form_Admin_Search;
+        $search_form = new Form_Admin_PromosSearch;
         if (!$search_form->isValid($params)) {
             $params = array();
         }
@@ -113,3 +113,4 @@ class Admin_PromosController extends Zend_Controller_Action {
     }
 
 }
+
