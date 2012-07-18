@@ -75,25 +75,50 @@ class Admin_PromosController extends Zend_Controller_Action {
         }
         $params = $this->_request->getParams();
         $form = new Form_Admin_Promo;
-        if ($this->_request->isPost() && $form->isValidPartial($params)) {
-            try {
-                $id = $this->_promos_mapper->insert($params); 
-                $this->_helper->FlashMessenger->addMessage('Promo added');
-                $this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
-                    array('id' => $id));
-            } catch (Exception $e) {
-                $msg = 'There was an error inserting into the database';
-                $this->_helper->FlashMessenger->addMessage($msg);
+        if ($this->_request->isPost()) {
+            $adapter = $form->banner->getTransferAdapter();
+            $uid = md5(uniqid(mt_rand(), true));
+            $filename = $adapter->getFileName();
+            $filename = basename($filename);
+            $rename_filter = new Zend_Filter_File_Rename(array(
+                'target' => "/tmp/{$uid}{$filename}",
+                'overwrite' => false
+            ));
+            $adapter->addFilter($rename_filter);
+            if ($form->isValid($params)) {
+                try {
+                    $id = $this->_promos_mapper->insert($params); 
+                    $this->_helper->FlashMessenger->addMessage('Promo added');
+                    $this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
+                        array('id' => $id));
+                } catch (Exception $e) {
+                    $msg = 'There was an error inserting into the database';
+                    $this->_helper->FlashMessenger->addMessage($msg);
+                }
+            } else {
+                $banner = $form->banner->getValue();
+                if ($banner) {
+                    $this->view->banner = $this->view->url(array(
+                        'action' => 'tmp-image', 'filename' => $banner));
+                }
+                $this->_helper->FlashMessenger->addMessage('Please check your information');
             }
-        } elseif ($this->_request->isPost()) {
-            $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
-        print_r($form->getMessages());
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->promo_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }
     
+    public function tmpImageAction() {
+        $filename = $this->_request->getParam('filename');
+        $img = file_get_contents('/tmp/' . $filename);
+        $this->_response->setHeader('Content-Type', mime_content_type($filename));
+        $this->_response->setHeader('Content-Length', strlen($img));
+        $this->_response->setBody($img);
+        $this->_helper->ViewRenderer->setNoRender(true);
+        $this->_helper->Layout->disableLayout();
+    }
+
     public function deleteDialogAction() {
         $id = $this->_request->getParam('id');
         $zone = $this->_sz_mapper->getById($id, false);

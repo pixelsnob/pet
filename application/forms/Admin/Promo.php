@@ -12,7 +12,7 @@ class Form_Admin_Promo extends Pet_Form {
     public function init() {
         parent::init();
         // Elements common to all product types
-        $this->setEnctype(Zend_Form::ENCTYPE_MULTIPART);
+        $this->setEnctype(Zend_Form::ENCTYPE_MULTIPART)->setName('promo_edit');
         $this->addElement('text', 'code', array(
             'label'        => 'Promo Code',
             'required'     => true,
@@ -53,7 +53,7 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('file', 'banner', array(
             'label'        => 'Banner',
             'required'     => false,
-            //'destination'  => '/var/www/pet/tmp',
+            'destination'  => '/private/tmp',
             'validators'   => array(
                 array('Count', false, 1),
                 array('Size', false, 10000000),
@@ -61,6 +61,5 @@ class Form_Admin_Promo extends Pet_Form {
             )
         ));
     }
-
-
+    
 }

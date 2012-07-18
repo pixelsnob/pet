@@ -1,6 +1,6 @@
 <div id="promo-edit">
     <?php echo $this->flashMessenger($this->messages); ?>
-    <form action="<?php echo $this->promo_form->getAction(); ?>" method="<?php echo $this->promo_form->getMethod(); ?>" name="<?php echo $this->promo_form->getName(); ?>" enctype="<?php echo $this->promo_form->getEnctype(); ?>">
+    <form action="" method="<?php echo $this->promo_form->getMethod(); ?>" name="<?php echo $this->promo_form->getName(); ?>" enctype="<?php echo $this->promo_form->getEnctype(); ?>">
         <fieldset class="promo">
             <dl class="form">
                 <dt><?php echo $this->promo_form->code->renderLabel(); ?></dt>
@@ -22,6 +22,7 @@
                 <dd>
                     <?php echo $this->promo_form->banner->renderFile(); ?>
                     <?php echo $this->promo_form->banner->renderErrors(); ?>
+                    <?php echo ($this->banner ? '<img src="' . $this->banner . '">' : ''); ?>
                 </dd>
             </dl>
         </fieldset>

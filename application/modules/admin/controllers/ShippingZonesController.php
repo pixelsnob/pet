@@ -36,12 +36,12 @@ class Admin_ShippingZonesController extends Zend_Controller_Action {
         }
         $form = new Form_Admin_ShippingZone;
         $form->populate($zone->toArray());
-        if ($this->_request->isPost() && $form->isValidPartial($params)) {
+        if ($this->_request->isPost() && $form->isValid($params)) {
             try {
                 $this->_sz_mapper->update($params, $id); 
                 $this->_helper->FlashMessenger->addMessage('Shipping zone updated');
             } catch (Exception $e) {
-                print_r($e); exit;
+                //print_r($e); exit;
                 $msg = 'There was an error updating the database';
                 $this->_helper->FlashMessenger->addMessage($msg);
             }
