@@ -1,2 +1,33 @@
-
-form
+<div id="promo-edit">
+    <?php echo $this->flashMessenger($this->messages); ?>
+    <form action="<?php echo $this->promo_form->getAction(); ?>" method="<?php echo $this->promo_form->getMethod(); ?>" name="<?php echo $this->promo_form->getName(); ?>" enctype="<?php echo $this->promo_form->getEnctype(); ?>">
+        <fieldset class="promo">
+            <dl class="form">
+                <dt><?php echo $this->promo_form->code->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->promo_form->code->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->code->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->promo_form->expiration->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->promo_form->expiration->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->expiration->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->promo_form->description->renderLabel(); ?></dt>
+                <dd class="textarea">
+                    <?php echo $this->promo_form->description->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->description->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->promo_form->banner->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->promo_form->banner->renderFile(); ?>
+                    <?php echo $this->promo_form->banner->renderErrors(); ?>
+                </dd>
+            </dl>
+        </fieldset>
+        <p class="update clear">
+            <input type="submit" value="Submit" class="submit">
+            <input type="submit" value="Cancel" name="cancel">
+        </p>
+    </form>
+</div>

@@ -74,12 +74,12 @@ class Admin_PromosController extends Zend_Controller_Action {
             $this->_helper->Redirector->gotoSimple('index');
         }
         $params = $this->_request->getParams();
-        $form = new Form_Admin_ShippingZone;
+        $form = new Form_Admin_Promo;
         if ($this->_request->isPost() && $form->isValidPartial($params)) {
             try {
-                $id = $this->_sz_mapper->insert($params); 
-                $this->_helper->FlashMessenger->addMessage('Shipping zone added');
-                $this->_helper->Redirector->gotoSimple('edit', 'shipping-zones', 'admin',
+                $id = $this->_promos_mapper->insert($params); 
+                $this->_helper->FlashMessenger->addMessage('Promo added');
+                $this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
                     array('id' => $id));
             } catch (Exception $e) {
                 $msg = 'There was an error inserting into the database';
@@ -88,8 +88,9 @@ class Admin_PromosController extends Zend_Controller_Action {
         } elseif ($this->_request->isPost()) {
             $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
+        print_r($form->getMessages());
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
-        $this->view->shipping_zone_form = $form;
+        $this->view->promo_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }
     
