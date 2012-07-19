@@ -66,11 +66,11 @@ class Admin_PromosController extends Zend_Controller_Action {
                     $new_banner = $this->_copyBannerUpload($banner,
                         $tmp_banner, $id);
                     if ($new_banner) {
-                        $params['banner'] = $new_banner;
+                        $this->_promos_mapper->updateBanner($new_banner, $id);
                         $this->view->banner = '/images/uploads/promos/' .
                             $new_banner;
-                    } else {
-                        $params['banner'] = null;
+                    } elseif ($form->delete_banner->getValue()) {
+                        $this->_promos_mapper->updateBanner(null, $id);
                     }
                     $this->_promos_mapper->update($params, $id); 
                     $this->_helper->FlashMessenger->addMessage('Promo updated');
@@ -96,6 +96,8 @@ class Admin_PromosController extends Zend_Controller_Action {
                 }
             }
             $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
+        } else {
+            $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
         $this->view->promo_form = $form;
         $this->_helper->ViewRenderer->render('form'); 

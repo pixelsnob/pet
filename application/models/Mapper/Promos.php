@@ -120,6 +120,7 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
     public function update(array $data, $id) {
         $promo_model = new Model_Promo($data);
         $promo = $promo_model->toArray();
+        unset($promo['banner']);
         $this->_promos->update($promo, $id);
     }
 
