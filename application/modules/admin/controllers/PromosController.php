@@ -23,7 +23,9 @@ class Admin_PromosController extends Zend_Controller_Action {
     
     public function indexAction() {
         $request = $this->_request;
-        $params = $this->_admin_svc->initSearchParams($request);
+        //$params = $this->_admin_svc->initSearchParams($request);
+        $params = $request->getParams();
+        //print_r($params); exit;
         $this->view->promos = $this->_promos_mapper->getAll();
         $search_form = new Form_Admin_PromosSearch;
         if (!$search_form->isValid($params)) {
@@ -42,21 +44,27 @@ class Admin_PromosController extends Zend_Controller_Action {
         }
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
-        $zone = $this->_sz_mapper->getById($id);
-        if (!$zone) {
-            throw new Exception('Shipping zone not found');
+        $promo = $this->_promos_mapper->getById($id);
+        if (!$promo) {
+            throw new Exception('Promo not found');
         }
-        $form = new Form_Admin_ShippingZone;
-        $form->populate($zone->toArray());
-        if ($this->_request->isPost() && $form->isValidPartial($params)) {
-            try {
+        $form = new Form_Admin_Promo(array(
+            'promosMapper' => $this->_promos_mapper
+        ));
+        $form->populate($promo->toArray());
+        if ($promo->banner) {
+            $this->view->banner = $this->view->url(array(
+                'action' => 'tmp-image', 'filename' => $promo->banner));
+        }
+        if ($this->_request->isPost() && $form->isValid($params)) {
+            /*try {
                 $this->_sz_mapper->update($params, $id); 
                 $this->_helper->FlashMessenger->addMessage('Shipping zone updated');
             } catch (Exception $e) {
                 print_r($e); exit;
                 $msg = 'There was an error updating the database';
                 $this->_helper->FlashMessenger->addMessage($msg);
-            }
+            }*/
         } elseif ($this->_request->isPost()) {
             $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
@@ -65,7 +73,7 @@ class Admin_PromosController extends Zend_Controller_Action {
         } else {
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
         }
-        $this->view->shipping_zone_form = $form;
+        $this->view->promo_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }
 
@@ -74,7 +82,10 @@ class Admin_PromosController extends Zend_Controller_Action {
             $this->_helper->Redirector->gotoSimple('index');
         }
         $params = $this->_request->getParams();
-        $form = new Form_Admin_Promo;
+        $form = new Form_Admin_Promo(array(
+            'promosMapper' => $this->_promos_mapper
+        ));
+        $config = Zend_Registry::get('app_config');
         if ($this->_request->isPost()) {
             if ($form->isValid($params)) {
                 try {
@@ -87,15 +98,16 @@ class Admin_PromosController extends Zend_Controller_Action {
                         $banner_parts = explode('.', $banner_path);
                         $ext = $banner_parts[count($banner_parts) - 1];
                         $new_banner = "banner-{$id}.{$ext}";
-                        $banner_dest_path = PUBLIC_PATH . "/images/promos/$new_banner";
-                        if (!copy($banner_path, $banner_dest_path)) {
+                        $dest_path = "{$config['image_upload_dir']}/promos/{$new_banner}";
+                        if (copy($banner_path, $dest_path)) {
+                            $this->_promos_mapper->updateBanner($new_banner, $id);
+                        } else {
                             throw new Exception('File upload copy failed');
                         }
-                        $this->_promos_mapper->updateBanner($new_banner, $id);
                     }
                     $this->_helper->FlashMessenger->addMessage('Promo added');
-                    //$this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
-                    //    array('id' => $id));
+                    $this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
+                        array('id' => $id));
                 } catch (Exception $e) {
                     $msg = $e->getMessage();
                     $this->_helper->FlashMessenger->addMessage($msg);
@@ -131,22 +143,22 @@ class Admin_PromosController extends Zend_Controller_Action {
     }
 
     public function deleteDialogAction() {
-        $id = $this->_request->getParam('id');
+        /*$id = $this->_request->getParam('id');
         $zone = $this->_sz_mapper->getById($id, false);
         if (!$zone) {
             throw new Exception('Shipping zone not found');
         }
-        $this->view->shipping_zone = $zone;
+        $this->view->shipping_zone = $zone;*/
     }
 
     public function deleteAction() {
-        $id = $this->_request->getParam('id'); 
+        /*$id = $this->_request->getParam('id'); 
         try {
             $this->_sz_mapper->delete($id);
             $this->view->status = true;
         } catch (Exception $e) {
             $this->view->status = false;
-        }
+        }*/
     }
 
 }

@@ -139,7 +139,7 @@ class Service_Cart {
         $existing_promo_code = ($cart->promo ? $cart->promo->code : '');
         if ($promo_code && $promo_code != $existing_promo_code) {
             $promos_mapper = new Model_Mapper_Promos;
-            $promo = $promos_mapper->getUnexpiredPromoByCode($promo_code);
+            $promo = $promos_mapper->getByCode($promo_code);
             if ($promo) {
                 $this->_cart_mapper->addPromo($promo);
             }

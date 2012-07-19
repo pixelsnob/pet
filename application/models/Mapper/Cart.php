@@ -278,7 +278,7 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
             return true;
         }
         $promos_mapper = new Model_Mapper_Promos;
-        $promo = $promos_mapper->getUnexpiredPromoByCode($code);
+        $promo = $promos_mapper->getByCode($code);
         if ($promo && $this->_cart->addPromo($promo)) {
             $this->_message = "Promo $code added";
             return true;

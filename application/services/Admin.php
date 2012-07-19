@@ -27,7 +27,7 @@ class Service_Admin {
     public function initSearchParams(Zend_Controller_Request_Abstract $request,
                                      $id_column = 'id') {
         $params = $request->getParams();
-        $params = $this->initDateRangeParams($request);
+        ///$params = $this->initDateRangeParams($request);
         $params['sort'] = $request->getParam('sort', $id_column);
         $params['sort_dir'] = $request->getParam('sort_dir', 'desc');
         return $params;

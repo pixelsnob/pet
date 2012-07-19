@@ -5,6 +5,21 @@
  */
 class Form_Admin_Promo extends Pet_Form {
     
+    /** 
+     * @var Model_Mapper_Promos
+     * 
+     */
+    protected $_promos_mapper;
+
+    /**
+     * @param Model_Mapper_Promos $mapper
+     * @return void
+     * 
+     */
+    public function setPromosMapper(Model_Mapper_Promos $mapper) {
+        $this->_promos_mapper = $mapper;
+    }
+
     /**
      * @return void
      * 
@@ -19,6 +34,10 @@ class Form_Admin_Promo extends Pet_Form {
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Promo code is required'
+                )),
+                array('Callback', true, array(
+                    'callback' => array($this, 'promoExists'),
+                    'messages' => 'Promo code already exists'
                 ))
             )
         ))->addElement('text', 'expiration', array(
@@ -107,4 +126,13 @@ class Form_Admin_Promo extends Pet_Form {
         }
     }
     
+    /**
+     * @param string $value
+     * @return bool
+     * 
+     */
+    public function promoExists($value) {
+        $promo = $this->_promos_mapper->getByCode($value, false);
+        return !$promo;
+    }
 }

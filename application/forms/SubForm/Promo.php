@@ -57,7 +57,7 @@ class Form_SubForm_Promo extends Pet_Form_SubForm {
      * 
      */
     public function isPromoValid($value) {
-        $promo = $this->_mapper->getUnexpiredPromoByCode($value);
+        $promo = $this->_mapper->getByCode($value);
         if (!$promo) {
             return false;
         }

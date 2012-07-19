@@ -19,12 +19,15 @@ class Model_DbTable_Promos extends Zend_Db_Table_Abstract {
     
     /**
      * @param string $code
+     * @param bool $expired_check
      * @return Zend_DbTable_Row
      * 
      */
-    public function getUnexpiredPromoByCode($code) {
-        $sel = $this->select()->where('code = ?', $code)
-            ->where('expiration >= ?', date('Y-m-d', time()));
+    public function getByCode($code, $expired_check = true) {
+        $sel = $this->select()->where('code = ?', $code);
+        if ($expired_check) {
+            $sel->where('expiration >= ?', date('Y-m-d', time()));
+        }
         return $this->fetchRow($sel);
     }
 
