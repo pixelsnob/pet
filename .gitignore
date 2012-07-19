@@ -5,3 +5,4 @@ library/Zend
 *.bak
 .DS_Store
 public/version
+public/images/uploads/

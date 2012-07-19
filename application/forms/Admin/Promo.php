@@ -42,12 +42,33 @@ class Form_Admin_Promo extends Pet_Form {
                     'messages' => 'Description is required'
                 ))
             )
-        ))->addElement('text', 'public_description', array(
+        ))->addElement('textarea', 'public_description', array(
             'label'        => 'Public Description',
-            'required'     => false,
+            'required'     => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Public description is required'
+                ))
+            )
+        ))->addElement('textarea', 'receipt_description', array(
+            'label'        => 'Receipt Description',
+            'required'     => true,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Receipt description is required'
+                ))
+            )
+        ))->addElement('text', 'discount', array(
+            'label'        => 'Discount',
+            'required'     => false,
+            'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'Discount is required'
+                )),
+                array(new Pet_Validate_Currency, true),
+                array('LessThan', true, array(
+                    'max' => 1000,
+                    'messages' => 'Amount must be less than $%max%'
                 ))
             )
         ))->addElement('file', 'banner', array(
@@ -57,9 +78,33 @@ class Form_Admin_Promo extends Pet_Form {
             'validators'   => array(
                 array('Count', false, 1),
                 array('Size', false, 10000000),
-                array('Extension', false, 'jpg,png,gif')
+                array('Extension', false, array(
+                    'extensions' => 'jpg,gif,png',
+                    'messages'   => 'Only .jpg, .gif, and .png are allowed'
+                ))
             )
-        ));
+        ))->addElement('text', 'extra_days', array(
+            'label'        => 'Extra Days',
+            'required'     => false,
+            'validators'   => array(
+                array('Digits', true, array(
+                    'messages' => 'Extra days must be a whole, positive number'
+                ))
+            )
+        ))->addElement('hidden', 'tmp_banner')
+          ->setElementFilters(array('StringTrim'));
+        // Banner upload
+        $adapter = $this->banner->getTransferAdapter();
+        $uid = md5(uniqid(mt_rand(), true));
+        $filename = $adapter->getFileName();
+        if ($filename) {
+            $filename = basename($filename);
+            $rename_filter = new Zend_Filter_File_Rename(array(
+                'target'    => "/tmp/{$uid}{$filename}",
+                'overwrite' => false
+            ));
+            $adapter->addFilter($rename_filter);
+        }
     }
     
 }

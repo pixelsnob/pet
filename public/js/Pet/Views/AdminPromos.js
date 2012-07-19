@@ -15,7 +15,8 @@ Pet.AdminPromosView = Pet.AdminView.extend({
         'click #promos .admin-table .delete': 'openDeleteDialogPopup',
         'click #delete-promo-dialog #submit': 'deleteShippingZone',
         'click #delete-promo-dialog #cancel': 'closeDeleteDialog',
-        'click #delete-promo-dialog #close': 'closeDeleteDialogAndUpdateList'
+        'click #delete-promo-dialog #close': 'closeDeleteDialogAndUpdateList',
+        'click #promo-edit .delete-banner': 'deleteBanner'
     },
     
     initialize: function() {
@@ -50,11 +51,16 @@ Pet.AdminPromosView = Pet.AdminView.extend({
         return false;
     },
 
-
     adminTableRowClick: function(el) {
         var href = $(el.target).parent().find('a:first').attr('href');
         window.location.href = href;
         return true;
+    },
+
+    deleteBanner: function(el) {
+        $('#tmp_banner', this.el).val('');
+        $('#banner-image', this.el).remove();
+        return false;
     }
 
 });

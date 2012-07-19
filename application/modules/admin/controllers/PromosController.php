@@ -76,32 +76,43 @@ class Admin_PromosController extends Zend_Controller_Action {
         $params = $this->_request->getParams();
         $form = new Form_Admin_Promo;
         if ($this->_request->isPost()) {
-            $adapter = $form->banner->getTransferAdapter();
-            $uid = md5(uniqid(mt_rand(), true));
-            $filename = $adapter->getFileName();
-            $filename = basename($filename);
-            $rename_filter = new Zend_Filter_File_Rename(array(
-                'target' => "/tmp/{$uid}{$filename}",
-                'overwrite' => false
-            ));
-            $adapter->addFilter($rename_filter);
             if ($form->isValid($params)) {
                 try {
                     $id = $this->_promos_mapper->insert($params); 
+                    $tmp_banner = $form->tmp_banner->getValue();
+                    $banner     = $form->banner->getValue();
+                    if ($banner || $tmp_banner)  {
+                        $banner = ($tmp_banner ? $tmp_banner : $banner);
+                        $banner_path  = "/tmp/$banner";
+                        $banner_parts = explode('.', $banner_path);
+                        $ext = $banner_parts[count($banner_parts) - 1];
+                        $new_banner = "banner-{$id}.{$ext}";
+                        $banner_dest_path = PUBLIC_PATH . "/images/promos/$new_banner";
+                        if (!copy($banner_path, $banner_dest_path)) {
+                            throw new Exception('File upload copy failed');
+                        }
+                        $this->_promos_mapper->updateBanner($new_banner, $id);
+                    }
                     $this->_helper->FlashMessenger->addMessage('Promo added');
-                    $this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
-                        array('id' => $id));
+                    //$this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
+                    //    array('id' => $id));
                 } catch (Exception $e) {
-                    $msg = 'There was an error inserting into the database';
+                    $msg = $e->getMessage();
                     $this->_helper->FlashMessenger->addMessage($msg);
                 }
             } else {
-                $banner = $form->banner->getValue();
+                $tmp_banner = $form->tmp_banner->getValue();
+                $banner     = $form->banner->getValue();
                 if ($banner) {
+                    $form->tmp_banner->setValue($banner);
                     $this->view->banner = $this->view->url(array(
                         'action' => 'tmp-image', 'filename' => $banner));
+                } elseif ($tmp_banner) {
+                    $this->view->banner = $this->view->url(array(
+                        'action' => 'tmp-image', 'filename' => $tmp_banner));
                 }
-                $this->_helper->FlashMessenger->addMessage('Please check your information');
+                $this->_helper->FlashMessenger->addMessage(
+                    'Please check your information');
             }
         }
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();

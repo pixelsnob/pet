@@ -154,7 +154,8 @@ CREATE  TABLE IF NOT EXISTS `pet`.`promos` (
   `discount` DECIMAL(5,2) NOT NULL DEFAULT 0 ,
   `extra_days` INT(11) NOT NULL ,
   `uses` INT(11) NOT NULL DEFAULT 0 ,
-  PRIMARY KEY (`id`) )
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC) )
 ENGINE = InnoDB
 AUTO_INCREMENT = 119
 DEFAULT CHARACTER SET = utf8

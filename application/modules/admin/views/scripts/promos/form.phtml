@@ -18,15 +18,41 @@
                     <?php echo $this->promo_form->description->renderViewHelper(); ?>
                     <?php echo $this->promo_form->description->renderErrors(); ?>
                 </dd>
+                <dt><?php echo $this->promo_form->public_description->renderLabel(); ?></dt>
+                <dd class="textarea">
+                    <?php echo $this->promo_form->public_description->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->public_description->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->promo_form->receipt_description->renderLabel(); ?></dt>
+                <dd class="textarea">
+                    <?php echo $this->promo_form->receipt_description->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->receipt_description->renderErrors(); ?>
+                </dd>
                 <dt><?php echo $this->promo_form->banner->renderLabel(); ?></dt>
                 <dd>
                     <?php echo $this->promo_form->banner->renderFile(); ?>
                     <?php echo $this->promo_form->banner->renderErrors(); ?>
-                    <?php echo ($this->banner ? '<img src="' . $this->banner . '">' : ''); ?>
+                    <?php if ($this->banner): ?>
+                        <div id="banner-image">
+                            <p><img src="<?php echo $this->escape($this->banner); ?>" width="100"></p>
+                            <a href="#" class="delete-banner">Remove</a>
+                        </div>
+                    <?php endif; ?>
+                </dd>
+                <dt><?php echo $this->promo_form->discount->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->promo_form->discount->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->discount->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->promo_form->extra_days->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->promo_form->extra_days->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->extra_days->renderErrors(); ?>
                 </dd>
             </dl>
         </fieldset>
         <p class="update clear">
+            <?php echo $this->promo_form->tmp_banner->renderViewHelper(); ?>
             <input type="submit" value="Submit" class="submit">
             <input type="submit" value="Cancel" name="cancel">
         </p>

@@ -88,5 +88,26 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
         }
         return array('paginator' => $paginator, 'data' => $promos);
     }
+
+    /**
+     * @param array $data
+     * @return int New shipping_zone id
+     * 
+     */
+    public function insert(array $data) {
+        $promo_model = new Model_Promo($data);
+        $promo = $promo_model->toArray();
+        return $this->_promos->insert($promo);
+    }
+
+    /**
+     * @param string $banner_filename
+     * @param int $id
+     * @return void
+     * 
+     */
+    public function updateBanner($banner_filename, $id) {
+        $this->_promos->updateBanner($banner_filename, $id);
+    }
 }
 

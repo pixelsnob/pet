@@ -16,7 +16,6 @@ class Model_DbTable_Promos extends Zend_Db_Table_Abstract {
         $sel = $this->select()->where('id = ?', $id);
         return $this->fetchRow($sel);
     }
-
     
     /**
      * @param string $code
@@ -29,5 +28,15 @@ class Model_DbTable_Promos extends Zend_Db_Table_Abstract {
         return $this->fetchRow($sel);
     }
 
+    /** 
+     * @param string $banner_filename
+     * @param int $id
+     * @return int Num rows updated
+     * 
+     */
+    public function updateBanner($banner_filename, $id) {
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        return parent::update(array('banner' => $banner_filename), $where);
+    }
 }
 
