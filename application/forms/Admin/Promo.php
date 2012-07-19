@@ -109,7 +109,7 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('file', 'banner', array(
             'label'        => 'Banner',
             'required'     => false,
-            'destination'  => '/private/tmp',
+            //'destination'  => '/private/tmp',
             'validators'   => array(
                 array('Count', false, 1),
                 array('Size', false, 10000000),
