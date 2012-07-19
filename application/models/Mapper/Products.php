@@ -12,6 +12,21 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     public function __construct() {
         $this->_products = new Model_DbTable_Products;
     }
+
+    /**
+     * @return array
+     * 
+     */
+    public function getAll() {
+        $products = $this->_products->fetchAll($this->_products->select());
+        if ($products) {
+            $out = array();
+            foreach ($products as $product) {
+                $out[] = $this->getById($product->id, false);
+            }
+            return $out;
+        }
+    }
     
     /**
      * @param int $id

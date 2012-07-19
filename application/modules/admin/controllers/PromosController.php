@@ -41,18 +41,30 @@ class Admin_PromosController extends Zend_Controller_Action {
             $this->_helper->Redirector->gotoSimple('index');
         }
         $db = Zend_Db_Table::getDefaultAdapter();
+        $products_mapper = new Model_Mapper_Products;
+        $promo_products_mapper = new Model_Mapper_PromoProducts;
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
         $promo = $this->_promos_mapper->getById($id);
         if (!$promo) {
             throw new Exception('Promo not found');
         }
+        $products = $products_mapper->getAll();
+        $promo_products = $promo_products_mapper->getByPromoId($id);
+        $ppids = array();
+        foreach ($promo_products as $pp) {
+            $ppids[] = $pp->product_id;
+        }
         $form = new Form_Admin_Promo(array(
             'promosMapper' => $this->_promos_mapper,
-            'promo'        => $promo
+            'promo'        => $promo,
+            'products'     => $products
         ));
         $delete_banner = $this->_request->getPost('delete_banner');;
+        //print_r($promo->toArray(true));
+        //print_r($promo_products);
         $form->populate($promo->toArray());
+        $form->products->setValue($ppids);
         if ($promo->banner && !$delete_banner) {
             $this->view->banner = '/images/uploads/promos/' . $promo->banner;
         }
@@ -73,6 +85,11 @@ class Admin_PromosController extends Zend_Controller_Action {
                         $this->_promos_mapper->updateBanner(null, $id);
                     }
                     $this->_promos_mapper->update($params, $id); 
+                    $product_ids = (array) $this->_request->getParam('products');
+                    if (!empty($product_ids)) {
+                        $promo_products_mapper->updateByPromoId(
+                            $product_ids, $id);
+                    }
                     $this->_helper->FlashMessenger->addMessage('Promo updated');
                     $db->commit();
                 } catch (Exception $e) {
@@ -115,15 +132,26 @@ class Admin_PromosController extends Zend_Controller_Action {
         }
         $db = Zend_Db_Table::getDefaultAdapter();
         $params = $this->_request->getParams();
+        $products_mapper = new Model_Mapper_Products;
+        $promo_products_mapper = new Model_Mapper_PromoProducts;
+        $products = $products_mapper->getAll();
         $form = new Form_Admin_Promo(array(
-            'promosMapper' => $this->_promos_mapper
+            'promosMapper' => $this->_promos_mapper,
+            'products'     => $products
         ));
         if ($this->_request->isPost()) {
             if ($form->isValid($params)) {
                 $db->query('set transaction isolation level serializable');
                 $db->beginTransaction();
                 try {
-                    $id = $this->_promos_mapper->insert($params); 
+                    // Insert
+                    $id  = $this->_promos_mapper->insert($params); 
+                    $product_ids = (array) $this->_request->getParam('products');
+                    if (!empty($product_ids)) {
+                        $promo_products_mapper->updateByPromoId(
+                            $product_ids, $id);
+                    }
+                    // File upload stuff
                     $tmp_banner = $form->tmp_banner->getValue();
                     $banner     = $form->banner->getValue();
                     $new_banner = $this->_copyBannerUpload($banner,
@@ -166,16 +194,6 @@ class Admin_PromosController extends Zend_Controller_Action {
         $this->_helper->ViewRenderer->render('form'); 
     }
     
-    public function tmpImageAction() {
-        $filename = $this->_request->getParam('filename');
-        $img = file_get_contents('/tmp/' . $filename);
-        $this->_response->setHeader('Content-Type', mime_content_type($filename));
-        $this->_response->setHeader('Content-Length', strlen($img));
-        $this->_response->setBody($img);
-        $this->_helper->ViewRenderer->setNoRender(true);
-        $this->_helper->Layout->disableLayout();
-    }
-
     public function deleteDialogAction() {
         /*$id = $this->_request->getParam('id');
         $zone = $this->_sz_mapper->getById($id, false);
@@ -200,8 +218,6 @@ class Admin_PromosController extends Zend_Controller_Action {
         if ($banner || $tmp_banner)  {
             $banner = ($tmp_banner ? $tmp_banner : $banner);
             $banner_path  = "/tmp/$banner";
-            //$banner_parts = explode('.', $banner_path);
-            //$ext = $banner_parts[count($banner_parts) - 1];
             $new_banner = "banner-$promo_id";
             $dest_path = "{$config['image_upload_dir']}/promos/{$new_banner}";
             if (!copy($banner_path, $dest_path)) {
@@ -209,7 +225,6 @@ class Admin_PromosController extends Zend_Controller_Action {
             }
             return $new_banner;
         }
-        return false;
     }
 }
 

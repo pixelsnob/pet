@@ -29,12 +29,12 @@
                     <?php echo $this->promo_form->receipt_description->renderErrors(); ?>
                 </dd>
                 <dt><?php echo $this->promo_form->banner->renderLabel(); ?></dt>
-                <dd>
+                <dd class="image">
                     <?php echo $this->promo_form->banner->renderFile(); ?>
                     <?php echo $this->promo_form->banner->renderErrors(); ?>
                     <?php if ($this->banner): ?>
                         <div id="banner-image">
-                            <p><img src="<?php echo $this->escape($this->banner); ?>" width="100"></p>
+                            <p><img src="<?php echo $this->escape($this->banner); ?>"></p>
                             <a href="#" class="delete-banner">Remove</a>
                         </div>
                     <?php endif; ?>
@@ -48,6 +48,11 @@
                 <dd>
                     <?php echo $this->promo_form->extra_days->renderViewHelper(); ?>
                     <?php echo $this->promo_form->extra_days->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->promo_form->products->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->promo_form->products->renderViewHelper(); ?>
+                    <?php echo $this->promo_form->products->renderErrors(); ?>
                 </dd>
             </dl>
         </fieldset>

@@ -59,8 +59,11 @@ Pet.AdminPromosView = Pet.AdminView.extend({
 
     deleteBanner: function(el) {
         $('#tmp_banner', this.el).val('');
-        $('#banner-image', this.el).remove();
+        $('#banner-image img', this.el).fadeTo(100, .2);
+        var msg = 'Image marked for deletion: save form to make change permanent';
+        $('#banner-image p').append($('<p>').text(msg).addClass('alert'));
         $('#delete_banner', this.el).val(1);
+        $('a.delete-banner').remove();
         return false;
     }
 

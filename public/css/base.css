@@ -24,7 +24,7 @@
     box-shadow: 0 0 7px 7px rgba(0,0,0,0.1);
 }*/
 
-.error, .errors {
+.error, .errors, .alert {
     color: red;
 }
 

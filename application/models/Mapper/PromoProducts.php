@@ -27,5 +27,23 @@ class Model_Mapper_PromoProducts extends Pet_Model_Mapper_Abstract {
         }
         return $out;
     }
+    
+    /**
+     * @param array $product_ids
+     * @param int $promo_id
+     * @return void
+     * 
+     */
+    public function updateByPromoId(array $product_ids, $promo_id) {
+        $where = $this->_promo_products->getAdapter()
+            ->quoteInto('promo_id = ?', $promo_id);
+        $this->_promo_products->delete($where);
+        foreach ($product_ids as $product_id) {
+            $this->_promo_products->insert(array(
+                'promo_id'   => $promo_id,
+                'product_id' => $product_id
+            ));
+        }
+    }
 }
 

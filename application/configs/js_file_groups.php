@@ -61,6 +61,7 @@ return array(
         'js/Pet/Views/AdminShippingZones.js'
     ),
     'admin-promos' => array(
+        'js/lib/chosen/chosen.jquery.min.js',
         'js/Pet/Views/AdminPromos.js'
     )
 );

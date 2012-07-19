@@ -19,6 +19,12 @@ class Form_Admin_Promo extends Pet_Form {
     protected $_promos_mapper;
 
     /**
+     * @var array
+     * 
+     */
+    protected $_products = array();
+
+    /**
      * @param Model_Promo $promo
      * @return void
      * 
@@ -37,13 +43,25 @@ class Form_Admin_Promo extends Pet_Form {
     }
 
     /**
+     * @param array $products
+     * @return void
+     * 
+     */
+    public function setProducts(array $products) {
+        $this->_products = $products;
+    }
+
+    /**
      * @return void
      * 
      */
     public function init() {
         parent::init();
-        // Elements common to all product types
         $this->setEnctype(Zend_Form::ENCTYPE_MULTIPART)->setName('promo_edit');
+        $product_opts = array();
+        foreach ($this->_products as $product) {
+            $product_opts[$product->product_id] = $product->name;
+        }
         $this->addElement('text', 'code', array(
             'label'        => 'Promo Code',
             'required'     => true,
@@ -59,15 +77,14 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('text', 'expiration', array(
             'label'        => 'Expiration',
             'required'     => true,
-            'class' => 'datepicker datepicker-min-today',
+            'class' => 'datepicker datepicker-no-max',
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Expiration is required'
                 )),
                 array('Date', true, array(
                     'messages' => 'Invalid date'
-                )),
-                array(new Pet_Validate_DateNotBeforeToday, true)
+                ))
             )
         ))->addElement('textarea', 'description', array(
             'label'        => 'Description',
@@ -109,10 +126,12 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('file', 'banner', array(
             'label'        => 'Banner',
             'required'     => false,
-            //'destination'  => '/private/tmp',
             'validators'   => array(
                 array('Count', false, 1),
-                array('Size', false, 204800),
+                array('Size', false, array(
+                    'max'     => 200000,
+                    'messages' => 'File size must be less than 200K'
+                )),
                 array('Extension', false, array(
                     'extensions' => 'jpg,gif,png',
                     'messages'   => 'Only .jpg, .gif, and .png are allowed'
@@ -125,6 +144,13 @@ class Form_Admin_Promo extends Pet_Form {
                 array('Digits', true, array(
                     'messages' => 'Extra days must be a whole, positive number'
                 ))
+            )
+        ))->addElement('multiselect', 'products', array(
+            'label'        => 'Applicable Products',
+            'class'        => 'multi',
+            'multiOptions' => $product_opts,
+            'required'     => false,
+            'validators'   => array(
             )
         ))->addElement('hidden', 'tmp_banner')
           ->addElement('hidden', 'delete_banner')

@@ -83,6 +83,12 @@ li {
     width: auto;
 }
 
+.form select.multi {
+    height: 250px;
+    width: 400px;
+    margin-top: 7px;
+}
+
 #content-wrap {
     width: 1140px;
 }
@@ -242,6 +248,10 @@ li {
 
 .form dd.textarea {
     padding-top: 5px;
+}
+
+.form dd.image {
+    width: 420px;
 }
 
 .form .radio-list ul {
