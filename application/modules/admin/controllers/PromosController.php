@@ -89,10 +89,16 @@ class Admin_PromosController extends Zend_Controller_Action {
                     $form->tmp_banner->setValue($banner);
                     $form->delete_banner->setValue('');
                     $this->view->banner = $this->view->url(array(
-                        'action' => 'tmp-image', 'filename' => $banner));
+                        'action'     => 'tmp-image',
+                        'controller' => 'index',
+                        'filename'   => $banner
+                    ));
                 } elseif ($tmp_banner) {
                     $this->view->banner = $this->view->url(array(
-                        'action' => 'tmp-image', 'filename' => $tmp_banner));
+                        'action'     => 'tmp-image',
+                        'controller' => 'index',
+                        'filename'   => $tmp_banner
+                    ));
                 }
             }
             $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
@@ -140,10 +146,16 @@ class Admin_PromosController extends Zend_Controller_Action {
                 if ($banner) {
                     $form->tmp_banner->setValue($banner);
                     $this->view->banner = $this->view->url(array(
-                        'action' => 'tmp-image', 'filename' => $banner));
+                        'action'     => 'tmp-image',
+                        'controller' => 'index',
+                        'filename'   => $banner
+                    ));
                 } elseif ($tmp_banner) {
                     $this->view->banner = $this->view->url(array(
-                        'action' => 'tmp-image', 'filename' => $tmp_banner));
+                        'action'     => 'tmp-image',
+                        'controller' => 'index',
+                        'filename'   => $tmp_banner
+                    ));
                 }
                 $this->_helper->FlashMessenger->addMessage(
                     'Please check your information');
@@ -188,9 +200,9 @@ class Admin_PromosController extends Zend_Controller_Action {
         if ($banner || $tmp_banner)  {
             $banner = ($tmp_banner ? $tmp_banner : $banner);
             $banner_path  = "/tmp/$banner";
-            $banner_parts = explode('.', $banner_path);
-            $ext = $banner_parts[count($banner_parts) - 1];
-            $new_banner = "banner-{$promo_id}.{$ext}";
+            //$banner_parts = explode('.', $banner_path);
+            //$ext = $banner_parts[count($banner_parts) - 1];
+            $new_banner = "banner-$promo_id";
             $dest_path = "{$config['image_upload_dir']}/promos/{$new_banner}";
             if (!copy($banner_path, $dest_path)) {
                 throw new Exception('File upload copy failed');

@@ -112,7 +112,7 @@ class Form_Admin_Promo extends Pet_Form {
             //'destination'  => '/private/tmp',
             'validators'   => array(
                 array('Count', false, 1),
-                array('Size', false, 10000000),
+                array('Size', false, 204800),
                 array('Extension', false, array(
                     'extensions' => 'jpg,gif,png',
                     'messages'   => 'Only .jpg, .gif, and .png are allowed'
