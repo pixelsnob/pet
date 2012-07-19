@@ -52,7 +52,7 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
      */
     public function getByCode($code, $expired_check = true) {
         $promo_products_mapper = new Model_Mapper_PromoProducts;
-        $promo = $this->_promos->getByCode($code);
+        $promo = $this->_promos->getByCode($code, $expired_check);
         if ($promo) {
             $promo = new Model_Promo($promo->toArray());
             $promo->promo_products = $promo_products_mapper->getByPromoId(
