@@ -41,5 +41,17 @@ class Model_DbTable_Promos extends Zend_Db_Table_Abstract {
         $where = $this->getAdapter()->quoteInto('id = ?', $id);
         return parent::update(array('banner' => $banner_filename), $where);
     }
+
+    /** 
+     * @param array $data
+     * @param int $id
+     * @return int Num rows updated
+     * 
+     */
+    public function update(array $data, $id) {
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        return parent::update($data, $where);
+    }
+
 }
 

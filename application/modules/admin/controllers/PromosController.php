@@ -40,6 +40,7 @@ class Admin_PromosController extends Zend_Controller_Action {
         if ($this->_request->getParam('cancel')) {
             $this->_helper->Redirector->gotoSimple('index');
         }
+        $db = Zend_Db_Table::getDefaultAdapter();
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
         $promo = $this->_promos_mapper->getById($id);
@@ -57,22 +58,36 @@ class Admin_PromosController extends Zend_Controller_Action {
         }
         if ($this->_request->isPost()) {
             if ($form->isValid($params)) {
-                /*try {
-                    $this->_sz_mapper->update($params, $id); 
-                    $this->_helper->FlashMessenger->addMessage('Shipping zone updated');
+                $db->query('set transaction isolation level serializable');
+                $db->beginTransaction();
+                try {
+                    $tmp_banner = $form->tmp_banner->getValue();
+                    $banner     = $form->banner->getValue();
+                    $new_banner = $this->_copyBannerUpload($banner,
+                        $tmp_banner, $id);
+                    if ($new_banner) {
+                        $params['banner'] = $new_banner;
+                        $this->view->banner = '/images/uploads/promos/' .
+                            $new_banner;
+                    } else {
+                        $params['banner'] = null;
+                    }
+                    $this->_promos_mapper->update($params, $id); 
+                    $this->_helper->FlashMessenger->addMessage('Promo updated');
+                    $db->commit();
                 } catch (Exception $e) {
-                    print_r($e); exit;
+                    $db->rollBack();
                     $msg = 'There was an error updating the database';
                     $this->_helper->FlashMessenger->addMessage($msg);
-                }*/
+                }
             } else {
-                $this->_helper->FlashMessenger->addMessage('Please check your information');
-            }
-            if (!$delete_banner) {
+                $this->_helper->FlashMessenger->addMessage(
+                    'Please check your information');
                 $tmp_banner = $form->tmp_banner->getValue();
                 $banner     = $form->banner->getValue();
                 if ($banner) {
                     $form->tmp_banner->setValue($banner);
+                    $form->delete_banner->setValue('');
                     $this->view->banner = $this->view->url(array(
                         'action' => 'tmp-image', 'filename' => $banner));
                 } elseif ($tmp_banner) {
@@ -80,14 +95,8 @@ class Admin_PromosController extends Zend_Controller_Action {
                         'action' => 'tmp-image', 'filename' => $tmp_banner));
                 }
             }
-            $this->_helper->FlashMessenger->addMessage(
-                'Please check your information');
-        }
-        /*if ($this->_request->isPost()) {
             $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
-        } else {
-            $this->view->messages = $this->_helper->FlashMessenger->getMessages();
-        }*/
+        }
         $this->view->promo_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }

@@ -110,5 +110,27 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
     public function updateBanner($banner_filename, $id) {
         $this->_promos->updateBanner($banner_filename, $id);
     }
+
+    /**
+     * @param array $data
+     * @param int $id
+     * @return void
+     * 
+     */
+    public function update(array $data, $id) {
+        $promo_model = new Model_Promo($data);
+        $promo = $promo_model->toArray();
+        $this->_promos->update($promo, $id);
+    }
+
+    /**
+     * @param int $id
+     * @return void
+     * 
+     */
+    public function delete($id) {
+        $where = $this->_shipping_zones->getAdapter()->quoteInto('id = ?', $id);
+        $this->_shipping_zones->delete($where);
+    }
 }
 
