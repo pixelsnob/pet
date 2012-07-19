@@ -134,9 +134,8 @@ class Form_Admin_Promo extends Pet_Form {
         $uid = md5(uniqid(mt_rand(), true));
         $filename = $adapter->getFileName();
         if ($filename) {
-            $filename = basename($filename);
             $rename_filter = new Zend_Filter_File_Rename(array(
-                'target'    => "/tmp/{$uid}{$filename}",
+                'target'    => "/tmp/{$uid}",
                 'overwrite' => false
             ));
             $adapter->addFilter($rename_filter);
