@@ -4,12 +4,28 @@
  * 
  */
 class Form_Admin_Promo extends Pet_Form {
+
+    /** 
+     * @var Model_Promo
+     * 
+     */
+    protected $_promo;
+
     
     /** 
      * @var Model_Mapper_Promos
      * 
      */
     protected $_promos_mapper;
+
+    /**
+     * @param Model_Promo $promo
+     * @return void
+     * 
+     */
+    public function setPromo(Model_Promo $promo) {
+        $this->_promo = $promo;
+    }
 
     /**
      * @param Model_Mapper_Promos $mapper
@@ -111,6 +127,7 @@ class Form_Admin_Promo extends Pet_Form {
                 ))
             )
         ))->addElement('hidden', 'tmp_banner')
+          ->addElement('hidden', 'delete_banner')
           ->setElementFilters(array('StringTrim'));
         // Banner upload
         $adapter = $this->banner->getTransferAdapter();
@@ -133,6 +150,10 @@ class Form_Admin_Promo extends Pet_Form {
      */
     public function promoExists($value) {
         $promo = $this->_promos_mapper->getByCode($value, false);
-        return !$promo;
+        if (!$promo || ($promo && $this->_promo && $promo->id ==
+                $this->_promo->id)) {
+            return true;
+        }
+        return false;
     }
 }

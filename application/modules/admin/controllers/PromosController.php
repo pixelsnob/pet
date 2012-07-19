@@ -23,9 +23,7 @@ class Admin_PromosController extends Zend_Controller_Action {
     
     public function indexAction() {
         $request = $this->_request;
-        //$params = $this->_admin_svc->initSearchParams($request);
         $params = $request->getParams();
-        //print_r($params); exit;
         $this->view->promos = $this->_promos_mapper->getAll();
         $search_form = new Form_Admin_PromosSearch;
         if (!$search_form->isValid($params)) {
@@ -49,30 +47,47 @@ class Admin_PromosController extends Zend_Controller_Action {
             throw new Exception('Promo not found');
         }
         $form = new Form_Admin_Promo(array(
-            'promosMapper' => $this->_promos_mapper
+            'promosMapper' => $this->_promos_mapper,
+            'promo'        => $promo
         ));
+        $delete_banner = $this->_request->getPost('delete_banner');;
         $form->populate($promo->toArray());
-        if ($promo->banner) {
-            $this->view->banner = $this->view->url(array(
-                'action' => 'tmp-image', 'filename' => $promo->banner));
-        }
-        if ($this->_request->isPost() && $form->isValid($params)) {
-            /*try {
-                $this->_sz_mapper->update($params, $id); 
-                $this->_helper->FlashMessenger->addMessage('Shipping zone updated');
-            } catch (Exception $e) {
-                print_r($e); exit;
-                $msg = 'There was an error updating the database';
-                $this->_helper->FlashMessenger->addMessage($msg);
-            }*/
-        } elseif ($this->_request->isPost()) {
-            $this->_helper->FlashMessenger->addMessage('Please check your information');
+        if ($promo->banner && !$delete_banner) {
+            $this->view->banner = '/images/uploads/promos/' . $promo->banner;
         }
         if ($this->_request->isPost()) {
+            if ($form->isValid($params)) {
+                /*try {
+                    $this->_sz_mapper->update($params, $id); 
+                    $this->_helper->FlashMessenger->addMessage('Shipping zone updated');
+                } catch (Exception $e) {
+                    print_r($e); exit;
+                    $msg = 'There was an error updating the database';
+                    $this->_helper->FlashMessenger->addMessage($msg);
+                }*/
+            } else {
+                $this->_helper->FlashMessenger->addMessage('Please check your information');
+            }
+            if (!$delete_banner) {
+                $tmp_banner = $form->tmp_banner->getValue();
+                $banner     = $form->banner->getValue();
+                if ($banner) {
+                    $form->tmp_banner->setValue($banner);
+                    $this->view->banner = $this->view->url(array(
+                        'action' => 'tmp-image', 'filename' => $banner));
+                } elseif ($tmp_banner) {
+                    $this->view->banner = $this->view->url(array(
+                        'action' => 'tmp-image', 'filename' => $tmp_banner));
+                }
+            }
+            $this->_helper->FlashMessenger->addMessage(
+                'Please check your information');
+        }
+        /*if ($this->_request->isPost()) {
             $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         } else {
             $this->view->messages = $this->_helper->FlashMessenger->getMessages();
-        }
+        }*/
         $this->view->promo_form = $form;
         $this->_helper->ViewRenderer->render('form'); 
     }
@@ -81,34 +96,30 @@ class Admin_PromosController extends Zend_Controller_Action {
         if ($this->_request->getParam('cancel')) {
             $this->_helper->Redirector->gotoSimple('index');
         }
+        $db = Zend_Db_Table::getDefaultAdapter();
         $params = $this->_request->getParams();
         $form = new Form_Admin_Promo(array(
             'promosMapper' => $this->_promos_mapper
         ));
-        $config = Zend_Registry::get('app_config');
         if ($this->_request->isPost()) {
             if ($form->isValid($params)) {
+                $db->query('set transaction isolation level serializable');
+                $db->beginTransaction();
                 try {
                     $id = $this->_promos_mapper->insert($params); 
                     $tmp_banner = $form->tmp_banner->getValue();
                     $banner     = $form->banner->getValue();
-                    if ($banner || $tmp_banner)  {
-                        $banner = ($tmp_banner ? $tmp_banner : $banner);
-                        $banner_path  = "/tmp/$banner";
-                        $banner_parts = explode('.', $banner_path);
-                        $ext = $banner_parts[count($banner_parts) - 1];
-                        $new_banner = "banner-{$id}.{$ext}";
-                        $dest_path = "{$config['image_upload_dir']}/promos/{$new_banner}";
-                        if (copy($banner_path, $dest_path)) {
-                            $this->_promos_mapper->updateBanner($new_banner, $id);
-                        } else {
-                            throw new Exception('File upload copy failed');
-                        }
+                    $new_banner = $this->_copyBannerUpload($banner,
+                        $tmp_banner, $id);
+                    if ($new_banner) {
+                        $this->_promos_mapper->updateBanner($new_banner, $id);
                     }
+                    $db->commit();
                     $this->_helper->FlashMessenger->addMessage('Promo added');
                     $this->_helper->Redirector->gotoSimple('edit', 'promos', 'admin',
                         array('id' => $id));
                 } catch (Exception $e) {
+                    $db->rollBack();
                     $msg = $e->getMessage();
                     $this->_helper->FlashMessenger->addMessage($msg);
                 }
@@ -161,5 +172,21 @@ class Admin_PromosController extends Zend_Controller_Action {
         }*/
     }
 
+    private function _copyBannerUpload($banner, $tmp_banner, $promo_id) {
+        $config = Zend_Registry::get('app_config');
+        if ($banner || $tmp_banner)  {
+            $banner = ($tmp_banner ? $tmp_banner : $banner);
+            $banner_path  = "/tmp/$banner";
+            $banner_parts = explode('.', $banner_path);
+            $ext = $banner_parts[count($banner_parts) - 1];
+            $new_banner = "banner-{$promo_id}.{$ext}";
+            $dest_path = "{$config['image_upload_dir']}/promos/{$new_banner}";
+            if (!copy($banner_path, $dest_path)) {
+                throw new Exception('File upload copy failed');
+            }
+            return $new_banner;
+        }
+        return false;
+    }
 }
 

@@ -60,6 +60,7 @@ Pet.AdminPromosView = Pet.AdminView.extend({
     deleteBanner: function(el) {
         $('#tmp_banner', this.el).val('');
         $('#banner-image', this.el).remove();
+        $('#delete_banner', this.el).val(1);
         return false;
     }
 
