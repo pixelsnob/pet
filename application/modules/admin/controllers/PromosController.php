@@ -68,7 +68,6 @@ class Admin_PromosController extends Zend_Controller_Action {
         }
         if ($this->_request->isPost()) {
             if ($form->isValid($params)) {
-                $db->query('set transaction isolation level serializable');
                 $db->beginTransaction();
                 try {
                     $tmp_banner = $form->tmp_banner->getValue();
@@ -139,7 +138,6 @@ class Admin_PromosController extends Zend_Controller_Action {
         ));
         if ($this->_request->isPost()) {
             if ($form->isValid($params)) {
-                $db->query('set transaction isolation level serializable');
                 $db->beginTransaction();
                 try {
                     // Insert
@@ -193,22 +191,22 @@ class Admin_PromosController extends Zend_Controller_Action {
     }
     
     public function deleteDialogAction() {
-        /*$id = $this->_request->getParam('id');
-        $zone = $this->_sz_mapper->getById($id, false);
-        if (!$zone) {
+        $id = $this->_request->getParam('id');
+        $promo = $this->_promos_mapper->getById($id, false);
+        if (!$promo) {
             throw new Exception('Shipping zone not found');
         }
-        $this->view->shipping_zone = $zone;*/
+        $this->view->promo = $promo;
     }
 
     public function deleteAction() {
-        /*$id = $this->_request->getParam('id'); 
+        $id = $this->_request->getParam('id'); 
         try {
-            $this->_sz_mapper->delete($id);
+            $this->_promos_mapper->delete($id);
             $this->view->status = true;
         } catch (Exception $e) {
             $this->view->status = false;
-        }*/
+        }
     }
 
     private function _copyBannerUpload($banner, $tmp_banner, $promo_id) {

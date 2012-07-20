@@ -130,8 +130,8 @@ class Model_Mapper_Promos extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function delete($id) {
-        $where = $this->_shipping_zones->getAdapter()->quoteInto('id = ?', $id);
-        $this->_shipping_zones->delete($where);
+        $where = $this->_promos->getAdapter()->quoteInto('id = ?', $id);
+        $this->_promos->delete($where);
     }
 }
 

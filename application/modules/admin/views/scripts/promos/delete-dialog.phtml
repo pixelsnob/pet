@@ -1,0 +1,9 @@
+
+<form name="delete-promo-dialog" id="delete-promo-dialog" method="post" action="">
+    <h2><strong>Are you sure you want to delete promo <?php echo $this->escape($this->promo->code); ?>?</strong></h2>
+    <p>
+        <input type="hidden" name="id" value="<?php echo $this->escape($this->promo->id); ?>">
+        <input type="submit" id="submit" value="Submit">
+        <input type="submit" id="cancel" value="Cancel">
+    </p>
+</form>

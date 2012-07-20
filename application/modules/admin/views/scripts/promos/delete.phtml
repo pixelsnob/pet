@@ -1,0 +1,11 @@
+
+<form name="delete-promo" id="delete-promo" method="post" action="">
+    <?php if ($this->status): ?>
+        <h2>Promo deleted</h2>
+    <?php else: ?>
+        <h2>Error</h2>
+        <p class="error">An error has occurred. Maybe this promo is already in use by other tables?</p>
+    <?php endif; ?>
+    <input type="submit" value="Close" id="close">
+    <input type="hidden" value="<?php echo (int) $this->status; ?>" name="status">
+</form>
