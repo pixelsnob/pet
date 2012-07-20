@@ -44,5 +44,15 @@ class Model_Mapper_PromoProducts extends Pet_Model_Mapper_Abstract {
         }
     }
 
+    /**
+     * @param int $promo_id
+     * @return void
+     * 
+     */
+    public function deleteByPromoId($promo_id) {
+        $where = $this->_promo_products->getAdapter()
+            ->quoteInto('promo_id = ?', $promo_id);
+        $this->_promo_products->delete($where);
+    }
 }
 
