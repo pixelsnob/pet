@@ -95,6 +95,7 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $sz_mapper = new Model_Mapper_ShippingZones;
         $product = $products_mapper->getById($product_id);
         if ($product) {
+            $shipping_zone = null;
             if ($product->product_type_id == Model_ProductType::PHYSICAL) {
                 $shipping_zone = $sz_mapper->getById($product->shipping_zone_id);
                 if (!$shipping_zone) {

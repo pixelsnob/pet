@@ -12,9 +12,9 @@ class Pet_View_Helper_Version extends Zend_View_Helper_Abstract {
      * 
      */
     public function version() {
-        $file = APPLICATION_PATH . '/../public/version';
+        $file = PUBLIC_PATH . '/version';
         if (is_readable($file)) {
-            $version = file_get_contents(APPLICATION_PATH . '/../public/version');
+            $version = file_get_contents(PUBLIC_PATH . '/version');
             return trim($version);
         }
     }

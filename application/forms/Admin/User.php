@@ -74,6 +74,9 @@ class Form_Admin_User extends Pet_Form {
         ));
         $this->addSubform($user_form, 'user');
         $this->user->username->setRequired(false);
+        if ($this->_mode == 'edit') {
+            $this->user->username->setAttrib('class', 'no-focus');
+        }
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $countries,
             'states'    => $states

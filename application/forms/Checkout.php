@@ -123,7 +123,8 @@ class Form_Checkout extends Pet_Form {
         if ($totals['total']) {
             $this->addSubform(new Form_SubForm_Payment, 'payment');
         }
-        if (!$this->_cart->products->hasDigitalSubscription() || $this->_identity) {
+        if ((!$this->_cart->products->hasDigitalSubscription() &&
+                !$this->_cart->products->hasSubscription()) || $this->_identity) {
             $this->user->removeElement('password');
             $this->user->removeElement('confirm_password');
             $this->user->removeElement('username');

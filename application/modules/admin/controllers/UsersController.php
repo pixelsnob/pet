@@ -144,7 +144,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             'mapper'  => $this->_users_mapper,
             'mode'    => 'add'
         ));
-        $form->submit->setLabel('Add'); // <<<<<<<<<<<
+        $form->submit->setLabel('Add');
         $this->view->show_pw_fields = true;
         if ($this->_request->isPost() && $form->isValid($params)) {
             $db->query('set transaction isolation level serializable');
@@ -170,32 +170,4 @@ class Admin_UsersController extends Zend_Controller_Action {
         $this->view->user_form = $form; 
         $this->_helper->ViewRenderer->render('form');
     }
-
-    /*public function changePasswordAction() {
-        $params = $this->_request->getParams();
-        $users_mapper = new Model_Mapper_Users;
-        $id = $this->_request->getParam('id');
-        if (!$id) {
-            throw new Exception('User id not supplied');
-        }
-        $user = $this->_users_svc->getUser($id);
-        if (!$user) {
-            throw new Exception('User not found');
-        }
-        if ($this->_request->getParam('cancel')) {
-            $this->_helper->Redirector->gotoSimple('edit', 'users', 'admin',
-                array('id' => $id));
-        }
-        $this->view->user = $user;
-        $pw_form = new Form_Admin_ChangePassword; 
-        if ($this->_request->isPost() && $pw_form->isValid($params)) {
-            $hash = $this->_users_svc->generateHash(
-                $pw_form->new_password->getValue());
-            $users_mapper->updatePassword($hash, $id);
-            $this->_helper->FlashMessenger->addMessage('Password changed');
-            $this->_helper->Redirector->gotoSimple('edit', 'users', 'admin',
-                array('id' => $id));
-        }
-        $this->view->pw_form = $pw_form;
-    }*/
 }

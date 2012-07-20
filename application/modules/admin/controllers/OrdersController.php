@@ -108,6 +108,9 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     $order->total = $form->payment->amount->getValue();
                     $order->discount = 0;
                 }
+                if ($order->payment_method == 'bypass') {
+                    $order->total = 0;
+                }
                 // Process payment
                 if ($order->total > 0 && $order->payment_method == 'credit_card') {
                     $gateway->processSale($order);
@@ -125,7 +128,11 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 // Save order products
                 foreach ($cart->products as $product) {
                     // Insert into order_products
-                    $opid = $op_mapper->insert($product->toArray(), $order->order_id); 
+                    $product_array = $product->toArray();
+                    if ($order->payment_method == 'bypass') {
+                        $product_array['cost'] = 0;
+                    }
+                    $opid = $op_mapper->insert($product_array, $order->order_id); 
                     if ($product->isSubscription() || $product->isDigital()) {
                         $term = (int) $product->term_months;
                         // If expiration is null here, DateTime defaults to today
