@@ -84,9 +84,11 @@ li {
 }
 
 .form select.multi {
-    height: 250px;
+    height: 350px;
     width: 400px;
     margin-top: 7px;
+    border: 1px solid #ddd;
+    padding: 3px;
 }
 
 #content-wrap {

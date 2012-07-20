@@ -29,6 +29,45 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     }
     
     /**
+     * @return array|null
+     * 
+     */
+    public function getNamesGroupedByProductType() {
+        $product_types = $this->getProductTypes();
+        if ($product_types) {
+            $out = array();
+            foreach ($product_types as $product_type) {
+                $ptid = $product_type->id;
+                $products = $this->getByProductType($ptid);
+                $products_array = array();
+                foreach ($products as $product) {
+                    $products_array[$product->product_id] = $product->name;
+                }
+                asort($products_array);
+                $out[$product_type->plural_name] = $products_array;
+            }
+            return $out;
+        }
+    }
+    
+    /**
+     * @return array|null
+     * 
+     */
+    public function getByProductType($product_type) {
+        $products = $this->_products->getByProductType($product_type);
+        if ($products) {
+            $out = array();
+            foreach ($products as $product) {
+                $product_model = new Model_Product($product->toArray());
+                $out[] = $this->getItem($product_model, false);
+                
+            }
+            return $out;
+        }
+    }
+
+    /**
      * @param int $id
      * @param bool $is_active_check Whether to check if the product is active
      * @return Model_Product_Abstract
@@ -234,7 +273,7 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
      */
     public function getProductTypes() {
         $pt = new Model_DbTable_ProductTypes;
-        $product_types = $pt->fetchAll($pt->select());
+        $product_types = $pt->fetchAll($pt->select()->order('name'));
         $out = array();
         if ($product_types) {
             foreach ($product_types as $product_type) {

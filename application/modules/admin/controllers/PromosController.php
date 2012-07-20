@@ -49,7 +49,7 @@ class Admin_PromosController extends Zend_Controller_Action {
         if (!$promo) {
             throw new Exception('Promo not found');
         }
-        $products = $products_mapper->getAll();
+        $products = $products_mapper->getNamesGroupedByProductType();
         $promo_products = $promo_products_mapper->getByPromoId($id);
         $ppids = array();
         foreach ($promo_products as $pp) {
@@ -61,8 +61,6 @@ class Admin_PromosController extends Zend_Controller_Action {
             'products'     => $products
         ));
         $delete_banner = $this->_request->getPost('delete_banner');;
-        //print_r($promo->toArray(true));
-        //print_r($promo_products);
         $form->populate($promo->toArray());
         $form->products->setValue($ppids);
         if ($promo->banner && !$delete_banner) {
@@ -134,7 +132,7 @@ class Admin_PromosController extends Zend_Controller_Action {
         $params = $this->_request->getParams();
         $products_mapper = new Model_Mapper_Products;
         $promo_products_mapper = new Model_Mapper_PromoProducts;
-        $products = $products_mapper->getAll();
+        $products = $products_mapper->getNamesGroupedByProductType();
         $form = new Form_Admin_Promo(array(
             'promosMapper' => $this->_promos_mapper,
             'products'     => $products

@@ -58,10 +58,6 @@ class Form_Admin_Promo extends Pet_Form {
     public function init() {
         parent::init();
         $this->setEnctype(Zend_Form::ENCTYPE_MULTIPART)->setName('promo_edit');
-        $product_opts = array();
-        foreach ($this->_products as $product) {
-            $product_opts[$product->product_id] = $product->name;
-        }
         $this->addElement('text', 'code', array(
             'label'        => 'Promo Code',
             'required'     => true,
@@ -148,7 +144,7 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('multiselect', 'products', array(
             'label'        => 'Applicable Products',
             'class'        => 'multi',
-            'multiOptions' => $product_opts,
+            'multiOptions' => $this->_products,
             'required'     => false,
             'validators'   => array(
             )

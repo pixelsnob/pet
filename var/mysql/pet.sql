@@ -32,6 +32,7 @@ CREATE  TABLE IF NOT EXISTS `pet`.`product_types` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(255) NOT NULL ,
   `type` VARCHAR(50) NOT NULL ,
+  `plural_name` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `id` (`id` ASC) )
 ENGINE = InnoDB

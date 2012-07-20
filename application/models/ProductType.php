@@ -14,7 +14,8 @@ class Model_ProductType extends Pet_Model_Abstract {
     public $_data = array(
         'id' => null,
         'name' => null,
-        'type' => null
+        'type' => null,
+        'plural_name' => null
     );
 
 }

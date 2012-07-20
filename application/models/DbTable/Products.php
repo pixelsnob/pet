@@ -29,6 +29,16 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     }
 
     /**
+     * @param int $product_type_id
+     * @return Zend_Db_Table_Rowset object 
+     * 
+     */
+    public function getByProductType($product_type_id) {
+        $sel = $this->select()->where('product_type_id = ?', $product_type_id);
+        return $this->fetchAll($sel);
+    }
+
+    /**
      * @param int $product_id
      * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 

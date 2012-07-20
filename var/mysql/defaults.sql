@@ -10,9 +10,9 @@
  
 use pet;
 
-insert into pet.product_types values (1, 'Download', 'download'), (2, 'Physical', 'physical'),
-(3, 'Course', 'course'), (4, 'Subscription', 'subscription'),
-(5, 'Digital Subscription', 'digital_subscription');
+insert into pet.product_types values (1, 'Download', 'download', 'Downloads'), (2, 'Physical', 'physical', 'Physical Products'),
+(3, 'Course', 'course', 'Courses'), (4, 'Subscription', 'subscription', 'Subscriptions'),
+(5, 'Digital Subscription', 'digital_subscription', 'Digital Subscriptions');
 
 /* Digital products */
 

@@ -76,7 +76,7 @@ class Form_Checkout extends Pet_Form {
     }
 
     /**
-     * @param array $countries
+     * @param array $states
      * @return void
      */
     public function setStates(array $states) {
