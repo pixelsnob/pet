@@ -702,6 +702,11 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_giftable` INT, `name` INT, `product_type` INT);
 
 -- -----------------------------------------------------
+-- Placeholder table for view `pet`.`view_user_expirations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pet`.`view_user_expirations` (`user_id` INT, `regular_exp` INT, `digital_exp` INT, `prev_exp` INT);
+
+-- -----------------------------------------------------
 -- View `pet`.`view_products`
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS `pet`.`view_products` ;
@@ -729,6 +734,53 @@ left join physical_products pp
 on p.id = pp.product_id
 left join courses c
 on p.id = c.product_id;
+
+-- -----------------------------------------------------
+-- View `pet`.`view_user_expirations`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `pet`.`view_user_expirations` ;
+DROP TABLE IF EXISTS `pet`.`view_user_expirations`;
+USE `pet`;
+CREATE  OR REPLACE VIEW `pet`.`view_user_expirations` AS
+
+select ops_reg.user_id,
+ops_reg.expiration as regular_exp,
+if (
+    ops_reg.expiration < ops_dig.expiration,
+    ops_dig.expiration,
+    ops_reg.expiration
+) as digital_exp,
+ops_prev.expiration as prev_exp
+from order_product_subscriptions ops_reg
+left join order_product_subscriptions ops_dig
+on (
+    ops_reg.user_id = ops_dig.user_id
+    and ops_dig.expiration = (
+        select max(expiration)
+        from order_product_subscriptions
+        where user_id = ops_reg.user_id
+        and digital_only = 1
+    ) 
+)
+left join order_product_subscriptions ops_prev
+on (
+    ops_reg.user_id = ops_prev.user_id
+    and ops_prev.expiration = (
+        select expiration 
+        from order_product_subscriptions
+        where user_id = ops_reg.user_id
+        and digital_only = 0
+        order by expiration desc
+        limit 1, 1
+    )
+)
+where ops_reg.expiration = (
+    select max(expiration)
+    from order_product_subscriptions
+    where user_id = ops_reg.user_id
+    and digital_only = 0
+)
+group by ops_reg.user_id;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
