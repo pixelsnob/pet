@@ -99,7 +99,6 @@
         <?php echo $this->objectToAdminList(array(
             'code',
             'expiration'  => array('format' => 'date')
-            //'description'
         ), $this->order->promo); ?>
         <?php else: ?>
             <p class="no-data">No promotion</p>
@@ -110,7 +109,8 @@
         <h3>Subscription Expirations</h3>
         <?php echo $this->objectToAdminList(array(
             'regular' => array('title' => 'Regular Expiration'),
-            'digital' => array('title' => 'Digital Expiration')
+            'digital' => array('title' => 'Digital Expiration'),
+            'previous' => array('title' => 'Previous Expiration')
         ), $this->order->expirations); ?>
     </section>
 
