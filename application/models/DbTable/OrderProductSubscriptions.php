@@ -38,6 +38,51 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
     }
     
     /**
+     * @param int $user_id
+     * @return Zend_DbTable_Row
+     * 
+     */
+    public function getExpirationsByUserId($user_id) {
+        $reg_subquery = <<<END
+select max(expiration)
+from order_product_subscriptions
+where user_id = ops_reg.user_id
+and digital_only = 0
+END;
+        $dig_subquery = <<<END
+select max(expiration)
+from order_product_subscriptions
+where user_id = ops_reg.user_id
+and digital_only = 1
+END;
+        $prev_subquery = <<<END
+select expiration 
+from order_product_subscriptions
+where user_id = ops_reg.user_id
+and digital_only = 0
+order by expiration desc
+limit 1, 1
+END;
+        $sel = $this->select()->setIntegrityCheck(false)
+            ->from(array('ops_reg' => 'order_product_subscriptions'), array(
+                'ops_reg.user_id',
+                'ops_reg.expiration as regular',
+                'if (ops_reg.expiration < ops_dig.expiration, '.
+                    'ops_dig.expiration, ops_reg.expiration) as digital',
+                'ops_prev.expiration as previous'
+            ))
+            ->joinLeft(array('ops_dig' => 'order_product_subscriptions'),
+                "ops_reg.user_id = ops_dig.user_id and ops_dig.expiration = " .
+                "($dig_subquery)", null)
+            ->joinLeft(array('ops_prev' => 'order_product_subscriptions'),
+                "ops_reg.user_id = ops_prev.user_id and ops_prev.expiration = " .
+                "($prev_subquery)", null)
+            ->where("ops_reg.expiration = ($reg_subquery)")
+            ->where('ops_reg.user_id = ?', $user_id);
+        return $this->fetchRow($sel);
+    }
+
+    /**
      * @param string $date
      * @return Zend_DbTable_Rowset
      * 

@@ -70,6 +70,18 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
         }
         return $subs_array;
     }
+    
+    /**
+     * @param int $user_id
+     * @return Model_UserExpirations
+     * 
+     */
+    public function getExpirationsByUserId($user_id) {
+        $expirations = $this->_ops->getExpirationsByUserId($user_id);
+        if ($expirations) {
+            return new Model_UserExpirations($expirations->toArray());
+        }
+    }
 
     /**
      * @param string $region "usa", "intl" or null for all regions
