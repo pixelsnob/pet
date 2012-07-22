@@ -164,7 +164,6 @@ END;
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops' => 'order_product_subscriptions'), array(
                 'date_format(ops.expiration, "%m/%d/%Y") as expiration',
-                //'ops.expiration',
                 'u.email',
                 'up.shipping_first_name',
                 'up.shipping_last_name',
@@ -181,7 +180,6 @@ END;
             ->joinleft(array('u' => 'users'), 'ops.user_id = u.id', null)
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where("ops.expiration = ($subquery)")
-            //->having("expiration between $start_date and $end_date")
             ->where("ops.expiration between $start_date and $end_date")
             ->order('ops.expiration')
             ->group('ops.user_id');
