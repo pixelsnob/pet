@@ -44,7 +44,6 @@ class Service_Users extends Pet_Service {
      * 
      */
     public function logout() {
-        $this->logUserAction('User logged out');
         Zend_Auth::getInstance()->clearIdentity();
         Zend_Session::regenerateId();
     }
@@ -65,7 +64,6 @@ class Service_Users extends Pet_Service {
             $timeout = ($is_superuser ? $config['admin_session_timeout'] :
                 $config['user_session_timeout']);
             if ($ts && (time() - $ts > $timeout)) {
-                $this->logUserAction('User timed out');
                 Zend_Auth::getInstance()->clearIdentity();
                 return false;
             }
@@ -258,7 +256,6 @@ class Service_Users extends Pet_Service {
         $db->beginTransaction();
         $this->_users->updatePersonal($data, $user_id);
         $this->_user_profiles->updateByUserId($data, $user_id);
-        $this->logUserAction('Profile updated', $user_id);
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
         $auth_storage->write($this->getUser());
@@ -292,7 +289,6 @@ class Service_Users extends Pet_Service {
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
         $this->_users->updatePassword($enc_pw, $user_id);
-        $this->logUserAction('Password updated', $user_id);
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
         $auth_storage->write($this->getUser());
@@ -305,7 +301,7 @@ class Service_Users extends Pet_Service {
      * @param null|int $user_id
      * 
      */ 
-    public function logUserAction($action, $user_id = null) {
+    /*public function logUserAction($action, $user_id = null) {
         if (!$user_id) {
             $user_id = $this->getId();
         }
@@ -316,7 +312,7 @@ class Service_Users extends Pet_Service {
         try {
             $user_actions->insert($action, $ip, $user_id);
         } catch (Exception $e) {}
-    }
+    }*/
 
 
     /**
@@ -363,7 +359,6 @@ class Service_Users extends Pet_Service {
             ->setSubject('Photoshop Elements User Password Reset');
         $mail->send();
         $log_msg = "Password reset email sent to {$user->email}, token $token";
-        $this->logUserAction($log_msg, $user->id);
         $db->commit();
     }
     
@@ -381,7 +376,6 @@ class Service_Users extends Pet_Service {
         $db->beginTransaction();
         $this->_users->updatePassword($enc_pw, $token->user_id);
         $pw_tokens->deleteByUserId($token->user_id); 
-        $this->logUserAction('Password reset', $token->user_id);
         $db->commit();
     }
 

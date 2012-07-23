@@ -697,51 +697,50 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `pet`.`user_actions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pet`.`user_actions` ;
+
+CREATE  TABLE IF NOT EXISTS `pet`.`user_actions` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `user_id` INT NOT NULL ,
+  `admin_user_id` INT NOT NULL ,
+  `date_created` DATETIME NOT NULL ,
+  `action` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `user_actions_fk_2` (`user_id` ASC) ,
+  INDEX `user_actions_fk_3` (`admin_user_id` ASC) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  INDEX `date_created` (`date_created` ASC) ,
+  CONSTRAINT `user_log_fk_2`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `pet`.`users` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `user_log_fk_3`
+    FOREIGN KEY (`admin_user_id` )
+    REFERENCES `pet`.`users` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Placeholder table for view `pet`.`view_products`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_giftable` INT, `name` INT, `product_type` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `pet`.`view_user_expirations`
+-- procedure sp_user_expirations
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pet`.`view_user_expirations` (`user_id` INT, `regular_exp` INT, `digital_exp` INT, `prev_exp` INT);
 
--- -----------------------------------------------------
--- View `pet`.`view_products`
--- -----------------------------------------------------
-DROP VIEW IF EXISTS `pet`.`view_products` ;
-DROP TABLE IF EXISTS `pet`.`view_products`;
 USE `pet`;
-CREATE  OR REPLACE VIEW `pet`.`view_products` AS
-select p.*,
-(case p.product_type_id
-    when 1 then d.name
-    when 2 then pp.name
-    when 3 then c.name
-    when 4 then s.name
-    when 5 then ds.name end) as name,
-pt.name as product_type
-from products p
-left join product_types pt
-on p.product_type_id = pt.id
-left join downloads d
-on p.id = d.product_id
-left join digital_subscriptions ds
-on p.id = ds.product_id
-left join subscriptions s
-on p.id = s.product_id
-left join physical_products pp
-on p.id = pp.product_id
-left join courses c
-on p.id = c.product_id;
+DROP procedure IF EXISTS `pet`.`sp_user_expirations`;
 
--- -----------------------------------------------------
--- View `pet`.`view_user_expirations`
--- -----------------------------------------------------
-DROP VIEW IF EXISTS `pet`.`view_user_expirations` ;
-DROP TABLE IF EXISTS `pet`.`view_user_expirations`;
-USE `pet`;
-CREATE  OR REPLACE VIEW `pet`.`view_user_expirations` AS
+DELIMITER $$
+USE `pet`$$
+CREATE PROCEDURE `pet`.`sp_user_expirations` (user_id int)
+BEGIN
 
 select ops_reg.user_id,
 ops_reg.expiration as regular_exp,
@@ -780,7 +779,40 @@ where ops_reg.expiration = (
     where user_id = ops_reg.user_id
     and digital_only = 0
 )
+and ops_reg.user_id = 1
 group by ops_reg.user_id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- View `pet`.`view_products`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `pet`.`view_products` ;
+DROP TABLE IF EXISTS `pet`.`view_products`;
+USE `pet`;
+CREATE  OR REPLACE VIEW `pet`.`view_products` AS
+select p.*,
+(case p.product_type_id
+    when 1 then d.name
+    when 2 then pp.name
+    when 3 then c.name
+    when 4 then s.name
+    when 5 then ds.name end) as name,
+pt.name as product_type
+from products p
+left join product_types pt
+on p.product_type_id = pt.id
+left join downloads d
+on p.id = d.product_id
+left join digital_subscriptions ds
+on p.id = ds.product_id
+left join subscriptions s
+on p.id = s.product_id
+left join physical_products pp
+on p.id = pp.product_id
+left join courses c
+on p.id = c.product_id;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

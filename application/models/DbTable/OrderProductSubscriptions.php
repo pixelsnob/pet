@@ -43,26 +43,13 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
      * 
      */
     public function getExpirationsByUserId($user_id) {
-        $reg_subquery = <<<END
-select max(expiration)
-from order_product_subscriptions
-where user_id = ops_reg.user_id
-and digital_only = 0
-END;
-        $dig_subquery = <<<END
-select max(expiration)
-from order_product_subscriptions
-where user_id = ops_reg.user_id
-and digital_only = 1
-END;
-        $prev_subquery = <<<END
-select expiration 
-from order_product_subscriptions
-where user_id = ops_reg.user_id
-and digital_only = 0
-order by expiration desc
-limit 1, 1
-END;
+        $reg_subquery = 'select max(expiration) from order_product_subscriptions ' .
+            'where user_id = ops_reg.user_id and digital_only = 0';
+        $dig_subquery = 'select max(expiration) from order_product_subscriptions ' .
+            'where user_id = ops_reg.user_id and digital_only = 1';
+        $prev_subquery = 'select expiration from order_product_subscriptions ' .
+            'where user_id = ops_reg.user_id and digital_only = 0 ' .
+            'order by expiration desc limit 1, 1';
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('ops_reg' => 'order_product_subscriptions'), array(
                 'ops_reg.user_id',
