@@ -6,7 +6,8 @@
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
             <div class="checkout-left">
                 <fieldset class="account<?php echo (!$this->is_authenticated ? ' med' : ''); ?>">
-                    <legend>Create your account</legend>
+                    <legend>P.E.T. website credentials</legend>
+                    <i>Your login credentials for the website</i>
                     <dl class="form">
                         <?php if (!$this->is_authenticated && ($this->cart->products->hasDigitalSubscription() || $this->cart->products->hasSubscription())): ?>
                             <dt><?php echo $this->checkout_form->user->username->renderLabel(); ?></dt>
@@ -106,7 +107,7 @@
                         <dt class="opt-in checkbox"></dt>
                         <dd class="opt-in checkbox">
                             <?php echo $this->checkout_form->info->opt_in->renderViewHelper(); ?>
-                            <label for="opt-in">I'd like to receive occasional information from Photoshop Elements Techniques</label>
+                            <label for="opt-in">Please send me occasional email newsletters and let me know when my subscription needs to be renewed.</label>
                             <?php echo $this->checkout_form->info->opt_in->renderErrors(); ?>
                         </dd>
                         <dt class="opt-in-partner checkbox"></dt>
