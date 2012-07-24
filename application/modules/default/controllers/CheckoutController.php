@@ -1,5 +1,7 @@
 <?php
 
+require_once 'markdown.php';
+
 class CheckoutController extends Zend_Controller_Action {
 
     private $_generic_error = '';

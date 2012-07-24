@@ -141,7 +141,7 @@ class Service_Cart {
             $promos_mapper = new Model_Mapper_Promos;
             $promo = $promos_mapper->getByCode($promo_code);
             if ($promo) {
-                $this->_cart_mapper->addPromo($promo);
+                $this->_cart_mapper->addPromo($promo_code);
             }
         } elseif (!strlen(trim($promo_code)) && $existing_promo_code) {
             $this->_cart_mapper->removePromo();

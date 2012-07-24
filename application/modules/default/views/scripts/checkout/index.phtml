@@ -227,6 +227,15 @@
                 </p>
                 <p>We will email a receipt when the transaction processes.
                 <br><em>We will not share your contact info with <strong>anyone</strong></em>.</p>
+
+                <div id="promo-info">
+                    <?php if ($this->cart->promo && $this->cart->promo->public_description): ?>
+                        <h3>Your Promo</h3> 
+                        <div class="promo-description">
+                            <?php echo Markdown($this->cart->promo->public_description); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
             <div class="checkout-right">
                 <h3>In your cart:</h3>

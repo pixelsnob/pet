@@ -48,16 +48,7 @@ Pet.CheckoutView = Pet.View.extend({
                 if (model.get('success') === 1) {
                     type = 'success';
                     // Get updated total after applying promo
-                    obj.updateTotal();
-                    /*var cart = new Pet.CartModel;
-                    obj.xhr.push(cart.fetch());
-                    cart.on('change', function(model) {
-                        var totals = cart.get('totals');
-                        if (typeof totals.total == 'number') {
-                            var total = '$' + totals.total.toFixed(2);
-                            $('.total-value').text(total);
-                        }
-                    });*/
+                    obj.updateForm();
                 }
                 if ($.trim(msg).length) {
                     $('.promo-code .errors, .promo-code .success').remove();
@@ -68,15 +59,39 @@ Pet.CheckoutView = Pet.View.extend({
         return true;
     },
     
-    updateTotal: function() {
-        var cart = new Pet.CartModel;
-        this.xhr.push(cart.fetch());
-        cart.on('change', function(model) {
-            var totals = cart.get('totals');
+    updateForm: function() {
+        var cart_model = new Pet.CartModel;
+        this.xhr.push(cart_model.fetch());
+        cart_model.on('change', function(model) {
+            var totals = model.get('totals'),
+                cart = model.get('cart');
             if (typeof totals.total == 'number') {
                 var total = '$' + totals.total.toFixed(2);
                 $('.total-value').text(total);
             }
+            //console.log(cart.promo === null);
+            if (cart.promo !== null && cart.promo.public_description !== null) {
+                //$('#promo-info').fadeIn().find('.promo-description').html(cart.promo.public_description);
+                console.log(1);
+                $('#promo-info').empty().end().append(
+                    $('<h3>').text('Your promo'),
+                    $('<div>').addClass('promo-description').html(
+                        cart.promo.public_description
+                    )
+                );
+            } else {
+                $('#promo-info').fadeOut();
+                console.log(2);
+            }
+            /*if (typeof cart.promo == 'object' && cart.promo !== null &&
+                typeof cart.promo.public_description == 'string' &&
+                cart.promo.public_description.length) {
+                $('#promo-info').fadeIn().find('.promo-description').html(cart.promo.public_description);
+                console.log('?');
+            } else {
+                $('#promo-info').fadeOut();
+                console.log('fuck');
+            }*/
         });
     },
 
@@ -93,7 +108,7 @@ Pet.CheckoutView = Pet.View.extend({
                 }
                 // Remove existing errors
                 el.parent().find('.errors, .success').remove();
-                obj.updateTotal();
+                obj.updateForm();
                 var messages = model.get('messages'); 
                 // Special case for cc expiration selects
                 if (el.attr('name') == 'cc_exp_month' || el.attr('name') == 'cc_exp_year') {
@@ -153,6 +168,7 @@ Pet.CheckoutView = Pet.View.extend({
                 }
                 // Remove existing errors
                 form.find('.errors, .success').remove();
+                obj.updateForm();
                 if (model.get('status')) {
                     // Form is valid
                     form.submit();
