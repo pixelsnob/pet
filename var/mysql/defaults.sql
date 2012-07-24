@@ -92,15 +92,6 @@ left join pet_old.sales_product sp
 on p.sku = sp.code
 where p.product_type_id = 4;
 
-/*insert into pet.products_subscriptions
-select null, p.id, s.id
-from pet.products p
-left join pet_old.sales_product sp
-on p.sku = sp.code
-left join pet.subscriptions s
-on sp.name = s.name
-where p.product_type_id = 4;*/
-
 /* Gift subscriptions */
 
 update products set is_giftable = 1
@@ -119,12 +110,6 @@ insert into digital_subscriptions values
 (2, 301, 'Digital Subscription, Monthly, Renewal', '', 1, 1, 1),
 (3, 302, 'Digital Subscription, Yearly', '', 0, 0, 12),
 (4, 303, 'Digital Subscription, Yearly, Renewal', '', 1, 0, 12);
-
-/*insert into pet.products_digital_subscriptions values
-(null, 300, 1),
-(null, 301, 2),
-(null, 302, 3),
-(null, 303, 4);*/
 
 /* Add products that were deleted that still exist in the ordered_products table */
 
@@ -228,6 +213,13 @@ where so.previous_expiration is not null;
    table, because we are about to delete the duplicate users. */
 delete from pet.order_product_subscriptions where user_id in (884338, 893654, 1078835, 809224, 866185,
 887013, 902945, 1079210, 881059, 87670873, 843818);
+
+/* These users don't exist anymore */
+
+delete from pet_old.subscriber_profile_note where id in (23, 24);
+
+insert into pet.user_actions (select id, profile_id, rep_id, date, body from pet_old.subscriber_profile_note);
+
 
 /***************************************************************************************************
   Orders

@@ -704,21 +704,21 @@ DROP TABLE IF EXISTS `pet`.`user_actions` ;
 CREATE  TABLE IF NOT EXISTS `pet`.`user_actions` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
-  `admin_user_id` INT NOT NULL ,
+  `rep_user_id` INT NOT NULL ,
   `date_created` DATETIME NOT NULL ,
   `action` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `user_actions_fk_2` (`user_id` ASC) ,
-  INDEX `user_actions_fk_3` (`admin_user_id` ASC) ,
+  INDEX `user_actions_fk_3` (`rep_user_id` ASC) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `date_created` (`date_created` ASC) ,
-  CONSTRAINT `user_log_fk_2`
+  CONSTRAINT `user_actions_fk_2`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `user_log_fk_3`
-    FOREIGN KEY (`admin_user_id` )
+  CONSTRAINT `user_actions_fk_3`
+    FOREIGN KEY (`rep_user_id` )
     REFERENCES `pet`.`users` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)

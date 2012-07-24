@@ -6,24 +6,29 @@
  * 
  */
 class Model_Mapper_UserActions extends Pet_Model_Mapper_Abstract {
-    
+
     /**
-     * @param string $action Description of user action
-     * @param string $ip
-     * @param int $user_id
      * @return void
      * 
      */
-    public function insert($action, $ip, $user_id) {
-        $mongo = Pet_Mongo::getInstance(); 
-        $user_action = new Model_UserAction;
-        $user_action->user_id = $user_id;
-        $user_action->action = $action;
-        $user_action->ip = $ip;
-        $user_action->timestamp = date('Y-m-d H:i:s');
-        $user_action_array = $user_action->toArray();
-        unset($user_action_array['id']);
-        $mongo->user_actions->insert($user_action_array);
+    public function __construct() {
+        $this->_user_actions = new Model_DbTable_UserActions;
+    }
+    
+    /**
+     * @param int $user_id
+     * @return array
+     * 
+     */
+    public function getByUserId($user_id) {
+        $user_actions = $this->_user_actions->getByUserId($user_id); 
+        $out = array();
+        if ($user_actions) {
+            foreach ($user_actions as $user_action) {
+                $out[] = new Model_UserAction($user_action->toArray());
+            }
+        }
+        return $out;
     }
 }
 

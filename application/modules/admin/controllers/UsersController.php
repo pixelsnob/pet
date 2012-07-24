@@ -38,6 +38,7 @@ class Admin_UsersController extends Zend_Controller_Action {
 
     public function detailAction() {
         $orders_mapper = new Model_Mapper_Orders;
+        $user_actions_mapper = new Model_Mapper_UserActions;
         $id = $this->_request->getParam('id');
         if (!$id) {
             throw new Exception('User id was not supplied');
@@ -51,6 +52,7 @@ class Admin_UsersController extends Zend_Controller_Action {
         if (!$profile) {
             throw new Exception("User profile for user $id not found");
         }
+        $this->view->user_actions = $user_actions_mapper->getByUserId($id);
         $this->view->profile = $profile;
         $this->view->expirations = $this->_users_svc->getExpirations($id);
         $this->view->orders = $orders_mapper->getByUserId($id);
