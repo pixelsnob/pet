@@ -10,7 +10,7 @@ Pet.AdminView = Pet.View.extend({
     
     events: {
         'click #billing-to-shipping': 'copyBillingToShipping',
-        'click .datepicker': 'openDatepicker'
+        'focus .datepicker': 'openDatepicker'
     },
     
     initialize: function() {
@@ -70,7 +70,7 @@ Pet.AdminView = Pet.View.extend({
             opts.minDate = new Date;
             opts.maxDate = null;
         }
-        $(el.target).datepicker(opts).focus();
+        $(el.target).datepicker(opts);
     }
 
 });
