@@ -51,7 +51,7 @@
                             <td><?php echo $this->escape($product->getFullName()); ?></td>
                             <td>
                                 <?php if ($this->cart->promo && !isset($promo_shown)): ?>
-                                    <p><?php echo $this->escape($this->cart->promo->public_description); $promo_shown = true; ?></p>
+                                    <p><?php echo Markdown($this->cart->promo->receipt_description); $promo_shown = true; ?></p>
                                 <?php endif; ?>
                                 <?php if ($product->product_type_id == Model_ProductType::SUBSCRIPTION && !$product->isGift()): ?>
                                     <p>Your first magazine will be sent within 30 days, depending on when you placed your order and where that date falls in relation to our publication schedule.<br>

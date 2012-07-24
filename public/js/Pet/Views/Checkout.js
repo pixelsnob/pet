@@ -69,29 +69,22 @@ Pet.CheckoutView = Pet.View.extend({
                 var total = '$' + totals.total.toFixed(2);
                 $('.total-value').text(total);
             }
-            //console.log(cart.promo === null);
-            if (cart.promo !== null && cart.promo.public_description !== null) {
-                //$('#promo-info').fadeIn().find('.promo-description').html(cart.promo.public_description);
-                console.log(1);
-                $('#promo-info').empty().end().append(
+            if (cart.promo !== null && typeof cart.promo.public_description == 'string' &&
+                $.trim(cart.promo.public_description).length) {
+                // Markdown filter
+                var md = new Showdown.converter(),
+                    desc = md.makeHtml(cart.promo.public_description);
+                $('#promo-info').empty().append(
                     $('<h3>').text('Your promo'),
-                    $('<div>').addClass('promo-description').html(
-                        cart.promo.public_description
-                    )
-                );
+                    $('<div>').addClass('promo-description').html(desc)
+                ).fadeIn();
+                console.log(desc);
             } else {
-                $('#promo-info').fadeOut();
-                console.log(2);
+                $('#promo-info').fadeOut(100, function() {
+                    $(this).empty();
+                });
+                console.log('b');
             }
-            /*if (typeof cart.promo == 'object' && cart.promo !== null &&
-                typeof cart.promo.public_description == 'string' &&
-                cart.promo.public_description.length) {
-                $('#promo-info').fadeIn().find('.promo-description').html(cart.promo.public_description);
-                console.log('?');
-            } else {
-                $('#promo-info').fadeOut();
-                console.log('fuck');
-            }*/
         });
     },
 

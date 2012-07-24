@@ -14,7 +14,7 @@ class CartController extends Zend_Controller_Action {
         if ($this->_request->isXmlHttpRequest() &&
                 !$this->_request->getParam('nolayout')) {
             $json = array(
-                'cart' => $cart->toArray(),
+                'cart'   => $cart->toArray(),
                 'totals' => $cart->getTotals()
             );
             $this->_helper->json($json);

@@ -325,6 +325,9 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $promo = $this->_data['promo'];
         if ($totals['total'] && $promo && isset($promo->discount)) {
             $totals['discount'] = $promo->discount;
+            if ($totals['discount'] >= $totals['total']) {
+                $totals['discount'] = $totals['total'];
+            }
             $totals['total'] = $totals['total'] - $totals['discount'];
         }
         return $totals;
@@ -336,7 +339,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      */
     public function isFreeOrder() {
         $totals = $this->getTotals();
-        return ($totals['total'] === 0);
+        return ($totals['total'] == 0);
     }
 
     /**
@@ -380,13 +383,15 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             $products[] = $product->toArray();
         }
         $data = $this->_data;
+        $promo = ($data['promo'] ? $data['promo']->toArray() : null);
         $data = array_merge($this->_data, array(
             'products'  => $products,
             'billing'   => $this->_data['billing']->toArray(),
             'shipping'  => $this->_data['shipping']->toArray(),
             'payment'   => $this->_data['payment']->toArray(),
             'user'      => $this->_data['user']->toArray(),
-            'user_info' => $this->_data['user_info']->toArray()
+            'user_info' => $this->_data['user_info']->toArray(),
+            'promo'     => $promo
         ));
         return $data;
     }

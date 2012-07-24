@@ -28,6 +28,7 @@ return array(
         'js/Pet/Views/Cart.js'
     ),
     'checkout' => array(
+        'js/lib/showdown.js',
         'js/Pet/Models/Cart.js',
         'js/Pet/Models/Checkout.js',
         'js/Pet/Models/PromoCode.js',
