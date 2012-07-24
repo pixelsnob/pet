@@ -109,7 +109,11 @@
 
     <section class="user-actions clear full-width">
         <h3>Notes</h3>
+        <?php echo $this->objectsToAdminTable(array(
+            'date_created' => array('format' => 'datetime'),
+            'action',
+            'rep_user_name' => array('title' => 'User'),
+        ), $this->user_actions); ?>
     </section>
 </div>
 
-<?php print_r($this->user_actions); ?>
