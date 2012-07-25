@@ -16,7 +16,6 @@ class Service_Users extends Pet_Service {
      */
     public function __construct() {
         $this->_user_profiles = new Model_Mapper_UserProfiles;
-        $this->_user_actions = new Model_Mapper_UserActions;
         $this->_users = new Model_Mapper_Users;
     }
 
@@ -295,25 +294,6 @@ class Service_Users extends Pet_Service {
         Zend_Session::regenerateId();
         session_write_close();
     }
-
-    /**
-     * @param string $action
-     * @param null|int $user_id
-     * 
-     */ 
-    /*public function logUserAction($action, $user_id = null) {
-        if (!$user_id) {
-            $user_id = $this->getId();
-        }
-        $server = Zend_Controller_Front::getInstance()
-            ->getRequest()->getServer();
-        $ip = (isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : '');
-        $user_actions = new Model_Mapper_UserActions;
-        try {
-            $user_actions->insert($action, $ip, $user_id);
-        } catch (Exception $e) {}
-    }*/
-
 
     /**
      * Passwords are stored as sha1$salt$hash

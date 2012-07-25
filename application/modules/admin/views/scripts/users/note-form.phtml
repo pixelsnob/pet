@@ -1,0 +1,19 @@
+
+<div id="user-note-edit">
+    <?php echo $this->flashMessenger($this->messages); ?>
+    <form action="<?php echo $this->user_note_form->getAction(); ?>" method="<?php echo $this->user_note_form->getMethod(); ?>" name="<?php echo $this->user_note_form->getName(); ?>">
+        <dl class="form">
+            <dt><?php echo $this->user_note_form->note->renderLabel(); ?></dt>
+            <dd>
+                <?php echo $this->user_note_form->note->renderViewHelper(); ?>
+                <?php echo $this->user_note_form->note->renderErrors(); ?>
+            </dd>
+        </dl>
+        <p class="update clear">
+            <?php echo $this->user_note_form->user_id->renderViewHelper(); ?>
+            <input type="submit" value="Submit" name="submit" id="submit">
+            <input type="submit" value="Cancel" name="cancel" id="cancel">
+        </p>
+    </form>
+</div>
+

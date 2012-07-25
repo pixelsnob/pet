@@ -107,13 +107,23 @@
         ), $this->profile); ?>
     </section>
 
-    <section class="user-actions clear full-width">
+    <section class="user-notes clear full-width">
         <h3>Notes</h3>
+        <?php if ($this->user_notes): ?>
         <?php echo $this->objectsToAdminTable(array(
             'date_created' => array('format' => 'datetime'),
-            'action',
-            'rep_user_name' => array('title' => 'User'),
-        ), $this->user_actions); ?>
+            'note',
+            'rep_user_name' => array('title' => 'Added By'),
+            'delete' => array(
+                'format' => 'link',
+                'label'  => 'Delete',
+                'url' => '/admin/users/delete-user-action/id'
+            )
+        ), $this->user_notes); ?>
+        <?php else: ?>
+        <p>No notes for this user</p>
+        <?php endif; ?>
+        <p><a href="<?php echo $this->serverUrl($this->url(array('action' => 'add-note', 'id' => null, 'user_id' => $this->user->id))); ?>" class="add-user-note">Add note</a></p>
     </section>
 </div>
 

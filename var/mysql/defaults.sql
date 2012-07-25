@@ -218,7 +218,7 @@ delete from pet.order_product_subscriptions where user_id in (884338, 893654, 10
 
 delete from pet_old.subscriber_profile_note where id in (23, 24);
 
-insert into pet.user_actions (select id, profile_id, rep_id, date, body from pet_old.subscriber_profile_note);
+insert into pet.user_notes (select id, profile_id, rep_id, body, date from pet_old.subscriber_profile_note);
 
 
 /***************************************************************************************************

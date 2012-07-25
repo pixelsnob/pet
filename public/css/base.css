@@ -95,6 +95,10 @@ ul.errors li, ul.success li {
     -webkit-border-radius: 5px;
 }
 
+#nolayout textarea {
+    width: 420px;
+}
+
 .hide {
     display: none;
 }

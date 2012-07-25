@@ -15,6 +15,7 @@ class Admin_UsersController extends Zend_Controller_Action {
         $this->_users_svc = new Service_Users;
         $this->_admin_svc = new Service_Admin;
         $this->_users_mapper = new Model_Mapper_Users;
+        $this->_user_notes_mapper = new Model_Mapper_UserNotes;
         if (!$this->_users_svc->isAuthenticated(true)) {
             $this->_helper->Redirector->gotoSimple('index', 'index');
         }
@@ -38,7 +39,6 @@ class Admin_UsersController extends Zend_Controller_Action {
 
     public function detailAction() {
         $orders_mapper = new Model_Mapper_Orders;
-        $user_actions_mapper = new Model_Mapper_UserActions;
         $id = $this->_request->getParam('id');
         if (!$id) {
             throw new Exception('User id was not supplied');
@@ -52,7 +52,7 @@ class Admin_UsersController extends Zend_Controller_Action {
         if (!$profile) {
             throw new Exception("User profile for user $id not found");
         }
-        $this->view->user_actions = $user_actions_mapper->getByUserId($id);
+        $this->view->user_notes = $this->_user_notes_mapper->getByUserId($id);
         $this->view->profile = $profile;
         $this->view->expirations = $this->_users_svc->getExpirations($id);
         $this->view->orders = $orders_mapper->getByUserId($id);
@@ -171,5 +171,45 @@ class Admin_UsersController extends Zend_Controller_Action {
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->user_form = $form; 
         $this->_helper->ViewRenderer->render('form');
+    }
+    
+    public function addNoteAction() {
+        $params = $this->_request->getParams();
+        $user_id = $this->_request->getParam('user_id');
+        if (!$user_id) {
+            throw new Exception('User id was not supplied');
+        }
+        $user = $this->_users_svc->getUser($user_id);
+        if (!$user) {
+            throw new Exception("User $user_id not found");
+        }
+        $form = new Form_Admin_UserNote; 
+        $form->user_id->setValue($user_id);
+
+        if ($this->_request->isPost() && $form->isValid($params)) {
+            $params['rep_user_id'] = $this->_users_svc->getId();
+            $this->_user_notes_mapper->insert($params); 
+        }
+        $this->view->user_note_form = $form; 
+        $this->_helper->ViewRenderer->render('note-form');
+    }
+
+    public function deleteNoteDialogAction() {
+        $id = $this->_request->getParam('id');
+        $action = $this->_user_notes_mapper->getById($id, false);
+        if (!$action) {
+            throw new Exception('User action not found');
+        }
+        $this->view->user_action = $action;
+    }
+
+    public function deleteNoteAction() {
+        $id = $this->_request->getParam('id'); 
+        try {
+            $this->_user_notes_mapper->delete($id);
+            $this->view->status = true;
+        } catch (Exception $e) {
+            $this->view->status = false;
+        }
     }
 }

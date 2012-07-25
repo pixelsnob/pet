@@ -50,7 +50,6 @@ Pet.AdminShippingZonesView = Pet.AdminView.extend({
         return false;
     },
 
-
     adminTableRowClick: function(el) {
         var href = $(el.target).parent().find('a:first').attr('href');
         window.location.href = href;

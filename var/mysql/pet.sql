@@ -697,27 +697,27 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `pet`.`user_actions`
+-- Table `pet`.`user_notes`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pet`.`user_actions` ;
+DROP TABLE IF EXISTS `pet`.`user_notes` ;
 
-CREATE  TABLE IF NOT EXISTS `pet`.`user_actions` (
+CREATE  TABLE IF NOT EXISTS `pet`.`user_notes` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
   `rep_user_id` INT NOT NULL ,
+  `note` VARCHAR(255) NOT NULL ,
   `date_created` DATETIME NOT NULL ,
-  `action` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `user_actions_fk_2` (`user_id` ASC) ,
-  INDEX `user_actions_fk_3` (`rep_user_id` ASC) ,
+  INDEX `user_notes_fk_2` (`user_id` ASC) ,
+  INDEX `user_notes_fk_3` (`rep_user_id` ASC) ,
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   INDEX `date_created` (`date_created` ASC) ,
-  CONSTRAINT `user_actions_fk_2`
+  CONSTRAINT `user_notes_fk_2`
     FOREIGN KEY (`user_id` )
     REFERENCES `pet`.`users` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `user_actions_fk_3`
+  CONSTRAINT `user_notes_fk_3`
     FOREIGN KEY (`rep_user_id` )
     REFERENCES `pet`.`users` (`id` )
     ON DELETE CASCADE

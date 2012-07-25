@@ -1,15 +1,15 @@
 <?php
 /**
- * @package Model_UserAction
+ * @package Model_UserNote
  * 
  */
-class Model_UserAction extends Pet_Model_Abstract {
+class Model_UserNote extends Pet_Model_Abstract {
 
     public $_data = array(
         'id' => null,
         'user_id' => null,
         'rep_user_id' => null,
-        'action' => null,
+        'note' => null,
         'date_created' => null,
         'rep_user_name' => null,
         'user_name' => null

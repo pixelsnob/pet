@@ -51,7 +51,7 @@ class Form_Admin_ShippingZone extends Pet_Form {
                     'messages' => 'Amount must be less than $%max%'
                 ))
             )
-        ));
+        ))->setElementFilters(array('StringTrim'));
     }
     
 
