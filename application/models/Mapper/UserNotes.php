@@ -14,6 +14,18 @@ class Model_Mapper_UserNotes extends Pet_Model_Mapper_Abstract {
     public function __construct() {
         $this->_user_notes = new Model_DbTable_UserNotes;
     }
+
+    /**
+     * @param int $id
+     * @return Model_UserNote
+     * 
+     */
+    public function getById($id) {
+        $user_note = $this->_user_notes->getById($id);
+        if ($user_note) {
+            return new Model_UserNote($user_note->toArray());
+        }
+    }
     
     /**
      * @param int $user_id
@@ -50,7 +62,7 @@ class Model_Mapper_UserNotes extends Pet_Model_Mapper_Abstract {
      */
     public function delete($id) {
         $where = $this->_user_notes->getAdapter()->quoteInto('id = ?', $id);
-        //$this->_user_notes->delete($where);
+        $this->_user_notes->delete($where);
     }
 }
 

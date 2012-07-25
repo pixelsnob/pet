@@ -1,0 +1,11 @@
+
+<form name="delete-user-note" id="delete-user-note" method="post" action="<?php echo $this->serverUrl($this->url(array('action' => 'detail', 'id' => $this->user_note->user_id))); ?>">
+    <?php if ($this->status): ?>
+        <h2>User note deleted</h2>
+    <?php else: ?>
+        <h2>Error</h2>
+        <p class="error">An error has occurred</p>
+    <?php endif; ?>
+    <input type="submit" value="Return to user detail" id="return">
+    <input type="hidden" value="<?php echo (int) $this->status; ?>" name="status">
+</form>

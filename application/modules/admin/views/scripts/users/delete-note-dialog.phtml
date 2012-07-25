@@ -1,0 +1,9 @@
+
+<form name="delete-user-note-dialog" id="delete-user-note-dialog" method="post" action="">
+    <h2>Are you sure you want to delete user note #<?php echo $this->escape($this->user_note->id); ?>?</h2>
+    <p>
+        <input type="hidden" name="id" value="<?php echo $this->escape($this->user_note->id); ?>">
+        <input type="submit" id="submit" value="Submit" name="submit">
+        <input type="submit" id="cancel" value="Cancel" name="cancel">
+    </p>
+</form>

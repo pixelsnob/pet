@@ -21,7 +21,7 @@ class Form_Admin_UserNote extends Pet_Form {
                 )),
                 array('StringLength', true, array(
                     'max' => 255,
-                    'messages' => 'Amount must be less than $%max%'
+                    'messages' => 'Note must be less than %max% characters'
                 ))
             )
         ))->addElement('hidden', 'user_id')

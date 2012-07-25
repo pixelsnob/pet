@@ -183,30 +183,73 @@ class Admin_UsersController extends Zend_Controller_Action {
         if (!$user) {
             throw new Exception("User $user_id not found");
         }
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('detail', 'users', 'admin',
+                array('id' => $user_id));
+        }
         $form = new Form_Admin_UserNote; 
         $form->user_id->setValue($user_id);
 
-        if ($this->_request->isPost() && $form->isValid($params)) {
-            $params['rep_user_id'] = $this->_users_svc->getId();
-            $this->_user_notes_mapper->insert($params); 
+        if ($this->_request->isPost()) {
+            if ($form->isValid($params)) {
+                $params['rep_user_id'] = $this->_users_svc->getId();
+                try {
+                    $this->_user_notes_mapper->insert($params); 
+                    $this->_helper->Redirector->gotoSimple('add-note-success',
+                        'users', 'admin', array('user_id' => $user_id));
+                } catch (Exception $e) {
+                    $this->_helper->FlashMessenger->addMessage(
+                        'An error occurred while attempting to add a user note');
+                }
+            } else {
+                $this->_helper->FlashMessenger->addMessage(
+                    'Please check your information');
+                
+            }
         }
+        $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
+        $this->view->user = $user;
         $this->view->user_note_form = $form; 
         $this->_helper->ViewRenderer->render('note-form');
+    }
+    
+    public function addNoteSuccessAction() {
+        $user_id = $this->_request->getParam('user_id');
+        if (!$user_id) {
+            throw new Exception('User id was not supplied');
+        }
+        $user = $this->_users_svc->getUser($user_id);
+        if (!$user) {
+            throw new Exception("User $user_id not found");
+        }
+        $this->view->user = $user;
     }
 
     public function deleteNoteDialogAction() {
         $id = $this->_request->getParam('id');
-        $action = $this->_user_notes_mapper->getById($id, false);
-        if (!$action) {
-            throw new Exception('User action not found');
+        $user_note = $this->_user_notes_mapper->getById($id, false);
+        if (!$user_note) {
+            throw new Exception('User note not found');
         }
-        $this->view->user_action = $action;
+        $this->view->user_note = $user_note;
+        if ($this->_request->getParam('cancel')) {
+            $this->_helper->Redirector->gotoSimple('detail', 'users', 'admin',
+                array('id' => $user_note->user_id));
+        } elseif ($this->_request->getParam('submit')) {
+            try {
+                $this->_user_notes_mapper->delete($id);
+                $this->view->status = true;
+            } catch (Exception $e) {
+                $this->view->status = false;
+            }
+            $this->_helper->ViewRenderer->render('delete-note-results');
+            return;
+        }
     }
 
     public function deleteNoteAction() {
         $id = $this->_request->getParam('id'); 
         try {
-            $this->_user_notes_mapper->delete($id);
             $this->view->status = true;
         } catch (Exception $e) {
             $this->view->status = false;

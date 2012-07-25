@@ -14,8 +14,14 @@ Pet.AdminUsersView = Pet.AdminView.extend({
         'click #change_password': 'togglePasswordFields',
         'click #user-edit .submit': 'overlayFormSubmit',
         'click #user-detail .add-user-note': 'openAddUserNoteDialog',
-        'click #user-note-edit #submit': 'addUserNote'
-        //'click #delete-shipping-zone-dialog #cancel': 'closeDeleteDialog',
+        'click #nolayout #user-note-edit #submit': 'addUserNote',
+        'click #nolayout #user-note-edit #cancel': 'closeAddUserNoteDialog',
+        'click #nolayout #add-note-success #close': 'closeAddUserNoteDialog',
+        'click #user-detail .user-notes .admin-table .delete': 'openDeleteUserNoteDialog',
+        'click #nolayout #delete-user-note-dialog #submit': 'deleteUserNote',
+        'click #nolayout #delete-user-note-dialog #cancel': 'closeDeleteUserNoteDialog',
+        'click #nolayout #delete-user-note #return': 'closeDeleteUserNoteDialog',
+
     },
     
     initialize: function() {
@@ -48,15 +54,39 @@ Pet.AdminUsersView = Pet.AdminView.extend({
     addUserNote: function(el) {
         var qs = $('form[name=user_note_edit]', this.el).serialize();
         this.populateFancybox('/admin/users/add-note/', qs);
+        console.log('a');
         return false;
     },
 
-    closeAddUserNoteDialogUpdateList: function(el) {
+    openDeleteUserNoteDialog: function(el) {
+        this.showFancybox({
+            href: $(el.target).attr('href')
+        });
+        return false;
+    },
+
+    closeAddUserNoteDialog: function(el) {
         $.fancybox.close();
-        var delete_status = $('input[name=status]').val();
-        if (delete_status == '1') {
+        if ($(el.target).attr('id') == 'close') {
             window.location.href = window.location.href;
         }
+        return false;
+    },
+
+    closeDeleteUserNoteDialog: function(el) {
+        $.fancybox.close();
+        if ($(el.target).attr('id') == 'return') {
+            window.location.href = window.location.href;
+        }
+        return false;
+    },
+
+    deleteUserNote: function(el) {
+        var params = {
+            id: $('input[name=id]', this.el).val(),
+            submit: 1
+        };
+        this.populateFancybox('/admin/users/delete-note-dialog/', $.param(params));
         return false;
     }
 

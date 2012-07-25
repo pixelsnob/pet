@@ -51,6 +51,12 @@
                     <action>change-password</action>
                     <module>admin</module>
                 </change_password>
+                <add_note hide="1">
+                    <label>Add User Note</label>
+                    <controller>users</controller>
+                    <action>add-note</action>
+                    <module>admin</module>
+                </add_note>
             </pages>
         </users>
         <payments>
