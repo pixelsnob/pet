@@ -82,6 +82,7 @@ Pet.AdminUsersView = Pet.AdminView.extend({
     },
 
     deleteUserNote: function(el) {
+        $(el.target).parent().find('input[type=submit]').attr('disabled', true);
         var params = {
             id: $('input[name=id]', this.el).val(),
             submit: 1
