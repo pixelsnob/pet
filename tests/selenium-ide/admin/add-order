@@ -76,7 +76,31 @@
 	<td>id=billing-to-shipping</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>type</td>
+	<td>id=cc_num</td>
+	<td>4411037114367821</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=cc_exp_month</td>
+	<td>label=07 - July</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=cc_exp_year</td>
+	<td>label=2021</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=cc_cvv</td>
+	<td>123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>slob3@pixelsnob.com</td>
+</tr>
 </tbody></table>
 </body>
 </html>

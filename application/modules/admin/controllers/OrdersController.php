@@ -145,6 +145,21 @@ class Admin_OrdersController extends Zend_Controller_Action {
                             'expiration'         => $date->format('Y-m-d H:i:s')
                         ));
                     }
+                    if ($product->isSubscription() && $product->is_renewal) {
+                        if ($order->payment_method == 'bypass') {     
+                            $this->_users_svc->addUserNote(
+                                'Added renewal with no payment',
+                                $order->user_id,
+                                $this->_users_svc->getId()
+                            );
+                        } else {
+                            $this->_users_svc->addUserNote(
+                                'Added renewal',
+                                $order->user_id,
+                                $this->_users_svc->getId()
+                            );
+                        }
+                    }
                 }
                 // Save payments
                 if ($order->total > 0) {

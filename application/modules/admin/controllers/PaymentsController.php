@@ -39,18 +39,22 @@ class Admin_PaymentsController extends Zend_Controller_Action {
     }
 
     public function creditAction() {
+        $db = Zend_Db_Table::getDefaultAdapter();
         $payments_mapper = new Model_Mapper_OrderPayments;
+        $orders_mapper   = new Model_Mapper_Orders;
         $gateway_mapper  = new Model_Mapper_PaymentGateway;
         $gateway_logger  = new Model_Mapper_PaymentGateway_Logger_Credits;
-        $mongo = Pet_Mongo::getInstance();
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
-        if (!($payment = $payments_mapper->get($id))) {
+        if (!($payment = $payments_mapper->getById($id))) {
             throw new Exception('Payment not found');
         }
         if ($this->_request->getParam('cancel')) {
             $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
                 array('id' => $payment->order_id));
+        }
+        if (!($order = $orders_mapper->get($payment->order_id))) {
+            throw new Exception('Order not found');
         }
         $this->view->payment = $payment;
         if ($payment->amount <= 0) {
@@ -64,14 +68,16 @@ class Admin_PaymentsController extends Zend_Controller_Action {
         $payment_type = $payment->payment_type_id;
         if ($this->_request->isPost() && $form->isValid($params)) {
             try {
+                $db->beginTransaction();
                 $gateway_mapper->processCredit($payment->pnref,
                     $form->amount->getValue()); 
                 $gateway_responses = $gateway_mapper->getSuccessfulResponseObjects();
                 if (isset($gateway_responses[0])) {
                     $response = $gateway_responses[0];
+                    $amount = $form->amount->getValue();
                     $payments_mapper->insert(array( 
                         'order_id'            => $payment->order_id,
-                        'amount'              => - ($form->amount->getValue()),
+                        'amount'              => -$amount,
                         'payment_type_id'     => $payment->payment_type_id,
                         'pnref'               => $response->pnref,
                         'ppref'               => $response->ppref,
@@ -86,10 +92,17 @@ class Admin_PaymentsController extends Zend_Controller_Action {
                     $payment->toArray(), 
                     $gateway_mapper->getRawCalls()
                 );
+                $this->_users_svc->addUserNote(
+                    'Processed credit for $' . number_format($amount, 2),
+                    $order->user_id,
+                    $this->_users_svc->getId()
+                ); 
+                $db->commit();
                 $this->_helper->FlashMessenger->setNamespace('order_detail')
                     ->addMessage('Payment was credited successfully');
                 $this->_helper->Redirector->gotoSimple('credit-success');
             } catch (Exception $e) {
+                $db->rollBack();
                 $this->_helper->FlashMessenger->addMessage($e->getMessage());
                 $gateway_logger->insert(
                     false,
