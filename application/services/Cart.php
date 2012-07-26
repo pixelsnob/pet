@@ -273,7 +273,6 @@ class Service_Cart {
     public function saveOrderProducts(Model_Cart_Order $order) {
         $users_svc  = new Service_Users;
         $is_auth    = $users_svc->isAuthenticated();
-        $user_id    = $users_svc->getId();
         $cart       = clone $this->_cart_mapper->get();
         $op         = new Model_Mapper_OrderProducts;
         $ops        = new Model_Mapper_OrderProductSubscriptions;
@@ -317,6 +316,12 @@ class Service_Cart {
                     'order_product_id'   => $opid,
                     'expiration'         => $date->format($fmt)
                 ));
+                // Log as a user note
+                if ($product->is_renewal) {
+                    $users_svc->addUserNote('User added renewal', $order->user_id);
+                } else {
+                    $users_svc->addUserNote('User added subscription', $order->user_id);
+                }
             } elseif ($product->isDigital()) {
                 $expiration = null;
                 // See if we need to renew

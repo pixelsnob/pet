@@ -288,6 +288,7 @@ class Service_Users extends Pet_Service {
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->beginTransaction();
         $this->_users->updatePassword($enc_pw, $user_id);
+        $this->addUserNote('User updated password');
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
         $auth_storage->write($this->getUser());
@@ -369,5 +370,27 @@ class Service_Users extends Pet_Service {
     public function generateHash($new_pw) {
         $token_gen = new TokenGenerator;
         return $token_gen->generateHash($new_pw); 
+    }
+
+    /**
+     * @param string $note
+     * @param int $user_id
+     * @param int $rep_user_id
+     * @return string
+     * 
+     */
+    public function addUserNote($note, $user_id = null, $rep_user_id = null) {
+        if (!$user_id) {
+            $user_id = $this->getId();
+        }
+        if (!$rep_user_id) {
+            $rep_user_id = $user_id;
+        }
+        $user_notes_mapper = new Model_Mapper_UserNotes;
+        $user_notes_mapper->insert(array(
+            'user_id'     => $user_id,
+            'rep_user_id' => $rep_user_id,
+            'note'        => $note
+        ));
     }
 }

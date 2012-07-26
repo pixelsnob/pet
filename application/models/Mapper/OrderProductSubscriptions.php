@@ -78,9 +78,8 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
      */
     public function getExpirationsByUserId($user_id) {
         $expirations = $this->_ops->getExpirationsByUserId($user_id);
-        if ($expirations) {
-            return new Model_UserExpirations($expirations->toArray());
-        }
+        // Return a result regardless of whether user has expirations
+        return new Model_UserExpirations($expirations->toArray());
     }
 
     /**

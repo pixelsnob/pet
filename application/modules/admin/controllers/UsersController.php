@@ -117,6 +117,7 @@ class Admin_UsersController extends Zend_Controller_Action {
                         'digital_only' => $form->digital_only->getValue()
                     ));
                 }
+                $this->_users_svc->addUserNote('Updated profile', $id, $this->_users_svc->getId());
                 $db->commit();
                 $this->_helper->FlashMessenger->addMessage('User updated');
             } catch (Exception $e) {
