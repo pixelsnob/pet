@@ -255,6 +255,7 @@ class Service_Users extends Pet_Service {
         $db->beginTransaction();
         $this->_users->updatePersonal($data, $user_id);
         $this->_user_profiles->updateByUserId($data, $user_id);
+        $this->addUserNote('User updated profile');
         $db->commit();
         $auth_storage = Zend_Auth::getInstance()->getStorage();
         $auth_storage->write($this->getUser());
