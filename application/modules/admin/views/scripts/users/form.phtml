@@ -6,12 +6,14 @@
             <fieldset class="account">
                 <legend>Account Information</legend>
                 <dl class="form">
+                    <?php if ($this->user_form->getMode() == 'edit'): ?>
                     <dt>User ID</dt>
                     <dd>
                         <a href="<?php echo $this->serverUrl($this->url(array('action' => 'detail', 'id' => $this->user->id))); ?>" title="Click to view user detail">
                             <?php echo $this->escape($this->user->id); ?>
                         </a>
                     </dd>
+                    <?php endif; ?>
                     <dt><?php echo $this->user_form->user->username->renderLabel(); ?></dt>
                     <dd>
                         <?php echo $this->user_form->user->username->renderViewHelper(); ?>
