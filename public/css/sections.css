@@ -352,16 +352,6 @@
     background: url(/images/checkout/form-bg.gif) -8px 0 repeat-y;
 }
 
-/*
-#checkout fieldset.med {
-    min-height: 210px;
-}
-
-#checkout fieldset.tall {
-    min-height: 485px;
-}
-*/
-
 #checkout .checkout-left, #checkout .checkout-middle, #checkout .checkout-right {
     float: left;
     padding: 10px 0;
@@ -401,6 +391,15 @@
     font-size: 12px;
 }
 
+#checkout .checkout-right a.cart-reset {
+    display: block;
+    height: 14px;
+    width: 80px;
+    padding: 5px 18px;
+    line-height: 14px;
+    margin: 0 auto !important;
+}
+
 #checkout .payment-method input {
     width: auto;
     margin-right: 10px;
@@ -421,7 +420,6 @@
 #checkout .cc-exp {
     line-height: 24px;
 }
-
 
 #checkout .cc-exp .errors {
     margin-top: 5px;

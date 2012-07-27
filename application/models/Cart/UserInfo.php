@@ -11,7 +11,7 @@ class Model_Cart_UserInfo extends Pet_Model_Abstract {
      */
     protected $_data = array(
         'version'          => '',
-        'opt_in'           => '',
+        'opt_in'           => '1',
         'opt_in_partner'   => ''
     );
 }

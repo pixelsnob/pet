@@ -28,7 +28,6 @@ class CheckoutController extends Zend_Controller_Action {
             $this->_updateCheckoutFormJson();
             return;
         }
-        ///////////////////////////////////////////////////////////////////////
         $cart = $this->_cart_mapper->get();
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
         // User is logged out but is trying to purchase a renewal. Clear cart
@@ -138,7 +137,6 @@ class CheckoutController extends Zend_Controller_Action {
             }
         } else {
             $this->_messenger->addMessage('Submitted information is not valid');
-            //print_r($checkout_form->getMessages()); exit;
             $this->_helper->Redirector->gotoRoute(array(), 'checkout');
         }
     }
@@ -165,15 +163,10 @@ class CheckoutController extends Zend_Controller_Action {
         $this->view->getHelper('serverUrl')->setScheme('https');
     }
 
-    /*public function testAction() {
-        $mongo = Pet_Mongo::getInstance();
-        for ($i = 0; $i < 10000; $i++) {
-            $mongo->testing->insert(array(
-                'test' => 'xxxxxxxxxxxxxxxxxxxxx',
-                'i'    => $i
-            ), array('fsync' => false));
-        }
-        exit('?');
-    }*/
+    public function cartResetAction() {
+        $cart = $this->_cart_mapper->get();
+        $cart->products->clear();
+        $this->_helper->Redirector->gotoSimple('index');
+    }
 
 }

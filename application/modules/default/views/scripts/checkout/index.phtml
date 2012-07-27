@@ -7,15 +7,21 @@
             <div class="checkout-left">
                 <fieldset class="account<?php echo (!$this->is_authenticated ? ' med' : ''); ?>">
                     <legend>P.E.T. website credentials</legend>
-                    <i>Your login credentials for the website</i>
+                    <!--<i>Your login credentials for the website</i>-->
                     <dl class="form">
                         <?php if (!$this->is_authenticated && ($this->cart->products->hasDigitalSubscription() || $this->cart->products->hasSubscription())): ?>
-                            <dt><?php echo $this->checkout_form->user->username->renderLabel(); ?></dt>
+                            <dt>
+                                <?php echo $this->checkout_form->user->username->renderLabel(); ?>
+                                <em>(Letters and numbers only)</em>
+                            </dt>
                             <dd>
                                 <?php echo $this->checkout_form->user->username->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->user->username->renderErrors(); ?>
                             </dd>
-                            <dt><?php echo $this->checkout_form->user->password->renderLabel(); ?></dt>
+                            <dt>
+                                <?php echo $this->checkout_form->user->password->renderLabel(); ?>
+                                <em>(6 characters long, including at least one number)</em>
+                            </dt>
                             <dd>
                                 <?php echo $this->checkout_form->user->password->renderViewHelper(); ?>
                                 <?php echo $this->checkout_form->user->password->renderErrors(); ?>
@@ -26,7 +32,10 @@
                                 <?php echo $this->checkout_form->user->confirm_password->renderErrors(); ?>
                             </dd>
                         <?php endif; ?>
-                        <dt><?php echo $this->checkout_form->user->email->renderLabel(); ?></dt>
+                        <dt>
+                            <?php echo $this->checkout_form->user->email->renderLabel(); ?>
+                            <em>(We will email your receipt here)</em>
+                        </dt>
                         <dd>
                             <?php echo $this->checkout_form->user->email->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->user->email->renderErrors(); ?>
@@ -126,7 +135,10 @@
             <div class="checkout-middle">
                 <?php if (!$this->cart->isFreeOrder()): ?>
                 <fieldset class="payment med">
-                    <legend>Enter your payment info</legend>
+                    <legend>
+                        Enter your Payment Info
+                        <img src="/images/checkout/cc-logos.gif" width="260" height="40" alt="Credit card logos">
+                    </legend>
                     <dl class="form">
                         <dt class="payment-method"><?php echo $this->checkout_form->payment->payment_method->getLabel(); ?></dt>
                         <dd class="payment-method">
@@ -214,7 +226,10 @@
                 <fieldset class="promo-code">
                     <legend>Do you have a promo code?</legend>
                     <dl class="form">
-                        <dt><?php echo $this->checkout_form->promo->promo_code->renderLabel(); ?></dt>
+                        <dt>
+                            <?php echo $this->checkout_form->promo->promo_code->renderLabel(); ?>
+                            <em>(Promo details will appear after you click "Apply")</em>
+                        </dt>
                         <dd>
                             <?php echo $this->checkout_form->promo->promo_code->renderViewHelper(); ?>
                             <?php echo $this->checkout_form->promo->promo_code->renderErrors(); ?>
@@ -247,6 +262,7 @@
                         </li>
                     <?php endforeach; ?>
                 </ul>
+                <a href="<?php echo $this->serverUrl($this->url(array(), 'checkout_cart_reset')); ?>" class="button-grad cart-reset">Clear Cart</a>
             </div>
         </form>
     <?php else: ?>
