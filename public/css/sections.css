@@ -417,6 +417,10 @@
     line-height: 20px;
 }
 
+#checkout img.cc {
+    margin-top: 10px;
+}
+
 #checkout .cc-exp {
     line-height: 24px;
 }
