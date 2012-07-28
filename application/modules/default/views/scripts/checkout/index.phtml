@@ -6,8 +6,7 @@
         <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="checkout">
             <div class="checkout-left">
                 <fieldset class="account<?php echo (!$this->is_authenticated ? ' med' : ''); ?>">
-                    <legend>P.E.T. website credentials</legend>
-                    <!--<i>Your login credentials for the website</i>-->
+                    <legend>P.E.T. website login info</legend>
                     <dl class="form">
                         <?php if (!$this->is_authenticated && ($this->cart->products->hasDigitalSubscription() || $this->cart->products->hasSubscription())): ?>
                             <dt>

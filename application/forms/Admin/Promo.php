@@ -61,6 +61,7 @@ class Form_Admin_Promo extends Pet_Form {
         $this->addElement('text', 'code', array(
             'label'        => 'Promo Code',
             'required'     => true,
+            'title'        => 'Look at the format of other similar promos and mimic that.',
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Promo code is required'
@@ -73,6 +74,7 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('text', 'expiration', array(
             'label'        => 'Expiration',
             'required'     => true,
+            'title'        => '3 months is a good benchmark for a 1-time promo, go till year end if it is one you will use repeatedly.',
             'class' => 'datepicker datepicker-no-max',
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -84,6 +86,7 @@ class Form_Admin_Promo extends Pet_Form {
             )
         ))->addElement('textarea', 'description', array(
             'label'        => 'Description',
+            'title'        => '150 characters or less, please.',
             'required'     => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -92,6 +95,8 @@ class Form_Admin_Promo extends Pet_Form {
             )
         ))->addElement('textarea', 'public_description', array(
             'label'        => 'Public Description',
+            'title'        => 'Appears on the checkout page under the Buy Now button. It should describe what the customer will receive, and how soon. Go for 250 characters or less.',
+
             'required'     => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -100,6 +105,7 @@ class Form_Admin_Promo extends Pet_Form {
             )
         ))->addElement('textarea', 'receipt_description', array(
             'label'        => 'Receipt Description',
+            'title'        => 'This field will show up on the customer receipt. It should remind them exactly what they will get with the promo, and set the expectation for delivery. Try to keep it at 400 characters or less.',
             'required'     => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
@@ -109,6 +115,7 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('text', 'discount', array(
             'label'        => 'Discount',
             'required'     => false,
+            'title'        => 'How many dollars off the regular price?',
             'validators'   => array(
                 array('NotEmpty', true, array(
                     'messages' => 'Discount is required'
@@ -122,6 +129,7 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('file', 'banner', array(
             'label'        => 'Banner',
             'required'     => false,
+            'title'        => 'Image size should be 550 px wide by 350 px high, save as a .png.',
             'validators'   => array(
                 array('Count', false, 1),
                 array('Size', false, array(
@@ -136,6 +144,7 @@ class Form_Admin_Promo extends Pet_Form {
         ))->addElement('text', 'extra_days', array(
             'label'        => 'Extra Days',
             'required'     => false,
+            'title'        => 'How many extra months -- assuming 31 day months in days -- does this offer. Example- if the promo is Get An Extra Month Free, then this value should be 31. For two months, use 62, etc.',
             'validators'   => array(
                 array('Digits', true, array(
                     'messages' => 'Extra days must be a whole, positive number'
@@ -146,6 +155,7 @@ class Form_Admin_Promo extends Pet_Form {
             'class'        => 'multi',
             'multiOptions' => $this->_products,
             'required'     => false,
+            'title'        => 'To which product does this promo apply? If a subscription promotion, then look for sub type (All Access or Digital) and include the ones you need. If a standalone product (DVD or course), choose from those. Shift-click to select multiple in a row, or Command-click to select non-sequential products.',
             'validators'   => array(
             )
         ))->addElement('hidden', 'tmp_banner')
