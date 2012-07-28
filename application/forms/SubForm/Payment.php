@@ -12,7 +12,7 @@ class Form_SubForm_Payment extends Pet_Form_SubForm {
     public function init() {
         $payment_opts = array(
             'credit_card' => 'Credit Card',
-            'paypal'      => 'Paypal'
+            'paypal'      => 'PayPal'
         );
         $this->addElement('radio', 'payment_method', array(
             'multiOptions' => $payment_opts, 
@@ -21,7 +21,7 @@ class Form_SubForm_Payment extends Pet_Form_SubForm {
             'class'        => 'radio',
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Payment method is required'
+                    'messages' => 'Please choose your payment method.'
                 ))
             ),
             'separator' => '</li><li>',
@@ -40,7 +40,7 @@ class Form_SubForm_Payment extends Pet_Form_SubForm {
             'class'        => 'text',
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Card number is required'
+                    'messages' => 'Enter your credit card number above.'
                 )),
                 array(new Pet_Validate_CCNum)
             )
@@ -67,7 +67,7 @@ class Form_SubForm_Payment extends Pet_Form_SubForm {
             'allowEmpty'   => false,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Date is invalid'
+                    'messages' => 'Please enter expiration month and year for the card.'
                 )),
                 array(new Pet_Validate_CCExpDate(array(
                     'month' => 'cc_exp_month',
@@ -89,7 +89,7 @@ class Form_SubForm_Payment extends Pet_Form_SubForm {
             'allowEmpty'   => false,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Date is invalid'
+                    'messages' => 'Please enter expiration month and year for the card.'
                 )),
                 array(new Pet_Validate_CCExpDate(array(
                     'month' => 'cc_exp_month',
@@ -104,14 +104,14 @@ class Form_SubForm_Payment extends Pet_Form_SubForm {
             'class'        => 'text',
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Security code is required'
+                    'messages' => 'Please enter the security code from your card.'
                 )),
                 array('StringLength', true, array(
                     'max' => 4,
-                    'messages' => 'Security code must be %max% characters or less'
+                    'messages' => 'The security code must be %max% characters or less.'
                 )),
                 array('Digits', true, array(
-                    'messages' => 'Security code must contain only numbers'
+                    'messages' => 'The security code must contain only numbers.'
                 ))
             )
         ))->setElementFilters(array('StringTrim'));

@@ -19,7 +19,7 @@ class Form_SubForm_UserInfo extends Pet_Form_SubForm {
             'validators'   => array(
                 array('StringLength', true, array(
                     'max' => 50,
-                    'messages' => 'Phone must be %max% characters or less'
+                    'messages' => 'Hello, I love you won\'t you tell me your name?'
                 ))
             ),
             'multiOptions' => array(
