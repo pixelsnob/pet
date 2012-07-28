@@ -49,6 +49,14 @@ class Model_Cart_Products implements Iterator, Countable {
             }
         }
     }
+
+    /**
+     * @return void
+     * 
+     */
+    public function clear() {
+        $this->_data = array();
+    }
     
     /**
      * @return void

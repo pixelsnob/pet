@@ -12,7 +12,7 @@ class Form_SubForm_Payment extends Pet_Form_SubForm {
     public function init() {
         $payment_opts = array(
             'credit_card' => 'Credit Card',
-            'paypal'      => 'Paypal Express Checkout'
+            'paypal'      => 'PayPal'
         );
         $this->addElement('radio', 'payment_method', array(
             'multiOptions' => $payment_opts, 

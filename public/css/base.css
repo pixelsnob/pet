@@ -54,12 +54,33 @@ ul.errors li, ul.success li {
 
 .form dt, .form dd {
     float: left;
-    line-height: 32px;
+    line-height: 30px;
 }
 
 .form dt {
     clear: left;
     width: 165px;
+}
+
+.form dt label {
+    vertical-align: middle;
+}
+
+/*
+.form dt label {
+    display: block;
+    line-height: 16px;
+    margin-top: 4px;
+}
+*/
+
+.form dt em {
+    font-size: 10px;
+    display: block;
+    line-height: 11px;
+    color: #bfbfbf;
+    position: relative;
+    top: -5px;
 }
 
 .form dd {
