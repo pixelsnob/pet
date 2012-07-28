@@ -1,6 +1,14 @@
 
+body.pet.products.index #content {
+    background: url(/images/layout/death-valley-bg.jpg) center top no-repeat;
+    margin: 0 auto;
+    min-width: 1082px;
+    min-height: 2000px; /* <<<<<<<<< */
+}
+
 /* Products main */
 
+/*
 #products-main {
     position: relative;
     left: -10px;
@@ -107,7 +115,7 @@
     bottom: 7px;
     left: 30px;
 }
-
+*/
 
 /* Individual product pages */
 

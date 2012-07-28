@@ -30,7 +30,7 @@ echo $this->headLink()
 
 </head>
 
-<body>
+<body class="<?php echo $this->bodyClass(); ?>">
     <header>
         <h1><a href="<?php echo $this->url(array('action' => 'home', 'controller' => 'index')); ?>">PET Admin</a></h1>
     </header>

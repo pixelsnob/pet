@@ -37,12 +37,13 @@ echo $this->headLink()
 
 </head>
 
-<body id="home">
+<body class="<?php echo $this->bodyClass(); ?>">
     <div id="header">
         <div class="container">
             <div id="logo">
                 <a href="/"><img src="<?php echo $this->fullUrl('/wp-content/themes/pet/_img/pet-logo.png', 'www.photoshopelementsuser.com'); ?>" alt="Photoshop Elements Techniques" /></a>
             </div>
+            <?php if (!$this->suppress_nav): ?>
             <div id="nav-wrap">
                 <ul id="top-nav" class="clearfix">
                     <li><a href="/topics/" class="top-level-link">Topics</a>
@@ -102,8 +103,10 @@ echo $this->headLink()
                     </li>
                 </ul>
             </div>
+            <?php endif; ?>
         </div>
     </div>
+    <?php if (!$this->suppress_top_bar): ?>
     <div id="top">
         <div class="container">
             <div class="col-wrap clearfix">
@@ -126,7 +129,7 @@ echo $this->headLink()
             </div>
         </div>
     </div>
-    
+    <?php endif; ?> 
     <div id="content">
         <div class="container clearfix">
             <div id="main">

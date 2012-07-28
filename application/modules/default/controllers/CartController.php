@@ -48,7 +48,7 @@ class CartController extends Zend_Controller_Action {
             $msg = $this->_cart_mapper->getMessage();
         }
         $this->_messenger->addMessage($msg);
-        $this->_helper->Redirector->setGotoSimple('index');
+        $this->_helper->Redirector->gotoSimple('index');
     }
     
     public function addPromoAction() {

@@ -1,10 +1,15 @@
 
+#top {
+    margin-bottom: 0;
+}
+
 #content, #nolayout {
     font-family: Lucida Grande, sans-serif;
     color: #888;
 }
 
 #content {
+    margin-top: 25px;
 }
 
 #content a:link, #content a:visited, #nolayout a:link, #nolayout a:visited {

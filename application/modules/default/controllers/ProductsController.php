@@ -10,10 +10,11 @@ class ProductsController extends Zend_Controller_Action {
     }
 
     /**
-     * Profile form for logged-in users
      * 
      */
     public function indexAction() {
+        $this->view->suppress_nav = true;
+        $this->view->suppress_top_bar = true;
     }
 
     /**
