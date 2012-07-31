@@ -12,10 +12,11 @@ class Pet_View_Helper_BodyClass extends Zend_View_Helper_Abstract {
      * 
      */
     public function bodyClass() {
-        $fc = Zend_Controller_Front::getInstance();
+        /*$fc = Zend_Controller_Front::getInstance();
         $module = $fc->getRequest()->getModuleName();
         $controller = $fc->getRequest()->getControllerName();
         $action = $fc->getRequest()->getActionName();
-        return $this->view->escape("pet $module $controller $action");
+        return $this->view->escape("pet $module $controller $action");*/
+        return ($this->view->body_class ? $this->view->body_class : '');
     }
 }

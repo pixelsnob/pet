@@ -1,9 +1,49 @@
 
-body.pet.products.index #content {
-    background: url(/images/layout/death-valley-bg.jpg) center top no-repeat;
+#products-index #content {
+    background: url(/images/products-index/death-valley-bg.jpg) center top no-repeat;
     margin: 0 auto;
     min-width: 1082px;
     min-height: 2000px; /* <<<<<<<<< */
+}
+
+#products-index .training {
+    width: 480px;
+    left: -24px;
+    padding: 24px 24px;
+    position: relative;
+}
+
+#products-index h2, 
+#products-index .training p,
+#products-index .training li {
+    color: #f0f0f0 !important;
+    text-shadow: 2px 2px 2px #000;
+}
+
+#products-index h2 {
+    font-size: 36px !important;
+    line-height: 44px; 
+    margin-bottom: 10px;
+}
+
+#products-index .training h3 {
+    color: #fab517 !important;
+    text-transform: none !important;
+    font-size: 17px !important;
+    text-shadow: 2px 2px 2px #000;
+    margin-bottom: 0px;
+}
+
+#products-index .training p {
+    font-size: 16px;
+    line-height: 22px;
+}
+
+#products-index .training li {
+    background: url(/images/products-index/bullet.png) 0 7px no-repeat;
+    line-height: 16px;
+    font-size: 13px;
+    margin-bottom: 10px !important;
 }
 
 /* Products main */
