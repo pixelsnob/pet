@@ -8,8 +8,10 @@
 
 #products-index .training {
     width: 480px;
+    height: 405px;
     left: -24px;
-    padding: 24px 24px;
+    padding: 24px;
+    margin-bottom: 30px;
     position: relative;
 }
 
@@ -26,6 +28,10 @@
     margin-bottom: 10px;
 }
 
+#products-index h3 {
+    color: #5f6278 !important;
+}
+
 #products-index .training h3 {
     color: #fab517 !important;
     text-transform: none !important;
@@ -40,10 +46,57 @@
 }
 
 #products-index .training li {
-    background: url(/images/products-index/bullet.png) 0 7px no-repeat;
+    background: url(/images/products-index/bullet.png) 0 5px no-repeat;
     line-height: 16px;
     font-size: 13px;
     margin-bottom: 10px !important;
+}
+
+#products-index .subscribe-renew {
+    overflow: hidden; 
+    padding-bottom: 15px;
+}
+
+#products-index .subscribe-renew a span {
+    display: none;
+}
+
+#products-index .subscribe-renew a:hover {
+    opacity: 0.85;
+}
+
+#products-index .subscribe-renew a:active {
+    opacity: 0.65;
+}
+
+#products-index .subscribe-renew .subscribe {
+    display: block;
+    float: left;
+    width: 420px;
+    height: 144px;
+    background: url(/images/products-index/sprites.png) -30px -7px;
+}
+
+#products-index .subscribe-renew .renew {
+    display: block;
+    float: left;
+    width: 248px;
+    height: 89px;
+    margin: 48px 0 0 20px;
+    background: url(/images/products-index/sprites.png) -511px -40px;
+}
+
+#products-index .dvds {
+    border-top: 1px solid #70717b;
+    padding: 16px 0;
+}
+
+#products-index .dvds li {
+    width: 208px;
+    height: 400px;
+    float: left;
+    border: 1px solid red;
+
 }
 
 /* Products main */
