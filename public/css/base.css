@@ -230,7 +230,7 @@ label input {
 
 /* Butons */
 
-.button-grad, .button-grad-blue {
+.button-grad, .button-grad-blue, .button-grad-yellow {
     border: none;
     color: #fff !important;
     text-transform: uppercase;
@@ -269,6 +269,19 @@ label input {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6582d2', endColorstr='#3b4b6d',GradientType=0 ); /* IE6-9 */
 }
 
+.button-grad-yellow {
+    background: #5267aa; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f5b331 0%, #cc820b 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5b331), color-stop(100%,#cc820b)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f5b331 0%,#cc820b 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f5b331 0%,#cc820b 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f5b331 0%,#cc820b 100%); /* IE10+ */
+    background: linear-gradient(top,  #f5b331 0%,#cc820b 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5b331', endColorstr='#cc820b',GradientType=0 ); /* IE6-9 */
+    border: 1px solid #8e5a07 !important;
+}
+
+
 .button-grad:hover {
     background: #707070;
 }
@@ -285,7 +298,16 @@ label input {
     background: #495d9c;
 }
 
-a.button-grad, a.button-grad-blue {
+.button-grad-yellow:hover {
+    background: #f0ad2d;
+}
+
+.button-grad-yellow:active {
+    background: #f3bf5c;
+}
+
+
+a.button-grad, a.button-grad-blue, a.button-grad-yellow {
     display: block;
 }
 

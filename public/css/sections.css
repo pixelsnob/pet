@@ -2,8 +2,8 @@
 #products-index #content {
     background: url(/images/products-index/death-valley-bg.jpg) center top no-repeat;
     margin: 0 auto;
+    padding-bottom: 30px;
     min-width: 1082px;
-    min-height: 2000px; /* <<<<<<<<< */
 }
 
 #products-index .training {
@@ -28,7 +28,7 @@
     margin-bottom: 10px;
 }
 
-#products-index h3 {
+#products-index h3, #products-index h4, #products-index p {
     color: #5f6278 !important;
 }
 
@@ -88,16 +88,73 @@
 
 #products-index .dvds {
     border-top: 1px solid #70717b;
-    padding: 16px 0;
+    padding: 16px 0 25px 0;
+    overflow: hidden;
+}
+
+#products-index .dvds h3 {
+
 }
 
 #products-index .dvds li {
-    width: 208px;
-    height: 400px;
+    width: 234px;
+    padding: 0;
+    margin-right: 15px;
     float: left;
-    border: 1px solid red;
-
+    background: none;
 }
+
+#products-index .dvds li .copy {
+    min-height: 100px;
+}
+
+#products-index .dvds li h4 {
+    padding-bottom: 0;
+    margin: 12px 0 0 0;
+    text-transform: none;
+}
+
+#products-index .dvds li p {
+    padding: 0 !important;
+}
+
+#products-index .dvds li .learn-more {
+    width: 100px;
+}
+
+#products-index .gift {
+    clear: both;
+    border-top: 1px solid #70717b;
+    padding: 16px 0 25px 0;
+}
+
+#products-index .gift h3 {
+    text-transform: none;
+    font-style: italic;
+    font-size: 18px;
+}
+
+#products-index .gift .button-grad {
+    width: 140px;
+}
+
+#products-index .guarantee {
+    clear: both;
+    border-top: 1px solid #70717b;
+    padding: 16px 0 25px 0;
+}
+
+#products-index .guarantee p {
+    color: #9d9d9d;
+}
+
+#products-index .guarantee strong {
+    text-transform: uppercase;
+    color: #fab517;
+}
+
+
+
 
 /* Products main */
 
@@ -212,6 +269,7 @@
 
 /* Individual product pages */
 
+/*
 .product-select-left, .product-select-right {
     float: left;
 }
@@ -232,15 +290,6 @@
     border-bottom: 2px solid #dfdfdf;
     overflow: hidden;
 }
-
-/*
-.product-select h2 {
-    text-transform: none;
-    font-style: italic;
-    font-size: 28px !important;
-    padding-bottom: 5px;
-}
-*/
 
 .product-select h3 {
     font-size: 16px !important;
@@ -339,7 +388,7 @@
     background: none;
     margin: 0;
     padding: 0;
-}
+} */
 
 /* Cart */
 
@@ -535,7 +584,6 @@
 }
 
 .promo-code dd {
-    /*position: relative;*/
     padding-top: 7px;
 }
 
