@@ -21,34 +21,37 @@ Pet.ProductsView = Pet.View.extend({
         'click .renew': 'openRenewPopup',
         'click #digital .buy': 'openDigitalSelectPopup',
         'click .forgot-password a': 'openForgotPasswordPopup'*/
-        'mousedown #products-index .subscribe-renew a': 'buttonDown',
-        'mouseup #products-index .subscribe-renew a': 'buttonUp',
-        'mouseover #products-index .subscribe-renew a': 'buttonOver',
-        'mouseout #products-index .subscribe-renew a': 'buttonOut',
-        'click #products-index .subscribe-renew a': 'buttonClick'
+        'mousedown #products-index .subscribe-renew a': 'subButtonDown',
+        'mouseup #products-index .subscribe-renew a': 'subButtonUp',
+        'mouseover #products-index .subscribe-renew a': 'subButtonOver',
+        'mouseout #products-index .subscribe-renew a': 'subButtonOut',
+        'click #products-index .subscribe-renew a': 'subButtonClick'
     },
     
     initialize: function(){
         this.cart_view = new Pet.CartView;
     },
 
-    buttonDown: function(el) {
+    subButtonDown: function(el) {
         $(el.target).fadeTo(1, 0.5);
     },
 
-    buttonUp: function(el) {
+    subButtonUp: function(el) {
         $(el.target).fadeTo(1, 0.8);
     },
 
-    buttonOver: function(el) {
-        $(el.target).fadeTo(200, 0.8);
+    subButtonOver: function(el) {
+        this.button_timeout = window.setTimeout(function() {
+            $(el.target).fadeTo(200, 0.8);
+        }, 100);
     },
 
-    buttonOut: function(el) {
+    subButtonOut: function(el) {
+        window.clearTimeout(this.button_timeout);
         $(el.target).fadeTo(130, 1);
     },
 
-    buttonClick: function(el) {
+    subButtonClick: function(el) {
         return false;
     },
 

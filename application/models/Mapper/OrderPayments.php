@@ -21,7 +21,7 @@ class Model_Mapper_OrderPayments extends Pet_Model_Mapper_Abstract {
      * @return Model_OrderPayment
      * 
      */
-    public function get($id) {
+    public function getById($id) {
         $payment = $this->_order_payments->find($id);
         if ($payment) {
             $payment_array = $payment->toArray();
