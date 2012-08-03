@@ -4,6 +4,7 @@
     margin: 0 auto;
     padding-bottom: 30px;
     min-width: 1082px;
+    font-family: "myriad-pro", sans-serif !important;
 }
 
 #products-index .training {
@@ -23,9 +24,12 @@
 }
 
 #products-index h2 {
-    font-size: 36px !important;
+    font-size: 42px !important;
+    font-weight: 300 !important;
+    width: 80%;
     line-height: 44px; 
     margin-bottom: 10px;
+    font-family: "myriad-pro", sans-serif !important;
 }
 
 #products-index h3, #products-index h4, #products-index p {
@@ -153,6 +157,9 @@
     color: #fab517;
 }
 
+#products-index .button-grad-yellow, #products-index .button-grad {
+    font-size: 14px;
+}
 
 
 
