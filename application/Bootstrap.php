@@ -20,7 +20,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initRegistryView() {
         $this->bootstrap('view');
-        Zend_Registry::set('view', $this->getResource('view'));
+        $view = $this->getResource('view');
+        $view->config = Zend_Registry::get('app_config');
+        Zend_Registry::set('view', $view);
     }
     
     protected function _initLogger() {

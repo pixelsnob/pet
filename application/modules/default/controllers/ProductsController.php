@@ -16,6 +16,8 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->suppress_nav = true;
         $this->view->suppress_top_bar = true;
         $this->view->body_id = 'products-index';
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript("Pet.loadView('Products');");
     }
 
     /**

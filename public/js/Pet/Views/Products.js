@@ -7,7 +7,7 @@ Pet.ProductsView = Pet.View.extend({
     el: $('body'),
     
     events: {
-        'click form[name=subscription-select-term] .submit input':
+        /*'click form[name=subscription-select-term] .submit input':
             'submitSubscriptionTermSelectForm',
         'click form[name=digital-subscription-select] .submit input':
             'submitDigitalSelectForm',
@@ -20,14 +20,40 @@ Pet.ProductsView = Pet.View.extend({
             'openSubscriptionSelectPopup',
         'click .renew': 'openRenewPopup',
         'click #digital .buy': 'openDigitalSelectPopup',
-        'click .forgot-password a': 'openForgotPasswordPopup'
-
+        'click .forgot-password a': 'openForgotPasswordPopup'*/
+        'mousedown #products-index .subscribe-renew a': 'buttonDown',
+        'mouseup #products-index .subscribe-renew a': 'buttonUp',
+        'mouseover #products-index .subscribe-renew a': 'buttonOver',
+        'mouseout #products-index .subscribe-renew a': 'buttonOut',
+        'click #products-index .subscribe-renew a': 'buttonClick'
     },
     
     initialize: function(){
         this.cart_view = new Pet.CartView;
     },
+
+    buttonDown: function(el) {
+        $(el.target).fadeTo(1, 0.5);
+    },
+
+    buttonUp: function(el) {
+        $(el.target).fadeTo(1, 0.8);
+    },
+
+    buttonOver: function(el) {
+        $(el.target).fadeTo(200, 0.8);
+    },
+
+    buttonOut: function(el) {
+        $(el.target).fadeTo(130, 1);
+    },
+
+    buttonClick: function(el) {
+        return false;
+    },
+
     
+    /*
     openSubscriptionSelectPopup: function(el) {
         this.showFancybox({ href: $(el.target).attr('href') });
         return false;
@@ -82,7 +108,7 @@ Pet.ProductsView = Pet.View.extend({
     openDigitalSelectPopup: function(el) {
         this.showFancybox({ href: $(el.target).attr('href') });
         return false;
-    }
+    }*/
 
 });
 

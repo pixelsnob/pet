@@ -27,10 +27,13 @@
 #products-index h2 {
     font-size: 42px !important;
     font-weight: 300 !important;
-    width: 80%;
     line-height: 44px; 
     margin-bottom: 10px;
     font-family: "myriad-pro", sans-serif !important;
+}
+
+#products-index.has-typekit h2 {
+    width: 80% !important;
 }
 
 #products-index h3, #products-index h4, #products-index p {
@@ -67,6 +70,7 @@
     display: none;
 }
 
+/*
 #products-index .subscribe-renew a:hover {
     opacity: 0.85;
 }
@@ -74,6 +78,7 @@
 #products-index .subscribe-renew a:active {
     opacity: 0.65;
 }
+*/
 
 #products-index .subscribe-renew .subscribe {
     display: block;
@@ -141,7 +146,7 @@
 }
 
 #products-index .gift .button-grad {
-    width: 140px;
+    width: 160px;
 }
 
 #products-index .guarantee {

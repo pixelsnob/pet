@@ -7,8 +7,10 @@
 <meta name="copyright" content="1999-<?php echo date('Y'); ?>, Photo One Media" />
 <meta name="google-site-verification" content="yxFgFAShYWbqXMOs28hBBdBqeqiPh0LGs9e2-ocHe_E" />
 
-<script type="text/javascript" src="//use.typekit.net/ocq1lfl.js"></script>
-<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<?php if (isset($this->config['typekit_path'])): ?>
+    <script type="text/javascript" src="<?php echo $this->config['typekit_path']; ?>"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<?php endif; ?>
 
 <?php
     
@@ -39,7 +41,7 @@ echo $this->headLink()
 
 </head>
 
-<body id="<?php echo $this->bodyId(); ?>">
+<body id="<?php echo $this->bodyId(); ?>" class="<?php echo (isset($this->config['typekit_path']) ? 'has-typekit' : ''); ?>">
     <div id="header">
         <div class="container">
             <div id="logo">
