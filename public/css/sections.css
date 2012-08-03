@@ -9,7 +9,7 @@
 }
 
 #products-index .training {
-    width: 480px;
+    width: 450px;
     height: 405px;
     left: -24px;
     padding: 24px;
@@ -32,10 +32,6 @@
     font-family: "myriad-pro", sans-serif !important;
 }
 
-#products-index.has-typekit h2 {
-    width: 80% !important;
-}
-
 #products-index h3, #products-index h4, #products-index p {
     color: #5f6278 !important;
 }
@@ -44,6 +40,7 @@
     color: #fab517 !important;
     text-transform: none !important;
     font-size: 17px !important;
+    font-weight: 300 !important;
     text-shadow: 2px 2px 2px #000;
     margin-bottom: 0px;
 }
