@@ -112,9 +112,9 @@
     background: none;
 }
 
-#products-index .dvds li .copy {
-    min-height: 100px;
-}
+/*#products-index .dvds li .copy {
+    min-height: 80px;
+}*/
 
 #products-index .dvds li h4 {
     padding-bottom: 0;
