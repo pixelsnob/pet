@@ -2,7 +2,7 @@
 <?php echo $this->render('products/training.phtml'); ?>
 
 <div class="subscribe-renew">
-    <a href="#" class="subscribe"><span>Subscribe</span></a>
+    <a href="<?php echo $this->serverUrl($this->url(array('controller' => 'products', 'action' => 'special'))); ?>" class="subscribe"><span>Subscribe</span></a>
     <a href="#" class="renew"><span>Renew</span></a>
 </div>
 <section class="dvds">

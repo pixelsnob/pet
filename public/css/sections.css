@@ -126,6 +126,11 @@
     padding: 0 !important;
 }
 
+
+#products-index .dvds li .copy {
+    min-height: 96px;
+}
+
 #products-index .dvds li .learn-more {
     width: 100px;
 }
@@ -155,6 +160,7 @@
 
 #products-index .guarantee p, #products-special .guarantee p {
     color: #9d9d9d;
+    font-size: 14px;
 }
 
 #products-index .guarantee strong, #products-special .guarantee strong {
@@ -177,10 +183,14 @@
     color: #5f6278 !important;
 }
 
+#products-special .free-gifts li,
+#products-special .free-gifts p {
+    font-size: 14px;
+}
+
 #products-special .free-gifts li {
     background: url(/images/products-index/bullet-navy.png) 0 5px no-repeat;
     line-height: 16px;
-    font-size: 14px;
     margin-bottom: 10px !important;
 }
 

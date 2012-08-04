@@ -58,7 +58,7 @@ Pet.ProductsView = Pet.View.extend({
     },
 
     subButtonClick: function(el) {
-        return false;
+        //return false;
     },
 
     
