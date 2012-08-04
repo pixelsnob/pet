@@ -1,5 +1,7 @@
 
-#products-index #content {
+/* Products landing pages */
+
+#products-index #content, #products-special #content {
     background: url(/images/products-index/death-valley-bg.jpg) center top no-repeat;
     margin: 0 auto;
     padding-bottom: 30px;
@@ -8,7 +10,17 @@
     border-top: 2px solid #322a2d;
 }
 
-#products-index .training {
+#products-index #content {
+    background: url(/images/products-index/death-valley-bg.jpg) center top no-repeat;
+}
+
+#products-special #content {
+    background: url(/images/products-index/coast-bg.jpg) center top no-repeat;
+}
+
+/* "Training resource" wide header shared by products pages */
+
+.products-training {
     width: 450px;
     height: 405px;
     left: -24px;
@@ -17,45 +29,47 @@
     position: relative;
 }
 
-#products-index h2, 
-#products-index .training p,
-#products-index .training li {
+.products-training h2, 
+.products-training p,
+.products-training li {
     color: #f0f0f0 !important;
     text-shadow: 2px 2px 2px #000;
 }
 
-#products-index h2 {
+.products-training h2 {
     font-size: 42px !important;
     font-weight: 300 !important;
     line-height: 44px; 
-    margin-bottom: 10px;
     font-family: "myriad-pro", sans-serif !important;
 }
 
-#products-index h3, #products-index h4, #products-index p {
-    color: #5f6278 !important;
-}
-
-#products-index .training h3 {
+.products-training h3 {
     color: #fab517 !important;
     text-transform: none !important;
     font-size: 17px !important;
     font-weight: 300 !important;
     text-shadow: 2px 2px 2px #000;
-    margin-bottom: 0px;
+    margin-bottom: 0 !important;
 }
 
-#products-index .training p {
+.products-training p {
     font-size: 17px;
     font-weight: 300;
     line-height: 22px;
 }
 
-#products-index .training li {
-    background: url(/images/products-index/bullet.png) 0 5px no-repeat;
+.products-training li {
+    background: url(/images/products-index/bullet-yellow.png) 0 5px no-repeat;
     line-height: 16px;
     font-size: 14px;
     margin-bottom: 10px !important;
+}
+
+
+/* Products index page */
+
+#products-index h4 {
+    color: #5f6278 !important;
 }
 
 #products-index .subscribe-renew {
@@ -66,16 +80,6 @@
 #products-index .subscribe-renew a span {
     display: none;
 }
-
-/*
-#products-index .subscribe-renew a:hover {
-    opacity: 0.85;
-}
-
-#products-index .subscribe-renew a:active {
-    opacity: 0.65;
-}
-*/
 
 #products-index .subscribe-renew .subscribe {
     display: block;
@@ -101,7 +105,7 @@
 }
 
 #products-index .dvds h3 {
-
+    color: #5f6278 !important;
 }
 
 #products-index .dvds li {
@@ -111,10 +115,6 @@
     float: left;
     background: none;
 }
-
-/*#products-index .dvds li .copy {
-    min-height: 80px;
-}*/
 
 #products-index .dvds li h4 {
     padding-bottom: 0;
@@ -140,23 +140,24 @@
     text-transform: none;
     font-style: italic;
     font-size: 18px;
+    color: #5f6278 !important;
 }
 
 #products-index .gift .button-grad {
     width: 160px;
 }
 
-#products-index .guarantee {
+#products-index .guarantee, #products-special .guarantee {
     clear: both;
     border-top: 1px solid #70717b;
     padding: 16px 0 25px 0;
 }
 
-#products-index .guarantee p {
+#products-index .guarantee p, #products-special .guarantee p {
     color: #9d9d9d;
 }
 
-#products-index .guarantee strong {
+#products-index .guarantee strong, #products-special .guarantee strong {
     text-transform: uppercase;
     color: #fab517;
 }
@@ -165,6 +166,45 @@
     font-size: 14px;
 }
 
+
+/* Products "special offers" page */
+
+#products-special .free-gifts {
+    margin-top: 120px;
+}
+
+#products-special .free-gifts h3 {
+    color: #5f6278 !important;
+}
+
+#products-special .free-gifts li {
+    background: url(/images/products-index/bullet-navy.png) 0 5px no-repeat;
+    line-height: 16px;
+    font-size: 14px;
+    margin-bottom: 10px !important;
+}
+
+#products-special .offers a span {
+    display: none;
+}
+
+#products-special .offers a.offer-1 {
+    float: left;
+    display: block;
+    width: 413px;
+    height: 106px;
+    background: url(/images/products-index/sprites.png) -31px -230px;
+    margin-top: 37px;
+}
+
+#products-special .offers a.offer-2 {
+    float: left;
+    display: block;
+    width: 536px;
+    height: 167px;
+    background: url(/images/products-index/sprites.png) -468px -193px;
+    margin-left: 20px;
+}
 
 
 /* Products main */

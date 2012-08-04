@@ -21,6 +21,18 @@ class ProductsController extends Zend_Controller_Action {
     }
 
     /**
+     * 
+     */
+    public function specialAction() {
+        $this->view->suppress_nav = true;
+        $this->view->suppress_top_bar = true;
+        $this->view->body_id = 'products-special';
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript("Pet.loadView('Products');");
+    }
+
+
+    /**
      * Regular subscriptions 
      * 
      */

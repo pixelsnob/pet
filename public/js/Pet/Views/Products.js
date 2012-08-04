@@ -25,7 +25,13 @@ Pet.ProductsView = Pet.View.extend({
         'mouseup #products-index .subscribe-renew a': 'subButtonUp',
         'mouseover #products-index .subscribe-renew a': 'subButtonOver',
         'mouseout #products-index .subscribe-renew a': 'subButtonOut',
-        'click #products-index .subscribe-renew a': 'subButtonClick'
+        'click #products-index .subscribe-renew a': 'subButtonClick',
+
+        'mousedown #products-special .offers a': 'subButtonDown',
+        'mouseup #products-special .offers a': 'subButtonUp',
+        'mouseover #products-special .offers a': 'subButtonOver',
+        'mouseout #products-special .offers a': 'subButtonOut',
+        'click #products-special .offers a': 'subButtonClick'
     },
     
     initialize: function(){
