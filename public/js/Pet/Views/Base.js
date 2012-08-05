@@ -8,6 +8,35 @@ Pet.View = Backbone.View.extend({
     
     spinner: null,
 
+    events: {
+        //'click a.button-grad': 'linkSubmitForm'
+    },
+
+    initialize: function() {
+        this.replaceGradLinks();
+    },
+    
+    /**
+     * Replaces links with gradient inputs, for a consistent look
+     * 
+     */
+    replaceGradLinks: function() {
+        var links = $('a.button-grad, a.button-grad-yellow, a.button-grad-blue');
+        links.each(function() {
+            var link = $(this);
+            link.replaceWith(
+                $('<input type="submit">').attr({ value: link.text() })
+                    .addClass(link.attr('class'))
+                    .width(link.width())
+                    .css('visibility', 'visible')
+                    .click(function() {
+                        window.location.href = link.attr('href');
+                        return false;
+                    })
+            );
+        });
+    },
+
     /**
      * Populates an existing fancybox
      * 

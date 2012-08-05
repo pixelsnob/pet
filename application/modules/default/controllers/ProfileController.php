@@ -43,6 +43,7 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('index');
         }
+        $this->_helper->FlashMessenger->setNamespace('login_form');
         $redirect_to = $this->_request->getParam('redirect_to');
         $redirect_params = (array) $this->_request->getParam('redirect_params');
         $login_form = $this->_users_svc->getLoginForm($redirect_to,
@@ -63,6 +64,8 @@ class ProfileController extends Zend_Controller_Action {
                 $this->view->messages = $this->_helper->FlashMessenger
                     ->getCurrentMessages();
             } 
+        } else {
+            $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         }
     }
     

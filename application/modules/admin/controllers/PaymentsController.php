@@ -32,7 +32,7 @@ class Admin_PaymentsController extends Zend_Controller_Action {
     public function detailAction() {
         $id = $this->_request->getParam('id');
         $op_mapper = new Model_Mapper_OrderPayments;
-        if (!($payment = $op_mapper->get($id))) {
+        if (!($payment = $op_mapper->getById($id))) {
             throw new Exception('Payment not found');
         }
         $this->view->payment = $payment;

@@ -7,20 +7,6 @@ Pet.ProductsView = Pet.View.extend({
     el: $('body'),
     
     events: {
-        /*'click form[name=subscription-select-term] .submit input':
-            'submitSubscriptionTermSelectForm',
-        'click form[name=digital-subscription-select] .submit input':
-            'submitDigitalSelectForm',
-        'click form[name=login] .submit input':
-            'submitLoginForm',
-        'click .forgot-password a': 'resetPasswordRequestForm',
-        'click form[name=reset-password-request] .submit input':
-            'submitResetPasswordRequestForm',
-        'click .subscription-options a, #gift-subscriptions .digital a':
-            'openSubscriptionSelectPopup',
-        'click .renew': 'openRenewPopup',
-        'click #digital .buy': 'openDigitalSelectPopup',
-        'click .forgot-password a': 'openForgotPasswordPopup'*/
         'mousedown #products-index .subscribe-renew a': 'subButtonDown',
         'mouseup #products-index .subscribe-renew a': 'subButtonUp',
         'mouseover #products-index .subscribe-renew a': 'subButtonOver',
@@ -35,7 +21,9 @@ Pet.ProductsView = Pet.View.extend({
     },
     
     initialize: function(){
-        this.cart_view = new Pet.CartView;
+        this.events = $.extend({}, Pet.View.prototype.events, this.events)
+        Pet.View.prototype.initialize.call(this);
+        //this.cart_view = new Pet.CartView;
     },
 
     subButtonDown: function(el) {

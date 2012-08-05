@@ -13,6 +13,7 @@ return array(
         'js/lib/jquery.tools.min.js',
         'js/Pet/Pet.js',
         'js/Pet/Views/Base.js'
+        //'js/Pet/Views/Global.js'
     ),
     'profile' => array(
         'js/Pet/Models/Auth.js',
@@ -43,26 +44,26 @@ return array(
         'js/lib/jquery-ui.custom.min.js',
         'js/Pet/Pet.js',
         'js/Pet/Views/Base.js',
-        'js/Pet/Views/Admin.js'
+        'js/Pet/Views/Admin/Base.js'
     ),
     'admin-users' => array(
-        'js/Pet/Views/AdminUsers.js'
+        'js/Pet/Views/Admin/Users.js'
     ),
     'admin-orders' => array(
         'js/Pet/Models/ProductCost.js',
-        'js/Pet/Views/AdminOrders.js'
+        'js/Pet/Views/Admin/Orders.js'
     ),
     'admin-payments' => array(
-        'js/Pet/Views/AdminPayments.js'
+        'js/Pet/Views/Admin/Payments.js'
     ),
     'admin-products' => array(
-        'js/Pet/Views/AdminProducts.js'
+        'js/Pet/Views/Admin/Products.js'
     ),
     'admin-shipping-zones' => array(
-        'js/Pet/Views/AdminShippingZones.js'
+        'js/Pet/Views/Admin/ShippingZones.js'
     ),
     'admin-promos' => array(
-        'js/lib/chosen/chosen.jquery.min.js',
-        'js/Pet/Views/AdminPromos.js'
+        //'js/lib/chosen/chosen.jquery.min.js',
+        'js/Pet/Views/Admin/Promos.js'
     )
 );

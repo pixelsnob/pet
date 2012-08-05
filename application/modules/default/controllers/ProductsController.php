@@ -9,9 +9,6 @@ class ProductsController extends Zend_Controller_Action {
         $this->_users_svc = new Service_Users;
     }
 
-    /**
-     * 
-     */
     public function indexAction() {
         $this->view->suppress_nav = true;
         $this->view->suppress_top_bar = true;
@@ -20,9 +17,6 @@ class ProductsController extends Zend_Controller_Action {
             ->appendScript("Pet.loadView('Products');");
     }
 
-    /**
-     * 
-     */
     public function specialAction() {
         $this->view->suppress_nav = true;
         $this->view->suppress_top_bar = true;
@@ -30,22 +24,31 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
     }
+    
+    public function renewalOptionsAction() {
+        if ($this->_users_svc->isAuthenticated()) {
+            
+        } else {
+            $this->_helper->FlashMessenger->setNamespace('login_form')
+                ->addMessage('Please log in to renew your subscription');
+            $this->_forward('login', 'profile', 'default', 
+                array(
+                    'redirect_to'     => 'products_renewal_options',
+                    'redirect_params' => array('is_renewal' => 1)
+                )
+            );
+        }
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript("Pet.loadView('Products');");
+    }
 
-
-    /**
-     * Regular subscriptions 
-     * 
-     */
+    /*
     public function subscriptionsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
     }
 
-    /**
-     * Subscription renewals
-     * 
-     */
     public function subscriptionRenewAction() {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_forward('subscription-term-select', 'products',
@@ -60,10 +63,6 @@ class ProductsController extends Zend_Controller_Action {
         }
     }
 
-    /**
-     * Term select form, subscriptions, gift and non
-     * 
-     */
     public function subscriptionTermSelectAction() {
         $zone_id = $this->_request->getParam('zone_id');
         $is_gift = $this->_request->getParam('is_gift');
@@ -112,20 +111,12 @@ class ProductsController extends Zend_Controller_Action {
         }
     }
 
-    /**
-     * Digital subscriptions 
-     * 
-     */
     public function digitalAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();
     }
 
-    /**
-     * Subscription renewals
-     * 
-     */
     public function digitalRenewAction() {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_forward('digital-select', 'products',
@@ -140,11 +131,6 @@ class ProductsController extends Zend_Controller_Action {
         }
     }
     
-    /**
-     * Term select form, digital subscriptions
-     * 
-     * 
-     */
     public function digitalSelectAction() {
         $is_gift    = $this->_request->getParam('is_gift');
         $is_gift = (strlen(trim($is_gift)) ? true : null);
@@ -180,22 +166,14 @@ class ProductsController extends Zend_Controller_Action {
         }
     }
     
-    /**
-     * Gift subscriptions
-     * 
-     */
     public function giftsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
     }
     
-    /**
-     * Physical products
-     *
-     */
     public function physicalAction() {
         $this->view->products = $this->_products_mapper->getPhysicalProducts(); 
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
-    }
+    }*/
 }

@@ -1,0 +1,7 @@
+/**
+ * Rules that will only be applied if JS is turned on in the user's browser
+ * 
+ */
+a.button-grad, a.button-grad-yellow, a.button-grad-blue {
+    visibility: hidden;
+}

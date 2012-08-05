@@ -16,7 +16,9 @@ Pet.CheckoutView = Pet.View.extend({
     },
     
     initialize: function() {
-        this.addPromoCodeApplyLink();
+        this.events = $.extend({}, Pet.View.prototype.events, this.events)
+        Pet.View.prototype.initialize.call(this);
+        //this.addPromoCodeApplyLink();
         $('input[type=text]').attr('autocomplete', 'off');
     },
 

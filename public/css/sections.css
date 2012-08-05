@@ -648,18 +648,16 @@
     padding-top: 7px;
 }
 
-.promo-code input {
+#promo_code {
     width: 90px;
-    float: left;
 }
 
-.promo-code a {
-    height: 14px;
-    line-height: 14px;
-    float: left;
-    display: block;
-    position: relative;
+.promo-code .button-grad {
     margin-left: 10px;
+    font-size: 12px !important;
+    height: 24px;
+    line-height: 24px;
+    padding: 2px 15px;
 }
 
 .promo-code .errors, .promo-code .success {

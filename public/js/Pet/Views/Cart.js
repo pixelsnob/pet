@@ -10,17 +10,20 @@ Pet.CartView = Pet.View.extend({
 
     events: {
         'click .add-to-cart': 'openCartPopup',
-        'click #cart .remove': 'removeProduct',
-        'click #cart .update': 'update',
-        'mousedown #cart .remove, #cart .update': 'fadeOutItem',
-        'mouseup #cart .update, #cart .remove': 'fadeInItem',
-        'click #cart .checkout input': 'goToCheckout',
-        'click #cart .continue-shopping input': 'continueShopping',
-        'mouseup #cart .items input': 'qtySelectMouseup',
-        'focus #cart .items input': 'qtySelectFocus'
+        'click #nolayout #cart .remove': 'removeProduct',
+        'click #nolayout #cart .update': 'update',
+        'mousedown #nolayout #cart .remove, #cart .update': 'fadeOutItem',
+        'mouseup #nolayout #cart .update, #cart .remove': 'fadeInItem',
+        'click #nolayout #cart .checkout input': 'goToCheckout',
+        'click #nolayout #cart .continue-shopping input': 'continueShopping',
+        'mouseup #nolayout #cart .items input': 'qtySelectMouseup',
+        'focus #nolayout #cart .items input': 'qtySelectFocus',
     },
     
-    initialize: function() {},
+    initialize: function() {
+        this.events = $.extend({}, Pet.View.prototype.events, this.events)
+        Pet.View.prototype.initialize.call(this);
+    },
     
     openCartPopup: function(el) {
         var obj = this;

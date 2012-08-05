@@ -37,6 +37,8 @@ class CartController extends Zend_Controller_Action {
             $this->view->messages = $this->_messenger->getMessages();
         }
         $this->view->nolayout = $this->_request->getParam('nolayout');
+        $this->view->inlineScriptMin()->loadGroup('cart')
+            ->appendScript("Pet.loadView('Cart');");
     }
 
     public function addAction() {
