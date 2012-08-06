@@ -49,7 +49,7 @@ class ProfileController extends Zend_Controller_Action {
         $login_form = $this->_users_svc->getLoginForm($redirect_to,
             $redirect_params);
         $this->view->login_form = $login_form;
-        $post = $this->_request->getPost();
+        $post = $this->_request->getParams();
         if ($this->_request->isPost() && $login_form->isValid($post)) {
             if ($this->_users_svc->login($post, null)) {
                 $this->_users_svc->updateLastLogin();

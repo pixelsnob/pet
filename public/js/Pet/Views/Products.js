@@ -13,11 +13,13 @@ Pet.ProductsView = Pet.View.extend({
         'mouseout #products-index .subscribe-renew a': 'subButtonOut',
         'click #products-index .subscribe-renew a': 'subButtonClick',
 
+        'click #nolayout .renewal-options': 'renewButtonClick',
+
         'mousedown #products-special .offers a': 'subButtonDown',
         'mouseup #products-special .offers a': 'subButtonUp',
         'mouseover #products-special .offers a': 'subButtonOver',
-        'mouseout #products-special .offers a': 'subButtonOut',
-        'click #products-special .offers a': 'subButtonClick'
+        'mouseout #products-special .offers a': 'subButtonOut'
+        //'click #products-special .offers a': 'subButtonClick'
     },
     
     initialize: function(){
@@ -46,8 +48,17 @@ Pet.ProductsView = Pet.View.extend({
     },
 
     subButtonClick: function(el) {
-        //return false;
+        var obj = this;
+        this.showFancybox({ href: $(el.target).attr('href') }, function() {
+            obj.replaceGradLinks(null, true);
+        });
+        return false;
     },
+
+    renewButtonClick: function(el) {
+        this.populateFancybox($(el.target).data('href')); 
+        return false;
+    }
 
     
     /*

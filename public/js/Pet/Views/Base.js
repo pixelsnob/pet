@@ -4,36 +4,55 @@
  */
 Pet.View = Backbone.View.extend({
     
+    el: $('body'),
+
     error_msg: '<p class="error">An error has ocurred</p>',
     
     spinner: null,
 
     events: {
-        //'click a.button-grad': 'linkSubmitForm'
+        'click #nolayout #login-form #login-submit': 'submitLoginForm'
+        //'click .fb-open': 'applyShowFancybox',
+        //'click .fb-populate': 'applyPopulateFancybox'
     },
 
     initialize: function() {
         this.replaceGradLinks();
     },
     
+    submitLoginForm: function() {
+        var login_form = $('form[name=login]', this.el);
+        var qs = login_form.serialize();
+        //console.log(login_form.serialize());
+        //qs += '&redirect_params[nolayout]=1';
+        //console.log(qs);
+        this.populateFancybox('/profile/login/', qs);
+        return false; 
+    },
+
     /**
      * Replaces links with gradient inputs, for a consistent look
      * 
      */
-    replaceGradLinks: function() {
-        var links = $('a.button-grad, a.button-grad-yellow, a.button-grad-blue');
+    replaceGradLinks: function(el, no_click) {
+        el = (typeof el == 'object' && el !== null ? el : this.el); 
+        var sel = 'a.button-grad, a.button-grad-yellow, a.button-grad-blue',
+            links = $(sel, el);
         links.each(function() {
-            var link = $(this);
-            link.replaceWith(
-                $('<input type="submit">').attr({ value: link.text() })
+            var link = $(this),
+                input = $('<input type="submit">')
+                    .attr({ value: link.text() })
                     .addClass(link.attr('class'))
                     .width(link.width())
                     .css('visibility', 'visible')
-                    .click(function() {
-                        window.location.href = link.attr('href');
-                        return false;
-                    })
-            );
+                    .data('href', link.attr('href'));
+            link.replaceWith(input);
+            if (input.parents('#nolayout').length == 0) {
+                input.click(function() {
+                    window.location.href = link.attr('href');
+                    return false;
+                });
+            }
         });
     },
 
@@ -88,7 +107,28 @@ Pet.View = Backbone.View.extend({
         }, opts);
         $.fancybox(opts);
     },
-    
+
+    /*
+    applyShowFancybox: function(el) {
+        var obj = this;
+        this.showFancybox({
+            href: $(el.target).attr('href')
+        }, function() {
+            obj.replaceGradLinks($('#nolayout'));
+        });
+        return false;
+    },
+
+    applyPopulateFancybox: function(el) {
+        alert('');
+        var obj = this;
+        this.populateFancybox($(el.target).attr('href'), function() {
+            obj.replaceGradLinks($('#nolayout'));
+        });
+        return false;
+    },
+    */
+
     /**
      * Smooth scroll
      * 
