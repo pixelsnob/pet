@@ -27,14 +27,13 @@ class ProductsController extends Zend_Controller_Action {
     
     public function renewalOptionsAction() {
         if ($this->_users_svc->isAuthenticated()) {
-            
         } else {
             $this->_helper->FlashMessenger->setNamespace('login_form')
                 ->addMessage('Please log in to renew your subscription');
             $this->_forward('login', 'profile', 'default', 
                 array(
                     'redirect_to'     => 'products_renewal_options',
-                    'redirect_params' => array('is_renewal' => 1)
+                    'redirect_params' => array('is_renewal' => 1, 'nolayout' => 1)
                 )
             );
         }

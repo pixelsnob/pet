@@ -18,14 +18,21 @@ Pet.ProductsView = Pet.View.extend({
         'mousedown #products-special .offers a': 'subButtonDown',
         'mouseup #products-special .offers a': 'subButtonUp',
         'mouseover #products-special .offers a': 'subButtonOver',
-        'mouseout #products-special .offers a': 'subButtonOut'
+        'mouseout #products-special .offers a': 'subButtonOut',
         //'click #products-special .offers a': 'subButtonClick'
+
+        'click #nolayout #login-form #login-submit': 'submitLoginForm',
+        'click #nolayout #login-form .forgot-password': 'populateFancyboxFromLink',
+        'click #nolayout #reset-password-request .submit': 'submitResetPasswordRequestForm'
+
+        //'click #nolayout #cart .continue-shopping input': 'closeFancybox'
+
     },
     
     initialize: function(){
         this.events = $.extend({}, Pet.View.prototype.events, this.events)
         Pet.View.prototype.initialize.call(this);
-        //this.cart_view = new Pet.CartView;
+        Pet.loadView('Cart'); 
     },
 
     subButtonDown: function(el) {
@@ -49,14 +56,27 @@ Pet.ProductsView = Pet.View.extend({
 
     subButtonClick: function(el) {
         var obj = this;
-        this.showFancybox({ href: $(el.target).attr('href') }, function() {
-            obj.replaceGradLinks(null, true);
-        });
+        this.showFancybox({ href: $(el.target).attr('href') });
         return false;
     },
 
     renewButtonClick: function(el) {
         this.populateFancybox($(el.target).data('href')); 
+        return false;
+    },
+
+    submitLoginForm: function() {
+        var login_form = $('form[name=login]', this.el),
+            qs         = login_form.serialize() + '&redirect_params[nolayout]=1',
+            obj        = this;
+        this.populateFancybox('/products/renewal-options', qs);
+        return false; 
+    },
+
+    submitResetPasswordRequestForm: function() {
+        var form = $('form[name=reset-password-request]', this.el);
+        var qs = form.serialize();
+        this.populateFancybox('/profile/reset-password-request', qs);
         return false;
     }
 

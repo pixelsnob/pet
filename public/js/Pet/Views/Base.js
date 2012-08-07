@@ -11,7 +11,7 @@ Pet.View = Backbone.View.extend({
     spinner: null,
 
     events: {
-        'click #nolayout #login-form #login-submit': 'submitLoginForm'
+        //'click #nolayout #login-form #login-submit': 'submitLoginForm'
         //'click .fb-open': 'applyShowFancybox',
         //'click .fb-populate': 'applyPopulateFancybox'
     },
@@ -20,16 +20,6 @@ Pet.View = Backbone.View.extend({
         this.replaceGradLinks();
     },
     
-    submitLoginForm: function() {
-        var login_form = $('form[name=login]', this.el);
-        var qs = login_form.serialize();
-        //console.log(login_form.serialize());
-        //qs += '&redirect_params[nolayout]=1';
-        //console.log(qs);
-        this.populateFancybox('/profile/login/', qs);
-        return false; 
-    },
-
     /**
      * Replaces links with gradient inputs, for a consistent look
      * 
@@ -65,15 +55,16 @@ Pet.View = Backbone.View.extend({
         cb = (typeof cb == 'function' ? cb : function() {});
         var obj = this,
         ajax_params = {
-            'url': url,
-            'type': (post_data ? 'post' : 'get'),
-            'async': false,
-            'success': function(data) {
+            url: url,
+            type: (post_data ? 'post' : 'get'),
+            async: false,
+            success: function(data) {
                 $('.fancybox-inner').html(data);
                 cb();
                 $.fancybox.update();
+                obj.replaceGradLinks();
             },
-            'error': function() {
+            error: function() {
                 $('.fancybox-inner').html(obj.error_msg);
             }
         };
@@ -92,6 +83,7 @@ Pet.View = Backbone.View.extend({
             opts.href += '?nolayout';
         }
         cb = (typeof cb == 'function' ? cb : function() {});
+        var obj = this;
         opts = $.extend({
             type: 'ajax',
             scrolling: 'no',
@@ -103,9 +95,19 @@ Pet.View = Backbone.View.extend({
             beforeShow: function() {
                 cb();
                 $.fancybox.update();
+                obj.replaceGradLinks();
             }
         }, opts);
         $.fancybox(opts);
+    },
+
+    populateFancyboxFromLink: function(el) {
+        this.populateFancybox($(el.target).attr('href'));
+        return false;
+    },
+
+    closeFancybox: function() {
+        $.fancybox().close();
     },
 
     /*

@@ -9,8 +9,7 @@ Pet.ProfileFormView = Pet.View.extend({
     events: {
         'click .change-password a': 'changePassword',
         'click form[name=change-password] .submit input':
-            'submitChangePasswordForm',
-        'click .forgot-password': 'test'
+            'submitChangePasswordForm'
     },
     
     initialize: function(){

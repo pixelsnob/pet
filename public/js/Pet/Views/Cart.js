@@ -21,8 +21,8 @@ Pet.CartView = Pet.View.extend({
     },
     
     initialize: function() {
-        this.events = $.extend({}, Pet.View.prototype.events, this.events)
-        Pet.View.prototype.initialize.call(this);
+        //this.events = $.extend({}, Pet.View.prototype.events, this.events)
+        //Pet.View.prototype.initialize.call(this);
     },
     
     openCartPopup: function(el) {
