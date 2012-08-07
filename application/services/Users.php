@@ -130,6 +130,26 @@ class Service_Users extends Pet_Service {
         }
         return $this->_user_profiles->getByUserId($user_id);
     }
+    
+    /**
+     * Returns the zone_id from a user's profile
+     * 
+     * @param int|null $user_id
+     * @return int
+     * 
+     */
+    public function getZoneId($user_id = null) {
+        $profile = $this->getProfile($user_id);
+        if (!$profile) {
+            return;
+        }
+        $products_mapper = new Model_Mapper_Products;
+        $sz = $products_mapper->getSubscriptionZoneByName(
+            $profile->billing_country);
+        if ($sz && $sz->id) {
+            return $sz->id;
+        }
+    }
 
     /**
      * @param string $token

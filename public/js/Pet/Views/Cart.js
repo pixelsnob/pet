@@ -9,29 +9,26 @@ Pet.CartView = Pet.View.extend({
     model: new Pet.CartModel,
 
     events: {
-        'click .add-to-cart': 'openCartPopup',
-        'click #nolayout #cart .remove': 'removeProduct',
+        //'click .add-to-cart': 'openCartPopup',
+        'click #nolayout #cart .remove': 'populateFancyboxFromLink',
         'click #nolayout #cart .update': 'update',
         'mousedown #nolayout #cart .remove, #cart .update': 'fadeOutItem',
         'mouseup #nolayout #cart .update, #cart .remove': 'fadeInItem',
         'click #nolayout #cart .checkout input': 'goToCheckout',
         'click #nolayout #cart .continue-shopping input': 'continueShopping',
         'mouseup #nolayout #cart .items input': 'qtySelectMouseup',
-        'focus #nolayout #cart .items input': 'qtySelectFocus',
+        'focus #nolayout #cart .items input': 'qtySelectFocus'
     },
     
     initialize: function() {
-        //this.events = $.extend({}, Pet.View.prototype.events, this.events)
-        //Pet.View.prototype.initialize.call(this);
     },
     
-    openCartPopup: function(el) {
-        var obj = this;
+    /*openCartPopup: function(el) {
         this.showFancybox({
             href: $(el.target).attr('href')
         });
         return false;
-    },
+    },*/
 
     update: function() {
         var qs = $('form[name=cart]', this.el).serialize();
@@ -55,9 +52,6 @@ Pet.CartView = Pet.View.extend({
 
     continueShopping: function() {
         $.fancybox.close();
-        window.setTimeout(function() {
-            window.location.href = '/products';
-        }, 500);
         return false;
     },
 

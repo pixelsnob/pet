@@ -10,8 +10,7 @@ class Model_SubscriptionZone extends Pet_Model_Abstract
         'id' => null,
         'name' => null,
         'zone' => null
-        );
-
+    );
 
 }
 

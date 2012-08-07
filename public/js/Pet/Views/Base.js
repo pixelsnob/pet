@@ -101,6 +101,19 @@ Pet.View = Backbone.View.extend({
         $.fancybox(opts);
     },
 
+    /**
+     * Creates a fancybox popup and populates it using a link's href
+     * 
+     */
+    showFancyboxFromLink: function(el) {
+        this.showFancybox($(el.target).attr('href'));
+        return false;
+    },
+    
+    /**
+     * Populates existing fancybox using a link's href
+     * 
+     */
     populateFancyboxFromLink: function(el) {
         this.populateFancybox($(el.target).attr('href'));
         return false;
@@ -108,28 +121,8 @@ Pet.View = Backbone.View.extend({
 
     closeFancybox: function() {
         $.fancybox().close();
-    },
-
-    /*
-    applyShowFancybox: function(el) {
-        var obj = this;
-        this.showFancybox({
-            href: $(el.target).attr('href')
-        }, function() {
-            obj.replaceGradLinks($('#nolayout'));
-        });
         return false;
     },
-
-    applyPopulateFancybox: function(el) {
-        alert('');
-        var obj = this;
-        this.populateFancybox($(el.target).attr('href'), function() {
-            obj.replaceGradLinks($('#nolayout'));
-        });
-        return false;
-    },
-    */
 
     /**
      * Smooth scroll

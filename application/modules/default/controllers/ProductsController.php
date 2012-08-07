@@ -27,6 +27,7 @@ class ProductsController extends Zend_Controller_Action {
     
     public function renewalOptionsAction() {
         if ($this->_users_svc->isAuthenticated()) {
+            //echo $this->_users_svc->getZoneId();
         } else {
             $this->_helper->FlashMessenger->setNamespace('login_form')
                 ->addMessage('Please log in to renew your subscription');

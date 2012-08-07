@@ -79,7 +79,6 @@ Pet.ProductsView = Pet.View.extend({
         this.populateFancybox('/profile/reset-password-request', qs);
         return false;
     }
-
     
     /*
     openSubscriptionSelectPopup: function(el) {

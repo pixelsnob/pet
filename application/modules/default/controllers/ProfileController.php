@@ -54,7 +54,6 @@ class ProfileController extends Zend_Controller_Action {
             if ($this->_users_svc->login($post, null)) {
                 $this->_users_svc->updateLastLogin();
                 if ($redirect_to) {
-                    $redirect_params['nolayout'] = 1;
                     $this->_helper->Redirector->gotoRoute($redirect_params,
                         $redirect_to);
                 } else {
