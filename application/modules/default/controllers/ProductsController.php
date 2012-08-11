@@ -73,6 +73,20 @@ class ProductsController extends Zend_Controller_Action {
             ->appendScript("Pet.loadView('Products');");
     }
 
+    public function physicalDetailAction() {
+        $product_id = $this->_request->getParam('product_id');
+        if (!$product_id) {
+            throw new Exception('Product id is required');
+        }
+        $product = $this->_products_mapper->getById($product_id);
+        if (!$product) {
+            throw new Exception('Product not found');
+        }
+        $this->view->product = $product;
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript("Pet.loadView('Products');");
+    }
+
     /*
     public function subscriptionsAction() {
             $zone_id = $this->_users_svc->getZoneId();

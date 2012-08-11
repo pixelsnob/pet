@@ -391,3 +391,23 @@ pre {
 .clear {
     clear: both;
 }
+
+/* Floated list of buttons/links */
+
+.buttons-list {
+    clear: both;
+    padding: 20px 0 25px 0;
+}
+
+.buttons-list li {
+    width: auto;
+    float: left;
+    background: none;
+    padding-left: 0;
+    margin-right: 7px;
+}
+
+.buttons-list .submit {
+    margin-top: 0;
+}
+

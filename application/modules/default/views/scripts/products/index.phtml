@@ -1,45 +1,45 @@
 
 <?php echo $this->render('products/training.phtml'); ?>
 
-<div class="subscribe-renew">
-    <a href="<?php echo $this->serverUrl($this->url(array(), 'products_special')); ?>" class="subscribe"><span>Subscribe</span></a>
-    <a href="<?php echo $this->serverUrl($this->url(array(), 'products_renewal_options')); ?>" class="renew"><span>Renew</span></a>
-</div>
+<ul class="subscribe-renew">
+    <li><a href="<?php echo $this->serverUrl($this->url(array(), 'products_special')); ?>" class="subscribe"><span>Subscribe</span></a></li>
+    <li><a href="<?php echo $this->serverUrl($this->url(array(), 'products_renewal_options')); ?>" class="renew"><span>Renew</span></a></li>
+</ul>
 
 <section class="dvds">
     <h3>Tutorial DVDs</h3>
     <ul>
         <li>
-            <img src="/images/products-index/dvds/LRNELEMENTS.jpg" width="185" height="176" alt="Learn Photoshop Elements Today!">
+            <img src="/images/products/medium/LRNELEMENTS.jpg" width="185" height="176" alt="Learn Photoshop Elements Today!">
             <div class="copy">
                 <h4>Learn Elements Today!</h4>
                 <p>The best way to get up to speed with all the features in Elements, from beginner to advanced user!</p>
             </div>
-            <a href="#" class="learn-more button-grad-yellow">Learn More</a>
+            <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 170), 'products_physical_detail')); ?>" class="learn-more button-grad-yellow no-click">Learn More</a>
         </li>
         <li>
-            <img src="/images/products-index/dvds/BODVD6.jpg" width="185" height="176" alt="Best of Photoshop Elements Techniques, V6">
+            <img src="/images/products/medium/BODVD6.jpg" width="185" height="176" alt="Best of Photoshop Elements Techniques, V6">
             <div class="copy">
                 <h4>Best of P.E.T., Volume 6</h4>
                 <p>65 easy-to-follow tutorials will guide you through Elements’ best features!</p>
             </div>
-            <a href="#" class="learn-more button-grad-yellow">Learn More</a>
+            <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 173), 'products_physical_detail')); ?>" class="learn-more button-grad-yellow no-click">Learn More</a>
         </li>
         <li>
-            <img src="/images/products-index/dvds/BODVD5.jpg" width="185" height="176" alt="Best of Photoshop Elements Techniques, V5">
+            <img src="/images/products/medium/BODVD5.jpg" width="185" height="176" alt="Best of Photoshop Elements Techniques, V5">
             <div class="copy">
                 <h4>Best of P.E.T., Volume 5</h4>
                 <p>5 hours of creative projects, tips, and time-saving Elements techniques!</p>
             </div>
-            <a href="#" class="learn-more button-grad-yellow">Learn More</a>
+            <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 172), 'products_physical_detail')); ?>" class="learn-more button-grad-yellow no-click">Learn More</a>
         </li>
         <li>
-            <img src="/images/products-index/dvds/BODVD4.jpg" width="185" height="176" alt="Best of Photoshop Elements Techniques, V4">
+            <img src="/images/products/medium/BODVD4.jpg" width="185" height="176" alt="Best of Photoshop Elements Techniques, V4">
             <div class="copy">
                 <h4>Best of P.E.T., Volume 4</h4>
                 <p>Add to your Elements expertise with 50+ inspiring tutorial videos.</p>
             </div>
-            <a href="#" class="learn-more button-grad-yellow">Learn More</a>
+            <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 169), 'products_physical_detail')); ?>" class="learn-more button-grad-yellow no-click">Learn More</a>
         </li>
     </ul>
 </section>
@@ -52,3 +52,4 @@
 <div class="guarantee">
     <p><strong>Money-back guarantee:</strong> If you’re not happy with any purchase from Photoshop Elements Techniques, we’ll refund your money. It’s that easy.</p>
 </div>
+

@@ -36,8 +36,9 @@ Pet.View = Backbone.View.extend({
                     .width(link.width())
                     .css('visibility', 'visible')
                     .data('href', link.attr('href'));
+            var no_click = link.hasClass('no-click');
             link.replaceWith(input);
-            if (input.parents('#nolayout').length == 0) {
+            if (!no_click && input.parents('#nolayout').length == 0) {
                 input.click(function() {
                     window.location.href = link.attr('href');
                     return false;

@@ -12,6 +12,7 @@ Pet.ProductsView = Pet.View.extend({
         'mouseover #products-index .subscribe-renew a': 'subButtonOver',
         'mouseout #products-index .subscribe-renew a': 'subButtonOut',
         'click #products-index a.renew': 'showFancyboxFromLink',
+        'click #products-index .dvds .learn-more': 'openPhysicalDetailPopup',
 
         //'click #nolayout .renewal-options': 'renewButtonClick',
 
@@ -24,7 +25,9 @@ Pet.ProductsView = Pet.View.extend({
         'click #nolayout #login-form .forgot-password': 'populateFancyboxFromLink',
         'click #nolayout #reset-password-request .submit': 'submitResetPasswordRequestForm',
 
-        'click #nolayout .cart-add': 'addSubToCart',
+        'click #nolayout .cart-add': 'addProductToCart',
+
+        'click #nolayout .continue-shopping': 'closeFancybox',
 
         'click #nolayout #products-renewal-options .submit input': 'submitSubscriptionOptionsForm'
 
@@ -70,7 +73,7 @@ Pet.ProductsView = Pet.View.extend({
         return false;
     },
     
-    addSubToCart: function(el) {
+    addProductToCart: function(el) {
         this.populateFancybox($(el.target).data('href')); 
         return false;
     },
@@ -79,6 +82,11 @@ Pet.ProductsView = Pet.View.extend({
         var form = $('form[name=subscription-options]', this.el);
         var qs = form.serialize();
         this.populateFancybox('/products/renewal-options', qs);
+        return false;
+    },
+
+    openPhysicalDetailPopup: function(el) {
+        this.showFancybox({ href: $(el.target).data('href') });
         return false;
     }
 

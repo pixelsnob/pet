@@ -60,13 +60,12 @@
             <?php else: ?>
                 <p class="no-items">You have no items in your cart</p> 
             <?php endif; ?>
-            <ul class="cart-nav submit">
-                <?php if ($this->nolayout): ?>
-                    <li class="continue-shopping">
-                        <input type="submit" value="Continue Shopping" class="button-grad">
-                    </li>
-                <?php else: ?>
-                    <li class="submit"><input type="submit" value="Update" class="button-grad"></li>
+            <ul class="buttons-list">
+                <li class="continue-shopping">
+                    <a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>" class="button-grad">Continue Shopping</a>
+                </li>
+                <?php if (count($this->cart->products)): ?>
+                    <li class="update"><input type="submit" value="Update" class="button-grad"></li>
                 <?php endif; ?>
                 <?php if (count($this->cart->products)): ?>
                     <li class="checkout">
