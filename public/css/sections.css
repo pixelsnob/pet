@@ -217,6 +217,32 @@
 }
 
 
+#products-renewal-options .subscriptions li {
+    float: left;
+    width: 200px;
+    background: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#products-renewal-options section {
+    margin-bottom: 20px; 
+}
+
+#products-renewal-options h3 {
+    text-transform: none;
+    font-style: italic;
+}
+
+#products-renewal-options li {
+    background: none;
+    padding-left: 0;
+}
+
+#products-renewal-options li em {
+    font-weight: bold;
+}
+
 /* Products main */
 
 /*

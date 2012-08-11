@@ -106,7 +106,7 @@ Pet.View = Backbone.View.extend({
      * 
      */
     showFancyboxFromLink: function(el) {
-        this.showFancybox($(el.target).attr('href'));
+        this.showFancybox({ href: $(el.target).attr('href') });
         return false;
     },
     

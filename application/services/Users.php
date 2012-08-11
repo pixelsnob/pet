@@ -144,8 +144,9 @@ class Service_Users extends Pet_Service {
             return;
         }
         $products_mapper = new Model_Mapper_Products;
-        $sz = $products_mapper->getSubscriptionZoneByName(
-            $profile->billing_country);
+        $country = (strlen(trim($profile->shipping_country)) ?
+            $profile->shipping_country : $profile->billing_country);
+        $sz = $products_mapper->getSubscriptionZoneByName($country);
         if ($sz && $sz->id) {
             return $sz->id;
         }

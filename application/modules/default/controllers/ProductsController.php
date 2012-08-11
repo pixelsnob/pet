@@ -26,17 +26,48 @@ class ProductsController extends Zend_Controller_Action {
     }
     
     public function renewalOptionsAction() {
+        $request = $this->getRequest();
         if ($this->_users_svc->isAuthenticated()) {
-            //echo $this->_users_svc->getZoneId();
+            $zone_id = $this->_users_svc->getZoneId();
+            if (!$zone_id) {
+                throw new Exception('Zone id not found for authenticated user');
+            }
+            if ($zone_id == Model_SubscriptionZone::USA) {
+                $this->view->subscriptions = $this->_products_mapper
+                    ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA,
+                        null, true); 
+                $this->_helper->ViewRenderer->render('renewal-options-usa');
+            } else {
+                $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
+                    $zone_id, null, true);
+                $digital_subs = $this->_products_mapper->getDigitalSubscriptions(
+                    null, true);
+                $form = new Form_SubscriptionOptions(array(
+                    'zoneId'  => $zone_id,
+                    'isRenewal' => true,
+                    'subscriptions' => array_merge($regular_subs, $digital_subs)
+                ));
+                $this->view->regular_subs = $regular_subs;
+                $this->view->digital_subs = $digital_subs;
+                $this->view->sub_options_form = $form;
+                
+                if ($request->isPost() && $form->isValid($request->getPost())) {
+                    $product_id = $request->getPost('product_id');
+                    $this->_helper->Redirector->setGotoSimple('add', 'cart',
+                        'default',  array('product_id' => $product_id));
+                }
+                $this->_helper->ViewRenderer->render('renewal-options-non-usa');
+            }
         } else {
             $this->_helper->FlashMessenger->setNamespace('login_form')
                 ->addMessage('Please log in to renew your subscription');
-            $this->_forward('login', 'profile', 'default', 
-                array(
-                    'redirect_to'     => 'products_renewal_options',
-                    'redirect_params' => array('is_renewal' => 1, 'nolayout' => 1)
+            $this->_forward('login', 'profile', 'default', array(
+                'redirect_to'     => 'products_renewal_options',
+                'redirect_params' => array(
+                    'is_renewal' => 1,
+                    'nolayout' => (int) $request->getParam('nolayout')
                 )
-            );
+            ));
         }
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
@@ -44,6 +75,7 @@ class ProductsController extends Zend_Controller_Action {
 
     /*
     public function subscriptionsAction() {
+            $zone_id = $this->_users_svc->getZoneId();
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
         $this->view->is_authenticated = $this->_users_svc->isAuthenticated();

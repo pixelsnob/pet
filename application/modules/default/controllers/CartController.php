@@ -44,12 +44,22 @@ class CartController extends Zend_Controller_Action {
     public function addAction() {
         $product_id = $this->_request->getParam('product_id');
         $is_gift = $this->_request->getParam('is_gift');
+        $promo_code = $this->_request->getParam('promo_code');
+        $promo_msg = null;
         if ($this->_cart_mapper->addProductById($product_id, $is_gift)) {
-            $msg = 'Product added';
+            $product_msg = 'Product added';
+            if ($promo_code && $this->_cart_mapper->addPromo($promo_code)) {
+                $promo_msg = "Promo code \"$promo_code\" added"; 
+            } else {
+                $promo_msg = $this->_cart_mapper->getMessage();
+            }
         } else {
-            $msg = $this->_cart_mapper->getMessage();
+            $product_msg = $this->_cart_mapper->getMessage();
         }
-        $this->_messenger->addMessage($msg);
+        $this->_messenger->addMessage($product_msg);
+        if ($promo_msg) {
+            $this->_messenger->addMessage($promo_msg);
+        }
         $this->_helper->Redirector->gotoSimple('index');
     }
     
