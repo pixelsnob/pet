@@ -11,8 +11,7 @@ Pet.ProductsView = Pet.View.extend({
         'mouseup #products-index .subscribe-renew a': 'subButtonUp',
         'mouseover #products-index .subscribe-renew a': 'subButtonOver',
         'mouseout #products-index .subscribe-renew a': 'subButtonOut',
-
-        'click #nolayout #products-index a.renew': 'showFancyboxFromLink',
+        'click #products-index a.renew': 'showFancyboxFromLink',
 
         //'click #nolayout .renewal-options': 'renewButtonClick',
 
