@@ -396,7 +396,7 @@ pre {
 
 .buttons-list {
     clear: both;
-    padding: 20px 0 25px 0;
+    overflow: hidden;
 }
 
 .buttons-list li {
