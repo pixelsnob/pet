@@ -43,10 +43,12 @@ echo $this->headLink()
                 ?>
             </nav>
         <?php endif; ?>
-        <div id="breadcrumbs">
-            <?php echo $this->navigation()->breadcrumbs()->setLinkLast(false); ?>
-
-        </div>
+        <?php $breadcrumbs = $this->navigation()->breadcrumbs()->setLinkLast(false); ?>
+        <?php if (strlen(trim($breadcrumbs))): ?>
+            <div id="breadcrumbs">
+                <?php echo $breadcrumbs; ?>
+            </div>
+        <?php endif; ?>
         <div id="content">
             <?php echo $this->layout()->content; ?>
         </div>

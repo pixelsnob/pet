@@ -66,6 +66,11 @@ nav li.active ul li.active a {
     font-weight: bold;
 }
 
+#content {
+    padding-top: 0;
+    margin-top: 0;
+}
+
 #breadcrumbs {
     padding-bottom: 20px;
     font-weight: bold;
