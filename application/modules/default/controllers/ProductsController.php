@@ -31,10 +31,12 @@ class ProductsController extends Zend_Controller_Action {
         if (!$zone_id) {
             throw new Exception('Zone id is required');
         }
-        $is_gift = ($request->getParam('is_gift') ? true : null);
+        $is_gift    = ($request->getParam('is_gift') ? true : null);
         $is_renewal = $request->getParam('is_renewal');
-        $this->view->is_gift = $is_gift;
-        $this->view->is_renewal = $is_renewal;
+        $promo_code = $request->getParam('promo_code');
+        $this->view->is_gift       = $is_gift;
+        $this->view->is_renewal    = $is_renewal;
+        $this->view->promo_code = $promo_code;
         if ($zone_id == Model_SubscriptionZone::USA) {
             $this->view->subscriptions = $this->_products_mapper
                 ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA,
@@ -49,7 +51,8 @@ class ProductsController extends Zend_Controller_Action {
                 'zoneId'        => $zone_id,
                 'isGift'        => $is_gift,
                 'isRenewal'     => $is_renewal,
-                'subscriptions' => array_merge($regular_subs, $digital_subs)
+                'subscriptions' => array_merge($regular_subs, $digital_subs),
+                'promoCode'     => $promo_code
             ));
             $this->view->regular_subs = $regular_subs;
             $this->view->digital_subs = $digital_subs;
@@ -61,7 +64,8 @@ class ProductsController extends Zend_Controller_Action {
                     'default',  array(
                         'product_id' => $product_id,
                         'is_gift'    => $is_gift,
-                        'is_renewal' => $is_renewal
+                        'is_renewal' => $is_renewal,
+                        'promo_code' => $promo_code
                     ));
             }
             $this->_helper->ViewRenderer->render('subscription-options-non-usa');
@@ -112,7 +116,9 @@ class ProductsController extends Zend_Controller_Action {
         if (!$term) {
             throw new Exception('Term is required');
         }
+        $promo_code = $this->_request->getParam('promo_code');
         $this->view->term = $term;
+        $this->view->promo_code = $promo_code;
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
         

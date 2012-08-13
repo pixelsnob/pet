@@ -10,7 +10,7 @@
     <ul class="buttons-list">
         <?php foreach ($this->subscriptions as $sub): ?>
             <li>
-                <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $sub->product_id, 'is_gift' => $this->is_gift, 'is_renewal' => $this->is_renewal, 'promo_code' => 'LUIS-USA'), 'cart_add')); ?>" class="button-grad cart-add"><?php echo $this->escape($sub->name); ?></a>
+                <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $sub->product_id, 'is_gift' => $this->is_gift, 'is_renewal' => $this->is_renewal, 'promo_code' => $this->promo_code), 'cart_add')); ?>" class="button-grad cart-add"><?php echo $this->escape($sub->name); ?></a>
             </li>
         <?php endforeach; ?>
     </ul>

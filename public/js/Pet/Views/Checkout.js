@@ -12,7 +12,8 @@ Pet.CheckoutView = Pet.View.extend({
         'click #use_shipping': 'toggleShippingFields',
         'click input[name=payment_method]': 'toggleCCFields',
         'change input[name!=promo_code], select': 'saveForm',
-        'click .update input': 'submitForm'
+        'click .update input': 'submitForm',
+        'click .promo-code .apply': 'savePromoCode'
     },
     
     initialize: function() {
@@ -55,7 +56,7 @@ Pet.CheckoutView = Pet.View.extend({
                 }
             }
         }));
-        return true;
+        return false;
     },
     
     updateForm: function() {
@@ -199,17 +200,6 @@ Pet.CheckoutView = Pet.View.extend({
         } else {
             p.insertAfter('h2');
         }
-    },
-
-    addPromoCodeApplyLink: function() {
-        var obj = this;
-        $('#promo_code', this.el).parent().append(
-            $('<a>').attr({ href: '#' }).addClass('button-grad')
-                .text('Apply').on('click', function() {
-                    obj.savePromoCode();
-                    return false;
-                })
-        );
     }
 
 });

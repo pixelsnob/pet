@@ -50,8 +50,6 @@ class CartController extends Zend_Controller_Action {
             $product_msg = 'Product added';
             if ($promo_code && $this->_cart_mapper->addPromo($promo_code)) {
                 $promo_msg = "Promo code \"$promo_code\" added"; 
-            } else {
-                $promo_msg = $this->_cart_mapper->getMessage();
             }
         } else {
             $product_msg = $this->_cart_mapper->getMessage();

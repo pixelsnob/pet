@@ -35,10 +35,6 @@
                         <?php
                             echo $this->formRadio('product_id', null, null, array($digital_sub->product_id => $digital_sub->name)) . ' &mdash; ';
                             echo $this->dollarFormat($digital_sub->cost); 
-                            /*if (isset($last_digital_cost) && $last_digital_cost < $digital_sub->cost) {
-                                echo ' &mdash; <em>Save ' . $this->dollarFormat(($last_digital_cost * 2) - $digital_sub->cost) . '</em>';
-                            }
-                            $last_digital_cost = $digital_sub->cost;*/
                         ?>
                     </li>
                 <?php endforeach; ?>
@@ -50,6 +46,7 @@
             <?php echo $this->sub_options_form->zone_id->renderViewHelper(); ?>
             <?php echo $this->sub_options_form->is_gift->renderViewHelper(); ?>
             <?php echo $this->sub_options_form->is_renewal->renderViewHelper(); ?>
+            <?php echo $this->sub_options_form->promo_code->renderViewHelper(); ?>
         </div>
     </form>
 </div>

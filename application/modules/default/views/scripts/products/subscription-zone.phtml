@@ -3,8 +3,8 @@
     <h2>Where do you live?</h2>
     <p>Subscription pricing is based partly on where you live because of different postage costs outside the US.</p>
     <ul class="buttons-list zones">
-        <li><a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2, 'term' => $this->term), 'products_subscription_options')); ?>" class="button-grad">United States</a></li>
-        <li><a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1, 'term' => $this->term), 'products_subscription_options')); ?>" class="button-grad">Canada</a></li>
-        <li><a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3, 'term' => $this->term), 'products_subscription_options')); ?>" class="button-grad">International</a></li>
+        <li><a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2, 'term' => $this->term, 'promo_code' => $this->promo_code), 'products_subscription_options')); ?>" class="button-grad">United States</a></li>
+        <li><a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1, 'term' => $this->term, 'promo_code' => $this->promo_code), 'products_subscription_options')); ?>" class="button-grad">Canada</a></li>
+        <li><a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3, 'term' => $this->term, 'promo_code' => $this->promo_code), 'products_subscription_options')); ?>" class="button-grad">International</a></li>
     </ul>
 </div>

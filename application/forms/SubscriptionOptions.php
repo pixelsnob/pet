@@ -24,6 +24,12 @@ class Form_SubscriptionOptions extends Pet_Form {
     protected $_is_renewal;
 
     /**
+     * @var string
+     * 
+     */
+    protected $_promo_code;
+
+    /**
      * @var array
      * 
      */
@@ -54,13 +60,20 @@ class Form_SubscriptionOptions extends Pet_Form {
     }
 
     /**
+     * @param string
+     * @return void
+     */
+    public function setPromoCode($promo_code) {
+        $this->_promo_code = $promo_code;
+    }
+
+    /**
      * @param array
      * @return void
      */
     public function setSubscriptions($subscriptions) {
         $this->_subscriptions = $subscriptions;
     }
-
 
     /**
      * @return void
@@ -87,6 +100,8 @@ class Form_SubscriptionOptions extends Pet_Form {
             'value' => $this->_is_gift
         ))->addElement('hidden', 'is_renewal', array(
             'value' => $this->_is_renewal
+        ))->addElement('hidden', 'promo_code', array(
+            'value' => $this->_promo_code
         ));
         
     }
