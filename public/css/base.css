@@ -160,6 +160,10 @@ h2 {
     color: #3c466b !important;
 }
 
+#nolayout h2 {
+    margin-bottom: 10px;
+}
+
 legend {
     padding-bottom: 10px;
     font-size: 14px !important;
@@ -396,6 +400,7 @@ pre {
 
 .buttons-list {
     clear: both;
+    padding: 20px 0 25px 0;
     overflow: hidden;
 }
 

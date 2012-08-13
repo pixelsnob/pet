@@ -1,0 +1,17 @@
+
+<div id="products-renewal-options">
+    <?php if ($this->is_renewal): ?>
+        <h2>Renewal Options</h2>
+        <p>Renew now and get an extra 2 months and “The Best of P.E.T., Vol. 6” as a thank you gift!</p>
+    <?php else: ?>
+        <h2>Subscription Options</h2>
+        <p>A 1 year subscription is $59, or save $20 with a 2 year subscription!</p>
+    <?php endif; ?>
+    <ul class="buttons-list">
+        <?php foreach ($this->subscriptions as $sub): ?>
+            <li>
+                <a href="<?php echo $this->serverUrl($this->url(array('product_id' => $sub->product_id, 'is_gift' => $this->is_gift, 'is_renewal' => $this->is_renewal, 'promo_code' => 'LUIS-USA'), 'cart_add')); ?>" class="button-grad cart-add"><?php echo $this->escape($sub->name); ?></a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>

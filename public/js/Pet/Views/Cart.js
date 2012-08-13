@@ -21,15 +21,9 @@ Pet.CartView = Pet.View.extend({
     },
     
     initialize: function() {
+        Pet.View.prototype.initialize.call(this);
     },
     
-    /*openCartPopup: function(el) {
-        this.showFancybox({
-            href: $(el.target).attr('href')
-        });
-        return false;
-    },*/
-
     update: function() {
         var qs = $('form[name=cart]', this.el).serialize();
         this.populateFancybox('/cart', qs);

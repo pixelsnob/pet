@@ -1,40 +1,28 @@
 
-<div id="gift-subscriptions" class="product-select">
-    <div class="product-select-left">
+<div id="gifts">
+    <div class="gifts-left">
         <img src="/images/product-types/large/gifts.jpg" width="450" height="630"> 
     </div>
-    <div class="product-select-right">
+    <div class="gifts-right">
         <div class="product-select-right-inner">
             <h2>Gift Subscriptions</h2>  
             <p>We now offer an easy way to give the gift of Elements knowledge to a friend or loved one who wants to learn more about Photoshop Elements.<p>
             <ul>
-                <li>Choose a Premier subscription to give either one or two years (6 issues or 12) of printed magazines plus anytime access to our subscriber website</li>
-                <li>Choose a Digital-only subscription to give one year of complete access to our website, including downloadable PDFs of all of our issues</li>
+                <li>Choose an All-Access subscription to give either one or two years (6 issues or 12) of printed magazines plus full access to our subscriber website!</li>
+                <li>From $59 per year, depending on the delivery address.</li>
             </ul>
-            <?php if (!$this->is_authenticated): ?>
-                <h3>Pricing for your subscription to the magazine:</h3>
-                <ul class="subscription-options">
-                    <li>
-                        <h4>USA</h4>
-                        <p>From $59</p>
-                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2), 'products_gifts_select_term')); ?>" class="button-grad-blue">Go</a>
-                    </li>
-                    <li>
-                        <h4>Canada</h4>
-                        <p>From $69</p>
-                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1), 'products_gifts_select_term')); ?>" class="button-grad-blue">Go</a>
-                    </li>
-                    <li>
-                        <h4>International</h4>
-                        <p>From $95</p>
-                        <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3), 'products_gifts_select_term')); ?>" class="button-grad-blue">Go</a>
-                    </li>
-                </ul>
-            <?php endif; ?>
+            <ul class="buttons-list">
+                <li>
+                    <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 2, 'is_gift' => 1), 'products_subscription_options')); ?>" class="button-grad no-click">USA</a>
+                </li>
+                <li>
+                    <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 1, 'is_gift' => 1), 'products_subscription_options')); ?>" class="button-grad no-click">Canada</a>
+                </li>
+                <li>
+                    <a href="<?php echo $this->serverUrl($this->url(array('zone_id' => 3, 'is_gift' => 1), 'products_subscription_options')); ?>" class="button-grad no-click">International</a>
+                </li>
+            </ul>
         </div>
-        <p class="digital">
-            <a href="<?php echo $this->serverUrl($this->url(array('product_id' => 302, 'is_gift' => 1), 'cart_add')); ?>" class="button-grad">Digital Subscription</a>
-        </p>
     </div>
 </div>
 

@@ -14,27 +14,27 @@ Pet.ProductsView = Pet.View.extend({
         'click #products-index a.renew': 'showFancyboxFromLink',
         'click #products-index .dvds .learn-more': 'openPhysicalDetailPopup',
 
-        //'click #nolayout .renewal-options': 'renewButtonClick',
-
         'mousedown #products-special .offers a': 'subButtonDown',
         'mouseup #products-special .offers a': 'subButtonUp',
         'mouseover #products-special .offers a': 'subButtonOver',
         'mouseout #products-special .offers a': 'subButtonOut',
+        'click #products-special .offers a': 'showFancyboxFromLink',
 
         'click #nolayout #login-form #login-submit': 'submitLoginForm',
         'click #nolayout #login-form .forgot-password': 'populateFancyboxFromLink',
         'click #nolayout #reset-password-request .submit': 'submitResetPasswordRequestForm',
 
         'click #nolayout .cart-add': 'addProductToCart',
-
         'click #nolayout .continue-shopping': 'closeFancybox',
 
-        'click #nolayout #products-renewal-options .submit input': 'submitSubscriptionOptionsForm'
+        'click #nolayout #products-subscription-options .submit input': 'submitSubscriptionOptionsForm',
+
+        'click #nolayout #subscription-zones .zones input': 'showSubscriptionOptions',
+        'click #gifts .buttons-list input': 'showGiftOptions'
 
     },
     
     initialize: function(){
-        this.events = $.extend({}, Pet.View.prototype.events, this.events)
         Pet.View.prototype.initialize.call(this);
         Pet.loadView('Cart'); 
     },
@@ -79,14 +79,30 @@ Pet.ProductsView = Pet.View.extend({
     },
 
     submitSubscriptionOptionsForm: function() {
-        var form = $('form[name=subscription-options]', this.el);
-        var qs = form.serialize();
-        this.populateFancybox('/products/renewal-options', qs);
+        var form = $('form[name=subscription-options]', this.el),
+            qs = form.serialize(),
+            url;
+        if ($.trim($('input[name=is_renewal]').val()).length) {
+            url = '/products/renewal-options';
+        } else {
+            url = '/products/subscription-options';
+        }
+        this.populateFancybox(url, qs);
         return false;
     },
 
     openPhysicalDetailPopup: function(el) {
         this.showFancybox({ href: $(el.target).data('href') });
+        return false;
+    },
+
+    showSubscriptionOptions: function(el) {
+        this.populateFancybox($(el.target).data('href')); 
+        return false;
+    },
+
+    showGiftOptions: function(el) {
+        this.showFancybox({ href: $(el.target).data('href') }); 
         return false;
     }
 

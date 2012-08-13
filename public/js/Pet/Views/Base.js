@@ -11,13 +11,11 @@ Pet.View = Backbone.View.extend({
     spinner: null,
 
     events: {
-        //'click #nolayout #login-form #login-submit': 'submitLoginForm'
-        //'click .fb-open': 'applyShowFancybox',
-        //'click .fb-populate': 'applyPopulateFancybox'
     },
 
     initialize: function() {
         this.replaceGradLinks();
+        $('input[type=text]').attr('autocomplete', 'off');
     },
     
     /**

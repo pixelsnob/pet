@@ -24,7 +24,52 @@ class ProductsController extends Zend_Controller_Action {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
     }
-    
+
+    public function subscriptionOptionsAction() {
+        $request = $this->getRequest();
+        $zone_id = $request->getParam('zone_id');
+        if (!$zone_id) {
+            throw new Exception('Zone id is required');
+        }
+        $is_gift = ($request->getParam('is_gift') ? true : null);
+        $is_renewal = $request->getParam('is_renewal');
+        $this->view->is_gift = $is_gift;
+        $this->view->is_renewal = $is_renewal;
+        if ($zone_id == Model_SubscriptionZone::USA) {
+            $this->view->subscriptions = $this->_products_mapper
+                ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA,
+                    $is_gift, $is_renewal); 
+            $this->_helper->ViewRenderer->render('subscription-options-usa');
+        } else {
+            $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
+                $zone_id, $is_gift, $is_renewal);
+            $digital_subs = $this->_products_mapper->getDigitalSubscriptions(
+                $is_gift, $is_renewal);
+            $form = new Form_SubscriptionOptions(array(
+                'zoneId'        => $zone_id,
+                'isGift'        => $is_gift,
+                'isRenewal'     => $is_renewal,
+                'subscriptions' => array_merge($regular_subs, $digital_subs)
+            ));
+            $this->view->regular_subs = $regular_subs;
+            $this->view->digital_subs = $digital_subs;
+            $this->view->sub_options_form = $form;
+            
+            if ($request->isPost() && $form->isValid($request->getPost())) {
+                $product_id = $request->getPost('product_id');
+                $this->_helper->Redirector->setGotoSimple('add', 'cart',
+                    'default',  array(
+                        'product_id' => $product_id,
+                        'is_gift'    => $is_gift,
+                        'is_renewal' => $is_renewal
+                    ));
+            }
+            $this->_helper->ViewRenderer->render('subscription-options-non-usa');
+        }
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript("Pet.loadView('Products');");
+    }
+
     public function renewalOptionsAction() {
         $request = $this->getRequest();
         if ($this->_users_svc->isAuthenticated()) {
@@ -32,41 +77,16 @@ class ProductsController extends Zend_Controller_Action {
             if (!$zone_id) {
                 throw new Exception('Zone id not found for authenticated user');
             }
-            if ($zone_id == Model_SubscriptionZone::USA) {
-                $this->view->subscriptions = $this->_products_mapper
-                    ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA,
-                        null, true); 
-                $this->_helper->ViewRenderer->render('renewal-options-usa');
-            } else {
-                $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
-                    $zone_id, null, true);
-                $digital_subs = $this->_products_mapper->getDigitalSubscriptions(
-                    null, true);
-                $form = new Form_SubscriptionOptions(array(
-                    'zoneId'  => $zone_id,
-                    'isRenewal' => true,
-                    'subscriptions' => array_merge($regular_subs, $digital_subs)
-                ));
-                $this->view->regular_subs = $regular_subs;
-                $this->view->digital_subs = $digital_subs;
-                $this->view->sub_options_form = $form;
-                
-                if ($request->isPost() && $form->isValid($request->getPost())) {
-                    $product_id = $request->getPost('product_id');
-                    $this->_helper->Redirector->setGotoSimple('add', 'cart',
-                        'default',  array('product_id' => $product_id));
-                }
-                $this->_helper->ViewRenderer->render('renewal-options-non-usa');
-            }
+            $this->_forward('subscription-options', 'products', 'default',
+                array('is_renewal' => true, 'zone_id' => $zone_id));
         } else {
             $this->_helper->FlashMessenger->setNamespace('login_form')
                 ->addMessage('Please log in to renew your subscription');
+            $params = $request->getParams();
+            $params['is_renewal'] = 1;
             $this->_forward('login', 'profile', 'default', array(
                 'redirect_to'     => 'products_renewal_options',
-                'redirect_params' => array(
-                    'is_renewal' => 1,
-                    'nolayout' => (int) $request->getParam('nolayout')
-                )
+                'redirect_params' => $params
             ));
         }
         $this->view->inlineScriptMin()->loadGroup('products')
@@ -83,6 +103,22 @@ class ProductsController extends Zend_Controller_Action {
             throw new Exception('Product not found');
         }
         $this->view->product = $product;
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript("Pet.loadView('Products');");
+    }
+
+    public function subscriptionZoneAction() {
+        $term = $this->_request->getParam('term');
+        if (!$term) {
+            throw new Exception('Term is required');
+        }
+        $this->view->term = $term;
+        $this->view->inlineScriptMin()->loadGroup('products')
+            ->appendScript("Pet.loadView('Products');");
+        
+    }
+
+    public function giftsAction() {
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
     }

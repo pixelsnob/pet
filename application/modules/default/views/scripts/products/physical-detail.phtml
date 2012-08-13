@@ -2,7 +2,7 @@
 <div id="physical-detail">
     <h2><?php echo $this->escape($this->product->name); ?></h2>
     <div class="physical-detail-left">
-        <img src="/images/products/medium/<?php echo $this->escape($this->product->sku); ?>.jpg"> 
+        <img src="/images/products/medium/<?php echo $this->escape($this->product->sku); ?>.jpg" width="185" height="176" alt="<?php echo $this->escape($this->product->name); ?>"> 
     </div>
     <div class="physical-detail-right">
         <?php echo Markdown($this->product->description); ?>

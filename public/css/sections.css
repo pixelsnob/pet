@@ -126,7 +126,6 @@
     padding: 0 !important;
 }
 
-
 #products-index .dvds li .copy {
     min-height: 96px;
 }
@@ -217,7 +216,9 @@
 }
 
 
-#products-renewal-options .subscriptions li {
+/* Subscription options */
+
+#products-subscription-options .subscriptions li {
     float: left;
     width: 200px;
     background: none;
@@ -225,23 +226,26 @@
     margin-top: 20px;
 }
 
-#products-renewal-options section {
+#products-subscription-options section {
     margin-bottom: 20px; 
 }
 
-#products-renewal-options h3 {
+#products-subscription-options h3 {
     text-transform: none;
     font-style: italic;
 }
 
-#products-renewal-options li {
+#products-subscription-options li {
     background: none;
     padding-left: 0;
 }
 
-#products-renewal-options li em {
+#products-subscription-options li em {
     font-weight: bold;
 }
+
+
+/* Physical detail (dvds) */
 
 .physical-detail-left, .physical-detail-right {
     float: left;
@@ -253,6 +257,22 @@
 
 .physical-detail-right {
     width: 360px;
+}
+
+
+/* Gifts page */
+
+#gifts .gifts-left, #gifts .gifts-right {
+    float: left;
+}
+
+#gifts .gifts-left {
+    width: 460px;
+    margin-right: 20px;
+}
+
+#gifts .gifts-right {
+    width: 400px;
 }
 
 /* Products main */
@@ -578,6 +598,10 @@
 
 #nolayout #cart li.update {
     display: none;
+}
+
+#nolayout #cart .buttons-list {
+    padding: 0;
 }
 
 /* Checkout */
