@@ -70,6 +70,14 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $subscriptions          = $products_mapper->getSubscriptions();
         $digital_subscriptions  = $products_mapper->getDigitalSubscriptions();
         $logger                 = Zend_Registry::get('log');
+        $user_id                = $this->_request->getParam('user_id');
+        if ($user_id) {
+            $user = $this->_users_svc->getUser($user_id);
+            if (!$user) {
+                throw new Exception('User not found');
+            }
+            $this->view->user = $user;
+        }
         // Reset each time, we don't need values to perist
         $cart_mapper->reset();
         $form = new Form_Admin_Order(array(
@@ -77,7 +85,8 @@ class Admin_OrdersController extends Zend_Controller_Action {
             'promosMapper'          => $promos_mapper,
             'subscriptions'         => $subscriptions,
             'digitalSubscriptions'  => $digital_subscriptions,
-            'cart'                  => $cart_mapper->get()
+            'cart'                  => $cart_mapper->get(),
+            'userId'               => $user_id
         ));
         if ($this->_request->isPost() && $form->isValid($params)) {
             $db->query('set transaction isolation level serializable');
@@ -115,13 +124,21 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 if ($order->total > 0 && $order->payment_method == 'credit_card') {
                     $gateway->processSale($order);
                 }
-                // Insert user/user profile
-                $order->password = $this->_users_svc->generateHash(
-                    $order->password);
-                $order->user_id = $users_mapper->insert($order->toArray(), true);
-                $profile_mapper->insert($order->toArray());
-                if (!$order->user_id) {
-                    throw new Exception('user_id not defined');
+                // Insert or update user and user profile
+                if ($user) {
+                    $order->email = $user->email;
+                    $order->user_id = $user->id;
+                    $order->username = $user->username;
+                    $users_mapper->updatePersonal($order->toArray(), $order->user_id);
+                    $profile_mapper->updateByUserId($order->toArray(), $order->user_id);
+                } else {
+                    $order->password = $this->_users_svc->generateHash(
+                        $order->password);
+                    $order->user_id = $users_mapper->insert($order->toArray(), true);
+                    $profile_mapper->insert($order->toArray());
+                    if (!$order->user_id) {
+                        throw new Exception('user_id not defined');
+                    }
                 }
                 // Save order data
                 $order->order_id = $orders_mapper->insert($order->toArray());

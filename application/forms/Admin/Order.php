@@ -36,6 +36,12 @@ class Form_Admin_Order extends Pet_Form {
     protected $_cart;
 
     /**
+     * @var int
+     * 
+     */
+    protected $_user_id;
+
+    /**
      * @param Pet_Model_Mapper_Abstract $mapper
      * @return void
      */
@@ -77,6 +83,14 @@ class Form_Admin_Order extends Pet_Form {
     }
 
     /**
+     * @param Model_Cart $cart
+     * @return void
+     */
+    public function setUserId($user_id) {
+        $this->_user_id = $user_id;
+    }
+
+    /**
      * @return void
      * 
      */
@@ -98,10 +112,16 @@ class Form_Admin_Order extends Pet_Form {
         }
         $user_form = new Form_SubForm_User(array(
             'mapper' => $this->_users_mapper,
-            'identity' => $this->_identity
+            //'identity' => $this->_identity
         ));
         $this->addSubform($user_form, 'user');
         $this->user->username->setRequired(false);
+        if ($this->_user_id) {
+            $this->user->removeElement('username');
+            $this->user->removeElement('password');
+            $this->user->removeElement('confirm_password');
+            $this->user->removeElement('email');
+        }
         $billing_form = new Form_SubForm_Billing(array(
             'countries' => $countries,
             'states'    => $states
@@ -148,7 +168,7 @@ class Form_Admin_Order extends Pet_Form {
      */
     public function isValid($data) {
         $valid = true;
-        if (!isset($data['username']) || !strlen(trim($data['username']))) {
+        if (!$this->_user_id && (!isset($data['username']) || !strlen(trim($data['username'])))) {
             $this->user->password->setRequired(false)->clearValidators();
             $this->user->confirm_password->setRequired(false)->clearValidators();
         }

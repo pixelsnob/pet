@@ -17,26 +17,31 @@
             <fieldset class="account">
                 <legend>Account Information</legend>
                 <dl class="form">
-                    <dt><?php echo $this->order_form->user->username->renderLabel(); ?></dt>
-                    <dd>
-                        <?php echo $this->order_form->user->username->renderViewHelper(); ?>
-                        <?php echo $this->order_form->user->username->renderErrors(); ?>
-                    </dd>
-                    <dt><?php echo $this->order_form->user->email->renderLabel(); ?></dt>
-                    <dd>
-                        <?php echo $this->order_form->user->email->renderViewHelper(); ?>
-                        <?php echo $this->order_form->user->email->renderErrors(); ?>
-                    </dd>
-                    <dt><?php echo $this->order_form->user->password->renderLabel(); ?></dt>
-                    <dd>
-                        <?php echo $this->order_form->user->password->renderViewHelper(); ?>
-                        <?php echo $this->order_form->user->password->renderErrors(); ?>
-                    </dd>
-                    <dt><?php echo $this->order_form->user->confirm_password->renderLabel(); ?></dt>
-                    <dd>
-                        <?php echo $this->order_form->user->confirm_password->renderViewHelper(); ?>
-                        <?php echo $this->order_form->user->confirm_password->renderErrors(); ?>
-                    </dd>
+                    <?php if (!$this->user): ?>
+                        <dt><?php echo $this->order_form->user->username->renderLabel(); ?></dt>
+                        <dd>
+                            <?php echo $this->order_form->user->username->renderViewHelper(); ?>
+                            <?php echo $this->order_form->user->username->renderErrors(); ?>
+                        </dd>
+                        <dt><?php echo $this->order_form->user->email->renderLabel(); ?></dt>
+                        <dd>
+                            <?php echo $this->order_form->user->email->renderViewHelper(); ?>
+                            <?php echo $this->order_form->user->email->renderErrors(); ?>
+                        </dd>
+                        <dt><?php echo $this->order_form->user->password->renderLabel(); ?></dt>
+                        <dd>
+                            <?php echo $this->order_form->user->password->renderViewHelper(); ?>
+                            <?php echo $this->order_form->user->password->renderErrors(); ?>
+                        </dd>
+                        <dt><?php echo $this->order_form->user->confirm_password->renderLabel(); ?></dt>
+                        <dd>
+                            <?php echo $this->order_form->user->confirm_password->renderViewHelper(); ?>
+                            <?php echo $this->order_form->user->confirm_password->renderErrors(); ?>
+                        </dd>
+                    <?php else: ?>
+                        <dt>Email</dt>
+                        <dd><?php echo $this->escape($this->user->email); ?></dd>
+                    <?php endif; ?>
                 </dl>
             </fieldset>
             <fieldset class="billing">

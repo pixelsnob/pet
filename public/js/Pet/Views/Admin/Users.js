@@ -35,6 +35,12 @@ Pet.AdminUsersView = Pet.AdminView.extend({
         }
         Pet.AdminView.prototype.initialize.call(this);
     },
+    
+    adminTableRowClick: function(el) {
+        var href = $(el.target).parent().find('a:first').attr('href');
+        window.location.href = href;
+        return true;
+    },
 
     togglePasswordFields: function(el) {
         if (el.target.checked) {

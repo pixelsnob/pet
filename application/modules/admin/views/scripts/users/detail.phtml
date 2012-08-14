@@ -93,6 +93,7 @@
                 )
             ), $this->orders);
         ?>
+        <p><a href="<?php echo $this->serverUrl($this->url(array('action' => 'add', 'controller' => 'orders', 'user_id' => $this->user->id, 'id' => null))); ?>" class="add-order">Add order</a></p>
     </section>
 
     <section class="shipping admin-list-left">
