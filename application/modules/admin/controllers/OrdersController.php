@@ -77,6 +77,11 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 throw new Exception('User not found');
             }
             $this->view->user = $user;
+            $profile = $profile_mapper->getByUserId($user_id);
+            if (!$profile) {
+                throw new Exception('Profile not found');
+            }
+            $expirations = $this->_users_svc->getExpirations($user_id);
         }
         // Reset each time, we don't need values to perist
         $cart_mapper->reset();
@@ -88,7 +93,11 @@ class Admin_OrdersController extends Zend_Controller_Action {
             'cart'                  => $cart_mapper->get(),
             'userId'               => $user_id
         ));
-        if ($this->_request->isPost() && $form->isValid($params)) {
+        if ($this->_request->isGet() && isset($user)) {
+            // Populate form with user/user profile info
+            $form->populate(array_merge($user->toArray(), $profile->toArray()));
+        } elseif ($this->_request->isPost() && $form->isValid($params)) {
+            // Add order
             $db->query('set transaction isolation level serializable');
             $db->beginTransaction();
             try {
@@ -151,15 +160,24 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     }
                     $opid = $op_mapper->insert($product_array, $order->order_id); 
                     if ($product->isSubscription() || $product->isDigital()) {
-                        $term = (int) $product->term_months;
+                        $expiration = null;
+                        if ($product->isSubscription() && isset($expirations->regular) &&
+                            $expirations->regular) {
+                            $expiration = $expirations->regular;
+                        } elseif ($product->isDigital() && isset($expirations->digital) &&
+                            $expirations->digital) {
+                            $expiration = $expirations->digital;
+                        }
                         // If expiration is null here, DateTime defaults to today
-                        $date = new DateTime;
+                        $date = new DateTime($expiration);
                         $extra_days = ($cart->promo ? $cart->promo->extra_days : 0);
+                        $term = (int) $product->term_months;
                         $date->add(new DateInterval("P{$term}M{$extra_days}D"));
                         $ops_mapper->insert(array(
                             'user_id'            => $order->user_id,
                             'order_product_id'   => $opid,
-                            'expiration'         => $date->format('Y-m-d H:i:s')
+                            'expiration'         => $date->format('Y-m-d H:i:s'),
+                            'digital_only'       => (int) $product->isDigital()
                         ));
                     }
                     if ($product->isSubscription() && $product->is_renewal) {
@@ -204,6 +222,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     } elseif ($order->payment_method == 'check') {
                         $payments_mapper->insert(array( 
                             'order_id'            => $order->order_id,
+                            'date'                => date('Y-m-d H:i:s'),
                             'amount'              => $order->total,
                             'payment_type_id'     => Model_PaymentType::CHECK,
                             'check_number'        => $order->check
