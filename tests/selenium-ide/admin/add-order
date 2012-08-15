@@ -12,11 +12,6 @@
 <tr><td rowspan="1" colspan="3">add-order</td></tr>
 </thead><tbody>
 <tr>
-	<td>open</td>
-	<td>/admin/orders/add</td>
-	<td></td>
-</tr>
-<tr>
 	<td>select</td>
 	<td>id=product</td>
 	<td>label=2 Year New USA</td>

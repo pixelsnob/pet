@@ -82,6 +82,25 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param array $ids
+     * @param bool $is_active_check Whether to check if the product is active
+     * @return Model_Product_Abstract
+     * 
+     */
+    public function getByIds(array $ids, $is_active_check = true) { 
+        $out = array();
+        foreach ($ids as $id) {
+            $db_product = $this->_products->getById($id);
+            if ($db_product) {
+                $product = new Model_Product($db_product->toArray());
+                $out[] = $this->getItem($product, $is_active_check);
+            }
+        }
+        return $out;
+    }
+
+
+    /**
      * @param Model_Product $product
      * @param bool $is_active_check
      * @return Model_Product_Abstract 
