@@ -58,6 +58,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $db = Zend_Db_Table::getDefaultAdapter();
         $params                 = $this->_request->getPost();
         $cart_mapper            = new Model_Mapper_Cart;
+        $cart_svc               = new Service_Cart;
         $orders_mapper          = new Model_Mapper_Orders;
         $products_mapper        = new Model_Mapper_Products;
         $promos_mapper          = new Model_Mapper_Promos;
@@ -152,82 +153,27 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 // Save order data
                 $order->order_id = $orders_mapper->insert($order->toArray());
                 // Save order products
-                foreach ($cart->products as $product) {
-                    // Insert into order_products
-                    $product_array = $product->toArray();
-                    if ($order->payment_method == 'bypass') {
-                        $product_array['cost'] = 0;
-                    }
-                    $opid = $op_mapper->insert($product_array, $order->order_id); 
-                    if ($product->isSubscription() || $product->isDigital()) {
-                        $expiration = null;
-                        if ($product->isSubscription() && isset($expirations->regular) &&
-                            $expirations->regular) {
-                            $expiration = $expirations->regular;
-                        } elseif ($product->isDigital() && isset($expirations->digital) &&
-                            $expirations->digital) {
-                            $expiration = $expirations->digital;
-                        }
-                        // If expiration is null here, DateTime defaults to today
-                        $date = new DateTime($expiration);
-                        $extra_days = ($cart->promo ? $cart->promo->extra_days : 0);
-                        $term = (int) $product->term_months;
-                        $date->add(new DateInterval("P{$term}M{$extra_days}D"));
-                        $ops_mapper->insert(array(
-                            'user_id'            => $order->user_id,
-                            'order_product_id'   => $opid,
-                            'expiration'         => $date->format('Y-m-d H:i:s'),
-                            'digital_only'       => (int) $product->isDigital()
-                        ));
-                    }
-                    if ($product->isSubscription() && $product->is_renewal) {
-                        if ($order->payment_method == 'bypass') {     
-                            $this->_users_svc->addUserNote(
-                                'Added renewal with no payment',
-                                $order->user_id,
-                                $this->_users_svc->getId()
-                            );
-                        } else {
-                            $this->_users_svc->addUserNote(
-                                'Added renewal',
-                                $order->user_id,
-                                $this->_users_svc->getId()
-                            );
-                        }
+                $cart_svc->saveOrderProducts($order);
+                // Log user note
+                if ($cart->products->hasSubscription() && $cart->products->hasRenewal()) {
+                    if ($order->payment_method == 'bypass') {     
+                        $this->_users_svc->addUserNote(
+                            'Added renewal with no payment',
+                            $order->user_id,
+                            $this->_users_svc->getId()
+                        );
+                    } else {
+                        $this->_users_svc->addUserNote(
+                            'Added renewal',
+                            $order->user_id,
+                            $this->_users_svc->getId()
+                        );
                     }
                 }
                 // Save payments
                 if ($order->total > 0) {
-                    $payments_mapper = new Model_Mapper_OrderPayments;
-                    if ($order->payment_method == 'credit_card') {
-                        $gateway_responses = $gateway->getSuccessfulResponseObjects();
-                        if (isset($gateway_responses[0])) {
-                            $response = $gateway_responses[0];
-                            $payments_mapper->insert(array( 
-                                'order_id'            => $order->order_id,
-                                'amount'              => $order->total,
-                                'payment_type_id'     => Model_PaymentType::PAYFLOW,
-                                'pnref'               => $response->pnref,
-                                'date'                => date('Y-m-d H:i:s'),
-                                'cc_number'           => substr($order->cc_num, -4),
-                                'cc_expiration_month' => $order->cc_exp_month,
-                                'cc_expiration_year'  => $order->cc_exp_year,
-                                'cvv2match'           => $response->cvv2match,
-                                'ppref'               => $response->ppref,
-                                'correlationid'       => $response->correlationid
-                            ));
-                        } else {
-                            throw new Exception('No gateway responses');
-                        }
-                    } elseif ($order->payment_method == 'check') {
-                        $payments_mapper->insert(array( 
-                            'order_id'            => $order->order_id,
-                            'date'                => date('Y-m-d H:i:s'),
-                            'amount'              => $order->total,
-                            'payment_type_id'     => Model_PaymentType::CHECK,
-                            'check_number'        => $order->check
-                        ));
-                    }
+                    $cart_svc->saveOrderPayments($order,
+                        $gateway->getSuccessfulResponseObjects());
                 }
                 $gateway_logger->insert(
                     true,

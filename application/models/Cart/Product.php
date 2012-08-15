@@ -35,6 +35,24 @@ class Model_Cart_Product extends Pet_Model_Abstract {
     }
 
     /**
+     * Enable direct access to product properties:
+     * $product->name instead of $product->product->name 
+     * 
+     * @param string $field Name of field to set
+     * @param string
+     * @return mixed Field value
+     * 
+     */
+    public function __set($field, $value) {
+        if (!isset($this->_data[$field]) && isset($this->_data['product']->$field)) {
+            $this->_data['product']->$field = $value;
+        } else {
+            return parent::__set($field, $value);
+        }
+    }
+
+
+    /**
      * @return array
      * 
      */

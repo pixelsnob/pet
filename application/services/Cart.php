@@ -232,7 +232,8 @@ class Service_Cart {
             $order->order_id = $orders_mapper->insert($order->toArray());
             $this->saveOrderProducts($order);
             if (!$cart->isFreeOrder()) {
-                $order_payment_id = $this->saveOrderPayments($order);
+                $order_payment_id = $this->saveOrderPayments($order,
+                    $this->_gateway->getSuccessfulResponseObjects());
             }
             $gateway_logger->insert(
                 true,
@@ -280,10 +281,11 @@ class Service_Cart {
         $fmt        = 'Y-m-d H:i:s'; 
         $extra_days = ($cart->promo && $cart->promo->extra_days ?
                        $cart->promo->extra_days : 0);
-        if ($is_auth) {
-            $expirations = $users_svc->getExpirations();
-        }
+        $expirations = $users_svc->getExpirations($order->user_id);
         foreach ($cart->products as $product) {
+            if ($order->payment_method == 'bypass') {
+                $product->cost = 0;
+            }
             // Insert into order_products
             $opid = $op->insert($product->toArray(), $order->order_id); 
             // Gift processing here
@@ -348,34 +350,52 @@ class Service_Cart {
      * @return null|int The last insert id into OrderPayments
      * 
      */
-    public function saveOrderPayments(Model_Cart_Order $order) {
-        $gateway_responses = $this->_gateway->getSuccessfulResponseObjects();
+    public function saveOrderPayments(Model_Cart_Order $order, array $gateway_responses) {
         $payments_mapper = new Model_Mapper_OrderPayments;
-        foreach ($gateway_responses as $response) {
-            $payment_data = array(
-                'order_id'        => $order->order_id,
-                'amount'          => $order->total,
-                'pnref'           => $response->pnref,
-                'date'            => date('Y-m-d H:i:s')
-            );
-            if (is_a($response, 'Model_PaymentGateway_Response_Payflow')) {
-                $payments_mapper->insert(array_merge($payment_data, array(
-                    'payment_type_id'     => Model_PaymentType::PAYFLOW,
-                    'cc_number'           => substr($order->cc_num, -4),
-                    'cc_expiration_month' => $order->cc_exp_month,
-                    'cc_expiration_year'  => $order->cc_exp_year,
-                    'cvv2match'           => $response->cvv2match,
-                    'ppref'               => $response->ppref,
-                    'correlationid'       => $response->correlationid
-                )));
-            } elseif (is_a($response, 'Model_PaymentGateway_Response_Paypal')) {
-                $payments_mapper->insert(array_merge($payment_data, array(
-                    'correlationid'       => $response->correlationid,
-                    'payment_type_id'     => Model_PaymentType::PAYPAL,
-                    // Billing agreement id, for reference transactions
-                    'baid'                => $response->baid
-                )));
+        if (in_array($order->payment_method, array('credit_card', 'paypal'))) {
+            foreach ($gateway_responses as $response) {
+                $payment_data = array(
+                    'order_id'        => $order->order_id,
+                    'amount'          => $order->total,
+                    'date'            => date('Y-m-d H:i:s')
+                );
+                switch ($order->payment_method) {
+                    case 'credit_card':
+                        $payment_data = array_merge($payment_data, array(
+                            'payment_type_id'     => Model_PaymentType::PAYFLOW,
+                            'cc_number'           => substr($order->cc_num, -4),
+                            'cc_expiration_month' => $order->cc_exp_month,
+                            'cc_expiration_year'  => $order->cc_exp_year,
+                            'cvv2match'           => $response->cvv2match,
+                            'pnref'               => $response->pnref,
+                            'ppref'               => $response->ppref,
+                            'correlationid'       => $response->correlationid
+                        ));
+                        break;
+                    case 'paypal':
+                        $payment_data = array_merge($payment_data, array(
+                            'payment_type_id'     => Model_PaymentType::PAYPAL,
+                            'correlationid'       => $response->correlationid,
+                            'pnref'               => $response->pnref,
+                            // Billing agreement id, for reference transactions
+                            'baid'                => $response->baid
+                        ));
+                        break;
+                }
+                $payments_mapper->insert($payment_data);
+                // Should only be one response
+                return;
             }
+        } elseif ($order->payment_method == 'check') {
+            $payments_mapper->insert(array(
+                'order_id'            => $order->order_id,
+                'amount'              => $order->total,
+                'date'                => date('Y-m-d H:i:s'),
+                'payment_type_id'     => Model_PaymentType::CHECK,
+                'check_number'        => $order->check
+            ));
+        } else {
+            throw new Exception('Payment type not defined');
         }
     }
     
@@ -405,7 +425,7 @@ class Service_Cart {
                 throw new Exception(__FUNCTION__ . '() failed');
             }
             $cart->ec_token = $token;
-            $ot_mapper->insert(
+            $gateway_logger->insert(
                 $status,
                 $cart->toArray(),
                 $this->_gateway->getRawCalls()
@@ -413,7 +433,7 @@ class Service_Cart {
         } catch (Exception $e) {
             $status = false;
             try {
-                $ot_mapper->insert(
+                $gateway_logger->insert(
                     $status,
                     $cart->toArray(),
                     $this->_gateway->getRawCalls(),
