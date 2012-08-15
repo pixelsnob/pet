@@ -725,6 +725,40 @@ CREATE  TABLE IF NOT EXISTS `pet`.`user_notes` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Placeholder table for view `pet`.`view_products`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pet`.`view_products` (`id` INT, `product_type_id` INT, `sku` INT, `cost` INT, `image` INT, `active` INT, `max_qty` INT, `is_giftable` INT, `name` INT, `product_type` INT);
+
+-- -----------------------------------------------------
+-- View `pet`.`view_products`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `pet`.`view_products` ;
+DROP TABLE IF EXISTS `pet`.`view_products`;
+USE `pet`;
+CREATE  OR REPLACE VIEW `pet`.`view_products` AS
+select p.*,
+(case p.product_type_id
+    when 1 then d.name
+    when 2 then pp.name
+    when 3 then c.name
+    when 4 then s.name
+    when 5 then ds.name end) as name,
+pt.name as product_type
+from products p
+left join product_types pt
+on p.product_type_id = pt.id
+left join downloads d
+on p.id = d.product_id
+left join digital_subscriptions ds
+on p.id = ds.product_id
+left join subscriptions s
+on p.id = s.product_id
+left join physical_products pp
+on p.id = pp.product_id
+left join courses c
+on p.id = c.product_id;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
