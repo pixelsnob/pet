@@ -246,9 +246,10 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 try {
                     $gateway->voidCalls();
                     // Log
+                    $order_array = (isset($order) ? $order->toArray() : array());
                     $gateway_logger->insert(
                         false,
-                        $order->toArray(),
+                        $order_array,
                         $gateway->getRawCalls(),
                         array($e->getMessage() . ' -- ' . $e->getTraceAsString())
                     );
