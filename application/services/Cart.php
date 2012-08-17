@@ -295,10 +295,12 @@ class Service_Cart {
             // Gift processing here
             if ($product->isGift()) {
                 $token_generator = new TokenGenerator;
-                $gifts->insert(array(
-                    'order_product_id' => $opid,
-                    'token'            => $token_generator->generate()
-                ));
+                for ($i = 0; $i < $product->qty; $i++) {
+                    $gifts->insert(array(
+                        'order_product_id' => $opid,
+                        'token'            => $token_generator->generate()
+                    ));
+                }
                 // Gifts need no further processing
                 continue;
             } elseif ($product->isRedeemedGift()) {
