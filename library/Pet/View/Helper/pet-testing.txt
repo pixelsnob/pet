@@ -1,3 +1,0 @@
-Testing
-
-* Cross-check orders, users, etc. with old admin
