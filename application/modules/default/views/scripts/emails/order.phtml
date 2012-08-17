@@ -1,8 +1,118 @@
 
-Gifts:
+Thank You for your order from Photoshop Elements Techniques! 
+
+If you have any questions or concerns about your purchase, please contact us here:
+
+info@photoshopelementsuser.com 
+
+------------------------------------------------------------------------------
+ ORDER
+------------------------------------------------------------------------------
+
+Photoshop Elements Techniques
+Date: <?php echo date('F d, Y'); ?> 
+Order #: <?php echo $this->order->id; ?> 
+
+------------------------------------------------------------------------------
+ SOLD TO (BILLING)
+------------------------------------------------------------------------------
 
 <?php
-foreach ($this->order->gifts as $gift) {
-    echo 'http://dev.photoshopelementsuser.com' . $this->url(array('token' => $gift->token), 'cart_redeem_gift') . "\n";
+echo $this->order->billing_first_name . ' ' . $this->order->billing_last_name . "\n";
+if ($this->order->billing_company) {
+    echo $this->order->billing_company . "\n";
 }
+echo $this->order->billing_address . "\n";
+if ($this->order->billing_address_2) {
+    echo $this->order->billing_address_2 . "\n";
+}
+echo $this->order->billing_city . ', ' . $this->order->billing_state . ' ' .
+    $this->order->billing_postal_code . "\n" . $this->order->billing_country . "\n";
+
+if ($this->show_shipping):
 ?>
+
+------------------------------------------------------------------------------
+ SOLD TO (SHIPPING)
+------------------------------------------------------------------------------
+
+<?php
+echo $this->order->shipping_first_name . ' ' . $this->order->shipping_last_name . "\n";
+if ($this->order->shipping_company) {
+    echo $this->order->shipping_company . "\n";
+}
+echo $this->order->shipping_address . "\n";
+if ($this->order->shipping_address_2) {
+    echo $this->order->shipping_address_2 . "\n";
+}
+echo $this->order->shipping_city . ', ' . $this->order->shipping_state . ' ' .
+    $this->order->shipping_postal_code . "\n" . $this->order->shipping_country . "\n";
+endif; 
+?>
+
+------------------------------------------------------------------------------
+ ORDER DETAILS
+------------------------------------------------------------------------------
+
+<?php 
+
+$c = 1;
+$subtotal = 0;
+foreach ($this->order->products as $product) {
+    echo $this->dollarFormat($product->cost) . " -- " . $product->name . ($product->isGift() ? ' (gift)' : '') . "\n";
+    $subtotal += $product->cost * $product->qty;
+    $c++;
+}
+
+if ($this->has_subscription): 
+?>
+
+------------------------------------------------------------------------------
+ SUBSCRIPTION DETAILS
+------------------------------------------------------------------------------
+
+Expiration: <?php echo $this->expirations->regular; ?> 
+<?php if ($this->order->user->username): ?>Username: <?php echo $this->order->user->username; ?> <?php endif; ?> 
+<?php endif; if ($this->order->gifts): ?>
+
+------------------------------------------------------------------------------
+ GIFT SUBSCRIPTION DETAILS
+------------------------------------------------------------------------------
+
+You will get a separate email containing the details of your gift subscription. If you do not receive this email within a few minutes of your email receipt, please contact us via the email address above. 
+<?php
+endif;
+if ($this->order->promo): ?>
+
+------------------------------------------------------------------------------
+ PROMOTIONAL CODE 
+------------------------------------------------------------------------------
+
+Promo: <?php echo $this->order->promo->code; ?> 
+
+<?php echo $this->order->promo->receipt_description; ?>
+
+<?php endif; ?>
+
+------------------------------------------------------------------------------
+ ORDER TOTALS 
+------------------------------------------------------------------------------
+
+Subtotal: <?php echo $this->dollarFormat($subtotal); ?> 
+Shipping: <?php echo $this->dollarFormat($this->order->shipping); ?> 
+<?php echo ($this->order->discount > 0 ? 'Discount: -' . $this->dollarFormat($this->order->discount) . "\n" : ''); ?>
+Total: <?php echo $this->dollarFormat($this->order->total); ?> 
+
+------------------------------------------------------------------------------
+ WHAT HAPPENS NEXT 
+------------------------------------------------------------------------------
+
+DVDs and promotional items will be shipped via USPS within 7 days of your order. If you have not received your order within 3-4 weeks, please contact us: 
+
+info@photoshopelementsuser.com
+
+If you are a new subscriber to Photoshop Elements Techniques Magazine you should expect to see your first issue of the magazine in less than 30 days, depending on where your order lands in relation to our publishing cycle.
+
+If you are a renewing subscriber your subscription will continue to be sent to the mailing address on record with us.
+
+

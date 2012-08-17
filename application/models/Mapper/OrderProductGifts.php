@@ -36,11 +36,15 @@ class Model_Mapper_OrderProductGifts extends Pet_Model_Mapper_Abstract {
      * 
      */
     public function getByOrderId($order_id) {
+        $products_mapper = new Model_Mapper_Products;
         $gifts = $this->_opg->getByOrderId($order_id); 
         $gifts_array = array();
         if ($gifts) {
             foreach ($gifts as $gift) {
-                $gifts_array[] = new Model_OrderProductGift($gift->toArray());
+                $temp_gift = new Model_OrderProductGift($gift->toArray());
+                $temp_gift->product = $products_mapper->getById($gift->product_id);
+                $gifts_array[] = $temp_gift;
+                
             }
         }
         return $gifts_array;

@@ -57,8 +57,9 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
             ->from(array('u' => 'users'), array(
                 'u.id as user_id',
                 'ops_reg.expiration as regular',
-                'if (ops_reg.expiration > ops_dig.expiration, '.
-                    'ops_reg.expiration, ops_dig.expiration) as digital',
+                'if (ops_dig.expiration is null, ops_reg.expiration, ' .
+                    'if (ops_reg.expiration > ops_dig.expiration, '.
+                        'ops_reg.expiration, ops_dig.expiration)) as digital',
                 'ops_prev.expiration as previous'
             ))
             ->joinLeft(array('ops_reg' => 'order_product_subscriptions'),
