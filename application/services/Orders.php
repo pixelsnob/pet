@@ -52,8 +52,10 @@ class Service_Orders {
             $mail->setBodyText($message)
                  ->addTo($order->email)
                  ->setSubject('Photoshop Elements User Order: ' . $order->id)
-                 //->addBcc('soapscum@pixelsnob.com')
                  ->send();
+            if ($app_config['order_emails']['bcc']) {
+                $mail->addBcc($app_config['order_emails']['bcc']);
+            }
         } else {
             echo $message . "\n\n";
         }
@@ -68,9 +70,11 @@ class Service_Orders {
                     $mail = new Zend_Mail;
                     $mail->setBodyText($gift_message)
                          ->addTo($order->email)
-                         ->setSubject('Photoshop Elements Gift Order: ' . $order->id)
-                         //->addBcc('soapscum@pixelsnob.com')
+                         ->setSubject('Photoshop Elements Gift: ' . $gift->token)
                          ->send();
+                    if ($app_config['order_emails']['bcc']) {
+                        $mail->addBcc($app_config['order_emails']['bcc']);
+                    }
                 } else {
                     echo $gift_message . "\n\n";
                 }
