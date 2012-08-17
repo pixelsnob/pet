@@ -7,3 +7,8 @@
     width: 100px;
 }
 
+#user-detail .addresses {
+    overflow: hidden;
+    padding-bottom: 20px;
+    line-height: 18px;
+}
