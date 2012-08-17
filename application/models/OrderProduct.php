@@ -33,6 +33,52 @@ class Model_OrderProduct extends Pet_Model_Abstract {
         }
     }
 
+    /**
+     * @return bool
+     * 
+     */
+    public function isSubscription() {
+        if ($this->_data['product']->product_type_id == Model_ProductType::SUBSCRIPTION) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * @return bool
+     * 
+     */
+    public function isDigital() {
+        return $this->_data['product']->product_type_id ==
+            Model_ProductType::DIGITAL_SUBSCRIPTION;
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isPhysical() {
+        return $this->_data['product']->product_type_id ==
+            Model_ProductType::PHYSICAL;
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isDownload() {
+        return $this->_data['product']->product_type_id ==
+            Model_ProductType::DOWNLOAD;
+    }
+
+    /**
+     * @return bool
+     * 
+     */
+    public function isGift() {
+        return $this->_data['is_gift'];
+    }
+
     /** 
      * @return array
      * 

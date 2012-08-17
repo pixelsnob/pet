@@ -177,6 +177,7 @@ class Service_Cart {
      */
     public function process($form, $payer_id = '') {
         $users_svc = new Service_Users;
+        $orders_svc = new Service_Orders;
         $gateway_logger = new Model_Mapper_PaymentGateway_Logger_Orders;
         $config    = Zend_Registry::get('app_config');
         $logger    = Zend_Registry::get('log');
@@ -255,15 +256,18 @@ class Service_Cart {
                 );
             } catch (Exception $e1) {}
         }
-        // Reset cart
         if ($status) {
+            try {
+                $orders_svc->sendOrderEmail($order->order_id);
+            } catch (Exception $e) {
+                $logger->log("Email for order {$order->order_id} not sent", Zend_Log::CRIT);                   
+            }
             $this->_cart_mapper->setConfirmation($this->_cart_mapper->get());
             if ($config['reset_cart_after_process']) {
                 $this->_cart_mapper->reset();
             }
         }
         return $status;
-
     }
     
     /**

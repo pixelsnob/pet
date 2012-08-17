@@ -191,8 +191,9 @@ class Admin_OrdersController extends Zend_Controller_Action {
                 // These should fail silently if they do fail
                 try {
                     $gateway->voidCalls();
-                    // Log
+                    // $order might not exist here...
                     $order_array = (isset($order) ? $order->toArray() : array());
+                    // Log
                     $gateway_logger->insert(
                         false,
                         $order_array,

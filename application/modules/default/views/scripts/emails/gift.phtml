@@ -1,0 +1,28 @@
+
+Thank You for your order from Photoshop Elements Techniques! 
+
+If you have any questions or concerns about your purchase, please contact us here:
+
+info@photoshopelementsuser.com 
+
+------------------------------------------------------------------------------
+ ORDER DETAILS 
+------------------------------------------------------------------------------
+
+<?php echo $this->gift->product->name; ?> 
+ 
+------------------------------------------------------------------------------
+ HOW TO GIVE YOUR GIFT
+------------------------------------------------------------------------------
+
+Deliver the following code to the person who will be receiving the magazine subscription. They will be able to redeem it on our website, create a user account, and begin their new subscription! 
+
+<?php echo $this->gift->token; ?> 
+
+Please visit the following URL to redeem the code and enter the info necessary to get the subscription started! 
+
+<?php echo $this->base_url . $this->url(array('token' => $this->gift->token), 'cart_redeem_gift'); ?> 
+
+If there are questions or help is needed, please email us. 
+
+We offer a no-hassle refund if you are not happy with your purchase.

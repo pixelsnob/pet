@@ -1,31 +1,5 @@
 
 <div id="user-detail">
-    <section class="admin-list-left">
-        <?php
-            $url = $this->serverUrl($this->url(array('action' => 'edit', 'id' => $this->user->id))); 
-            echo $this->objectToAdminList(array(
-            'id'          => array(
-                'title' => 'User ID',
-                'callback' => function($data) use ($url) {
-                    return '<a href="' . $url . '" title="Click to edit this user">' . $data->id . '</a>';
-                },
-            ),
-            'username',
-            'email'       => array('format' => 'email'),
-            'date_joined' => array('format' => 'datetime'),
-            'last_login'  => array('format' => 'datetime'),
-            'is_active'   => array('title' => 'Active')
-        ), $this->user); ?>
-    </section>
-
-    <section class="expirations admin-list-right">
-        <?php echo $this->objectToAdminList(array(
-            'regular'  => array('title' => 'Regular Expiration'),
-            'digital'  => array('title' => 'Digital Expiration'),
-            'previous' => array('title' => 'Previous Expiration')
-        ), $this->expirations); ?>
-    </section>
-
     <section class="billing admin-list-left">
         <h3>Billing</h3>
         <?php
@@ -69,6 +43,33 @@
             'shipping_phone'       => array('title' => 'Phone')
         ), $this->profile); ?>
     </section>
+
+    <section class="admin-list-left">
+        <?php
+            $url = $this->serverUrl($this->url(array('action' => 'edit', 'id' => $this->user->id))); 
+            echo $this->objectToAdminList(array(
+            'id'          => array(
+                'title' => 'User ID',
+                'callback' => function($data) use ($url) {
+                    return '<a href="' . $url . '" title="Click to edit this user">' . $data->id . '</a>';
+                },
+            ),
+            'username',
+            'email'       => array('format' => 'email'),
+            'date_joined' => array('format' => 'datetime'),
+            'last_login'  => array('format' => 'datetime'),
+            'is_active'   => array('title' => 'Active')
+        ), $this->user); ?>
+    </section>
+
+    <section class="expirations admin-list-right">
+        <?php echo $this->objectToAdminList(array(
+            'regular'  => array('title' => 'Regular Expiration'),
+            'digital'  => array('title' => 'Digital Expiration'),
+            'previous' => array('title' => 'Previous Expiration')
+        ), $this->expirations); ?>
+    </section>
+
 
     <section class="orders clear full-width">
         <h3>Orders</h3>

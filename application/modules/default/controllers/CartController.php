@@ -95,7 +95,7 @@ class CartController extends Zend_Controller_Action {
     
     public function redeemGiftAction() {
         $token = $this->_request->getParam('token');
-        if ($this->_cart_mapper->redeemGift($token)) {
+        if ($this->_cart_svc->redeemGift($token)) {
             $this->_messenger->setNamespace('checkout');
             $this->_messenger->addMessage('Your gift card was redeemed');
             $this->_helper->Redirector->setGotoRoute(array(), 'checkout');
