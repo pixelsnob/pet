@@ -57,7 +57,7 @@ class ProfileController extends Zend_Controller_Action {
                     $this->_helper->Redirector->gotoRoute($redirect_params,
                         $redirect_to);
                 } else {
-                    $this->_helper->Redirector->gotoSimple('index');
+                    $this->_helper->Redirector->gotoSimple('index', 'products');
                 }
             } else {
                 $this->_helper->FlashMessenger->addMessage('Login failed');
