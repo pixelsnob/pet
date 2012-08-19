@@ -57,7 +57,8 @@ class ProfileController extends Zend_Controller_Action {
                     $this->_helper->Redirector->gotoRoute($redirect_params,
                         $redirect_to);
                 } else {
-                    $this->_helper->Redirector->gotoSimple('index', 'products');
+                    $this->_helper->Redirector->gotoUrl(
+                        'https://www.photoshopelementsuser.com/');
                 }
             } else {
                 $this->_helper->FlashMessenger->addMessage('Login failed');

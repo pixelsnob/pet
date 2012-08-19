@@ -4,23 +4,16 @@
 <title>Photoshop Elements Techniques, Tutorials, Downloads, Video Tips, Newsletter and more - Photoshop Elements User</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="description" content="We offer how-to articles, tutorials and videos about Adobe Photoshop Elements. Get a free issue of Photoshop Elements magazine." />
-<meta name="copyright" content="1999-<?php echo date('Y'); ?>, Photo One Media" />
+<meta name="copyright" content="1999-2012, Photo One Media" />
 <meta name="google-site-verification" content="yxFgFAShYWbqXMOs28hBBdBqeqiPh0LGs9e2-ocHe_E" />
 
-<?php if (isset($this->config['typekit_path'])): ?>
-    <script type="text/javascript" src="<?php echo $this->config['typekit_path']; ?>"></script>
+    <script type="text/javascript" src="//use.typekit.net/ocq1lfl.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-<?php endif; ?>
 
-<?php
-    
-echo $this->headLink()
-        ->prependStylesheet('/css/sections.css')
-        ->prependStylesheet('/css/base.css')
-        ->prependStylesheet('/css/fancybox/jquery.fancybox.css')
-        ->prependStylesheet($this->fullUrl('/wp-content/themes/pet/style.css', 'www.photoshopelementsuser.com'));
-?>
-
+<link href="https://www.photoshopelementsuser.com/wp-content/themes/pet/style.css?version=20" media="screen" rel="stylesheet" type="text/css" >
+<link href="/css/fancybox/jquery.fancybox.css?version=20" media="screen" rel="stylesheet" type="text/css" >
+<link href="/css/base.css?version=20" media="screen" rel="stylesheet" type="text/css" >
+<link href="/css/sections.css?version=20" media="screen" rel="stylesheet" type="text/css" >
 <!--[if IE 9]>
 <style type="text/css">
 #header #logo { width: 320px; }
@@ -28,12 +21,12 @@ echo $this->headLink()
 <![endif]-->
 
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-<link rel="alternate" type="application/rss+xml" href="<?php echo $this->fullUrl('/ElementsTechniques', 'feeds.feedburner.com'); ?>" />
+<link rel="alternate" type="application/rss+xml" href="https://feeds.feedburner.com/ElementsTechniques" />
 
-<link rel="prev" title="Blog" href="<?php echo $this->fullUrl('/blog', 'www.photoshopelementsuser.com'); ?>" />
-<link rel="next" title="Contest" href="<?php echo $this->fullUrl('/contest', 'www.photoshopelementsuser.com'); ?>" />
+<link rel="prev" title="Blog" href="https://www.photoshopelementsuser.com/blog" />
+<link rel="next" title="Contest" href="https://www.photoshopelementsuser.com/contest" />
 
-<link rel="shortlink" href="<?php echo $this->fullUrl('/PSCv8-5', 'wp.me'); ?>" />
+<link rel="shortlink" href="https://wp.me/PSCv8-5" />
 
 <!--[if lt IE 9]>
 <script src="/js/lib/html5.js"></script>
@@ -44,14 +37,13 @@ echo $this->headLink()
 
 </head>
 
-<body id="<?php echo $this->bodyId(); ?>" class="<?php echo (isset($this->config['typekit_path']) ? 'has-typekit' : ''); ?>">
+<body id="" class="has-typekit">
     <div id="header">
         <div class="container">
             <div id="logo">
-                <a href="/"><img src="<?php echo $this->fullUrl('/wp-content/themes/pet/_img/pet-logo.png', 'www.photoshopelementsuser.com'); ?>" alt="Photoshop Elements Techniques" /></a>
+                <a href="/"><img src="https://www.photoshopelementsuser.com/wp-content/themes/pet/_img/pet-logo.png" alt="Photoshop Elements Techniques" /></a>
             </div>
-            <?php if (!$this->suppress_nav): ?>
-            <div id="nav-wrap">
+                        <div id="nav-wrap">
                 <ul id="top-nav" class="clearfix">
                     <li><a href="/topics/" class="top-level-link">Topics</a>
                         <div>
@@ -110,21 +102,14 @@ echo $this->headLink()
                     </li>
                 </ul>
             </div>
-            <?php endif; ?>
-        </div>
+                    </div>
     </div>
-    <?php if (!$this->suppress_top_bar): ?>
-    <div id="top">
+        <div id="top">
         <div class="container">
             <div class="col-wrap clearfix">
                 <div class="col col-1">
-                    <?php $this->getHelper('serverUrl')->setScheme('https'); ?>
-                    <?php if ($user = Zend_Auth::getInstance()->getIdentity()): ?>
-                        <p>Logged in as <?php echo $this->escape($user->username); ?>. <a href="<?php echo $this->serverUrl($this->url(array(), 'profile_edit')); ?>">Profile</a> &middot; <!--<a href="/favorites/">My Favorites</a> &middot;--> <a href="<?php echo $this->serverUrl($this->url(array(), 'profile_logout')); ?>">Log out</a> </p>
-                    <?php else: ?>
-                        <p>New user? <a href="/subscribe">Subscribe</a>!&nbsp;&nbsp;&middot;&nbsp;&nbsp;Already a subscriber? <a href="<?php echo $this->serverUrl($this->url(array(), 'profile_login')); ?>"><span class="login">Log in</span></a>. </p>                    
-                    <?php endif; ?>
-                </div>
+                                                                <p>New user? <a href="/subscribe">Subscribe</a>!&nbsp;&nbsp;&middot;&nbsp;&nbsp;Already a subscriber? <a href="https://dev.photoshopelementsuser.com/profile/login"><span class="login">Log in</span></a>. </p>                    
+                                    </div>
                 <div class="col col-2">
                     <form method="get" id="search" action="/">
                         <div class="searchform">
@@ -136,26 +121,27 @@ echo $this->headLink()
             </div>
         </div>
     </div>
-    <?php endif; ?> 
-    <div id="content">
-        <div class="container clearfix">
-            <div id="main">
-                <?php echo $this->layout()->content; ?>
-            </div>
-        </div>
+     
+    <div id="content" style="height:600px;padding-left: 128px;">
+        <h1>We'll be back shortly...</h1>
     </div>
     
     <div id="footer">
         <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> Copyright Photoshop Elements Techniques. All rights reserved.&nbsp;&nbsp;<a href="/help/">Help</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/about/">About Us</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/contact/">Contact Us</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/privacy/">Privacy Policy</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/terms/">Terms of Use</a></p>
+            <p>&copy; 2012 Copyright Photoshop Elements Techniques. All rights reserved.&nbsp;&nbsp;<a href="/help/">Help</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/about/">About Us</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/contact/">Contact Us</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/privacy/">Privacy Policy</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="/terms/">Terms of Use</a></p>
             <p class="no-margin smaller">Adobe Photoshop Elements Techniques is published by Photo One Media.<br />Photo One is an independent company, and is not affiliated with Adobe Systems.<br />Adobe, Photoshop, and Premiere are registered trademarks of Adobe Systems Incorporated.</p>
 
         </div>
     </div>
     
-    <?php echo $this->headScriptMin()->loadGroup('common'); echo $this->inlineScriptMin(); ?>
-
-    <script type="text/javascript" src="<?php echo $this->fullUrl('/wp-content/themes/pet/_js/jquery.megamenu.js', 'www.photoshopelementsuser.com'); ?>"></script>
+    <script type="text/javascript" src="/min/f=js/lib/jquery-1.7.1.min.js,js/lib/underscore-min.js,js/lib/backbone-min.js,js/lib/jquery.fancybox.pack.js,js/lib/jquery.tools.min.js,js/Pet/Pet.js,js/Pet/Views/Base.js?version=20"></script>
+<script type="text/javascript"></script><script type="text/javascript" src="/min/f=js/lib/showdown.js,js/Pet/Models/Cart.js,js/Pet/Models/Checkout.js,js/Pet/Models/PromoCode.js,js/Pet/Views/Checkout.js?version=20"></script>
+<script type="text/javascript">
+    
+Pet.loadView('Checkout');
+    
+</script>
+    <script type="text/javascript" src="https://www.photoshopelementsuser.com/wp-content/themes/pet/_js/jquery.megamenu.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#top-nav").megamenu();
