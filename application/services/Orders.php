@@ -51,11 +51,11 @@ class Service_Orders {
             $mail = new Zend_Mail;
             $mail->setBodyText($message)
                  ->addTo($order->email)
-                 ->setSubject('Photoshop Elements User Order: ' . $order->id)
-                 ->send();
+                 ->setSubject('Photoshop Elements User Order: ' . $order->id);
             if ($app_config['order_emails']['bcc']) {
                 $mail->addBcc($app_config['order_emails']['bcc']);
             }
+            $mail->send();
         } else {
             echo $message . "\n\n";
         }
@@ -70,11 +70,11 @@ class Service_Orders {
                     $mail = new Zend_Mail;
                     $mail->setBodyText($gift_message)
                          ->addTo($order->email)
-                         ->setSubject('Photoshop Elements Gift: ' . $gift->token)
-                         ->send();
+                         ->setSubject('Photoshop Elements Gift: ' . $gift->token);
                     if ($app_config['order_emails']['bcc']) {
                         $mail->addBcc($app_config['order_emails']['bcc']);
                     }
+                    $mail->send();
                 } else {
                     echo $gift_message . "\n\n";
                 }
