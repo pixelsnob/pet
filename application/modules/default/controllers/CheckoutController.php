@@ -127,18 +127,18 @@ class CheckoutController extends Zend_Controller_Action {
         }
         // Validate stored values
         $checkout_form = $this->_cart_svc->getCheckoutForm();
-        if ($this->_cart_svc->validateSavedForm($checkout_form)) {
-            if ($this->_cart_svc->process($checkout_form, $payer_id)) {
-                $this->_helper->Redirector->gotoSimple('confirmation');
-                exit;
-            } else {
-                $this->_messenger->addMessage($this->_generic_error);
-                $this->_helper->Redirector->gotoRoute(array(), 'checkout');
-            }
+        //if ($this->_cart_svc->validateSavedForm($checkout_form)) {
+        if ($this->_cart_svc->process($checkout_form, $payer_id)) {
+            $this->_helper->Redirector->gotoSimple('confirmation');
+            exit;
         } else {
-            $this->_messenger->addMessage('Submitted information is not valid');
+            $this->_messenger->addMessage($this->_generic_error);
             $this->_helper->Redirector->gotoRoute(array(), 'checkout');
         }
+        /*} else {
+            $this->_messenger->addMessage('Submitted information is not valid');
+            $this->_helper->Redirector->gotoRoute(array(), 'checkout');
+        }*/
     }
 
     /**
