@@ -42,6 +42,7 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
             'order by expiration desc limit 1,1) as previous_expiration';
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('o' => 'orders'), array(
+                'o.id as order_id',
                 'date_format(o.date_created, "%m-%d-%Y") as date',
                 'pro.code as promo',
                 'group_concat(p.sku) as sku',
