@@ -66,7 +66,7 @@ class Pet_Validate_State extends Zend_Validate_Abstract {
                 $this->_error(self::NOT_IN_COUNTRY);
                 return false;
             }
-        } elseif (strlen(trim($value))) {
+        } elseif (strlen(trim($value)) && strlen(trim($country))) {
             $this->_error(self::NOT_IN_COUNTRY);
             return false;
         }

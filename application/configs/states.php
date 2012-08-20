@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    '' => 'Please select...',
+    '' => '--',
     'USA' => array(
         'AL' => 'Alabama',
         'AK' => 'Alaska',
