@@ -78,12 +78,10 @@ Pet.CheckoutView = Pet.View.extend({
                     $('<h3>').text('Your promo'),
                     $('<div>').addClass('promo-description').html(desc)
                 ).fadeIn();
-                console.log(desc);
             } else {
                 $('#promo-info').fadeOut(100, function() {
                     $(this).empty();
                 });
-                console.log('b');
             }
         });
     },

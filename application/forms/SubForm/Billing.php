@@ -92,15 +92,10 @@ class Form_SubForm_Billing extends Pet_Form_SubForm {
         ))->addElement('select', 'billing_state', array(
             'label' => 'State',
             'id' => 'billing_state',
-            'required' => true,
+            'required' => false,
+            'allowEmpty' => false,
             'validators'   => array(
-                array('NotEmpty', true, array(
-                    'messages' => 'State is required'
-                )),
-                array('StringLength', true, array(
-                    'max' => 2,
-                    'messages' => 'State must be %max% characters or less'
-                ))
+                array(new Pet_Validate_State('billing_country', $this->_states))
             )
         // Bill postal code
         ))->addElement('text', 'billing_postal_code', array(

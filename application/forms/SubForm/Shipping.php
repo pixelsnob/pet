@@ -122,14 +122,9 @@ class Form_SubForm_Shipping extends Pet_Form_SubForm {
             'label' => 'State',
             'id' => 'shipping_state',
             'required' => true,
+            'allowEmpty' => false,
             'validators'   => array(
-                array('NotEmpty', true, array(
-                    'messages' => 'State is required'
-                )),
-                array('StringLength', true, array(
-                    'max' => 2,
-                    'messages' => 'State must be %max% characters or less'
-                ))
+                array(new Pet_Validate_State('shipping_country', $this->_states))
             )
         // Ship postal code
         ))->addElement('text', 'shipping_postal_code', array(

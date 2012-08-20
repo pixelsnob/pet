@@ -60,7 +60,6 @@ Pet.AdminUsersView = Pet.AdminView.extend({
     addUserNote: function(el) {
         var qs = $('form[name=user_note_edit]', this.el).serialize();
         this.populateFancybox('/admin/users/add-note/', qs);
-        console.log('a');
         return false;
     },
 
