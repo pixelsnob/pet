@@ -18,7 +18,8 @@ echo $this->headLink()
         ->prependStylesheet('/css/sections.css')
         ->prependStylesheet('/css/base.css')
         ->prependStylesheet('/css/fancybox/jquery.fancybox.css')
-        ->prependStylesheet($this->fullUrl('/wp-content/themes/pet/style.css', 'www.photoshopelementsuser.com'));
+        ->prependStylesheet('/css/wp-style.css');
+        //->prependStylesheet($this->fullUrl('/wp-content/themes/pet/style.css', 'www.photoshopelementsuser.com'));
 ?>
 
 <!--[if IE 9]>
@@ -48,7 +49,7 @@ echo $this->headLink()
     <div id="header">
         <div class="container">
             <div id="logo">
-                <a href="http://www.photoshopelementsuser.com/"><img src="<?php echo $this->fullUrl('/wp-content/themes/pet/_img/pet-logo.png', 'www.photoshopelementsuser.com'); ?>" alt="Photoshop Elements Techniques" /></a>
+                <a href="http://www.photoshopelementsuser.com/"><img src="/images/pet-logo.png" alt="Photoshop Elements Techniques" /></a>
             </div>
             <?php if (!$this->suppress_nav): ?>
             <div id="nav-wrap">
@@ -155,7 +156,7 @@ echo $this->headLink()
     
     <?php echo $this->headScriptMin()->loadGroup('common'); echo $this->inlineScriptMin(); ?>
 
-    <script type="text/javascript" src="<?php echo $this->fullUrl('/wp-content/themes/pet/_js/jquery.megamenu.js', 'www.photoshopelementsuser.com'); ?>"></script>
+    <script type="text/javascript" src="/js/lib/jquery.megamenu.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#top-nav").megamenu();
