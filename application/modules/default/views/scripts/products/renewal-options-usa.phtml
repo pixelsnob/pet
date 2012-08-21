@@ -1,7 +1,7 @@
 
 <div id="products-renewal-options">
     <h2>Renewal Options</h2>
-    <p>Renew now and get an extra 2 months and “The Best of P.E.T., Vol. 6” as a thank you gift!</p>
+    <p>Keep your subscription current &mdash; if you have a promo code, please enter it at checkout!</p>
     <ul class="buttons-list">
         <?php foreach ($this->subscriptions as $sub): ?>
             <li><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $sub->product_id, 'is_renewal' => 1, 'promo_code' => 'LUIS-USA'), 'cart_add')); ?>" class="button-grad cart-add"><?php echo $this->escape($sub->name); ?></a></li>
