@@ -5,7 +5,7 @@
  */
 require_once 'zf_init.php';
 
-try {
+//try {
     $application->getBootstrap()->bootstrap(
         array('router', 'config', 'registryView', 'db', 'autoload', 'mail'));
 
@@ -21,9 +21,9 @@ try {
     $orders_svc = new Service_Orders;
     $orders_svc->sendOrderEmail($order_id, $debug);
     echo "Mail sent!\n";
-} catch (Exception $e){ 
+/*} catch (Exception $e){ 
     echo 'Mail not sent. Error: ' . $e->getMessage() . "\n";
     exit(1);
-}
+}*/
 
 exit(0);
