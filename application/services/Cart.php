@@ -264,7 +264,8 @@ class Service_Cart {
             try {
                 $orders_svc->sendOrderEmail($order->order_id);
             } catch (Exception $e) {
-                $logger->log("Email for order {$order->order_id} not sent", Zend_Log::CRIT);                   
+                $logger->log("Email for order {$order->order_id} not sent: " .
+                    $e->getMessage(), Zend_Log::CRIT);                   
             }
             $this->_cart_mapper->setConfirmation($this->_cart_mapper->get());
             if ($config['reset_cart_after_process']) {
