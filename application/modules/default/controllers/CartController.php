@@ -97,7 +97,9 @@ class CartController extends Zend_Controller_Action {
         $token = $this->_request->getParam('token');
         if ($this->_cart_svc->redeemGift($token)) {
             $this->_messenger->setNamespace('checkout');
-            $this->_messenger->addMessage('Your gift card was redeemed');
+            $msg = 'Welcome! To begin your gift subscription, please fill ' .
+                   'out the form below.';
+            $this->_messenger->addMessage($msg);
             $this->_helper->Redirector->setGotoRoute(array(), 'checkout');
         }
         // Fallback will show a "your gift was not redeemed" message
