@@ -17,13 +17,15 @@ class Pet_Validate_CCExpDate extends Zend_Validate_Abstract {
      * 
      */
     const INVALID = 'invalid';
+    const REQUIRED = 'required';
     
     /**
      * @var array $_messageTemplates
      * 
      */
     protected $_messageTemplates = array(
-        self::INVALID => 'Date is invalid'
+        self::REQUIRED => 'Please enter expiration month and year for the card',
+        self::INVALID  => 'Date is invalid'
     );
     
     /**
@@ -52,8 +54,8 @@ class Pet_Validate_CCExpDate extends Zend_Validate_Abstract {
         $y = (isset($context[$this->_field_names['year']]) ?
             $context[$this->_field_names['year']] : '');
         if (!$m || !$y) {
-            // Let "value required" validators deal with this (if any)
-            return true;
+            $this->_error(self::REQUIRED);
+            return false;
         }
         if (!checkdate($m, 1, $y)) {
             $this->_error(self::INVALID);
