@@ -62,8 +62,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             $config));*/
         $app_config = $this->getOptions();
         Zend_Session::setOptions(array(
-            'cookie_domain' => $app_config['session_cookie_domain'],
-            'name'          => 'PETSESSID'
+            'cookie_domain'   => $app_config['session_cookie_domain'],
+            'cookie_lifetime' => (60 * 60 * 24 * 30),
+            'name'            => 'PETSESSID'
         ));
         Zend_Session::start();
     }
