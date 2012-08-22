@@ -10,6 +10,18 @@ class Form_Login extends Pet_Form {
      * 
      */
     protected $_redirect_to;
+
+    /**
+     * @var array
+     * 
+     */
+    protected $_redirect_params = array();
+
+    /**
+     * @var string
+     * 
+     */
+    protected $_redirect_url;
     
     /**
      * @param string
@@ -18,20 +30,23 @@ class Form_Login extends Pet_Form {
     public function setRedirectTo($redirect_to) {
         $this->_redirect_to = $redirect_to;
     }
-
-    /**
-     * @var string
-     * 
-     */
-    protected $_redirect_params;
     
     /**
-     * @param string
+     * @param array
      * @return void
      */
     public function setRedirectParams(array $redirect_params) {
         $this->_redirect_params = $redirect_params;
     }
+
+    /**
+     * @param string
+     * @return void
+     */
+    public function setRedirectUrl($redirect_url) {
+        $this->_redirect_url = $redirect_url;
+    }
+
 
     /**
      * @return void
@@ -62,20 +77,24 @@ class Form_Login extends Pet_Form {
             $this->addElement('hidden', 'redirect_to', array(
                 'value' => $this->_redirect_to
             ));
-        }
-        if ($this->_redirect_to && !empty($this->_redirect_params)) {
-            $redirects = new Zend_Form;
-            $redirects->setDecorators(array('FormElements'));
-            $this->addSubForm($redirects, 'redirect_params');
-            foreach ($this->_redirect_params as $k => $v) {
-                $redirects->addElement('hidden', $k, array(
-                    'value'     => $v,
-                    'belongsTo' => 'redirect_params',
-                    'decorators' => array(
-                        'ViewHelper'
-                    )
-                ));
+            if (!empty($this->_redirect_params)) {
+                $redirects = new Zend_Form;
+                $redirects->setDecorators(array('FormElements'));
+                $this->addSubForm($redirects, 'redirect_params');
+                foreach ($this->_redirect_params as $k => $v) {
+                    $redirects->addElement('hidden', $k, array(
+                        'value'     => $v,
+                        'belongsTo' => 'redirect_params',
+                        'decorators' => array(
+                            'ViewHelper'
+                        )
+                    ));
+                }
             }
+        } elseif ($this->_redirect_url) {
+            $this->addElement('hidden', 'redirect_url', array(
+                'value' => $this->_redirect_url
+            ));
         }
     }
 }

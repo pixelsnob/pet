@@ -166,10 +166,12 @@ class Service_Users extends Pet_Service {
      * @return Form_Login
      * 
      */ 
-    public function getLoginForm($redirect_to = null, $redirect_params = array()) {
+    public function getLoginForm($redirect_to = null, $redirect_params = array(),
+                                 $redirect_url = null) {
         $login_form = new Form_Login(array(
             'redirectTo'     => $redirect_to,
-            'redirectParams' => $redirect_params
+            'redirectParams' => $redirect_params,
+            'redirectUrl'    => $redirect_url
         ));
         return $login_form;
     }

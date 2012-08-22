@@ -46,8 +46,13 @@ class ProfileController extends Zend_Controller_Action {
         $this->_helper->FlashMessenger->setNamespace('login_form');
         $redirect_to = $this->_request->getParam('redirect_to');
         $redirect_params = (array) $this->_request->getParam('redirect_params');
+        $redirect_referer = $this->_request->getParam('redirect_referer');
+        $redirect_url = $this->_request->getPost('redirect_url');
+        if ($redirect_referer && !$redirect_url && isset($_SERVER['HTTP_REFERER'])) {
+            $redirect_url = $_SERVER['HTTP_REFERER'];
+        }
         $login_form = $this->_users_svc->getLoginForm($redirect_to,
-            $redirect_params);
+            $redirect_params, $redirect_url);
         $this->view->login_form = $login_form;
         $post = $this->_request->getParams();
         if ($this->_request->isPost() && $login_form->isValid($post)) {
@@ -56,6 +61,8 @@ class ProfileController extends Zend_Controller_Action {
                 if ($redirect_to) {
                     $this->_helper->Redirector->gotoRoute($redirect_params,
                         $redirect_to);
+                } elseif ($redirect_url) {
+                    $this->_helper->Redirector->gotoUrl($redirect_url);
                 } else {
                     $this->_helper->Redirector->gotoUrl(
                         'http://www.photoshopelementsuser.com/');
@@ -167,7 +174,4 @@ class ProfileController extends Zend_Controller_Action {
             $this->_users_svc->isAuthenticated()));
     }
 
-    public function timeoutAction() {
-
-    }
 }
