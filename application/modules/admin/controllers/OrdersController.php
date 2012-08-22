@@ -59,6 +59,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $params                 = $this->_request->getPost();
         $cart_mapper            = new Model_Mapper_Cart;
         $cart_svc               = new Service_Cart;
+        $orders_svc             = new Service_Orders;
         $orders_mapper          = new Model_Mapper_Orders;
         $products_mapper        = new Model_Mapper_Products;
         $promos_mapper          = new Model_Mapper_Promos;
@@ -181,6 +182,12 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     $gateway->getRawCalls()
                 );
                 $db->commit();
+                try {
+                    $orders_svc->sendOrderEmail($order->order_id);
+                } catch (Exception $e) {
+                    $logger->log("Email for order {$order->order_id} not sent: " .
+                        $e->getMessage(), Zend_Log::CRIT);                   
+                }
                 $this->_helper->FlashMessenger->setNamespace('order_detail')
                     ->addMessage('Order added');
                 $this->_helper->Redirector->gotoSimple('detail', 'orders', 'admin',
