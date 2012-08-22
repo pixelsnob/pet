@@ -7,8 +7,8 @@
     Author URI:     http://www.photoshopelementsuser.com
 */
 
-@import url("/css/wp-css/reset.css");
-@import url("/css/wp-css/button.css");
+@import url("/css/reset.css");
+@import url("/css/button.css");
 
 /* !General */
 body {
@@ -156,7 +156,7 @@ ul#top-nav li a.top-level-link:hover {
 }
 
 ul#top-nav li a.here, ul#top-nav li a.here:hover {
-    background: #ad6a51 url(/wp-content/themes/pet/_img/dropdown.png) center left no-repeat;
+    background: #ad6a51 url(/images/wp/dropdown.png) center left no-repeat;
     background-position: 93% 9px;
     color: #fff;
     -moz-border-radius: 20px;
@@ -165,12 +165,12 @@ ul#top-nav li a.here, ul#top-nav li a.here:hover {
 }
 
 ul#top-nav li.tl-store a.here, ul#top-nav li.tl-store a.here:hover {
-    background: #ad6a51 url(/wp-content/themes/pet/_img/dropdown.png) center left no-repeat;
+    background: #ad6a51 url(/images/wp/dropdown.png) center left no-repeat;
     background-position: 90% 9px;
 }
 
 ul#top-nav li.tl-lc a.here, ul#top-nav li.tl-lc a.here:hover {
-    background: #ad6a51 url(/wp-content/themes/pet/_img/dropdown.png) center left no-repeat;
+    background: #ad6a51 url(/images/wp/dropdown.png) center left no-repeat;
     background-position: 97% 9px;
 }
 
