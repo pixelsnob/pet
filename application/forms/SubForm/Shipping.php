@@ -121,7 +121,7 @@ class Form_SubForm_Shipping extends Pet_Form_SubForm {
         ))->addElement('select', 'shipping_state', array(
             'label' => 'State',
             'id' => 'shipping_state',
-            'required' => true,
+            'required' => false,
             'allowEmpty' => false,
             'validators'   => array(
                 array(new Pet_Validate_State('shipping_country', $this->_states))
