@@ -11,16 +11,17 @@
             <?php endif; ?>
             <ul class="options">
             <?php foreach ($this->regular_subs as $regular_sub): ?>
+                <?php /* If term is defined, only show relevant subscription */ if ($this->term && $this->term != $regular_sub->term_months) { continue; } ?>
                 <li>
                     <?php
                         /* Because of the product_id options having to be split up into two sections, we're not using the form elements directly --
                            using formRadio() view helper here, as well as below */
                         echo $this->formRadio('product_id', null, null, array($regular_sub->product_id => $regular_sub->name)) . ' &mdash; ';
                         echo $this->dollarFormat($regular_sub->cost); 
-                        if (isset($last_sub_cost) && $last_sub_cost < $regular_sub->cost) {
-                            echo ' &mdash; <em>Save ' . $this->dollarFormat(($last_sub_cost) * 2 - $regular_sub->cost) . '</em>';
+                        if (isset($last_regular_sub_cost) && $last_regular_sub_cost < $regular_sub->cost) {
+                            echo ' &mdash; <em>Save ' . $this->dollarFormat(($last_regular_sub_cost) * 2 - $regular_sub->cost) . '</em>';
                         }
-                        $last_sub_cost = $regular_sub->cost;
+                        $last_regular_sub_cost = $regular_sub->cost;
                     ?>
                 </li>
             <?php endforeach; ?>
@@ -35,6 +36,10 @@
                         <?php
                             echo $this->formRadio('product_id', null, null, array($digital_sub->product_id => $digital_sub->name)) . ' &mdash; ';
                             echo $this->dollarFormat($digital_sub->cost); 
+                            if (isset($last_digital_sub_cost) && $last_digital_sub_cost < $digital_sub->cost) {
+                                echo ' &mdash; <em>Save ' . $this->dollarFormat(($last_digital_sub_cost) * 2 - $digital_sub->cost) . '</em>';
+                            }
+                            $last_digital_sub_cost = $digital_sub->cost;
                         ?>
                     </li>
                 <?php endforeach; ?>

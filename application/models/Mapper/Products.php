@@ -27,6 +27,38 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
             return $out;
         }
     }
+
+    /**
+     * @param int $id
+     * @param bool $is_active_check Whether to check if the product is active
+     * @return Model_Product_Abstract
+     * 
+     */
+    public function getById($id, $is_active_check = true) { 
+        $db_product = $this->_products->getById($id);
+        if ($db_product) {
+            $product = new Model_Product($db_product->toArray());
+            return $this->getItem($product, $is_active_check);
+        }
+    }
+
+    /**
+     * @param array $ids
+     * @param bool $is_active_check Whether to check if the product is active
+     * @return Model_Product_Abstract
+     * 
+     */
+    public function getByIds(array $ids, $is_active_check = true) { 
+        $out = array();
+        foreach ($ids as $id) {
+            $db_product = $this->_products->getById($id);
+            if ($db_product) {
+                $product = new Model_Product($db_product->toArray());
+                $out[] = $this->getItem($product, $is_active_check);
+            }
+        }
+        return $out;
+    }
     
     /**
      * @return array|null
@@ -68,37 +100,16 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
     }
 
     /**
-     * @param int $id
-     * @param bool $is_active_check Whether to check if the product is active
-     * @return Model_Product_Abstract
+     * @param int $term
+     * @param int $zone
      * 
      */
-    public function getById($id, $is_active_check = true) { 
-        $db_product = $this->_products->getById($id);
-        if ($db_product) {
-            $product = new Model_Product($db_product->toArray());
-            return $this->getItem($product, $is_active_check);
+    public function getSubscriptionByTermAndZone($term, $zone) {
+        $product = $this->_products->getSubscriptionByTermAndZone($term, $zone);
+        if ($product) {
+            return new Model_Product_Subscription($product->toArray());
         }
     }
-
-    /**
-     * @param array $ids
-     * @param bool $is_active_check Whether to check if the product is active
-     * @return Model_Product_Abstract
-     * 
-     */
-    public function getByIds(array $ids, $is_active_check = true) { 
-        $out = array();
-        foreach ($ids as $id) {
-            $db_product = $this->_products->getById($id);
-            if ($db_product) {
-                $product = new Model_Product($db_product->toArray());
-                $out[] = $this->getItem($product, $is_active_check);
-            }
-        }
-        return $out;
-    }
-
 
     /**
      * @param Model_Product $product

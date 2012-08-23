@@ -33,10 +33,12 @@ class ProductsController extends Zend_Controller_Action {
         }
         $is_gift    = ($request->getParam('is_gift') ? true : null);
         $is_renewal = $request->getParam('is_renewal');
+        $term       = $request->getParam('term');
         $promo_code = $request->getParam('promo_code');
-        $this->view->is_gift       = $is_gift;
-        $this->view->is_renewal    = $is_renewal;
-        $this->view->promo_code = $promo_code;
+        $this->view->is_gift     = $is_gift;
+        $this->view->is_renewal  = $is_renewal;
+        $this->view->promo_code  = $promo_code;
+        $this->view->term        = $term;
         if ($zone_id == Model_SubscriptionZone::USA) {
             $this->view->subscriptions = $this->_products_mapper
                 ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA,
@@ -116,6 +118,15 @@ class ProductsController extends Zend_Controller_Action {
         if (!$term) {
             throw new Exception('Term is required');
         }
+        $this->view->is_gift = ($this->_request->getParam('is_gift') ? true : null);
+        // Get USA subscription based on term and zone so we can add it directly to
+        // the cart from this page
+        $usa_subscription = $this->_products_mapper->getSubscriptionByTermAndZone(
+            $term, Model_SubscriptionZone::USA);
+        if (!$usa_subscription) {
+            throw new Exception('USA subscription not found');
+        }
+        $this->view->usa_subscription = $usa_subscription;
         $promo_code = $this->_request->getParam('promo_code');
         $this->view->term = $term;
         $this->view->promo_code = $promo_code;

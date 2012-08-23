@@ -90,6 +90,25 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
     }
 
     /**
+     * @param int $term
+     * @param int $zone
+     * @param bool $is_active_check
+     * @return Zend_Db_Table_Row object 
+     * 
+     */
+    public function getSubscriptionByTermAndZone($term, $zone, $is_active_check = true) {
+        $sel = $this->select()->setIntegrityCheck(false)
+            ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
+            ->join(array('s' => 'subscriptions'), 's.product_id = p.id')
+            ->where('s.term_months = ?', $term)
+            ->where('s.zone_id = ?', $zone);
+        if ($is_active_check) {
+            $sel->where('p.active');
+        }
+        return $this->fetchRow($sel);
+    }
+
+    /**
      * @param int $product_id
      * @param bool $is_active_check
      * @return Zend_Db_Table_Row object 
