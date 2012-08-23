@@ -36,6 +36,19 @@ class Model_Mapper_OrderProductSubscriptions extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param int $user_id
+     * @return Zend_DbTable_Row_Abstract 
+     * 
+     */
+    public function getLatestByUserId($user_id) {
+        $ops = $this->_ops->getLatestByUserId($user_id); 
+        if ($ops) {
+            $ops_model = new Model_OrderProductSubscription($ops->toArray());
+            return $ops_model;
+        }
+    }
+
+    /**
+     * @param int $user_id
      * @param mixed $digital_only
      * @return Zend_DbTable_Row_Abstract 
      * 

@@ -23,6 +23,17 @@ class Model_DbTable_OrderProductSubscriptions extends Zend_Db_Table_Abstract {
 
     /**
      * @param int $user_id
+     * @return Zend_DbTable_Row  
+     */
+    public function getLatestByUserId($user_id) {
+        $sel = $this->select()
+            ->where('user_id = ?', $user_id)
+            ->order(array('expiration desc'));
+        return $this->fetchRow($sel);
+    }
+    
+    /**
+     * @param int $user_id
      * @param mixed $digital_only
      * @return Zend_DbTable_Row  
      */

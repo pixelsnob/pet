@@ -84,7 +84,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             'mode'     => 'edit'
         ));
         // Get expiration, if any
-        $exp = $ops_mapper->getUnexpiredByUserId($id);
+        $exp = $ops_mapper->getLatestByUserId($id);
         if ($exp) {
             $form->expiration->setValue($exp->expiration);
             $form->digital_only->setValue($exp->digital_only);
