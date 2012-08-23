@@ -119,7 +119,10 @@ Pet.View = Backbone.View.extend({
     },
 
     closeFancybox: function() {
-        $.fancybox().close();
+        // Not sure why, but fancybox is throwing an error on close...
+        try {
+            $.fancybox().close();
+        } catch (e) {}
         return false;
     },
 
