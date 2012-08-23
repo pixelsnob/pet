@@ -95,7 +95,7 @@ class Form_Admin_User extends Pet_Form {
         $this->addElement('text', 'expiration', array(
             'label' => 'Expiration',
             'required' => false,
-            'class' => 'datepicker datepicker-no-max',
+            'class' => 'datepicker datepicker-min-today',
             'validators'   => array(
                 array('Date', true, array(
                     'messages' => 'Invalid date'
