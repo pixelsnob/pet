@@ -46,6 +46,9 @@ class ProfileController extends Zend_Controller_Action {
         $this->_helper->FlashMessenger->setNamespace('login_form');
         $redirect_to = $this->_request->getParam('redirect_to');
         $redirect_params = (array) $this->_request->getParam('redirect_params');
+        // Don't pass these in the url!
+        unset($redirect_params['username']);
+        unset($redirect_params['password']);
         $redirect_referer = $this->_request->getParam('redirect_referer');
         $redirect_url = $this->_request->getPost('redirect_url');
         if ($redirect_referer && !$redirect_url && isset($_SERVER['HTTP_REFERER'])) {
