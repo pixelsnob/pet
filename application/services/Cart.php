@@ -156,7 +156,9 @@ class Service_Cart {
      * @return bool
      * 
      */
-    public function validateSavedForm(Form_Checkout $form) {
+    public function validateSavedCheckoutForm(Form_Checkout $form) {
+        $form->user->removeElement('password');
+        $form->user->removeElement('confirm_password');
         $data = array_merge(
             $form->billing->getValues(true),
             $form->user->getValues(true),
