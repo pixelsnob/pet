@@ -319,7 +319,15 @@ class Service_Cart {
                 $expiration = null;
                 // See if we need to renew
                 if (isset($expirations->regular) && $expirations->regular) {
-                    $expiration = $expirations->regular;
+                    $temp_exp = new DateTime($expirations->regular);
+                    $temp_exp->setTime(0, 0, 0);
+                    $today = new DateTime;
+                    $today->setTime(0, 0, 0);
+                    // Only use expiration if it's today or later. Otherwise, 
+                    // use today.
+                    if ($temp_exp->format('U') - $today->format('U') >= 0) {
+                        $expiration = $expirations->regular;
+                    }
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
@@ -341,7 +349,15 @@ class Service_Cart {
                 $expiration = null;
                 // See if we need to renew
                 if (isset($expirations->digital) && $expirations->digital) {
-                    $expiration = $expirations->digital;
+                    $temp_exp = new DateTime($expirations->digital);
+                    $temp_exp->setTime(0, 0, 0);
+                    $today = new DateTime;
+                    $today->setTime(0, 0, 0);
+                    // Only use expiration if it's today or later. Otherwise, 
+                    // use today.
+                    if ($temp_exp->format('U') - $today->format('U') >= 0) {
+                        $expiration = $expirations->digital;
+                    }
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
