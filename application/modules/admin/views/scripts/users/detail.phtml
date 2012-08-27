@@ -21,7 +21,7 @@
         <section class="admin-list-right">
             <h3>Shipping</h3>
             <?php
-                echo $this->escape($this->user->first_name) . ' ' . $this->escape($this->user->last_name) . '<br>';
+                echo $this->escape($this->profile->shipping_first_name) . ' ' . $this->escape($this->profile->shipping_last_name) . '<br>';
                 if ($this->profile->shipping_company) {
                     echo $this->escape($this->profile->shipping_company) . '<br>';
                 }
