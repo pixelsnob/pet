@@ -60,7 +60,7 @@ Pet.View = Backbone.View.extend({
             success: function(data) {
                 $('.fancybox-inner').html(data);
                 cb();
-                $.fancybox.update();
+                //$.fancybox.update();
                 obj.replaceGradLinks();
             },
             error: function() {
@@ -86,14 +86,14 @@ Pet.View = Backbone.View.extend({
         opts = $.extend({
             type: 'ajax',
             scrolling: 'no',
-            minWidth: 680,
-            minHeight: 300,
-            fitToView: true,
-            autoSize: true,
-            scrolling: true,
+            //minWidth: 680,
+            //minHeight: 300,
+            //fitToView: true,
+            fixed: false,
+            autoResize: true,
             beforeShow: function() {
                 cb();
-                $.fancybox.update();
+                //$.fancybox.update();
                 obj.replaceGradLinks();
             }
         }, opts);
