@@ -14,7 +14,7 @@
                 'title' => 'User ID'
             ),
             'username'     => array('callback' => function($data) {
-                return $data->user->username;
+                return (isset($data->user->username) ? $data->user->username : '');
             }),
             'date_created' => array('format' => 'datetime'),
             'date_updated' => array('format' => 'datetime'),
@@ -107,11 +107,18 @@
 
     <section class="expirations admin-list-right">
         <h3>Subscription Expirations</h3>
-        <?php echo $this->objectToAdminList(array(
-            'regular' => array('title' => 'Regular Expiration'),
-            'digital' => array('title' => 'Digital Expiration'),
-            'previous' => array('title' => 'Previous Expiration')
-        ), $this->order->expirations); ?>
+        
+        <?php
+        if ($this->order->expirations) {
+            echo $this->objectToAdminList(array(
+                'regular' => array('title' => 'Regular Expiration'),
+                'digital' => array('title' => 'Digital Expiration'),
+                'previous' => array('title' => 'Previous Expiration')
+            ), $this->order->expirations);
+        } else {
+            echo '<p class="no-data">No expirations</p>';
+        }
+        ?>
     </section>
 
     <section class="payments clear full-width">

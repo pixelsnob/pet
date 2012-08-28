@@ -51,12 +51,14 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
             $msg = 'Error retrieving order' . $msg_suffix;
             throw new Exception($msg);
         }
-        $order->user          = $users_svc->getUser($order->user_id);
-        $order->user_profile  = $users_svc->getProfile($order->user->id);
+        if ($order->user_id) {
+            $order->user          = $users_svc->getUser($order->user_id);
+            $order->user_profile  = $users_svc->getProfile($order->user->id);
+            $order->expirations   = $users_svc->getExpirations($order->user->id);
+        }
         $order->products      = $op_mapper->getByOrderId($order->id);
         $order->payments      = $payments_mapper->getByOrderId($order->id); 
         $order->subscriptions = $ops_mapper->getByOrderId($order->id);
-        $order->expirations   = $users_svc->getExpirations($order->user->id);
         $order->gifts         = $opg_mapper->getByOrderId($order->id);
         if ($order->promo_id) {
             $order->promo     = $promos_mapper->getById($order->promo_id);
