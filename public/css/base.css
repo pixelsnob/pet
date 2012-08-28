@@ -298,35 +298,6 @@ input.button-grad-yellow {
 }
 
 
-input.button-grad:hover {
-    background: #707070;
-}
-
-input.button-grad:active {
-    background: #959595;
-}
-
-input.button-grad-blue:hover {
-    background: #5267aa;
-}
-
-input.button-grad-blue:active {
-    background: #495d9c;
-}
-
-input.button-grad-yellow:hover {
-    background: #f0ad2d;
-}
-
-input.button-grad-yellow:active {
-    background: #f3bf5c;
-}
-
-
-/*a.button-grad, a.button-grad-blue, a.button-grad-yellow {
-    display: block;
-}*/
-
 /* Spinner */
 
 #spinner-box {
