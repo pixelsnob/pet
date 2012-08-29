@@ -44,6 +44,8 @@ class Admin_PaymentsController extends Zend_Controller_Action {
         $orders_mapper   = new Model_Mapper_Orders;
         $gateway_mapper  = new Model_Mapper_PaymentGateway;
         $gateway_logger  = new Model_Mapper_PaymentGateway_Logger_Credits;
+        $orders_svc      = new Service_Orders;
+        $logger          = Zend_Registry::get('log');
         $params = $this->_request->getParams();
         $id = $this->_request->getParam('id');
         if (!($payment = $payments_mapper->getById($id))) {
@@ -98,6 +100,12 @@ class Admin_PaymentsController extends Zend_Controller_Action {
                     $this->_users_svc->getId()
                 ); 
                 $db->commit();
+                try {
+                    $orders_svc->sendOrderCreditEmail($payment->order_id, $amount);
+                } catch (Exception $e) {
+                    $logger->log("Credit email for order {$order->order_id} not sent: " .
+                        $e->getMessage(), Zend_Log::CRIT);                   
+                }
                 $this->_helper->FlashMessenger->setNamespace('order_detail')
                     ->addMessage('Payment was credited successfully');
                 $this->_helper->Redirector->gotoSimple('credit-success');
