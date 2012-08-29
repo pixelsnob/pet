@@ -80,74 +80,48 @@ class Service_Orders {
                 }
             }
         }
-        //echo $message;
-        //print_r($order);
     }
 
     /**
+     * @param int $order_id
+     * @param float $credit_amount
+     * @param bool $debug
      * @return void
      * 
      */
-    /*public function sendOrderEmails() {
-        $db            = Zend_Db_Table::getDefaultAdapter();
-        $op_mapper     = new Model_Mapper_OrderProducts;
-        $logger        = Zend_Registry::get('log');
-        $view          = Zend_Registry::get('view');
-        try {
-            $db->query('set transaction isolation level serializable');
-            $db->beginTransaction();
-            $orders          = $this->_orders_mapper->getByEmailSent(false);
-            $orders_sent     = array();
-            $mail_exceptions = array();
-            foreach ($orders as $order) {
-                $full_order = $this->_orders_mapper->getFullOrder($order->id);
-                if (!$full_order) {
-                    $msg = "Error retrieving order for id {$order->id}";
-                    throw new Exception($msg);
-                }
-                $view->order = $full_order;
-                $message = $view->render('emails/order.phtml');
+    public function sendOrderCreditEmail($order_id, $credit_amount, $debug = false) {
+        $view = Zend_Registry::get('view');
+        $app_config = Zend_Registry::get('app_config');
+        $order = $this->_orders_mapper->getFullOrder($order_id);
+        $message = $view->partial('emails/order_credit.phtml', array(
+            'order'         => $order,
+            'credit_amount' => $credit_amount
+        ));
+        if (!$debug) {
+            $mail = new Zend_Mail;
+            $mail->setBodyText($message)
+                 ->addTo($order->email)
+                 ->setSubject('Photoshop Elements Refund, Order: ' . $order->id);
+            if ($app_config['order_emails']['bcc']) {
+                $mail->addBcc($app_config['order_emails']['bcc']);
+            }
+            $mail->send();
+        } else {
+            echo $message . "\n\n";
+        }
+    }
 
-                try {
-                    $mail = new Zend_Mail;
-                    $mail->setBodyText($view->render('emails/order.phtml'))
-                         ->addTo($order->email)
-                         ->setSubject('Photoshop Elements User Order: ' .
-                                      $order->id)
-                         ->addBcc('soapscum@pixelsnob.com')
-                         ->send();
-                    $orders_sent[] = $order->id;
-                } catch (Exception $e2) {
-                    $mail_exceptions[] = $e2;
-                }
-            }
-            if (!empty($orders_sent)) {
-                foreach ($orders_sent as $order_id) {
-                    $this->_orders_mapper->updateEmailSent($order->id, true);
-                }
-            }
-            $db->commit();
-        } catch (Exception $e1) {
-            print_r($e1);
-            $db->rollback();
-            $logger->log('Error updating database while sending order emails',
-                Zend_Log::EMERG);
-        }
-        if (!empty($mail_exceptions)) {
-            $mail_exceptions_str = implode(' ', $mail_exceptions);
-            $logger->log("Error(s) sending order emails: " .
-                $mail_exceptions_str, Zend_Log::EMERG);
-        }
-    }*/
-    
+
     /**
+     * **** This is currently not in use ****
+     * 
      * This should be run once per day, preferably not too long after midnight...
      * 
      * @param DateTime $expiration The expiration date to use for the search
      * @return void
      * 
      */
-    public function processRecurringBilling(DateTime $expiration) {
+    /*public function processRecurringBilling(DateTime $expiration) {
         $ops_mapper         = new Model_Mapper_OrderProductSubscriptions;
         $payments_mapper    = new Model_Mapper_OrderPayments;
         $products_mapper    = new Model_Mapper_Products;
@@ -302,5 +276,5 @@ class Service_Orders {
                 );
             } catch (Exception $f) {}
         }
-    }
+    }*/
 }
