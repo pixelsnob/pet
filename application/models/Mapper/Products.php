@@ -232,15 +232,18 @@ class Model_Mapper_Products extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param int $zone_id
+     * @param int $term Term in months
      * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return array
      * 
      */
-    public function getSubscriptionsByZoneId($zone_id, $is_giftable = null,
+    public function getSubscriptionsByZoneId($zone_id,
+                                             $term = null,
+                                             $is_giftable = null,
                                              $is_renewal = false) {
-        $subs = $this->_products->getSubscriptionsByZoneId($zone_id,
-            $is_giftable, $is_renewal);
+        $subs = $this->_products->getSubscriptionsByZoneIdAndTerm($zone_id,
+            $term, $is_giftable, $is_renewal);
         $out = array();
         foreach ($subs as $sub) {
             $sub = new Model_Product_Subscription($sub->toArray());

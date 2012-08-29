@@ -47,7 +47,7 @@ ol {
 }
 
 ul li {
-    background: url(_img/bullet.png) 0 2px no-repeat;
+    background: url(/images/wp/bullet.png) 0 2px no-repeat;
     margin-bottom: 10px;
     padding-left: 22px;
 }

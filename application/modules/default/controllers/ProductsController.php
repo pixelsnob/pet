@@ -33,33 +33,26 @@ class ProductsController extends Zend_Controller_Action {
         }
         $is_gift    = ($request->getParam('is_gift') ? true : null);
         $is_renewal = $request->getParam('is_renewal');
-        $term       = $request->getParam('term');
+        $term       = (strlen(trim($request->getParam('term'))) ?
+                      $request->getParam('term') : null);
         $promo_code = $request->getParam('promo_code');
-        $this->view->is_gift     = $is_gift;
-        $this->view->is_renewal  = $is_renewal;
-        $this->view->promo_code  = $promo_code;
-        $this->view->term        = $term;
         if ($zone_id == Model_SubscriptionZone::USA) {
             $this->view->subscriptions = $this->_products_mapper
-                ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA,
+                ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA, null,
                     $is_gift, $is_renewal); 
             $this->_helper->ViewRenderer->render('subscription-options-usa');
         } else {
             $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
-                $zone_id, $is_gift, $is_renewal);
+                $zone_id, $term, $is_gift, $is_renewal);
             $digital_subs = $this->_products_mapper->getDigitalSubscriptions(
                 $is_gift, $is_renewal);
             $form = new Form_SubscriptionOptions(array(
-                'zoneId'        => $zone_id,
-                'isGift'        => $is_gift,
-                'isRenewal'     => $is_renewal,
-                'subscriptions' => array_merge($regular_subs, $digital_subs),
-                'promoCode'     => $promo_code
+                'subscriptions' => array_merge($regular_subs, $digital_subs)
             ));
+            $form->populate($request->getParams());
             $this->view->regular_subs = $regular_subs;
             $this->view->digital_subs = $digital_subs;
             $this->view->sub_options_form = $form;
-            
             if ($request->isPost() && $form->isValid($request->getPost())) {
                 $product_id = $request->getPost('product_id');
                 $this->_helper->Redirector->setGotoSimple('add', 'cart',

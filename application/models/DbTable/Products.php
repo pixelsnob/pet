@@ -160,12 +160,16 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
 
     /**
      * @param int $zone_id
+     * @param int $term Term in months 
      * @param mixed $is_giftable
      * @param bool $is_renewal
      * @return Zend_Db_Table_Row object 
      * 
      */
-    public function getSubscriptionsByZoneId($zone_id, $is_giftable = null, $is_renewal = false) {
+    public function getSubscriptionsByZoneIdAndTerm($zone_id,
+                                                    $term = null,
+                                                    $is_giftable = null,
+                                                    $is_renewal = false) {
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('p' => 'products'), array('p.*', 'p.id as product_id'))
             ->join(array('s' => 'subscriptions'), 's.product_id = p.id')
@@ -175,6 +179,9 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->where('s.is_renewal = ?', (int) $is_renewal);
         if ($is_giftable !== null) {
             $sel->where('p.is_giftable = ?', (int) $is_giftable);
+        }
+        if ($term !== null) {
+            $sel->where('s.term_months = ?', $term);
         }
         return $this->fetchAll($sel);
     }

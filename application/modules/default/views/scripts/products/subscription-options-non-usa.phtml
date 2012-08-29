@@ -11,7 +11,6 @@
             <?php endif; ?>
             <ul class="options">
             <?php foreach ($this->regular_subs as $regular_sub): ?>
-                <?php /* If term is defined, only show relevant subscription */ if ($this->term && $this->term != $regular_sub->term_months) { continue; } ?>
                 <li>
                     <?php
                         /* Because of the product_id options having to be split up into two sections, we're not using the form elements directly --
@@ -48,10 +47,13 @@
         <?php echo $this->sub_options_form->product_id->renderErrors(); ?>
         <div class="submit">
             <input type="submit" value="Add to Cart" class="button-grad">
-            <?php echo $this->sub_options_form->zone_id->renderViewHelper(); ?>
-            <?php echo $this->sub_options_form->is_gift->renderViewHelper(); ?>
-            <?php echo $this->sub_options_form->is_renewal->renderViewHelper(); ?>
-            <?php echo $this->sub_options_form->promo_code->renderViewHelper(); ?>
+            <?php
+            echo $this->sub_options_form->zone_id->renderViewHelper();
+            echo $this->sub_options_form->is_gift->renderViewHelper();
+            echo $this->sub_options_form->is_renewal->renderViewHelper();
+            echo $this->sub_options_form->promo_code->renderViewHelper();
+            echo $this->sub_options_form->term->renderViewHelper();
+            ?>
         </div>
     </form>
 </div>
