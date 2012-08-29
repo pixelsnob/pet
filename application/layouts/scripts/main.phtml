@@ -19,7 +19,6 @@ echo $this->headLink()
         ->prependStylesheet('/css/base.css')
         ->prependStylesheet('/css/fancybox/jquery.fancybox.css')
         ->prependStylesheet('/css/wp-style.css');
-        //->prependStylesheet($this->fullUrl('/wp-content/themes/pet/style.css', 'www.photoshopelementsuser.com'));
 ?>
 
 <!--[if IE 9]>
@@ -41,6 +40,9 @@ echo $this->headLink()
 <![endif]-->
 <script type="text/javascript">
     document.write('<link href="/css/js_enabled.css" media="screen" rel="stylesheet" type="text/css" >');
+    if (!navigator.userAgent.match(/iPhone|iPad/i)) {
+        document.write('<link href="/css/no_ios.css" media="screen" rel="stylesheet" type="text/css" >');
+    }
 </script>
 
 </head>

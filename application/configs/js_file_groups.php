@@ -9,7 +9,7 @@ return array(
         'js/lib/jquery-1.7.1.min.js',
         'js/lib/underscore-min.js',
         'js/lib/backbone-min.js',
-        'js/lib/jquery.fancybox.pack.js',
+        'js/lib/jquery.fancybox.js',
         'js/lib/jquery.tools.min.js',
         'js/Pet/Pet.js',
         'js/Pet/Views/Base.js'
@@ -39,7 +39,7 @@ return array(
         'js/lib/jquery-1.7.1.min.js',
         'js/lib/underscore-min.js',
         'js/lib/backbone-min.js',
-        'js/lib/jquery.fancybox.pack.js',
+        'js/lib/jquery.fancybox.js',
         'js/lib/jquery.tools.min.js',
         'js/lib/jquery-ui.custom.min.js',
         'js/Pet/Pet.js',

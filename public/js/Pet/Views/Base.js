@@ -60,7 +60,6 @@ Pet.View = Backbone.View.extend({
             success: function(data) {
                 $('.fancybox-inner').html(data);
                 cb();
-                $.fancybox.update();
                 obj.replaceGradLinks();
             },
             error: function() {
@@ -86,14 +85,11 @@ Pet.View = Backbone.View.extend({
         opts = $.extend({
             type: 'ajax',
             scrolling: 'no',
-            minWidth: 680,
-            minHeight: 300,
+            autoResize: true,
             fitToView: true,
-            autoSize: true,
-            scrolling: true,
+            topRatio: 0.2,
             beforeShow: function() {
                 cb();
-                $.fancybox.update();
                 obj.replaceGradLinks();
             }
         }, opts);
@@ -119,10 +115,7 @@ Pet.View = Backbone.View.extend({
     },
 
     closeFancybox: function() {
-        // Not sure why, but fancybox is throwing an error on close...
-        try {
-            $.fancybox().close();
-        } catch (e) {}
+        $('.fancybox-close').trigger('click');
         return false;
     },
 
@@ -164,6 +157,9 @@ Pet.View = Backbone.View.extend({
      * 
      */
     showSpinnerOverlay: function(cb) {
+        if (navigator.userAgent.match(/iPhone|iPad/i)) {
+            return;
+        }
         var spinner = $('<img>').attr('src', '/images/ajax-loader.gif'),
             obj = this;
         spinner.on('load', function() {
