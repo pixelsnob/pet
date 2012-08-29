@@ -28,3 +28,6 @@ input.button-grad-yellow:active {
     background: #f3bf5c;
 }
 
+#products-index #content, #products-special #content {
+    min-width: 1082px;
+}

@@ -162,6 +162,9 @@ Pet.View = Backbone.View.extend({
      * 
      */
     showSpinnerOverlay: function(cb) {
+        if (navigator.userAgent.match(/iPhone|iPad/i)) {
+            return;
+        }
         var spinner = $('<img>').attr('src', '/images/ajax-loader.gif'),
             obj = this;
         spinner.on('load', function() {

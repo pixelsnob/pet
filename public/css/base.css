@@ -10,6 +10,7 @@
 
 #content {
     margin-top: 25px;
+    min-height: 380px;
 }
 
 #content a:link, #content a:visited, #nolayout a:link, #nolayout a:visited {
@@ -50,10 +51,6 @@ ul.errors li, ul.success li {
     padding-left: 0;
     font-size: 11px !important;
     line-height: 13px !important;
-}
-
-#content {
-    min-height: 380px;
 }
 
 .form {
