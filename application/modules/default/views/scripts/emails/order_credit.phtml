@@ -1,0 +1,40 @@
+
+This is a receipt for a refund of an item from Photoshop Elements Techniques.
+
+------------------------------------------------------------------------------
+ REFUND
+------------------------------------------------------------------------------
+
+Date: <?php echo date('F d, Y'); ?> 
+
+------------------------------------------------------------------------------
+ REFUND TO
+------------------------------------------------------------------------------
+
+<?php
+echo $this->order->billing_first_name . ' ' . $this->order->billing_last_name . "\n";
+if ($this->order->billing_company) {
+    echo $this->order->billing_company . "\n";
+}
+echo $this->order->billing_address . "\n";
+if ($this->order->billing_address_2) {
+    echo $this->order->billing_address_2 . "\n";
+}
+echo $this->order->billing_city . ', ' . $this->order->billing_state . ' ' .
+    $this->order->billing_postal_code . "\n" . $this->order->billing_country . "\n";
+
+?>
+
+------------------------------------------------------------------------------
+ REFUND TOTAL
+------------------------------------------------------------------------------
+
+Total: <?php echo $this->dollarFormat($this->credit_amount); ?> 
+
+------------------------------------------------------------------------------
+ CONFIRMATION
+------------------------------------------------------------------------------
+
+Reference Order ID: <?php echo $this->order->id; ?> 
+
+If you have any questions about this transaction, please email us for a prompt reply: info@photoshopelementsuser.com
