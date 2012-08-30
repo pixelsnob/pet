@@ -16,7 +16,7 @@ Pet.AdminView = Pet.View.extend({
     initialize: function() {
         if ($('form').length) {
             $('form:first').find(
-                ':input:first:not(.hasDatepicker):not(.no-focus)'
+                ':input:first:not(.datepicker):not(.no-focus)'
             ).focus();
         }
     },
