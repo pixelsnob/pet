@@ -117,7 +117,8 @@ class ProductsController extends Zend_Controller_Action {
         $usa_subscription = $this->_products_mapper->getSubscriptionByTermAndZone(
             $term, Model_SubscriptionZone::USA);
         if (!$usa_subscription) {
-            throw new Exception('USA subscription not found');
+            $this->_response->setHttpResponseCode(404);
+            throw new Zend_Controller_Action_Exception('USA subscription not found', 404);
         }
         $this->view->usa_subscription = $usa_subscription;
         $promo_code = $this->_request->getParam('promo_code');
