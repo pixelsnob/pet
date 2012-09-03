@@ -67,7 +67,6 @@ class Admin_OrdersController extends Zend_Controller_Action {
         $profile_mapper         = new Model_Mapper_UserProfiles;
         $gateway                = new Model_Mapper_PaymentGateway;
         $op_mapper              = new Model_Mapper_OrderProducts;
-        $ops_mapper             = new Model_Mapper_OrderProductSubscriptions;
         $gateway_logger         = new Model_Mapper_PaymentGateway_Logger_Orders;
         $subscriptions          = $products_mapper->getSubscriptions();
         $digital_subscriptions  = $products_mapper->getDigitalSubscriptions();
@@ -83,7 +82,6 @@ class Admin_OrdersController extends Zend_Controller_Action {
             if (!$profile) {
                 throw new Exception('Profile not found');
             }
-            $expirations = $this->_users_svc->getExpirations($user_id);
         }
         // Reset each time, we don't need values to perist
         $cart_mapper->reset();

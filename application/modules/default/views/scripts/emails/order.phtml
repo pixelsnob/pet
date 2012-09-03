@@ -71,7 +71,7 @@ if ($this->has_subscription):
  SUBSCRIPTION DETAILS
 ------------------------------------------------------------------------------
 
-Expiration: <?php echo $this->expirations->regular; ?> 
+Expiration: <?php echo $this->expiration; ?> 
 <?php if ($this->order->user->username): ?>Username: <?php echo $this->order->user->username; ?> <?php endif; ?> 
 <?php endif; if ($this->order->gifts): ?>
 

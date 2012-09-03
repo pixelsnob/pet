@@ -38,7 +38,6 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
      */
     public function getFullOrder($id) {
         $op_mapper            = new Model_Mapper_OrderProducts;
-        $ops_mapper           = new Model_Mapper_OrderProductSubscriptions;
         $opg_mapper           = new Model_Mapper_OrderProductGifts;
         $payments_mapper      = new Model_Mapper_OrderPayments;
         $products_mapper      = new Model_Mapper_Products;
@@ -54,11 +53,10 @@ class Model_Mapper_Orders extends Pet_Model_Mapper_Abstract {
         if ($order->user_id) {
             $order->user          = $users_svc->getUser($order->user_id);
             $order->user_profile  = $users_svc->getProfile($order->user->id);
-            $order->expirations   = $users_svc->getExpirations($order->user->id);
+            //$order->expirations   = $users_svc->getExpirations($order->user->id);
         }
         $order->products      = $op_mapper->getByOrderId($order->id);
         $order->payments      = $payments_mapper->getByOrderId($order->id); 
-        $order->subscriptions = $ops_mapper->getByOrderId($order->id);
         $order->gifts         = $opg_mapper->getByOrderId($order->id);
         if ($order->promo_id) {
             $order->promo     = $promos_mapper->getById($order->promo_id);

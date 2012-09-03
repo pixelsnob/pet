@@ -236,35 +236,6 @@ class Service_Users extends Pet_Service {
     }    
     
     /**
-     * @param mixed $user_id
-     * @param mixed $digital_only
-     * @return null|Model_OrderProductSubscription
-     * 
-     */
-    public function getExpirations($user_id = null) {
-        if (!$user_id) {
-            $user_id = $this->getId();
-        }
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
-        return $ops_mapper->getExpirationsByUserId($user_id);
-    }
-    
-    /**
-     * @param int $user_id
-     * @return string
-     * 
-     */
-    public function getPreviousExpiration($user_id = null) {
-        if (!$user_id) {
-            $user_id = $this->getId();
-        }
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
-        $expirations = $this->getExpirations($user_id); 
-        return $ops_mapper->getPreviousExpiration($expirations->digital,
-            $expirations->regular);
-    }
-
-    /**
      * @param array $data
      * @param null|int $user_id
      * @return void

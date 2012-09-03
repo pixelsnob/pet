@@ -15,9 +15,10 @@ class ProfileController extends Zend_Controller_Action {
         if (!$this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('login');
         }
+        $this->view->user = $this->_users_svc->getUser();
         if ($profile_form = $this->_users_svc->getProfileForm()) {
             $this->view->profile_form = $profile_form;
-            $this->view->expirations = $this->_users_svc->getExpirations();
+            //$this->view->expirations = $this->_users_svc->getExpirations();
         } else {
             throw new Exception('User not found');
         }

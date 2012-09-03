@@ -56,10 +56,9 @@
 
     <section class="expirations admin-list-right">
         <?php echo $this->objectToAdminList(array(
-            'regular'  => array('title' => 'Regular Expiration'),
-            'digital'  => array('title' => 'Digital Expiration'),
-            'previous' => array('title' => 'Previous Expiration')
-        ), $this->expirations); ?>
+            'expiration'          => array('title' => 'Expiration'),
+            'previous_expiration' => array('title' => 'Previous Expiration')
+        ), $this->user); ?>
     </section>
 
     <section class="orders clear full-width">

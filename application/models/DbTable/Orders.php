@@ -37,9 +37,9 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
         $db = $this->getAdapter();
         $start_date = $db->quote($start_date);
         $end_date = $db->quote($end_date);
-        $subquery = '(select expiration from order_product_subscriptions ' .
-            'where user_id = o.user_id and digital_only = 0 ' .
-            'order by expiration desc limit 1,1) as previous_expiration';
+        /*$subquery = '(select expiration from order_product_subscriptions ' .
+            'where user_id = o.user_id ' .
+            'order by expiration desc limit 1,1) as previous_expiration';*/
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('o' => 'orders'), array(
                 'o.id as order_id',
@@ -62,7 +62,7 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
                 'o.shipping_state',
                 'o.shipping_country',
                 'o.shipping_postal_code',
-                $subquery,
+                'u.previous_expiration',
                 'up.version',
                 'up.platform',
                 'up.marketing',
@@ -71,7 +71,8 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
             ))
             ->joinLeft(array('op' => 'order_products'), 'op.order_id = o.id', null)
             ->joinLeft(array('p' => 'products'), 'op.product_id = p.id', null)
-            ->joinLeft(array('up' => 'user_profiles'), 'o.user_id = up.id', null)
+            ->joinLeft(array('u' => 'users'), 'u.id = o.user_id', null)
+            ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.id', null)
             ->joinLeft(array('pro' => 'promos'), 'o.promo_id = pro.id', null)
             ->where("o.date_created between $start_date and $end_date")
             ->group('o.id')

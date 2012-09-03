@@ -16,13 +16,9 @@
                         <?php echo $this->profile_form->user->email->renderViewHelper(); ?>
                         <?php echo $this->profile_form->user->email->renderErrors(); ?>
                     </dd>
-                    <?php if ($this->expirations->regular): ?>
-                        <dt>Print Expiration</dt>
-                        <dd><?php echo $this->escape(date('F j, Y', strtotime($this->expirations->regular))); ?></dd>
-                    <?php endif; ?>
-                    <?php if ($this->expirations->digital): ?>
-                        <dt>Digital Expiration</dt>
-                        <dd><?php echo $this->escape(date('F j, Y', strtotime($this->expirations->digital))); ?></dd>
+                    <?php if ($this->user->expiration): ?>
+                        <dt>Expiration</dt>
+                        <dd><?php echo $this->escape(date('F j, Y', strtotime($this->user->expiration))); ?></dd>
                     <?php endif; ?>
                 </dl>
                 <p class="change-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'change_password')); ?>">Change password</a></p>

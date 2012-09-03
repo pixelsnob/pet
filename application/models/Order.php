@@ -42,7 +42,7 @@ class Model_Order extends Pet_Model_Abstract {
         'user_profile' => null,
         'payments' => array(),
         'products' => array(),
-        'expirations' => array(),
+        //'expirations' => array(),
         'subscriptions' => array(),
         'gifts' => array(),
         'promo' => null
@@ -60,7 +60,6 @@ class Model_Order extends Pet_Model_Abstract {
             unset($data['user_profile']);
             unset($data['products']);
             unset($data['payments']);
-            unset($data['expirations']);
             unset($data['subscriptions']);
             unset($data['gifts']);
             unset($data['promo']);
@@ -87,12 +86,6 @@ class Model_Order extends Pet_Model_Abstract {
                 $gifts[] = $gift->toArray();
             }
             $data['gifts'] = $gifts;
-            if ($data['expirations']) {
-                $data['expirations'] = array(
-                    'regular' => $data['expirations']->regular,
-                    'digital' => $data['expirations']->digital
-                );
-            }
             if ($data['promo']) {
                 $data['promo'] = $data['promo']->toArray();
             }

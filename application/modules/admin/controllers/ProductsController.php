@@ -158,7 +158,6 @@ class Admin_ProductsController extends Zend_Controller_Action {
                     array('id' => $product_id));
             } catch (Exception $e) {
                 $db->rollBack();
-                print_r($e->getMessage());
                 $msg = 'There was an error inserting into the database';
                 $this->_helper->FlashMessenger->addMessage($msg);
             }

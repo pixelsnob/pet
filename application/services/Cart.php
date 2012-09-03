@@ -283,16 +283,13 @@ class Service_Cart {
      * 
      */
     public function saveOrderProducts(Model_Cart_Order $order) {
-        $users_svc  = new Service_Users;
-        $is_auth    = $users_svc->isAuthenticated();
-        $cart       = clone $this->_cart_mapper->get();
-        $op         = new Model_Mapper_OrderProducts;
-        $ops        = new Model_Mapper_OrderProductSubscriptions;
-        $gifts      = new Model_Mapper_OrderProductGifts;
-        $fmt        = 'Y-m-d H:i:s'; 
-        $extra_days = ($cart->promo && $cart->promo->extra_days ?
-                       $cart->promo->extra_days : 0);
-        $expirations = $users_svc->getExpirations($order->user_id);
+        $users_svc    = new Service_Users;
+        $users_mapper = new Model_Mapper_Users;
+        $cart         = clone $this->_cart_mapper->get();
+        $op           = new Model_Mapper_OrderProducts;
+        $gifts        = new Model_Mapper_OrderProductGifts;
+        $extra_days   = ($cart->promo && $cart->promo->extra_days ?
+                        $cart->promo->extra_days : 0);
         foreach ($cart->products as $product) {
             if ($order->payment_method == 'bypass') {
                 $product->cost = 0;
@@ -315,18 +312,18 @@ class Service_Cart {
                 // process subscriptions, if any
                 $gifts->redeem($opid, $product->order_product_gift_id);
             }
-            if ($product->isSubscription()) {
+            if ($product->isSubscription() || $product->isDigital()) {
                 $expiration = null;
                 // See if we need to renew
-                if (isset($expirations->regular) && $expirations->regular) {
-                    $temp_exp = new DateTime($expirations->regular);
+                if ($users_svc->isAuthenticated() && ($user = $users_svc->getUser())) {
+                    $temp_exp = new DateTime($user->expiration);
                     $temp_exp->setTime(0, 0, 0);
                     $today = new DateTime;
                     $today->setTime(0, 0, 0);
                     // Only use expiration if it's today or later. Otherwise, 
                     // use today.
                     if ($temp_exp->format('U') - $today->format('U') >= 0) {
-                        $expiration = $expirations->regular;
+                        $expiration = $user->expiration;
                     }
                 }
                 $term = (int) $product->term_months;
@@ -334,42 +331,16 @@ class Service_Cart {
                 $date = new DateTime($expiration);
                 // Adjust from today
                 $date->add(new DateInterval("P{$term}M{$extra_days}D"));
-                $ops->insert(array(
-                    'user_id'            => $order->user_id,
-                    'order_product_id'   => $opid,
-                    'expiration'         => $date->format($fmt)
-                ));
-                // Log as a user note
-                if ($product->is_renewal) {
-                    $users_svc->addUserNote('User added renewal', $order->user_id);
-                } else {
-                    $users_svc->addUserNote('User added subscription', $order->user_id);
-                }
-            } elseif ($product->isDigital()) {
-                $expiration = null;
-                // See if we need to renew
-                if (isset($expirations->digital) && $expirations->digital) {
-                    $temp_exp = new DateTime($expirations->digital);
-                    $temp_exp->setTime(0, 0, 0);
-                    $today = new DateTime;
-                    $today->setTime(0, 0, 0);
-                    // Only use expiration if it's today or later. Otherwise, 
-                    // use today.
-                    if ($temp_exp->format('U') - $today->format('U') >= 0) {
-                        $expiration = $expirations->digital;
+                $users_mapper->updateExpiration($date->format('Y-m-d H:i:s'),
+                    $order->user_id);
+                if ($product->isSubscription()) {
+                    // Log as a user note
+                    if ($product->is_renewal) {
+                        $users_svc->addUserNote('User added renewal', $order->user_id);
+                    } else {
+                        $users_svc->addUserNote('User added subscription', $order->user_id);
                     }
                 }
-                $term = (int) $product->term_months;
-                // If expiration is null here, DateTime defaults to today
-                $date = new DateTime($expiration);
-                // Adjust from today
-                $date->add(new DateInterval("P{$term}M{$extra_days}D"));
-                $ops->insert(array(
-                    'user_id'            => $order->user_id,
-                    'order_product_id'   => $opid,
-                    'expiration'         => $date->format($fmt),
-                    'digital_only'       => 1
-                ));
             }
         }
     }

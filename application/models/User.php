@@ -16,7 +16,9 @@ class Model_User extends Pet_Model_Abstract {
         'is_active' => 0,
         'is_superuser' => 0,
         'last_login' => null,
-        'date_joined' => null
+        'date_joined' => null,
+        'expiration' => null,
+        'previous_expiration' => null
     );
 
 }

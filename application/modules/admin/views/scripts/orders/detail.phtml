@@ -109,12 +109,11 @@
         <h3>Subscription Expirations</h3>
         
         <?php
-        if ($this->order->expirations) {
+        if ($this->order->user->expiration) {
             echo $this->objectToAdminList(array(
-                'regular' => array('title' => 'Regular Expiration'),
-                'digital' => array('title' => 'Digital Expiration'),
-                'previous' => array('title' => 'Previous Expiration')
-            ), $this->order->expirations);
+                'expiration'          => array('title' => 'Expiration'),
+                'previous_expiration' => array('title' => 'Previous Expiration')
+            ), $this->order->user);
         } else {
             echo '<p class="no-data">No expirations</p>';
         }

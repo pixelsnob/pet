@@ -54,7 +54,6 @@ class Admin_UsersController extends Zend_Controller_Action {
         }
         $this->view->user_notes = $this->_user_notes_mapper->getByUserId($id);
         $this->view->profile = $profile;
-        $this->view->expirations = $this->_users_svc->getExpirations($id);
         $this->view->orders = $orders_mapper->getByUserId($id);
     }
 
@@ -66,7 +65,6 @@ class Admin_UsersController extends Zend_Controller_Action {
         $params = $this->_request->getParams();
         $orders_mapper = new Model_Mapper_Orders;
         $profiles_mapper = new Model_Mapper_UserProfiles;
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $id = $this->_request->getParam('id');
         if (!$id) {
             throw new Exception('User id was not supplied');
@@ -84,10 +82,8 @@ class Admin_UsersController extends Zend_Controller_Action {
             'mode'     => 'edit'
         ));
         // Get expiration, if any
-        $exp = $ops_mapper->getLatestByUserId($id);
-        if ($exp) {
-            $form->expiration->setValue($exp->expiration);
-            $form->digital_only->setValue($exp->digital_only);
+        if ($user->expiration) {
+            $form->expiration->setValue($user->expiration);
             $this->view->show_expiration_fields = true;
         }
         // Populate form
@@ -99,25 +95,19 @@ class Admin_UsersController extends Zend_Controller_Action {
             try {
                 $this->_users_mapper->updatePersonal($params, $id);
                 if ($form->change_password->getValue() == '1') {
-                    $enc_pw = $this->_users_svc->generateHash($form->user->password->getValue());
+                    $enc_pw = $this->_users_svc->generateHash(
+                        $form->user->password->getValue());
                     $this->_users_mapper->updatePassword($enc_pw, $id);
                 }
-                $this->_users_mapper->updateIsActive($form->is_active->getValue(), $id);
+                $this->_users_mapper->updateIsActive(
+                    $form->is_active->getValue(), $id);
                 $profiles_mapper->updateByUserId($params, $id);
                 $form_exp = $form->expiration->getValue();
-                if ($exp && $form_exp) {
-                    $ops_mapper->update(array(
-                        'expiration'   => $form_exp,
-                        'digital_only' => $form->digital_only->getValue(),
-                        'user_id' => $id
-                    ), $exp->id);
-                } elseif ($form_exp) {
-                    $ops_mapper->insert(array(
-                        'expiration'   => $form_exp,
-                        'digital_only' => $form->digital_only->getValue()
-                    ));
+                if ($form_exp) {
+                    $this->_users_mapper->updateExpiration($form_exp, $id);
                 }
-                $this->_users_svc->addUserNote('Updated profile', $id, $this->_users_svc->getId());
+                $this->_users_svc->addUserNote('Updated profile', $id,
+                    $this->_users_svc->getId());
                 $db->commit();
                 $this->_helper->FlashMessenger->addMessage('User updated');
             } catch (Exception $e) {

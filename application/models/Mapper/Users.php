@@ -161,12 +161,21 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param int $id User id
-     * @return int user_id 
+     * @return int Num rows updated
      * 
      */
     public function updateLastLogin($id) {
         return $this->_users->update(array(
             'last_login' => date('Y-m-d H:i:s', time())), $id);
+    }
+
+    /**
+     * @param string $expiration
+     * @param int $id
+     * @return int Num rows updated 
+     */
+    public function updateExpiration($expiration, $id) {
+        return $this->_users->update(array('expiration' => $expiration), $id);
     }
 
     /**
@@ -186,5 +195,43 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
             $user_array['username'] : null);
         return $this->_users->insert($user_array);
     }
+
+    /**
+     * @param string $region "usa", "intl" or null for all regions
+     * @param Form_Admin_Report_MailingList $form
+     * @return Zend_Db_Table_Rowset 
+     */
+    public function getMailingListReport($region = null,
+                                         Form_Admin_Report_MailingList $form) {
+        $start_date = new DateTime($form->date_range->start_date->getValue());
+        $start_date->setTime(0, 0, 0);
+        $mailing_list = $this->_users->getMailingListReport(
+            $region,
+            $start_date->format('Y-m-d')
+        );
+        return $mailing_list;
+    }
+
+    /**
+     * @param string $start_date
+     * @param int $opt_in
+     * @param string $subscriber_type
+     * @return Zend_Db_Table_Rowset 
+     */
+    public function getSubscribersReport(Form_Admin_Report_Subscribers $form) {
+        $start_date = new DateTime($form->date_range->start_date->getValue());
+        $start_date->setTime(0, 0, 0);
+        $end_date = new DateTime($form->date_range->end_date->getValue());
+        $end_date->setTime(23, 59, 59);
+        $subscribers = $this->_users->getSubscribersReport(array(
+            'start_date'      => $start_date->format('Y-m-d'),
+            'end_date'        => $end_date->format('Y-m-d'),
+            'opt_in'          => $form->opt_in->getValue(),
+            'opt_in_partner'  => $form->opt_in_partner->getValue(),
+            'subscriber_type' => $form->subscriber_type->getValue()
+        ));
+        return $subscribers;
+    }
+
 }
 

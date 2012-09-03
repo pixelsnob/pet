@@ -46,13 +46,13 @@ class Admin_ReportsController extends Zend_Controller_Action {
 
     public function subscribersAction() {
         $request = $this->_request;
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
+        $users_mapper = new Model_Mapper_Users;
         $params = $request->getParams();
         $search_form = new Form_Admin_Report_Subscribers;
         $this->view->search_form = $search_form;
         $search_form->populate($params);
         if ($request->isPost() && $search_form->isValid($params)) {
-            $users = $ops_mapper->getSubscribersReport($search_form);
+            $users = $users_mapper->getSubscribersReport($search_form);
             if (count($users)) {
                 $date = new DateTime;
                 $filename = $date->format('Y-m-d') . '-apet-subscribers.csv';
@@ -76,7 +76,6 @@ class Admin_ReportsController extends Zend_Controller_Action {
         if ($request->getParam('no-results')) {
             $this->view->no_data = true;
         }
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $params = $request->getParams();
         $search_form = new Form_Admin_Report_MailingList;
         $this->view->search_form = $search_form;
@@ -92,7 +91,6 @@ class Admin_ReportsController extends Zend_Controller_Action {
     }
 
     public function mailingListAllAction() {
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
         $search_form = new Form_Admin_Report_MailingList;
         if (!$this->_outputMailingListReport($search_form)) {
             $this->_helper->Redirector->gotoSimple('mailing-list', 'reports',
@@ -101,9 +99,9 @@ class Admin_ReportsController extends Zend_Controller_Action {
     }
     
     private function _outputMailingListReport(Form_Admin_Report_MailingList $search_form) {
-        $ops_mapper = new Model_Mapper_OrderProductSubscriptions;
-        $usa_users = $ops_mapper->getMailingListReport('usa', $search_form);
-        $intl_users = $ops_mapper->getMailingListReport('intl', $search_form);
+        $users_mapper = new Model_Mapper_Users;
+        $usa_users = $users_mapper->getMailingListReport('usa', $search_form);
+        $intl_users = $users_mapper->getMailingListReport('intl', $search_form);
         if (count($usa_users) || count($intl_users)) {
             $tmp = tempnam('tmp', 'zip');
             $zip = new ZipArchive;

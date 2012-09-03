@@ -102,10 +102,6 @@ class Form_Admin_User extends Pet_Form {
                 )),
                 array(new Pet_Validate_DateNotBeforeToday, true)
             )
-        ))->addElement('checkbox', 'digital_only', array(
-            'label' => 'Digital only',
-            'required' => false,
-            'class' => 'checkbox'
         ))->addElement('checkbox', 'is_active', array(
             'label' => 'Active',
             'required' => false,
