@@ -315,7 +315,7 @@ class Service_Cart {
             if ($product->isSubscription() || $product->isDigital()) {
                 $expiration = null;
                 // See if we need to renew
-                if ($users_svc->isAuthenticated() && ($user = $users_svc->getUser())) {
+                if ($users_svc->isAuthenticated() && ($user = $users_svc->getUser($order->user_id))) {
                     $temp_exp = new DateTime($user->expiration);
                     $temp_exp->setTime(0, 0, 0);
                     $today = new DateTime;
@@ -331,6 +331,8 @@ class Service_Cart {
                 $date = new DateTime($expiration);
                 // Adjust from today
                 $date->add(new DateInterval("P{$term}M{$extra_days}D"));
+                $users_mapper->updatePreviousExpiration($user->expiration,
+                    $order->user_id);
                 $users_mapper->updateExpiration($date->format('Y-m-d H:i:s'),
                     $order->user_id);
                 if ($product->isSubscription()) {

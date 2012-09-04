@@ -179,6 +179,16 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param string $expiration
+     * @param int $id
+     * @return int Num rows updated 
+     */
+    public function updatePreviousExpiration($expiration, $id) {
+        return $this->_users->update(array(
+            'previous_expiration' => $expiration), $id);
+    }
+
+    /**
      * @param array $data
      * @param bool $is_active
      * @return int user_id
