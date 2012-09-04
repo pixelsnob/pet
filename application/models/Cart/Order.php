@@ -48,7 +48,6 @@ class Model_Cart_Order extends Pet_Model_Abstract {
         'opt_in' => null,
         'opt_in_partner' => null,
         'promo_id' => null,
-        'old_expiration' => null,
         'user_id' => null,
         'order_id' => null,
         'products' => array(),

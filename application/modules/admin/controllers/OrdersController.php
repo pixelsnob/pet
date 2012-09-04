@@ -134,7 +134,7 @@ class Admin_OrdersController extends Zend_Controller_Action {
                     $gateway->processSale($order);
                 }
                 // Insert or update user and user profile
-                if ($user) {
+                if (isset($user)) {
                     $order->email = $user->email;
                     $order->user_id = $user->id;
                     $order->username = $user->username;

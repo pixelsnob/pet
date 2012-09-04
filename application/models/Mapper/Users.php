@@ -237,8 +237,7 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
             'start_date'      => $start_date->format('Y-m-d'),
             'end_date'        => $end_date->format('Y-m-d'),
             'opt_in'          => $form->opt_in->getValue(),
-            'opt_in_partner'  => $form->opt_in_partner->getValue(),
-            'subscriber_type' => $form->subscriber_type->getValue()
+            'opt_in_partner'  => $form->opt_in_partner->getValue()
         ));
         return $subscribers;
     }

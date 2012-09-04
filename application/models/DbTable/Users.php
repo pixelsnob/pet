@@ -86,7 +86,6 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
      */
     public function getMailingListReport($region = null, $start_date) {
         $db = $this->getAdapter();
-        $start_date = $db->quote($start_date);
         $sel = $this->select()->setIntegrityCheck(false)
             ->from(array('u' => 'users'), array(
                 'upper(up.shipping_first_name) as FIRST_NAME_SHIPPING',

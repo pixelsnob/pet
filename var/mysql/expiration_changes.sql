@@ -12,3 +12,5 @@ set expiration = (
     order by expiration desc
     limit 1, 1
 );
+
+drop table order_product_subscriptions;

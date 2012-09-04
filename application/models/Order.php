@@ -42,7 +42,6 @@ class Model_Order extends Pet_Model_Abstract {
         'user_profile' => null,
         'payments' => array(),
         'products' => array(),
-        //'expirations' => array(),
         'subscriptions' => array(),
         'gifts' => array(),
         'promo' => null
