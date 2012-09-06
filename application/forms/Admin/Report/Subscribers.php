@@ -26,14 +26,14 @@ class Form_Admin_Report_Subscribers extends Pet_Form {
             'label' => 'Sponsor opt-in',
             'class' => 'checkbox',
             'required' => true
-        /*))->addElement('select', 'subscriber_type', array(
+        ))->addElement('select', 'subscriber_type', array(
             'label' => 'Subscribers',
             'multiOptions' => array(
                 'all' => 'All',
                 'premium' => 'Premium Subscription',
                 'digital_only' => 'Digital Only'
             ),
-            'required' => true*/
+            'required' => true
         ));
         
     }

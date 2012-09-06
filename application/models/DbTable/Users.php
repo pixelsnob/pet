@@ -140,6 +140,13 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where("u.expiration between $start_date and $end_date")
             ->order('u.expiration');
+        $sub_type = (isset($params['subscriber_type']) ?
+            $params['subscriber_type'] : null);
+        if ($sub_type == 'premium') {
+            $sel->where('u.digital_only = 0');
+        } elseif ($sub_type == 'digital_only') {
+            $sel->where('u.digital_only = 1');
+        }
         if (isset($params['opt_in']) && $params['opt_in']) {
             $sel->where('up.opt_in = 1');
         }
