@@ -334,7 +334,7 @@ class Service_Cart {
                 $users_mapper->updatePreviousExpiration($user->expiration,
                     $order->user_id);
                 $users_mapper->updateExpiration($date->format('Y-m-d H:i:s'),
-                    $order->user_id);
+                    $product->isDigital(), $order->user_id);
                 if ($product->isSubscription()) {
                     // Log as a user note
                     if ($product->is_renewal) {

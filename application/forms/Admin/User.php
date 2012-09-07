@@ -95,12 +95,18 @@ class Form_Admin_User extends Pet_Form {
         $this->addElement('text', 'expiration', array(
             'label' => 'Expiration',
             'required' => false,
-            'class' => 'datepicker datepicker-min-today',
+            'class' => 'datepicker datepicker-no-max',
             'validators'   => array(
                 array('Date', true, array(
                     'messages' => 'Invalid date'
-                )),
-                array(new Pet_Validate_DateNotBeforeToday, true)
+                ))
+            )
+        ))->addElement('select', 'subscriber_type', array(
+            'label' => 'Subscriber Type',
+            'required' => true,
+            'multiOptions' => array(
+                'premium' => 'Premium',
+                'digital' => 'Digital'
             )
         ))->addElement('checkbox', 'is_active', array(
             'label' => 'Active',

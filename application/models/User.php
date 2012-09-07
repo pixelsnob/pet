@@ -19,7 +19,7 @@ class Model_User extends Pet_Model_Abstract {
         'date_joined' => null,
         'expiration' => null,
         'previous_expiration' => null,
-        'digital_only' => null
+        'digital_only' => 0
     );
 
 }

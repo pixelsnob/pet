@@ -1,3 +1,4 @@
+lock tables users u write, order_product_subscriptions write;
 
 alter table users add expiration date;
 alter table users add previous_expiration date;
@@ -28,5 +29,7 @@ set digital_only = (
 
 alter table users add index(expiration);
 alter table users add index(digital_only);
+
+unlock tables;
 
 /*drop table order_product_subscriptions;*/

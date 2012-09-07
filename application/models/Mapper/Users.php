@@ -171,11 +171,15 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
 
     /**
      * @param string $expiration
+     * @param bool $digital_only
      * @param int $id
      * @return int Num rows updated 
      */
-    public function updateExpiration($expiration, $id) {
-        return $this->_users->update(array('expiration' => $expiration), $id);
+    public function updateExpiration($expiration, $digital_only, $id) {
+        return $this->_users->update(array(
+            'expiration'   => $expiration,
+            'digital_only' => (int) $digital_only
+        ), $id);
     }
 
     /**

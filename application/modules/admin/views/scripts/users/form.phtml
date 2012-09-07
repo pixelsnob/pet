@@ -47,6 +47,11 @@
                         <?php echo $this->user_form->expiration->renderViewHelper(); ?>
                         <?php echo $this->user_form->expiration->renderErrors(); ?>
                     </dd>
+                    <dt><?php echo $this->user_form->subscriber_type->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->user_form->subscriber_type->renderViewHelper(); ?>
+                        <?php echo $this->user_form->subscriber_type->renderErrors(); ?>
+                    </dd>
                     <?php endif; ?>
                     <dt><?php echo $this->user_form->is_active->renderLabel(); ?></dt>
                     <dd>

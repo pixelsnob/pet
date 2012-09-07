@@ -84,6 +84,8 @@ class Admin_UsersController extends Zend_Controller_Action {
         // Get expiration, if any
         if ($user->expiration) {
             $form->expiration->setValue($user->expiration);
+            $form->subscriber_type->setValue($user->digital_only ? 'digital' :
+                'premium');
             $this->view->show_expiration_fields = true;
         }
         // Populate form
@@ -104,7 +106,10 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $profiles_mapper->updateByUserId($params, $id);
                 $form_exp = $form->expiration->getValue();
                 if ($form_exp) {
-                    $this->_users_mapper->updateExpiration($form_exp, $id);
+                    $this->_users_mapper->updateExpiration($form_exp,
+                        ($form->subscriber_type->getValue() == 'digital'), $id);
+                    $this->_users_mapper->updatePreviousExpiration(
+                        $user->expiration, $id);
                 }
                 $this->_users_svc->addUserNote('Updated profile', $id,
                     $this->_users_svc->getId());
