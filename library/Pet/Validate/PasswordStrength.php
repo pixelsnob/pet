@@ -31,7 +31,7 @@ class Pet_Validate_PasswordStrength extends Zend_Validate_Abstract {
             $this->_error(self::LENGTH);
             return false;
         }
-        if (preg_match('/[^a-z1-9!@\$%\^&\*\(\)\+\?_\-]/i', $value)) {
+        if (preg_match('/[^a-z0-9!@\$%\^&\*\(\)\+\?_\-]/i', $value)) {
             $this->_error(self::CHARS);
             return false;
         }
