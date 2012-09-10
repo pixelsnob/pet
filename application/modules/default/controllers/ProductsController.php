@@ -40,6 +40,7 @@ class ProductsController extends Zend_Controller_Action {
             $this->view->subscriptions = $this->_products_mapper
                 ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA, null,
                     $is_gift, $is_renewal); 
+            $this->view->is_gift = $is_gift;
             $this->_helper->ViewRenderer->render('subscription-options-usa');
         } else {
             $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
