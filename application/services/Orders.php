@@ -70,7 +70,7 @@ class Service_Orders {
                     $mail = new Zend_Mail;
                     $mail->setBodyText($gift_message)
                          ->addTo($order->email)
-                         ->setSubject('Photoshop Elements Gift: ' . $gift->token);
+                         ->setSubject('Your Photoshop Elements Techniques Gift Code is here!');
                     if ($app_config['order_emails']['bcc']) {
                         $mail->addBcc($app_config['order_emails']['bcc']);
                     }
