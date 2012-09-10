@@ -1,8 +1,9 @@
-lock tables users u write, order_product_subscriptions write;
 
 alter table users add expiration date;
 alter table users add previous_expiration date;
 alter table users add digital_only int(1) not null default 0;
+alter table users add index(expiration);
+alter table users add index(digital_only);
 
 update users u
 set expiration = (
@@ -26,10 +27,5 @@ set digital_only = (
     )
     group by user_id
 );
-
-alter table users add index(expiration);
-alter table users add index(digital_only);
-
-unlock tables;
 
 /*drop table order_product_subscriptions;*/
