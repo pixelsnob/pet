@@ -101,6 +101,7 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
             ))
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where('u.expiration >= ?', $start_date)
+            ->where('u.digital_only = 0')
             ->order('u.expiration')
             ->group('u.id');
         if ($region == 'usa') {
