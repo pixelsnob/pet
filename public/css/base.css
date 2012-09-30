@@ -384,3 +384,7 @@ pre {
     margin-top: 0;
 }
 
+iframe.fancybox-iframe {
+    overflow:hidden;
+}
+

@@ -1,7 +1,7 @@
 
 <div id="login-form">
     <?php echo $this->flashMessenger($this->messages); ?>
-    <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="login">
+    <form action="<?php echo $this->serverUrl($this->login_form->getAction()); ?>" method="post" name="login"<?php echo ($this->iframe ? ' target="_top"' : ''); ?>>
         <dl class="form">
             <dt><?php echo $this->login_form->username->renderLabel(); ?></dt>
             <dd>
@@ -28,5 +28,5 @@
             <input type="submit" value="Login" id="login-submit" class="button-grad">
         </p>
     </form>
-    <p class="forgot-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'reset_password_request')); ?>">Forgot your password?</a></p>
+    <p class="forgot-password"><a href="<?php echo $this->serverUrl($this->url(array(), 'reset_password_request')); ?>"<?php echo ($this->iframe ? ' target="_top"' : ''); ?>>Forgot your password?</a></p>
 </div>

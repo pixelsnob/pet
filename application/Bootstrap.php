@@ -68,5 +68,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         ));
         Zend_Session::start();
     }
+
+    protected function _initForceSSL() {
+        $is_not_iframe = (strpos($_SERVER['QUERY_STRING'], 'iframe=') === false);
+        if ($_SERVER['HTTP_X_ORIG_PORT'] != '443' && $is_not_iframe) {
+            header('Location: https://' . $_SERVER['HTTP_HOST'] .
+                $_SERVER['REQUEST_URI']);
+            exit;
+        }       
+    }
 }
 

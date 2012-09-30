@@ -19,11 +19,12 @@ class Form_SubForm_UserInfo extends Pet_Form_SubForm {
             'validators'   => array(
                 array('StringLength', true, array(
                     'max' => 50,
-                    'messages' => 'Hello, I love you won\'t you tell me your name?'
+                    'messages' => 'This field is required. If unsure, a guess will do.'
                 ))
             ),
             'multiOptions' => array(
                 '' => 'Please select...',
+                11  => 'Version 11',
                 10  => 'Version 10',
                 9  => 'Version 9',
                 8  => 'Version 8',

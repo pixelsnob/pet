@@ -50,33 +50,41 @@ class ProfileController extends Zend_Controller_Action {
         unset($redirect_params['username']);
         unset($redirect_params['password']);
         $redirect_referer = $this->_request->getParam('redirect_referer');
-        $redirect_url = $this->_request->getPost('redirect_url');
+        $redirect_url = $this->_request->getParam('redirect_url');
         if ($redirect_referer && !$redirect_url && isset($_SERVER['HTTP_REFERER'])) {
             $redirect_url = $_SERVER['HTTP_REFERER'];
         }
         $login_form = $this->_users_svc->getLoginForm($redirect_to,
             $redirect_params, $redirect_url);
+        $login_form->setAction('/profile/login');
+        // Show a different layout, configure view if this is being displayed in
+        // an iframe
+        if ($this->_request->getParam('iframe')) {
+            $this->_helper->Layout->setLayout('iframe');
+            $this->view->iframe = true;
+            //$login_form->setAction('/profile/login/msg/1');
+        }
         $this->view->login_form = $login_form;
         $post = $this->_request->getParams();
-        if ($this->_request->isPost() && $login_form->isValid($post)) {
-            if ($this->_users_svc->login($post, null)) {
-                $this->_users_svc->updateLastLogin();
-                if ($redirect_to) {
-                    $this->_helper->Redirector->gotoRoute($redirect_params,
-                        $redirect_to);
-                } elseif ($redirect_url) {
-                    $this->_helper->Redirector->gotoUrl($redirect_url);
-                } else {
-                    $this->_helper->Redirector->gotoUrl(
-                        'http://www.photoshopelementsuser.com/');
-                }
+        if ($this->_request->isPost() && $login_form->isValid($post) &&
+        $this->_users_svc->login($post, null)) {
+            $this->_users_svc->updateLastLogin();
+            if ($redirect_to) {
+                $this->_helper->Redirector->gotoRoute($redirect_params,
+                    $redirect_to);
+            } elseif ($redirect_url) {
+                $this->_helper->Redirector->gotoUrl($redirect_url);
             } else {
-                $this->_helper->FlashMessenger->addMessage('Login failed');
-                $this->view->messages = $this->_helper->FlashMessenger
+                $this->_helper->Redirector->gotoUrl(
+                    'http://www.photoshopelementsuser.com/');
+            }
+        } elseif ($this->_request->isPost() || $this->_request->getParam('msg')) { 
+            $this->_helper->FlashMessenger->addMessage('Login failed');
+            $this->view->messages = $this->_helper->FlashMessenger
                     ->getCurrentMessages();
-            } 
         } else {
-            $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
+            $this->view->messages = $this->_helper->FlashMessenger
+                ->getCurrentMessages();
         }
     }
     

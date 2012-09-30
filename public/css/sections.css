@@ -876,3 +876,8 @@ fieldset.profile .note {
 #confirmation td {
     padding-bottom: 10px;
 }
+
+/*body#iframe #content {
+    width: 500px;
+    overflow: hidden;
+}*/
