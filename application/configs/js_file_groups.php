@@ -35,6 +35,9 @@ return array(
         'js/Pet/Models/PromoCode.js',
         'js/Pet/Views/Checkout.js'
     ),
+    'confirmation' => array(
+        'js/Pet/Views/Confirmation.js'
+    ),
     'admin-common' => array(
         'js/lib/jquery-1.7.1.min.js',
         'js/lib/underscore-min.js',

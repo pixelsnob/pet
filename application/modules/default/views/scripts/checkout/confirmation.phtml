@@ -36,6 +36,11 @@
                     <?php endif; ?>
                 </section>
             <?php endif; ?>
+            <?php if ($this->cart->user->username): ?>
+                <div class="login">
+                    <a href="<?php echo $this->serverUrl($this->url(array('action' => 'confirmation-login', 'token' => $this->login_token))); ?>" class="button-grad-yellow">Log In Now</a>
+                </div>
+            <?php endif; ?>
         </div>
         <div class="sep">
             <table class="products">

@@ -269,7 +269,8 @@ class Service_Cart {
                 $logger->log("Email for order {$order->order_id} not sent: " .
                     $e->getMessage(), Zend_Log::CRIT);                   
             }
-            $this->_cart_mapper->setConfirmation($this->_cart_mapper->get());
+            $this->_cart_mapper->setConfirmation($this->_cart_mapper->get(),
+                $order);
             if ($config['reset_cart_after_process']) {
                 $this->_cart_mapper->reset();
             }
@@ -464,4 +465,13 @@ class Service_Cart {
         return $this->_message;
     }
     
+    /**
+     * Used to verify user when logging in from the confirmation page
+     * 
+     */
+    public function generateConfirmationLoginToken() {
+        $confirmation = $this->_cart_mapper->getConfirmation();
+        return md5($confirmation->order->order_id . $confirmation->order->email .
+            $confirmation->order->user_id);
+    }
 }

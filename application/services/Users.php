@@ -22,17 +22,19 @@ class Service_Users extends Pet_Service {
     /**
      * @param array $data Username and password, etc.
      * @param bool $is_superuser 
+     * @param bool $no_password Skip password check -- for logging someone in manually 
      * @return bool Auth status
      * 
      * 
      */
-    public function login($data, $is_superuser = false) {
+    public function login($data, $is_superuser = false, $no_password = false) {
         $config = Zend_Registry::get('app_config');
         $username = (isset($data['username']) ? $data['username'] : '');
         $password = (isset($data['password']) ? $data['password'] : '');
         $auth_session = new Zend_Session_Namespace('Zend_Auth');
         $auth_session->timestamp = time();
-        $auth_adapter = new Pet_Auth_Adapter($username, $password, $is_superuser);
+        $auth_adapter = new Pet_Auth_Adapter($username,
+            $password, $is_superuser, $no_password);
         $auth = Zend_Auth::getInstance();
         Zend_Session::regenerateId();
         return $auth->authenticate($auth_adapter)->isValid();

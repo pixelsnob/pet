@@ -152,6 +152,35 @@ class CheckoutController extends Zend_Controller_Action {
             return;
         }
         $this->view->cart = $confirmation->cart;
+        if ($confirmation->cart->user->username) {
+            $this->view->login_token = $this->_cart_svc
+                ->generateConfirmationLoginToken();
+        }
+        $this->view->inlineScriptMin()->loadGroup('confirmation')
+            ->appendScript("Pet.loadView('Confirmation');");
+    }
+    
+    /**
+     * Logs a user in right after they've created an account
+     * 
+     */
+    public function confirmationLoginAction() {
+        $config = Zend_Registry::get('app_config');
+        $confirmation = $this->_cart_svc->getConfirmation();
+        if (!$confirmation) {
+            throw new Exception('User tried to log in from confirmation page but ' .
+                'confirmation object has expired');
+        }
+        $token = $this->_request->getParam('token');
+        if ($token != $this->_cart_svc->generateConfirmationLoginToken()) {
+            throw new Exception('Confirmation login tokens do not match');
+        }
+        $login_data = array('username' => $confirmation->cart->user->username);
+        if (!$this->_users_svc->login($login_data, false, true)) {
+            throw new Exception('Confirmation login failed');
+        }
+        // Redirect to wordpress site
+        $this->_redirect($config['wp_url']);
     }
 
     /**

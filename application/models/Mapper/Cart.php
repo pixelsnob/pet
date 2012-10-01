@@ -141,11 +141,13 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     
     /**
      * @param Model_Cart $cart
+     * @param Model_Cart_Order $order
      * 
      */
-    public function setConfirmation(Model_Cart $cart) {
+    public function setConfirmation(Model_Cart $cart, Model_Cart_Order $order) {
         $confirm = new Model_Cart_Confirmation;
         $confirm->cart = $cart;
+        $confirm->order = $order;
         $confirm->timestamp = time();
         $session = new Zend_Session_Namespace;
         $session->cart_confirmation = $confirm;

@@ -43,6 +43,7 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('index');
         }
+        $config = Zend_Registry::get('app_config');
         $this->_helper->FlashMessenger->setNamespace('login_form');
         $redirect_to = $this->_request->getParam('redirect_to');
         $redirect_params = (array) $this->_request->getParam('redirect_params');
@@ -62,7 +63,7 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_request->getParam('iframe')) {
             $this->_helper->Layout->setLayout('iframe');
             $this->view->iframe = true;
-            //$login_form->setAction('/profile/login/msg/1');
+            //$login_form->setAction('/profile/login/msg/1'); <<<<<<<<<<<<<<<<<<<
         }
         $this->view->login_form = $login_form;
         $post = $this->_request->getParams();
@@ -75,8 +76,8 @@ class ProfileController extends Zend_Controller_Action {
             } elseif ($redirect_url) {
                 $this->_helper->Redirector->gotoUrl($redirect_url);
             } else {
-                $this->_helper->Redirector->gotoUrl(
-                    'http://www.photoshopelementsuser.com/');
+                // Redirect to wordpress site
+                $this->_helper->Redirector->gotoUrl($config['wp_url']);
             }
         } elseif ($this->_request->isPost() || $this->_request->getParam('msg')) { 
             $this->_helper->FlashMessenger->addMessage('Login failed');

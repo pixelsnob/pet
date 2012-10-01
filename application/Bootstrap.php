@@ -49,17 +49,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     protected function _initSession() {
-        /*$this->bootstrap('db');
-        $app_config = $this->getOptions();
-        $config = array(
-            'name'           => 'sessions',
-            'primary'        => 'id',
-            'modifiedColumn' => 'modified',
-            'dataColumn'     => 'data',
-            'lifetimeColumn' => 'lifetime'
-        );
-        Zend_Session::setSaveHandler(new Zend_Session_SaveHandler_DbTable(
-            $config));*/
         $app_config = $this->getOptions();
         Zend_Session::setOptions(array(
             'cookie_domain'   => $app_config['session_cookie_domain'],
@@ -70,6 +59,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     protected function _initForceSSL() {
+        $config = $this->getOptions();
+        if (!$config['use_https'] || !isset($_SERVER['HTTP_X_ORIG_PORT'])) {
+            return;
+        }
         $is_not_iframe = (strpos($_SERVER['QUERY_STRING'], 'iframe=') === false);
         if ($_SERVER['HTTP_X_ORIG_PORT'] != '443' && $is_not_iframe) {
             header('Location: https://' . $_SERVER['HTTP_HOST'] .

@@ -855,6 +855,12 @@ fieldset.profile .note {
     padding: 0;
 }
 
+#confirmation .login {
+    width: 150px;
+    float: left;
+    padding-top: 20px;
+}
+
 #confirmation h4 {
     margin-bottom: 10px;
 }
