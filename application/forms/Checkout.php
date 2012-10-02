@@ -98,9 +98,16 @@ class Form_Checkout extends Pet_Form {
      */
     public function init() {
         parent::init();
+        if (!$this->_cart->products->hasDigitalSubscription()
+            && $this->_cart->products->hasSubscription() && !$this->_identity) {
+            $validate_existing_email = false;
+        }
         $user_form = new Form_SubForm_User(array(
-            'mapper' => $this->_users,
-            'identity' => $this->_identity
+            'mapper'                => $this->_users,
+            'identity'              => $this->_identity,
+            'validateExistingEmail' => ($this->_identity
+                || $this->_cart->products->hasSubscription()
+                || $this->_cart->products->hasDigitalSubscription())
         ));
         $promo_form = new Form_SubForm_Promo(array(
             'cart' => $this->_cart,

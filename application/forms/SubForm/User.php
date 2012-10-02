@@ -18,6 +18,12 @@ class Form_SubForm_User extends Pet_Form_SubForm {
     protected $_mapper;
 
     /**
+     * @var bool
+     * 
+     */
+    protected $_validate_existing_email = true;
+
+    /**
      * @param mixed $identity
      * @return void
      */
@@ -31,6 +37,14 @@ class Form_SubForm_User extends Pet_Form_SubForm {
      */
     public function setMapper(Pet_Model_Mapper_Abstract $mapper) {
         $this->_mapper = $mapper;
+    }
+
+    /**
+     * @param Model_Cart $cart
+     * @return void
+     */
+    public function setValidateExistingEmail($validate_existing_email) {
+        $this->_validate_existing_email = $validate_existing_email;
     }
     
     /**
@@ -70,8 +84,8 @@ class Form_SubForm_User extends Pet_Form_SubForm {
                     'max' => 75,
                     'messages' => 'Username must be %max% characters or less'
                 )),
-                array(new Pet_Validate_EmailNotExists(
-                    $this->_identity, $this->_mapper), true),
+                //array(new Pet_Validate_EmailNotExists(
+                //    $this->_identity, $this->_mapper), true),
                 array(new Pet_Validate_EmailAddress)
             )
         // First name
@@ -132,7 +146,10 @@ class Form_SubForm_User extends Pet_Form_SubForm {
                 ))
             )
         ))->setElementFilters(array('StringTrim'));
-
+        if ($this->_validate_existing_email) {
+            $this->email->addValidator(new Pet_Validate_EmailNotExists(
+                $this->_identity, $this->_mapper));
+        }
     }
     
 }

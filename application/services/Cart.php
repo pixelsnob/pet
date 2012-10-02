@@ -229,7 +229,8 @@ class Service_Cart {
                 }
                 // See if this email is already in use
                 $user = $users_mapper->getByEmail($order->email);
-                if ($user) { 
+                if ($user && !$cart->products->hasDigitalSubscription()
+                    && !$cart->products->hasSubscription()) { 
                     // User exists
                     // Check to see if active????????????????? <<<<<<<<<<<<<<<<<<<<<<
                     $order->user_id = $user->id;
