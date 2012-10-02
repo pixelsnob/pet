@@ -113,6 +113,11 @@ class Form_Admin_User extends Pet_Form {
             'required' => false,
             'class' => 'checkbox',
             'value' => 1
+        ))->addElement('checkbox', 'is_superuser', array(
+            'label' => 'Admin Access',
+            'required' => false,
+            'class' => 'checkbox',
+            'value' => 1
         ))->addElement('submit', 'submit', array(
             'label' => 'Update',
             'id'    => 'user-edit-submit',

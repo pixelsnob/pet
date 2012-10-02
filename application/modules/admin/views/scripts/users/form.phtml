@@ -58,6 +58,11 @@
                         <?php echo $this->user_form->is_active->renderViewHelper(); ?>
                         <?php echo $this->user_form->is_active->renderErrors(); ?>
                     </dd>
+                    <dt><?php echo $this->user_form->is_superuser->renderLabel(); ?></dt>
+                    <dd>
+                        <?php echo $this->user_form->is_superuser->renderViewHelper(); ?>
+                        <?php echo $this->user_form->is_superuser->renderErrors(); ?>
+                    </dd>
                 </dl>
             </fieldset>
             <fieldset class="billing">
