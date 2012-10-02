@@ -15,13 +15,23 @@ class ProfileController extends Zend_Controller_Action {
         if (!$this->_users_svc->isAuthenticated()) {
             $this->_helper->Redirector->gotoSimple('login');
         }
-        $this->view->user = $this->_users_svc->getUser();
+        $user = $this->_users_svc->getUser();
+        $user_profile = $this->_users_svc->getProfile();
+        $this->view->user = $user;
         if ($profile_form = $this->_users_svc->getProfileForm()) {
+            $profile_form->billing->billing_country
+                ->setValue($user_profile->billing_country)
+                ->setAttrib('disabled', 'disabled');
+            $profile_form->shipping->shipping_country
+                ->setValue($user_profile->shipping_country)
+                ->setAttrib('disabled', 'disabled');
             $this->view->profile_form = $profile_form;
         } else {
             throw new Exception('User not found');
         }
         $post = $this->_request->getPost();
+        $post['billing_country'] = $user_profile->billing_country;
+        $post['shipping_country'] = $user_profile->shipping_country;
         $messenger = $this->_helper->FlashMessenger;
         $messenger->setNamespace('login');
         if ($this->_request->isPost() && $profile_form->isValid($post)) {
