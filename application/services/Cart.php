@@ -222,16 +222,27 @@ class Service_Cart {
                 $profile_mapper->updateByUserId($order->toArray(),
                     $order->user_id);
             } else {
-                // This inserts into users and user_profiles
                 if ($cart->user->password_hash) {
                     $order->password = $cart->user->password_hash;
                 } else {
                     $order->password = $users_svc->generateHash($order->password);
                 }
-                $order->user_id = $users_mapper->insert($order->toArray(), true);
-                $profile_mapper->insert($order->toArray());
-                if (!$order->user_id) {
-                    throw new Exception('user_id not defined');
+                // See if this email is already in use
+                $user = $users_mapper->getByEmail($order->email);
+                if ($user) { 
+                    // User exists
+                    // Check to see if active????????????????? <<<<<<<<<<<<<<<<<<<<<<
+                    $order->user_id = $user->id;
+                    $users_mapper->updateEmail($order->email, $order->user_id);
+                    $profile_mapper->updateByUserId($order->toArray(),
+                        $order->user_id);
+                } else {
+                    // New user
+                    $order->user_id = $users_mapper->insert($order->toArray(), true);
+                    $profile_mapper->insert($order->toArray());
+                    if (!$order->user_id) {
+                        throw new Exception('user_id not defined');
+                    }
                 }
             }
             // Save order data

@@ -155,6 +155,17 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
      * @return int Num rows updated
      * 
      */
+    public function updateUsername($username, $id) {
+        return $this->_users->update(array('username' => $pw), $id);
+    }
+    
+
+    /**
+     * @param string $pw
+     * @param int $id User id
+     * @return int Num rows updated
+     * 
+     */
     public function updatePassword($pw, $id) {
         return $this->_users->update(array('password' => $pw), $id);
     }
