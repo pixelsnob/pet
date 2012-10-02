@@ -57,7 +57,7 @@ class Service_Users extends Pet_Service {
     public function isAuthenticated($is_superuser = false) {
         if ($identity = Zend_Auth::getInstance()->getIdentity()) {
             if ($is_superuser && !$identity->is_superuser) { 
-                false;
+                return false;
             }
             $config = Zend_Registry::get('app_config');
             $auth_session = new Zend_Session_Namespace('Zend_Auth');
