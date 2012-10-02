@@ -15,11 +15,14 @@ class Form_SubForm_UserInfo extends Pet_Form_SubForm {
         $this->addElement('select', 'version', array(
             'label' => 'Version',
             'id' => 'version',
-            'required' => false,
+            'required' => true,
             'validators'   => array(
+                array('NotEmpty', true, array(
+                    'messages' => 'This field is required. If unsure, a guess will do'
+                )),
                 array('StringLength', true, array(
                     'max' => 50,
-                    'messages' => 'This field is required. If unsure, a guess will do.'
+                    'messages' => 'Version must be 50 characters or less' 
                 ))
             ),
             'multiOptions' => array(
