@@ -1,12 +1,10 @@
 <?php
 
-class ErrorController extends Zend_Controller_Action
-{
+class ErrorController extends Zend_Controller_Action {
 
-    public function errorAction()
-    {
+    public function errorAction() {
         $errors = $this->_getParam('error_handler');
-        
+        $config = Zend_Registry::get('app_config'); 
         if (!$errors || !$errors instanceof ArrayObject) {
             $this->view->message = 'You have reached the error page';
             return;
@@ -19,8 +17,9 @@ class ErrorController extends Zend_Controller_Action
                 // 404 error -- controller or action not found
                 $this->getResponse()->setHttpResponseCode(404);
                 $priority = Zend_Log::NOTICE;
-                $this->view->message = 'Page not found';
-                break;
+                $this->getLog()->log($errors->exception->getMessage(), $priority);
+                $this->_redirect($config['wp_url'] . '/404');
+                exit;
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);

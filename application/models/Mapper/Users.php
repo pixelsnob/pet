@@ -141,6 +141,17 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     }
 
     /**
+     * @param bool $is_superuser
+     * @param int $id User id
+     * @return int Num rows updated
+     */
+    public function updateIsSuperuser($is_superuser, $id) {
+        $user_array = array('is_superuser' => $is_superuser);
+        return $this->_users->update($user_array, $id);
+    }
+
+
+    /**
      * @param string $email
      * @return int Num rows updated
      * 
@@ -206,16 +217,17 @@ class Model_Mapper_Users extends Pet_Model_Mapper_Abstract {
     /**
      * @param array $data
      * @param bool $is_active
+     * @param bool $is_superuser
      * @return int user_id
      * 
      */
-    public function insert(array $data, $is_active = true) {
+    public function insert(array $data, $is_active = true, $is_superuser = false) {
         $user = new Model_User($data);
         $user->is_active = (int) $is_active;
+        $user->is_superuser = (int) $is_superuser;
         $user->date_joined = date('Y-m-d H:i:s');
         $user_array = $user->toArray();
         unset($user_array['id']);
-        $user_array['is_superuser'] = 0;
         $user_array['username'] = (strlen(trim($user_array['username'])) ?
             $user_array['username'] : null);
         return $this->_users->insert($user_array);

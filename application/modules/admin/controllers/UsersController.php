@@ -87,6 +87,9 @@ class Admin_UsersController extends Zend_Controller_Action {
             $form->subscriber_type->setValue($user->digital_only ? 'digital' :
                 'premium');
             $this->view->show_expiration_fields = true;
+        } else {
+            $form->expiration->setRequired(false)->clearValidators();
+            $form->subscriber_type->setRequired(false)->clearValidators();
         }
         // Populate form
         $form->populate(array_merge($user->toArray(), $profile->toArray()));
@@ -103,9 +106,11 @@ class Admin_UsersController extends Zend_Controller_Action {
                 }
                 $this->_users_mapper->updateIsActive(
                     $form->is_active->getValue(), $id);
+                $this->_users_mapper->updateIsSuperuser(
+                    $form->is_superuser->getValue(), $id);
                 $profiles_mapper->updateByUserId($params, $id);
                 $form_exp = $form->expiration->getValue();
-                if ($form_exp) {
+                if ($user->expiration) {
                     $this->_users_mapper->updateExpiration($form_exp,
                         ($form->subscriber_type->getValue() == 'digital'), $id);
                     $this->_users_mapper->updatePreviousExpiration(
@@ -120,12 +125,15 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $this->_helper->FlashMessenger->addMessage(
                     'An error occurred while attempting to update');
             }
-            $this->view->messages = $this->_helper->FlashMessenger
-                ->getCurrentMessages();
+        } elseif ($this->_request->isPost()) {
+            $this->_helper->FlashMessenger->addMessage('Please check your information');
         }
         if ($this->_request->isGet()) {
             $this->view->messages = $this->_helper->FlashMessenger
                 ->getMessages();
+        } else {
+            $this->view->messages = $this->_helper->FlashMessenger
+                ->getCurrentMessages();
         }
         $this->view->user_form = $form; 
         $this->_helper->ViewRenderer->render('form');
@@ -151,7 +159,8 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $params['password'] = $this->_users_svc->generateHash(
                     $params['password']);
                 $params['user_id'] = $this->_users_mapper->insert($params,
-                    ($form->is_active->getValue() == '1'));
+                    $form->is_active->getValue(),
+                    $form->is_superuser->getValue());
                 $profiles_mapper->insert($params);
                 $db->commit();
                 $this->_helper->FlashMessenger->addMessage(
@@ -163,6 +172,9 @@ class Admin_UsersController extends Zend_Controller_Action {
                 $this->_helper->FlashMessenger->addMessage(
                     'An error occurred while attempting to add user');
             }
+        } elseif ($this->_request->isPost()) {
+            $this->_helper->FlashMessenger->addMessage(
+                'Please check your information');
         }
         $this->view->messages = $this->_helper->FlashMessenger->getCurrentMessages();
         $this->view->user_form = $form; 

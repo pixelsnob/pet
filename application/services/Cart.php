@@ -232,7 +232,10 @@ class Service_Cart {
                 if ($user && !$cart->products->hasDigitalSubscription()
                     && !$cart->products->hasSubscription()) { 
                     // User exists
-                    // Check to see if active????????????????? <<<<<<<<<<<<<<<<<<<<<<
+                    if (!$user->is_active) {
+                        throw new Exception('Existing user placed an order, ' .
+                            'but is set to inactive');
+                    }
                     $order->user_id = $user->id;
                     $users_mapper->updateEmail($order->email, $order->user_id);
                     $profile_mapper->updateByUserId($order->toArray(),

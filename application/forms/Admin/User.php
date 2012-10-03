@@ -103,7 +103,7 @@ class Form_Admin_User extends Pet_Form {
             )
         ))->addElement('select', 'subscriber_type', array(
             'label' => 'Subscriber Type',
-            'required' => true,
+            'required' => false,
             'multiOptions' => array(
                 'premium' => 'Premium',
                 'digital' => 'Digital'
@@ -117,7 +117,7 @@ class Form_Admin_User extends Pet_Form {
             'label' => 'Admin Access',
             'required' => false,
             'class' => 'checkbox',
-            'value' => 1
+            'value' => 0
         ))->addElement('submit', 'submit', array(
             'label' => 'Update',
             'id'    => 'user-edit-submit',
