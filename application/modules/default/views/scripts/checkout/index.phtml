@@ -105,13 +105,6 @@
                 <fieldset class="profile">
                     <legend>Profile Information</legend>
                     <dl class="form">
-                        <dt class="version">
-                            <label for="version"><strong>What version of Photoshop Elements are you using?</strong></label>
-                        </dt>
-                        <dd class="version">
-                            <?php echo $this->checkout_form->info->version->renderViewHelper(); ?>
-                            <?php echo $this->checkout_form->info->version->renderErrors(); ?>
-                        </dd>
                         <dt class="opt-in checkbox"></dt>
                         <dd class="opt-in checkbox">
                             <?php echo $this->checkout_form->info->opt_in->renderViewHelper(); ?>
@@ -236,13 +229,23 @@
                         </dd>
                     </dl>
                 </fieldset>
-                <p class="update">
+                <div class="update">
+                    <dl class="form">
+                        <dt class="version">
+                            <label for="version"><strong>What version of Photoshop Elements are you using?</strong></label>
+                        </dt>
+                        <dd class="version">
+                            <?php echo $this->checkout_form->info->version->renderViewHelper(); ?>
+                            <?php echo $this->checkout_form->info->version->renderErrors(); ?>
+                        </dd>
+                    </dl>
                     <strong class="total">Total: <span class="total-value"><?php echo $this->dollarFormat($this->cart_totals['total']); ?></span></strong>
                     <input type="submit" value="Buy Now" class="button-grad-blue">
+                </div>
+                <p>
+                    We will email a receipt when the transaction processes.
+                    <br><em>We will not share your contact info with <strong>anyone</strong></em>.
                 </p>
-                <p>We will email a receipt when the transaction processes.
-                <br><em>We will not share your contact info with <strong>anyone</strong></em>.</p>
-
                 <div id="promo-info">
                     <?php if ($this->cart->promo && $this->cart->promo->public_description): ?>
                         <h3>Your Promo</h3> 

@@ -712,6 +712,15 @@
     clear: both;
 }
 
+#checkout dt.version {
+    width: 100%;
+}
+
+#checkout dd.version {
+    width: 100%;
+    clear: both;
+}
+
 #checkout .update {
     border-top: 2px solid #ddd;
     padding-top: 15px;
@@ -782,9 +791,6 @@
 fieldset.profile .version {
     width: auto;
     clear: both;
-}
-
-fieldset.profile dt.version {
 }
 
 fieldset.profile dd {

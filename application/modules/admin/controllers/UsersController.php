@@ -91,6 +91,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             $form->expiration->setRequired(false)->clearValidators();
             $form->subscriber_type->setRequired(false)->clearValidators();
         }
+        $form->info->version->setRequired(false)->clearValidators();
         // Populate form
         $form->populate(array_merge($user->toArray(), $profile->toArray()));
         if ($this->_request->isPost() && $form->isValid($params)) {
@@ -151,6 +152,7 @@ class Admin_UsersController extends Zend_Controller_Action {
             'mode'    => 'add'
         ));
         $form->submit->setLabel('Add');
+        $form->info->version->setRequired(false)->clearValidators();
         $this->view->show_pw_fields = true;
         if ($this->_request->isPost() && $form->isValid($params)) {
             $db->query('set transaction isolation level serializable');
