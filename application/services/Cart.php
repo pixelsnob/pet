@@ -163,6 +163,7 @@ class Service_Cart {
             $form->billing->getValues(true),
             $form->user->getValues(true),
             $form->getShippingValues(),
+            $form->info->getValues(true),
             array('promo_code' => $form->promo->promo_code->getValue())
         );
         if (!$this->_cart_mapper->get()->isFreeOrder()) {
@@ -170,7 +171,7 @@ class Service_Cart {
         }
         return $form->isValid($data); 
     }
-
+    
     /**
      * @param array $post
      * @param string $payer_id
