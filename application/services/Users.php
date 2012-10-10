@@ -95,8 +95,8 @@ class Service_Users extends Pet_Service {
      * @return Model_User
      * 
      */
-    public function getActiveUserByUsername($username, $is_superuser = false) {
-        return $this->_users->getActiveByUsername($username, $is_superuser); 
+    public function getActiveUserByUsernameOrEmail($username, $is_superuser = false) {
+        return $this->_users->getActiveByUsernameOrEmail($username, $is_superuser); 
     }
     
     /**

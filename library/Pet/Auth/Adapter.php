@@ -56,7 +56,7 @@ class Pet_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         $identity = null;
         $messages = array();
         $users_svc = new Service_Users;
-        $user = $users_svc->getActiveUserByUsername($this->_username,
+        $user = $users_svc->getActiveUserByUsernameOrEmail($this->_username,
             $this->_is_superuser);
         if ($user && ($this->_no_password || $users_svc->validatePassword(
                 $user->password, $this->_password))) {
