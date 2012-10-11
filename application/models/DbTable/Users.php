@@ -97,7 +97,7 @@ class Model_DbTable_Users extends Zend_Db_Table_Abstract {
                 'upper(up.shipping_state) as STATE_SHIPPING',
                 'upper(up.shipping_postal_code) as POSTAL_CODE_SHIPPING',
                 'upper(up.shipping_country) as COUNTRY_SHIPPING',
-                'date_format(u.expiration, "%m/%Y") as EXPIRATION'
+                'date_format(u.expiration, "%c/%e/%y") as EXPIRATION'
             ))
             ->joinLeft(array('up' => 'user_profiles'), 'u.id = up.user_id', null)
             ->where('u.expiration >= ?', $start_date)
