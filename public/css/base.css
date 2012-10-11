@@ -210,15 +210,16 @@ form .submit {
     display: block;
     color: #000;
     width: 600px;
-    background: #fdffbf; /* Old browsers */
-    background: -moz-linear-gradient(-45deg,  #fdffbf 0%, #ffffff 77%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#fdffbf), color-stop(77%,#ffffff)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(-45deg,  #fdffbf 0%,#ffffff 77%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(-45deg,  #fdffbf 0%,#ffffff 77%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(-45deg,  #fdffbf 0%,#ffffff 77%); /* IE10+ */
-    background: linear-gradient(-45deg,  #fdffbf 0%,#ffffff 77%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdffbf', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
     margin-bottom: 25px !important;
+    background: #fdffbf; /* Old browsers */
+    background: -moz-linear-gradient(left,  #fdffbf 0%, #ffffff 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#fdffbf), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  #fdffbf 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  #fdffbf 0%,#ffffff 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  #fdffbf 0%,#ffffff 100%); /* IE10+ */
+    background: linear-gradient(to right,  #fdffbf 0%,#ffffff 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdffbf', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+
 }
 
 .flash-message li {

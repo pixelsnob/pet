@@ -55,12 +55,12 @@ class Form_Login extends Pet_Form {
     public function init() {
         parent::init();
         $this->addElement('text', 'username', array(
-            'label' => 'Username',
+            'label' => 'Username or email',
             'id' => 'login-username',
             'required' => true,
             'validators'   => array(
                 array('NotEmpty', true, array(
-                    'messages' => 'Please enter your username'
+                    'messages' => 'Please enter your username or email'
                 ))
             )
         ))->addElement('password', 'password', array(
