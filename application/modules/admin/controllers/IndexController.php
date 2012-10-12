@@ -12,6 +12,7 @@ class Admin_IndexController extends Zend_Controller_Action {
             $this->_helper->Redirector->gotoSimple('home');
         }
         $login_form = $this->_users_svc->getLoginForm();
+        $login_form->username->setLabel('Username');
         $this->view->login_form = $login_form;
         $post = $this->_request->getPost();
         if ($this->_request->isPost() && $login_form->isValid($post)) {

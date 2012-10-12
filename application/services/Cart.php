@@ -222,6 +222,8 @@ class Service_Cart {
                 $users_mapper->updateEmail($order->email, $order->user_id);
                 $profile_mapper->updateByUserId($order->toArray(),
                     $order->user_id);
+                $identity = Zend_Auth::getInstance()->getIdentity();
+                $identity->email = $order->email;
             } else {
                 if ($cart->user->password_hash) {
                     $order->password = $cart->user->password_hash;
@@ -342,13 +344,17 @@ class Service_Cart {
                     if ($temp_exp->format('U') - $today->format('U') >= 0) {
                         $expiration = $user->expiration;
                     }
+                    $session = new Zend_Session_Namespace('pet');
+                    $session->expiration = $expiration;
+                    Zend_Session::regenerateId();
+                    session_write_close();
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
                 $date = new DateTime($expiration);
                 // Adjust from today
                 $date->add(new DateInterval("P{$term}M{$extra_days}D"));
-                $users_mapper->updatePreviousExpiration($user->expiration,
+                $users_mapper->updatePreviousExpiration($expiration,
                     $order->user_id);
                 $users_mapper->updateExpiration($date->format('Y-m-d H:i:s'),
                     $product->isDigital(), $order->user_id);
