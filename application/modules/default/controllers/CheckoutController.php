@@ -158,6 +158,9 @@ class CheckoutController extends Zend_Controller_Action {
         }
         $this->view->inlineScriptMin()->loadGroup('confirmation')
             ->appendScript("Pet.loadView('Confirmation');");
+
+        Zend_Session::regenerateId();
+        session_write_close();
     }
     
     /**

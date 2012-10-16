@@ -346,8 +346,6 @@ class Service_Cart {
                     }
                     $session = new Zend_Session_Namespace('pet');
                     $session->expiration = $expiration;
-                    Zend_Session::regenerateId();
-                    session_write_close();
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
