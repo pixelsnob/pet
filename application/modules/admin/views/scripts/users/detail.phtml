@@ -44,12 +44,22 @@
                 'title' => 'User ID',
                 'callback' => function($data) use ($url) {
                     return '<a href="' . $url . '" title="Click to edit this user">' . $data->id . '</a>';
-                },
+                }
             ),
             'username',
             'email'       => array('format' => 'email'),
             'date_joined' => array('format' => 'datetime'),
-            'last_login'  => array('format' => 'datetime'),
+            'last_login'  => array(
+                'title' => 'Last Login',
+                'callback' => function($data) {
+                    if ($data->last_login) {
+                        try {
+                            $date = new DateTime($data->last_login);
+                            return $date->format('M j, Y h:i:s a');
+                        } catch (Exception $e) {}
+                    }
+                }
+            ),
             'is_active'   => array('title' => 'Active')
         ), $this->user); ?>
     </section>
