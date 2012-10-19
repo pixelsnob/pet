@@ -10,6 +10,9 @@ class Pet_Controller_Plugin_AdminInit extends Zend_Controller_Plugin_Abstract {
      * @return void
      */
     public function preDispatch(Zend_Controller_Request_Abstract $request) {
+        if ($request->getModuleName() != 'admin') {
+            return;
+        }
         $fc = Zend_Controller_Front::getInstance();
         // Admin navigation
         $layout = $fc->getParam('bootstrap')->getResource('layout');
