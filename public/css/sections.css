@@ -688,7 +688,7 @@
 }
 
 #checkout .cc-exp .errors li {
-    line-height: 10px !important;
+    /*line-height: 10px !important;*/
 }
 
 .promo-code dd {
@@ -722,7 +722,7 @@
 
 #checkout .update {
     border-top: 2px solid #ddd;
-    padding-top: 15px;
+    padding: 15px 0;
     line-height: 30px;
 }
 

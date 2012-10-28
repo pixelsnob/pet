@@ -47,10 +47,11 @@ ul.errors, ul.success {
 ul.errors li, ul.success li {
     list-style-type: none;
     margin-bottom: 5px;
-    background: none;
-    padding-left: 0;
+    background: url(/images/alert-triangle.png) 0 1px no-repeat;
+    padding-left: 19px;
+    /*text-indent: 17px;*/
     font-size: 11px !important;
-    line-height: 13px !important;
+    line-height: 15px !important;
 }
 
 .form {
