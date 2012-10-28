@@ -32,24 +32,6 @@ class Service_Admin {
         return $params;
     }
     
-    /*public function initDateRangeParams(Zend_Controller_Request_Abstract $request) {
-        $params = $request->getParams();
-        if (isset($params['start_date']) && !strlen(trim($params['start_date']))) {
-            $start_date = new DateTime('2000-01-01');
-        } elseif (isset($params['start_date']) && strlen(trim($params['start_date']))) {
-            $start_date = new DateTime($params['start_date']); 
-        } else {
-            $start_date = new DateTime;
-            $start_date->sub(new DateInterval('P1Y'));
-        }
-        $params['start_date'] = $start_date->format('Y-m-d');
-        $end_date = (isset($params['end_date']) && strlen(trim($params['end_date'])) ?
-            $params['end_date'] : null);
-        $end_date = new DateTime($end_date);
-        $params['end_date'] = $end_date->format('Y-m-d');
-        return $params;
-    }*/
-    
     /**
      * @param mixed $data Array or iterator
      * @return void
