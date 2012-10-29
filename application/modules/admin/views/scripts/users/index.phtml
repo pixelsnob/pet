@@ -12,7 +12,9 @@
             'id'           => array('title'  => 'User ID'),
             'date_joined'  => array(
                 'title'    => 'Date Joined',
-                'format'   => 'datetime'
+                'callback' => function($data) {
+                    return date('m-d-Y', strtotime($data->date_joined));
+                }
             ),
             'username', 
             'email',
