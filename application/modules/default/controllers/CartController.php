@@ -7,6 +7,7 @@ class CartController extends Zend_Controller_Action {
         $this->_cart_mapper = new Model_Mapper_Cart;
         $this->_messenger = $this->_helper->FlashMessenger;
         $this->_messenger->setNamespace('cart');
+        $this->view->getHelper('serverUrl')->setScheme('https');
     }
 
     public function indexAction() {
