@@ -7,6 +7,7 @@ class ProductsController extends Zend_Controller_Action {
     public function init() {
         $this->_products_mapper = new Model_Mapper_Products;
         $this->_users_svc = new Service_Users;
+        $this->view->getHelper('serverUrl')->setScheme('https');
     }
 
     public function indexAction() {

@@ -695,6 +695,11 @@
     padding-top: 7px;
 }
 
+.promo-code ul.success li {
+    background: none;
+    padding: 0;
+}
+
 #promo_code {
     width: 90px;
 }
