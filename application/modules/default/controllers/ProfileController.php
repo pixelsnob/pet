@@ -73,7 +73,6 @@ class ProfileController extends Zend_Controller_Action {
         if ($this->_request->getParam('iframe')) {
             $this->_helper->Layout->setLayout('iframe');
             $this->view->iframe = true;
-            //$login_form->setAction('/profile/login/msg/1'); <<<<<<<<<<<<<<<<<<<
         }
         $this->view->login_form = $login_form;
         $post = $this->_request->getParams();

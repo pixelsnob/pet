@@ -293,6 +293,12 @@ class Service_Cart {
                 $this->_cart_mapper->reset();
             }
         }
+        // Update session
+        if ($users_svc->isAuthenticated()) {
+            $auth_storage = Zend_Auth::getInstance()->getStorage();
+            $auth_storage->write($users_svc->getUser());
+            Zend_Session::regenerateId();
+        }
         return $status;
     }
     
@@ -344,8 +350,8 @@ class Service_Cart {
                     if ($temp_exp->format('U') - $today->format('U') >= 0) {
                         $expiration = $user->expiration;
                     }
-                    $session = new Zend_Session_Namespace('pet');
-                    $session->expiration = $expiration;
+                    //$session = new Zend_Session_Namespace('pet');
+                    //$session->expiration = $expiration;
                 }
                 $term = (int) $product->term_months;
                 // If expiration is null here, DateTime defaults to today
