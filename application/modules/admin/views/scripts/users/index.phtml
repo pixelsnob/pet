@@ -12,19 +12,14 @@
             'id'           => array('title'  => 'User ID'),
             'date_joined'  => array(
                 'title'    => 'Date Joined',
-                'callback' => function($data) {
-                    return date('m-d-Y', strtotime($data->date_joined));
-                }
+                'format'   => 'date'
             ),
             'username', 
             'email',
             'first_name',
             'last_name',
             'expiration' => array(
-                'callback' => function($data) {
-                    return ($data->expiration ? date('m-d-Y',
-                        strtotime($data->expiration)) : '');
-                }
+                'format'   => 'date'
             ),
             'is_active'   => array(
                 'title' => 'Active',
