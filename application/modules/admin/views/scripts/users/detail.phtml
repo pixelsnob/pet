@@ -67,7 +67,16 @@
     <section class="expirations admin-list-right">
         <?php echo $this->objectToAdminList(array(
             'expiration'          => array('title' => 'Expiration'),
-            'previous_expiration' => array('title' => 'Previous Expiration')
+            'previous_expiration' => array('title' => 'Previous Expiration'),
+            'subscriber_type'     => array(
+                'title' => 'Subscriber Type',
+                'callback' => function($data) {
+                    if (!$data->expiration) {
+                        return '-';
+                    }
+                    return ($data->digital_only ? 'Digital' : 'Premium');
+                }
+            )
         ), $this->user); ?>
     </section>
 
