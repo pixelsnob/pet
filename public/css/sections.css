@@ -174,7 +174,7 @@
 /* Products "special offers" page */
 
 #products-special .free-gifts {
-    margin-top: 120px;
+    margin-top: 150px;
 }
 
 #products-special .free-gifts h3 {
@@ -208,7 +208,7 @@
 #products-special .offers a.offer-2 {
     float: left;
     display: block;
-    width: 536px;
+    width: 412px;
     height: 167px;
     background: url(/images/products-index/sprites.png) -468px -193px;
     margin-left: 20px;
