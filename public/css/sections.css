@@ -97,7 +97,7 @@
     background: url(/images/products-index/sprites.png) -511px -40px;
 }
 
-#products-index .dvds {
+#products-index .dvds section {
     border-top: 1px solid #70717b;
     padding: 16px 0 25px 0;
     overflow: hidden;
@@ -119,6 +119,10 @@
     padding-bottom: 0;
     margin: 12px 0 0 0;
     text-transform: none;
+}
+
+#products-index .dvds li h5 {
+    font-style: italic;
 }
 
 #products-index .dvds li p {
