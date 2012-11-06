@@ -6,3 +6,4 @@ library/Zend
 .DS_Store
 public/version
 public/images/uploads/
+tests/selenium-ide/
