@@ -1,4 +1,4 @@
-
+	
 /* Products landing pages */
 
 #products-index #content, #products-special #content {
@@ -195,6 +195,11 @@
     margin-bottom: 10px !important;
 }
 
+#products-special .offers {
+    padding-bottom: 25px;
+    overflow: hidden;
+}
+
 #products-special .offers a span {
     display: none;
 }
@@ -202,18 +207,18 @@
 #products-special .offers a.offer-1 {
     float: left;
     display: block;
-    width: 315px;
-    height: 106px;
-    background: url(/images/products-index/sprites.png) -30px -440px;
-    margin-top: 37px;
+    width: 408px;
+    height: 90px;
+    background: url(/images/products-index/sprites.png) -31px -234px;
+    margin-top: 0px;
 }
 
 #products-special .offers a.offer-2 {
     float: left;
     display: block;
-    width: 580px;
-    height: 180px;
-    background: url(/images/products-index/sprites.png) -450px -403px;
+    width: 408px;
+    height: 90px;
+    background: url(/images/products-index/sprites.png) -467px -234px;
     margin-left: 20px;
 }
 
