@@ -23,8 +23,8 @@
     width: 450px;
     height: 405px;
     left: -24px;
-    padding: 24px;
-    margin-bottom: 30px;
+    padding: 15px;
+    margin-bottom: 20px;
     position: relative;
 }
 
@@ -32,7 +32,7 @@
 .products-training p,
 .products-training li {
     color: #f0f0f0 !important;
-    text-shadow: 2px 2px 2px #000;
+    text-shadow: 1px 1px 1px #000;
 }
 
 .products-training h2 {
@@ -59,8 +59,8 @@
 
 .products-training li {
     background: url(/images/products-index/bullet-yellow.png) 0 5px no-repeat;
-    line-height: 16px;
-    font-size: 14px;
+    line-height: 18px;
+    font-size: 16px;
     margin-bottom: 10px !important;
 }
 
@@ -99,7 +99,7 @@
 
 #products-index .dvds section {
     border-top: 1px solid #70717b;
-    padding: 16px 0 25px 0;
+    padding: 8px 0 25px 0;
     overflow: hidden;
 }
 
@@ -110,7 +110,7 @@
 #products-index .dvds li {
     width: 234px;
     padding: 0;
-    margin-right: 15px;
+    margin-right: 18px;
     float: left;
     background: none;
 }
@@ -139,14 +139,13 @@
 
 #products-index .gift {
     clear: both;
-    border-top: 1px solid #70717b;
-    padding: 16px 0 25px 0;
+    padding: 0 0 0 0;
 }
 
 #products-index .gift h3 {
     text-transform: none;
     font-style: italic;
-    font-size: 18px;
+    font-size: 16px;
     color: #5f6278 !important;
 }
 
@@ -157,7 +156,7 @@
 #products-index .guarantee, #products-special .guarantee {
     clear: both;
     border-top: 1px solid #70717b;
-    padding: 16px 0 25px 0;
+    padding: 16px 0 16px 0;
 }
 
 #products-index .guarantee p, #products-special .guarantee p {
@@ -203,18 +202,18 @@
 #products-special .offers a.offer-1 {
     float: left;
     display: block;
-    width: 413px;
+    width: 315px;
     height: 106px;
-    background: url(/images/products-index/sprites.png) -31px -230px;
+    background: url(/images/products-index/sprites.png) -30px -440px;
     margin-top: 37px;
 }
 
 #products-special .offers a.offer-2 {
     float: left;
     display: block;
-    width: 412px;
-    height: 167px;
-    background: url(/images/products-index/sprites.png) -468px -193px;
+    width: 580px;
+    height: 180px;
+    background: url(/images/products-index/sprites.png) -450px -403px;
     margin-left: 20px;
 }
 
