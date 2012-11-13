@@ -7,11 +7,6 @@
 <meta name="copyright" content="1999-<?php echo date('Y'); ?>, Photo One Media" />
 <meta name="google-site-verification" content="yxFgFAShYWbqXMOs28hBBdBqeqiPh0LGs9e2-ocHe_E" />
 
-<?php if (isset($this->config['typekit_path'])): ?>
-    <script type="text/javascript" src="<?php echo $this->config['typekit_path']; ?>"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-<?php endif; ?>
-
 <?php
     
 echo $this->headLink()
@@ -175,5 +170,10 @@ echo $this->headLink()
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
+    <?php if (isset($this->config['typekit_path'])): ?>
+        <script type="text/javascript" src="<?php echo $this->config['typekit_path']; ?>"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <?php endif; ?>
+
 </body>
 </html>
