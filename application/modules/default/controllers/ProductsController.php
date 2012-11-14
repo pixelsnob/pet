@@ -37,36 +37,26 @@ class ProductsController extends Zend_Controller_Action {
         $term       = (strlen(trim($request->getParam('term'))) ?
                       $request->getParam('term') : null);
         $promo_code = $request->getParam('promo_code');
-        if ($zone_id == Model_SubscriptionZone::USA) {
-            $this->view->subscriptions = $this->_products_mapper
-                ->getSubscriptionsByZoneId(Model_SubscriptionZone::USA, null,
-                    $is_gift, $is_renewal); 
-            $this->view->is_gift = $is_gift;
-            $this->view->promo_code = $promo_code;
-            $this->_helper->ViewRenderer->render('subscription-options-usa');
-        } else {
-            $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
-                $zone_id, $term, $is_gift, $is_renewal);
-            $digital_subs = $this->_products_mapper->getDigitalSubscriptions(
-                $is_gift, $is_renewal);
-            $form = new Form_SubscriptionOptions(array(
-                'subscriptions' => array_merge($regular_subs, $digital_subs)
-            ));
-            $form->populate($request->getParams());
-            $this->view->regular_subs = $regular_subs;
-            $this->view->digital_subs = $digital_subs;
-            $this->view->sub_options_form = $form;
-            if ($request->isPost() && $form->isValid($request->getPost())) {
-                $product_id = $request->getPost('product_id');
-                $this->_helper->Redirector->setGotoSimple('add', 'cart',
-                    'default',  array(
-                        'product_id' => $product_id,
-                        'is_gift'    => $is_gift,
-                        'is_renewal' => $is_renewal,
-                        'promo_code' => $promo_code
-                    ));
-            }
-            $this->_helper->ViewRenderer->render('subscription-options-non-usa');
+        $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
+            $zone_id, $term, $is_gift, $is_renewal);
+        $digital_subs = $this->_products_mapper->getDigitalSubscriptions(
+            $is_gift, $is_renewal);
+        $form = new Form_SubscriptionOptions(array(
+            'subscriptions' => array_merge($regular_subs, $digital_subs)
+        ));
+        $form->populate($request->getParams());
+        $this->view->regular_subs = $regular_subs;
+        $this->view->digital_subs = $digital_subs;
+        $this->view->sub_options_form = $form;
+        if ($request->isPost() && $form->isValid($request->getPost())) {
+            $product_id = $request->getPost('product_id');
+            $this->_helper->Redirector->setGotoSimple('add', 'cart',
+                'default',  array(
+                    'product_id' => $product_id,
+                    'is_gift'    => $is_gift,
+                    'is_renewal' => $is_renewal,
+                    'promo_code' => $promo_code
+                ));
         }
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
@@ -115,15 +105,6 @@ class ProductsController extends Zend_Controller_Action {
             throw new Exception('Term is required');
         }
         $this->view->is_gift = ($this->_request->getParam('is_gift') ? true : null);
-        // Get USA subscription based on term and zone so we can add it directly to
-        // the cart from this page
-        $usa_subscription = $this->_products_mapper->getSubscriptionByTermAndZone(
-            $term, Model_SubscriptionZone::USA);
-        if (!$usa_subscription) {
-            $this->_response->setHttpResponseCode(404);
-            throw new Zend_Controller_Action_Exception('USA subscription not found', 404);
-        }
-        $this->view->usa_subscription = $usa_subscription;
         $promo_code = $this->_request->getParam('promo_code');
         $this->view->term = $term;
         $this->view->promo_code = $promo_code;

@@ -2,6 +2,7 @@
 <div id="products-subscription-options">
     <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="subscription-options">
         <h2><?php echo ($this->is_renewal ? 'Renewal' : 'Subscription'); ?> Options</h2>
+        <p><strong class="please">Please choose a subscription type and duration</strong></p>
         <section class="all-access">
             <h3>All Access Subscription</h3>
             <?php if ($this->is_renewal): ?>
@@ -45,6 +46,7 @@
             </ul>
         </section>
         <?php echo $this->sub_options_form->product_id->renderErrors(); ?>
+        <p class="gifts"><em>Learn about <a href="<?php echo $this->serverUrl($this->url(array(), 'products_gifts')); ?>">Gift Subscriptions</a></em></p>
         <div class="submit">
             <input type="submit" value="Add to Cart" class="button-grad">
             <?php

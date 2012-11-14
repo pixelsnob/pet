@@ -233,8 +233,19 @@
     margin-top: 20px;
 }
 
+#products-subscription-options .please {
+    color: #ff9933;
+    margin-top: 0;
+    font-size: 14px;
+}
+
 #products-subscription-options section {
     margin-bottom: 20px; 
+}
+
+#products-subscription-options h2 {
+    padding-bottom: 0;
+    margin-bottom: 4px;
 }
 
 #products-subscription-options h3 {
@@ -251,6 +262,9 @@
     font-weight: bold;
 }
 
+#products-subscription-options .gifts {
+    margin-top: 10px;
+}
 
 /* Physical detail (dvds) */
 
