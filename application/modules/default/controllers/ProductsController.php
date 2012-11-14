@@ -34,11 +34,9 @@ class ProductsController extends Zend_Controller_Action {
         }
         $is_gift    = ($request->getParam('is_gift') ? true : null);
         $is_renewal = $request->getParam('is_renewal');
-        $term       = (strlen(trim($request->getParam('term'))) ?
-                      $request->getParam('term') : null);
         $promo_code = $request->getParam('promo_code');
         $regular_subs = $this->_products_mapper->getSubscriptionsByZoneId(
-            $zone_id, $term, $is_gift, $is_renewal);
+            $zone_id, null, $is_gift, $is_renewal);
         $digital_subs = $this->_products_mapper->getDigitalSubscriptions(
             $is_gift, $is_renewal);
         $form = new Form_SubscriptionOptions(array(
@@ -100,13 +98,8 @@ class ProductsController extends Zend_Controller_Action {
     }
 
     public function subscriptionZoneAction() {
-        $term = $this->_request->getParam('term');
-        if (!$term) {
-            throw new Exception('Term is required');
-        }
         $this->view->is_gift = ($this->_request->getParam('is_gift') ? true : null);
         $promo_code = $this->_request->getParam('promo_code');
-        $this->view->term = $term;
         $this->view->promo_code = $promo_code;
         $this->view->inlineScriptMin()->loadGroup('products')
             ->appendScript("Pet.loadView('Products');");
