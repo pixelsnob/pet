@@ -109,7 +109,7 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
                 'shipping_zone'         => $shipping_zone
             ));
             if ($this->_cart->addProduct($product_model, $is_gift)) {
-                $this->_message = "{$product->name} was just added to your shopping cart";
+                $this->_message = "\"{$product->name}\" was just added to your shopping cart";
                 return true;
             } else {
                 $this->_message = $this->_cart->getMessage();
