@@ -508,8 +508,8 @@ ul#top-nav .mm-content-base p.nav-all:hover { background: none; }
     background: #493e42;
     border-top: 2px solid #322a2d;
     color: #f1f1f1;
-    font-size: 12px;
-    padding: 20px 0;
+    font-size: 11px;
+    padding: 10px 0;
 }
 
 #footer a {
@@ -521,7 +521,6 @@ ul#top-nav .mm-content-base p.nav-all:hover { background: none; }
 
 #footer p {
     line-height: 14px;
-    margin-bottom: 10px;
 }
 
 
