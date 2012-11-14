@@ -10,49 +10,30 @@
                     <ul> 
                         <?php $c = 1; foreach ($this->cart->products as $product): ?>
                         <li class="item<?php echo ($c == count($this->cart->products) ? ' last' : ''); ?>">
-                            <div class="cart-left">
-                                <h4><?php echo $this->escape($product->getFullName()); ?></h4>
-                                <?php
-                                switch ($product->product_type_id) {
-                                    case Model_ProductType::SUBSCRIPTION:
-                                        $term = ((int) $product->term_months / 12);
-                                        $y = ($term == 1 ? 'year' : 'years');
-                                        $details = $this->escape("{$product->zone} - $term $y - ") .
-                                             $this->dollarFormat($product->cost);
-                                        break;
-                                    default:
-                                        $details = $this->dollarFormat($product->cost);
-                                        break;
-                                }
-                                ?>
-                                <div class="details"><?php echo $details; ?></div>
-                                <?php
-                                // Qty input
-                                $qty = $this->cart_form->qty->getElement($product->key);
-                                if ($qty) {
-                                    echo $qty->renderLabel() . $qty->renderViewHelper();
-                                }
-                                ?>
-                                <ul class="links">
-                                    <?php if ($this->nolayout && !$qty->getAttrib('readonly')): ?>
-                                    <li>
-                                        <a href="<?php echo $this->serverUrl($this->url(array())); ?>" class="update">Update</a>
-                                    </li>
-                                    <?php endif; ?>
-                                    <li>
-                                        <a href="<?php echo $this->serverUrl($this->url(array('key' => $product->key),
-                                                               'cart_remove')); ?>" class="remove">Remove</a>
-                                    </li>
-                                </ul>
-                                <?php
-                                if ($qty) {
-                                    echo $qty->renderErrors();
-                                }
-                                ?>
-                            </div>
-                            <div class="cart-right">
-                                <?php echo $this->productThumbnail($product); ?>
-                            </div>
+                            <p><?php echo $this->escape($product->getFullName()); ?></p>
+                            <?php
+                            // Qty input
+                            $qty = $this->cart_form->qty->getElement($product->key);
+                            if ($qty) {
+                                echo $qty->renderLabel() . $qty->renderViewHelper();
+                            }
+                            ?>
+                            <ul class="links">
+                                <?php if ($this->nolayout && !$qty->getAttrib('readonly')): ?>
+                                <li>
+                                    <a href="<?php echo $this->serverUrl($this->url(array())); ?>" class="update">Update</a>
+                                </li>
+                                <?php endif; ?>
+                                <li>
+                                    <a href="<?php echo $this->serverUrl($this->url(array('key' => $product->key),
+                                                           'cart_remove')); ?>" class="remove">Remove</a>
+                                </li>
+                            </ul>
+                            <?php
+                            if ($qty) {
+                                echo $qty->renderErrors();
+                            }
+                            ?>
                         </li>
                         <?php $c++; endforeach; ?>
                     </ul>
@@ -62,17 +43,15 @@
                 <p class="no-items">You have no items in your cart</p> 
             <?php endif; ?>
             <ul class="buttons-list">
-                <li class="continue-shopping">
-                    <a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>" class="button-grad">Continue Shopping</a>
-                </li>
                 <?php if (count($this->cart->products)): ?>
                     <li class="update"><input type="submit" value="Update" class="button-grad"></li>
-                <?php endif; ?>
-                <?php if (count($this->cart->products)): ?>
                     <li class="checkout">
-                        <a href="<?php echo $this->serverUrl($this->url(array(), 'checkout')); ?>" class="button-grad">Checkout</a>
+                        <a href="<?php echo $this->serverUrl($this->url(array(), 'checkout')); ?>" class="button-grad-yellow">Checkout</a>
                     </li>
                 <?php endif; ?>
+                <li class="continue-shopping">
+                    <a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>" class="">Continue Shopping</a>
+                </li>
             </ul>
         </fieldset>
     </form>

@@ -547,12 +547,13 @@
 #cart .item {
     background: none;
     padding: 9px 0 24px 0;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
     line-height: 30px;
     overflow: hidden;
 }
 
 #cart .item.last {
+    border-bottom: 1px solid #ccc;
 }
 
 #cart .item h4 {
@@ -579,24 +580,19 @@
     margin: 0 10px;
 }
 
+#cart .item p {
+    margin: 0;
+    padding: 0;
+}
+
 #cart .item input.readonly {
     opacity: 0.3;
 
 }
 
-#cart .cart-left {
-    width: 70%;
-    float: left;
-}
-
-#cart .cart-right {
-    width: 30%;
-    float: left;
-    text-align: right;
-}
-
-#cart .cart-right div {
-    float: right;
+#cart .buttons-list li.continue-shopping {
+    clear: both;
+    margin-top: 10px;
 }
 
 #nolayout #cart .items {
