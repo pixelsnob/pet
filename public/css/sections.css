@@ -546,7 +546,7 @@
 
 #cart .item {
     background: none;
-    padding: 9px 0 24px 0;
+    padding: 15px 0 20px 0;
     border-top: 1px solid #ccc;
     line-height: 30px;
     overflow: hidden;
@@ -556,9 +556,17 @@
     border-bottom: 1px solid #ccc;
 }
 
-#cart .item .description {
+#cart .item .description, #cart .item .promo {
     line-height: 19px;
     margin-bottom: 7px;
+}
+
+#cart .item .promo {
+    /*margin-left: 15px;
+    padding-left: 25px;
+    background: url(/images/wp/bullet.png) 0 2px no-repeat;*/
+    font-style: italic; 
+    font-weight: bold;
 }
 
 #cart .item h4 {
