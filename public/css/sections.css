@@ -556,6 +556,11 @@
     border-bottom: 1px solid #ccc;
 }
 
+#cart .item .description {
+    line-height: 19px;
+    margin-bottom: 7px;
+}
+
 #cart .item h4 {
     font-size: 14px;
     color: #505b7d;

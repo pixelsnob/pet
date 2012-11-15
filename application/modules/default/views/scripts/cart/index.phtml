@@ -10,7 +10,7 @@
                     <ul> 
                         <?php $c = 1; foreach ($this->cart->products as $product): ?>
                         <li class="item<?php echo ($c == count($this->cart->products) ? ' last' : ''); ?>">
-                            <p><?php echo $this->escape($product->getFullName()); ?></p>
+                            <p class="description"><?php echo $this->escape($product->description); ?></p>
                             <?php
                             // Qty input
                             $qty = $this->cart_form->qty->getElement($product->key);
