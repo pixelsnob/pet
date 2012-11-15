@@ -15,7 +15,7 @@
                             /* See if there's a promo, and if it "belongs" to this product. Also, show only once. */
                             if (!isset($promo_shown) && $this->cart->promo && is_array($this->cart->promo->promo_products)  &&
                                 in_array($product->id, array_keys($this->cart->promo->promo_products))): ?>
-                                <p class="promo"><?php echo $this->escape($this->cart->promo->description); ?></p>
+                                <p class="promo"><?php echo $this->escape($this->truncate($this->cart->promo->description, 0, 100)); ?></p>
                             <?php $promo_shown = true; endif; ?>
                             <?php
                             // Qty input
