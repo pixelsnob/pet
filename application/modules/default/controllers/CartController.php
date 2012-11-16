@@ -21,6 +21,10 @@ class CartController extends Zend_Controller_Action {
             $this->_helper->json($json);
             return;
         }
+        $this->view->cart_products = $cart->products->getUaSorted(function($a, $b) {
+            return ((($a->product_type_id == Model_ProductType::SUBSCRIPTION ||
+                $a->product_type_id == Model_ProductType::DIGITAL_SUBSCRIPTION) && !$a->is_gift) ? -1 : 1);
+        });
         $this->view->cart = $cart;
         $cart_form = $this->_cart_svc->getCartForm();
         $this->view->cart_form = $cart_form;

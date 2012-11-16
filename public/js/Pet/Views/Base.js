@@ -87,7 +87,7 @@ Pet.View = Backbone.View.extend({
             scrolling: 'no',
             autoResize: true,
             fitToView: true,
-            topRatio: 0.2,
+            topRatio: 0.05,
             beforeShow: function() {
                 cb();
                 obj.replaceGradLinks();

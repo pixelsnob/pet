@@ -3,13 +3,13 @@
     <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="cart">
         <fieldset class="account">
             <legend>Shopping Cart</legend>
-            <?php if (count($this->cart->products)): ?>
+            <?php if (count($this->cart_products)): ?>
                 <?php echo $this->flashMessenger($this->messages); ?>
                 <div class="items form">
                     <p>You will get:</p>
                     <ul> 
-                        <?php $c = 1; foreach ($this->cart->products as $product): ?>
-                        <li class="item<?php echo ($c == count($this->cart->products) ? ' last' : ''); ?>">
+                        <?php $c = 1; foreach ($this->cart_products as $product): ?>
+                        <li class="item<?php echo ($c == count($this->cart_products) ? ' last' : ''); ?>">
                             <p class="description"><?php echo $this->escape($this->truncate($product->short_description, 0, 200)); ?></p>
                             <?php 
                             /* See if there's a promo, and if it "belongs" to this product. Also, show only once. */
@@ -43,12 +43,12 @@
                         <?php $c++; endforeach; ?>
                     </ul>
                 </div>
-                <p class="total-qty">You have <?php echo count($this->cart->products); ?> item<?php echo (count($this->cart->products) > 1 ? 's' : ''); ?> in your cart</p>
+                <p class="total-qty">You have <?php echo count($this->cart_products); ?> item<?php echo (count($this->cart_products) > 1 ? 's' : ''); ?> in your cart</p>
             <?php else: ?>
                 <p class="no-items">You have no items in your cart</p> 
             <?php endif; ?>
             <ul class="buttons-list">
-                <?php if (count($this->cart->products)): ?>
+                <?php if (count($this->cart_products)): ?>
                     <li class="update"><input type="submit" value="Update" class="button-grad"></li>
                     <li class="checkout">
                         <a href="<?php echo $this->serverUrl($this->url(array(), 'checkout')); ?>" class="button-grad-yellow">Checkout</a>

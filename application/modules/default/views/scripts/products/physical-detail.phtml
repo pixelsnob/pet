@@ -5,7 +5,9 @@
         <img src="/images/products/medium/<?php echo $this->escape($this->product->sku); ?>.jpg" width="185" height="176" alt="<?php echo $this->escape($this->product->name); ?>"> 
     </div>
     <div class="physical-detail-right">
-        <?php echo Markdown($this->product->description); ?>
+        <div class="description">
+            <?php echo Markdown($this->product->description); ?>
+        </div>
         <ul class="buttons-list">
             <li><a href="<?php echo $this->serverUrl($this->url(array(), 'products')); ?>" class="button-grad continue-shopping">Continue Shopping</a></li>
             <li><a href="<?php echo $this->serverUrl($this->url(array('product_id' => $this->product->product_id), 'cart_add')); ?>" class="button-grad cart-add">Add to Cart</a></li>

@@ -277,9 +277,15 @@
 }
 
 .physical-detail-right {
-    width: 360px;
+    width: 450px;
 }
 
+/*#physical-detail .description {
+    height: 320px;
+    overflow: auto;
+    margin-bottom: 10px;
+    padding-right: 15px;
+}*/
 
 /* Gifts page */
 
@@ -533,7 +539,7 @@
 /* Cart */
 
 #cart {
-    width: 610px;
+    width: 660px;
 }
 
 #cart .items {
@@ -609,13 +615,10 @@
 }
 
 #nolayout #cart .items {
-    height: 380px;
     /* Allow for scrollbar */
-    width: 610px;
+    width: 660px;
     overflow: auto !important;
-    max-height: 350px;
-    height: auto !important;
-    height: 350px;
+    max-height: 320px;
 }
 
 #nolayout #cart .items ul {

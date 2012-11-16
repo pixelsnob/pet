@@ -35,7 +35,7 @@ class Model_Cart_Products implements Iterator, Countable {
     }
     
     /**
-     * @var string $key
+     * @param string $key
      * @return void
      * 
      */
@@ -71,8 +71,8 @@ class Model_Cart_Products implements Iterator, Countable {
     }
 
     /**
-     * @var string $key
-     * @var int $qty
+     * @param string $key
+     * @param int $qty
      * @return void
      * 
      */
@@ -98,7 +98,7 @@ class Model_Cart_Products implements Iterator, Countable {
     }
     
     /**
-     * @var string $key
+     * @param string $key
      * @return void
      * 
      */
@@ -112,7 +112,7 @@ class Model_Cart_Products implements Iterator, Countable {
     }
 
     /**
-     * @var int $id
+     * @param int $id
      * @return Model_Cart_Product
      * 
      */
@@ -125,7 +125,7 @@ class Model_Cart_Products implements Iterator, Countable {
     }
 
     /**
-     * @var string $key
+     * @param string $key
      * @return Model_Cart_Product
      * 
      */
@@ -137,6 +137,18 @@ class Model_Cart_Products implements Iterator, Countable {
         }
     }
     
+    /**
+     * Sort by user-defined function and returns the sorted array
+     * 
+     * @param callable User defined func
+     * @return array Sorted array of products 
+     */
+    public function getUaSorted($func) {
+        $products = $this->_data;
+        uasort($products, $func);
+        return $products;
+    }
+
     /**
      * @param Model_Cart_Product $product
      * @return bool
