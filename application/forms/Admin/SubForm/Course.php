@@ -11,10 +11,7 @@ class Form_Admin_SubForm_Course extends Zend_Form_SubForm {
      */
     public function init() {
         parent::init();
-        $this->addElement('textarea', 'description', array(
-            'label'        => 'Description',
-            'required'     => false
-        ))->addElement('text', 'slug', array(
+        $this->addElement('text', 'slug', array(
             'label'        => 'Slug',
             'required'     => true,
             'validators'   => array(

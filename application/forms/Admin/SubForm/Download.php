@@ -38,9 +38,6 @@ class Form_Admin_SubForm_Download extends Pet_Form_SubForm {
                     'messages' => 'Download format is required'
                 ))
             )
-        ))->addElement('textarea', 'description', array(
-            'label'        => 'Description',
-            'required'     => false
         ))->addElement('text', 'date', array(
             'label'        => 'Date',
             'required'     => true,

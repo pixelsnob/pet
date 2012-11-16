@@ -9,8 +9,6 @@ class Model_Subscription extends Pet_Model_Abstract {
         'id' => null,
         'product_id' => null,
         'zone_id' => null,
-        'name' => null,
-        'description' => null,
         'term_months' => null,
         'is_renewal' => null
     );

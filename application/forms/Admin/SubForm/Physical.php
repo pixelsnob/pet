@@ -29,10 +29,7 @@ class Form_Admin_SubForm_Physical extends Zend_Form_SubForm {
         foreach ($this->_shipping_zones as $zone) {
             $zones[$zone->id] = $zone->getLabel();
         }
-        $this->addElement('textarea', 'description', array(
-            'label'        => 'Description',
-            'required'     => false
-        ))->addElement('select', 'shipping_zone_id', array(
+        $this->addElement('select', 'shipping_zone_id', array(
             'label'        => 'Shipping Zone',
             'required'     => true,
             'multiOptions' => $zones,

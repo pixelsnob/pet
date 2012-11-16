@@ -15,6 +15,7 @@ class Model_Product_Physical extends Model_Product_Abstract {
         'shipping_zone_id' => null,
         'name' => null,
         'description' => null,
+        'short_description' => null,
         'is_giftable' => null
     );
     

@@ -15,6 +15,7 @@ class Model_Product_Download extends Model_Product_Abstract {
         'download_format_id' => null,
         'name' => null,
         'description' => null,
+        'short_description' => null,
         'date' => null,
         'path' => null,
         'size' => null,

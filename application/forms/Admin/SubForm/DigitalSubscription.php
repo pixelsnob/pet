@@ -11,10 +11,7 @@ class Form_Admin_SubForm_DigitalSubscription extends Zend_Form_SubForm {
      */
     public function init() {
         parent::init();
-        $this->addElement('textarea', 'description', array(
-            'label'        => 'Description',
-            'required'     => false
-        ))->addElement('checkbox', 'is_renewal', array(
+        $this->addElement('checkbox', 'is_renewal', array(
             'label'        => 'Renewal?',
             'class'        => 'checkbox',
             'required'     => false

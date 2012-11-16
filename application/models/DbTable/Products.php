@@ -154,7 +154,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->join(array('s' => 'subscriptions'),
                 'p.id = s.product_id')
             ->where('p.active')
-            ->order(array('s.zone_id', 's.name'));
+            ->order(array('s.zone_id', 'p.name'));
         return $this->fetchAll($sel);
     }
 
@@ -175,7 +175,7 @@ class Model_DbTable_Products extends Zend_Db_Table_Abstract {
             ->join(array('s' => 'subscriptions'), 's.product_id = p.id')
             ->where('s.zone_id = ?', $zone_id)
             ->where('p.active')
-            ->order('s.name')
+            ->order('p.name')
             ->where('s.is_renewal = ?', (int) $is_renewal);
         if ($is_giftable !== null) {
             $sel->where('p.is_giftable = ?', (int) $is_giftable);

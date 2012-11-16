@@ -20,6 +20,16 @@
                     <?php echo $this->product_form->sku->renderViewHelper(); ?>
                     <?php echo $this->product_form->sku->renderErrors(); ?>
                 </dd>
+                <dt><?php echo $this->product_form->description->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->product_form->description->renderViewHelper(); ?>
+                    <?php echo $this->product_form->description->renderErrors(); ?>
+                </dd>
+                <dt><?php echo $this->product_form->short_description->renderLabel(); ?></dt>
+                <dd>
+                    <?php echo $this->product_form->short_description->renderViewHelper(); ?>
+                    <?php echo $this->product_form->short_description->renderErrors(); ?>
+                </dd>
                 <dt><?php echo $this->product_form->cost->renderLabel(); ?></dt>
                 <dd>
                     <?php echo $this->product_form->cost->renderViewHelper(); ?>

@@ -38,9 +38,6 @@ class Form_Admin_SubForm_Subscription extends Zend_Form_SubForm {
                     'messages' => 'Subscription zone is required'
                 ))
             )
-        ))->addElement('textarea', 'description', array(
-            'label'        => 'Description',
-            'required'     => false
         ))->addElement('text', 'term_months', array(
             'label'        => 'Term (months)',
             'required'     => true,

@@ -133,6 +133,12 @@ class Form_Admin_Product extends Pet_Form {
                     'messages' => 'Name is required'
                 ))
             )
+        ))->addElement('textarea', 'description', array(
+            'label'        => 'Description',
+            'required'     => false
+        ))->addElement('textarea', 'short_description', array(
+            'label'        => 'Short Description',
+            'required'     => false
         ))->addElement('text', 'sku', array(
             'label'     => 'SKU',
             'required'  => true,

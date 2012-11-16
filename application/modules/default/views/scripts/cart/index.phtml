@@ -10,7 +10,7 @@
                     <ul> 
                         <?php $c = 1; foreach ($this->cart->products as $product): ?>
                         <li class="item<?php echo ($c == count($this->cart->products) ? ' last' : ''); ?>">
-                            <p class="description"><?php echo $this->escape($this->truncate($product->description, 0, 200)); ?></p>
+                            <p class="description"><?php echo $this->escape($this->truncate($product->short_description, 0, 200)); ?></p>
                             <?php 
                             /* See if there's a promo, and if it "belongs" to this product. Also, show only once. */
                             if (!isset($promo_shown) && $this->cart->promo && is_array($this->cart->promo->promo_products)  &&
