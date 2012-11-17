@@ -61,7 +61,7 @@ class Form_SubForm_Promo extends Pet_Form_SubForm {
         if (!$promo) {
             return false;
         }
-        return $this->_cart->getValidator()->validatePromo($promo);
+        return $this->_cart->validatePromo($promo);
     }
     
 }

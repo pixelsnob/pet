@@ -71,6 +71,22 @@ class Model_Cart_Products implements Iterator, Countable {
     }
 
     /**
+     * @param array $product_ids
+     * @return void
+     * 
+     */
+    public function removeByProductTypes(array $product_ids) {
+        $removed_products = array();
+        foreach ($this->_data as $product) {
+            if (in_array($product->product_type_id, $product_ids)) {
+                $removed_products[] = $product;
+                $this->remove($product->product_id);
+            }
+        }
+        return $removed_products;
+    }
+
+    /**
      * @param string $key
      * @param int $qty
      * @return void

@@ -1,7 +1,7 @@
 
 <div id="cart">
     <form action="<?php echo $this->serverUrl($this->url()); ?>" method="post" name="cart">
-        <fieldset class="account">
+        <fieldset>
             <legend>Shopping Cart</legend>
             <?php if (count($this->cart_products)): ?>
                 <?php echo $this->flashMessenger($this->messages); ?>

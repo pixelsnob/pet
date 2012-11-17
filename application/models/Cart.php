@@ -23,12 +23,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     );
     
     /**
-     * @var Model_Cart_Validator_Abstract
-     * 
-     */
-    protected $_validator = 'Model_Cart_Validator_Default';
-
-    /**
      * @var string
      * 
      */
@@ -68,29 +62,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     }
 
     /**
-     * @return Model_Cart_Validator_Abstract
-     * 
-     */
-    public function getValidator() {
-        $validator = new $this->_validator;
-        $validator->setCart($this);
-        return $validator;
-    }
-    
-    /**
-     * @return bool
-     * 
-     */
-    public function validate() {
-        $validator = $this->getValidator();
-        if (!$validator->validate()) {
-            $this->_message = $validator->getMessage();
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * @param Model_Cart_Product $product
      * @return bool
      * 
@@ -99,10 +70,12 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $product->key = $product->product_id . ($product->is_gift ?
             'GIFT' : '');
         $product->is_gift = (int) $product->is_gift;
-        $validator = $this->getValidator();
-        if (!$validator->validateProduct($product)) {
-            $this->_message = $validator->getMessage();
-            return false;
+        if (!$product->is_gift && ($this->_data['products']->hasSubscription() ||
+            $this->_data['products']->hasDigitalSubscription())) {
+            $this->_data['products']->removeByProductTypes(array(
+                Model_ProductType::SUBSCRIPTION,
+                Model_ProductType::DIGITAL_SUBSCRIPTION
+            ));
         }
         if ($this->_data['products']->getByKey($product->key)) {
             $this->_data['products']->incrementQty($product->key);
@@ -124,7 +97,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             $msg = '"' . $product->name . '" was removed from your cart';
             $this->_data['products']->remove($key);
             if ($this->_data['promo']) {
-                $valid = $this->getValidator()->validatePromo($this->_data['promo']); 
+                $valid = $this->validatePromo($this->_data['promo']); 
                 if (!$valid) {
                     $this->_message = $this->getValidator()->getMessage();
                     $this->removePromo();
@@ -280,15 +253,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     }
 
     /**
-     * Removes all renewals in the cart 
-     * 
-     * @return void 
-     */
-    public function removeRenewals() {
-        return $this->_data['products']->removeRenewals();
-    }
-
-    /**
      * @return array An array of totals
      * 
      */
@@ -348,7 +312,7 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      * 
      */
     public function addPromo(Model_Promo $promo) {
-        if (!$this->getValidator()->validatePromo($promo)) {
+        if (!$this->validatePromo($promo)) {
             $this->_message = $this->getValidator()->getMessage();
             return false;
         }
@@ -363,6 +327,21 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
     public function removePromo() {
         $code = $this->_data['promo']->code;
         $this->_data['promo'] = null;
+    }
+
+    /**
+     * @param Model_Promo $promo
+     * @return bool
+     * 
+     */
+    public function validatePromo(Model_Promo $promo) {
+        $valid = false;
+        foreach ($promo->promo_products as $pp) {
+            if (in_array($pp->product_id, $this->_data['products']->getIds())) {
+                $valid = true;
+            }
+        }
+        return $valid;
     }
 
     /**

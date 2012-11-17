@@ -42,9 +42,6 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         if (!isset($session->cart)) {
             $session->cart = new Model_Cart;
         }
-        /*if (!$session->cart->getValidator()->validate()) {
-            throw new Exception('Validation failed');
-        }*/
         $this->_cart = $session->cart;
         if (isset($session->cart_confirmation)) {
             $this->_confirmation = $session->cart_confirmation;
@@ -131,16 +128,6 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
     }
     
     /**
-     * @param string $key
-     * @param int $qty
-     * @return void
-     * 
-     */
-    /*public function setProductQty($key) {
-        $this->_cart->setProductQty($key); 
-    }*/
-    
-    /**
      * @param Model_Cart $cart
      * @param Model_Cart_Order $order
      * 
@@ -194,15 +181,6 @@ class Model_Mapper_Cart extends Pet_Model_Mapper_Abstract {
         $this->_cart->update($data);
     }
 
-    /**
-     * @param string $validator
-     * @return void
-     * 
-     */
-    public function setValidator($validator) {
-        $this->_cart->setValidator($validator);
-    }
-    
     /**
      * @param array $data
      * @return void
