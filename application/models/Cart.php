@@ -70,8 +70,8 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
         $product->key = $product->product_id . ($product->is_gift ?
             'GIFT' : '');
         $product->is_gift = (int) $product->is_gift;
-        if (!$product->is_gift && ($this->_data['products']->hasSubscription() ||
-            $this->_data['products']->hasDigitalSubscription())) {
+        if (!$product->is_gift && ($product->isSubscription() ||
+            $product->isDigital())) {
             $this->_data['products']->removeByProductTypes(array(
                 Model_ProductType::SUBSCRIPTION,
                 Model_ProductType::DIGITAL_SUBSCRIPTION
@@ -99,7 +99,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
             if ($this->_data['promo']) {
                 $valid = $this->validatePromo($this->_data['promo']); 
                 if (!$valid) {
-                    $this->_message = $this->getValidator()->getMessage();
                     $this->removePromo();
                 }
             }
@@ -313,7 +312,6 @@ class Model_Cart extends Pet_Model_Abstract implements Serializable {
      */
     public function addPromo(Model_Promo $promo) {
         if (!$this->validatePromo($promo)) {
-            $this->_message = $this->getValidator()->getMessage();
             return false;
         }
         $this->_data['promo'] = $promo;
