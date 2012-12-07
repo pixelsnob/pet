@@ -207,18 +207,18 @@
 #products-special .offers a.offer-1 {
     float: left;
     display: block;
-    width: 312px;
+    width: 415px;
     height: 95px;
-    background: url(/images/products-index/sprites.png) -31px -441px;
-    margin-top: 41px;
+    background: url(/images/products-index/sprites.png) -29px -631px;
+    margin-top: 35px;
 }
 
 #products-special .offers a.offer-2 {
     float: left;
     display: block;
-    width: 580px;
+    width: 408px;
     height: 178px;
-    background: url(/images/products-index/sprites.png) -453px -400px;
+    background: url(/images/products-index/sprites.png) -468px -596px;
     margin-left: 20px;
 }
 
