@@ -50,11 +50,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initSession() {
         $app_config = $this->getOptions();
+        $cookie_postfix = '_' . strtoupper(APPLICATION_ENV);
         Zend_Session::setOptions(array(
             'cookie_domain'   => $app_config['session_cookie_domain'],
             'cookie_lifetime' => (60 * 60 * 24 * 30),
             'name'            => 'PETSESSID' . (APPLICATION_ENV != 'production'
-                                                ? '_TESTING' : '')
+                                                ? $cookie_postfix : '')
         ));
         Zend_Session::start();
     }
