@@ -171,8 +171,9 @@ class CheckoutController extends Zend_Controller_Action {
         $config = Zend_Registry::get('app_config');
         $confirmation = $this->_cart_svc->getConfirmation();
         if (!$confirmation) {
-            throw new Exception('User tried to log in from confirmation page but ' .
-                'confirmation object has expired');
+            //throw new Exception('User tried to log in from confirmation page but ' .
+            //    'confirmation object has expired');
+            $this->_redirect($config['wp_url']);
         }
         $token = $this->_request->getParam('token');
         if ($token != $this->_cart_svc->generateConfirmationLoginToken()) {
