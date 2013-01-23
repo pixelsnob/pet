@@ -62,11 +62,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initForceSSL() {
         $config = $this->getOptions();
-        if (!$config['use_https'] || !isset($_SERVER['HTTP_X_ORIG_PORT'])) {
+        if (!$config['use_https'] || !isset($_SERVER['SERVER_PORT'])) {
             return;
         }
         $is_not_iframe = (strpos($_SERVER['QUERY_STRING'], 'iframe=') === false);
-        if ($_SERVER['HTTP_X_ORIG_PORT'] != '443' && $is_not_iframe) {
+        if ($_SERVER['SERVER_PORT'] != '443' && $is_not_iframe) {
             header('Location: https://' . $_SERVER['HTTP_HOST'] .
                 $_SERVER['REQUEST_URI']);
             exit;
