@@ -60,6 +60,7 @@ class Model_DbTable_Orders extends Zend_Db_Table_Abstract {
                 'o.shipping_country',
                 'o.shipping_postal_code',
                 'u.previous_expiration',
+                'u.expiration',
                 'up.version',
                 'up.platform',
                 'up.marketing',
